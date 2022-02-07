@@ -1,0 +1,3 @@
+It contain the page component.
+Each component can layout component as top wrapper based on the page structure
+Each component exported as default, since lazy loading works with default export

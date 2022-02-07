@@ -1,0 +1,56 @@
+{
+    "privileges": {
+        "pages": {
+            "studies": {
+                "searchTable": {
+                    "actionsRow": [
+                        "view",
+                        "info",
+                        "login_sheet",
+                        "add_report",
+                        "permissions",
+                        "delete"
+                    ],
+                    "actionsTable": [
+                        "download",
+                        "forward",
+                        "transfer"
+                    ]
+                }
+            }
+        }
+    },
+    "settings": {
+        "studies": {
+            "search": {
+                "primary_fields": [
+                    "accession_number",
+                    "referring_physician",
+                    "description",
+                    "modality"
+                ],
+                "secondary_fields": [
+                    "study_id"
+                ],
+                "date_presets": [
+                    "1",
+                    "3",
+                    "*",
+                    "7"
+                ],
+                "showDeleted": true
+            },
+            "searchTable": {
+                "columns": [
+                    "accession_number",
+                    "study_date",
+                    "description",
+                    "modality",
+                    "facility",
+                    "lite_viewer",
+                    "report"
+                ]
+            }
+        }
+    }
+}

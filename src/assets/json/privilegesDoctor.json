@@ -1,0 +1,160 @@
+{
+    "privileges": {
+        "pages": {
+            "studies": {
+                "searchTable": {
+                    "actionsRow": [
+                        "view",
+                        "info",
+                        "login_sheet",
+                        "add_report",
+                        "permissions",
+                        "delete"
+                    ],
+                    "actionsTable": [
+                        "download",
+                        "retrieve"
+                    ]
+                }
+            },
+            "aet": {
+                "searchTable": {
+                    "actionsRow": [],
+                    "actionsTable": [
+                        "download",
+                        "retrieve"
+                    ]
+                },
+                "statusTable": {
+                    "actionsRow": [],
+                    "actionsTable": []
+                }
+            },
+            "forwarding": {
+                "statusTable": {
+                    "actionsRow": [],
+                    "actionsTable": []
+                }
+            },
+            "transfer": {
+                "statusTable": {
+                    "actionsRow": [],
+                    "actionsTable": []
+                }
+            },
+            "media_output": {
+                "statusTable": {
+                    "actionsRow": [],
+                    "actionsTable": []
+                }
+            }
+        }
+    },
+    "settings": {
+        "studies": {
+            "search": {
+                "primary_fields": [
+                    "patient_id",
+                    "patient_name",
+                    "study_id",
+                    "birthdate"
+                ],
+                "secondary_fields": [
+                    "description",
+                    "modality",
+                    "referring_physician"
+                ],
+                "date_presets": [
+                    "0",
+                    "3",
+                    "*"
+                ],
+                "showDeleted": true
+            },
+            "searchTable": {
+                "columns": [
+                    "patient",
+                    "patient_id",
+                    "birthdate",
+                    "actions"
+                ]
+            }
+        },
+        "aet": {
+            "search": {
+                "primary_fields": [
+                    "patient_name",
+                    "accession_number",
+                    "description",
+                    "referring_physician",
+                    "modality",
+                    "birthdate"
+                ],
+                "secondary_fields": [
+                    "study_id",
+                    "patient_id"
+                ],
+                "date_presets": [
+                    "*",
+                    "0",
+                    "3"
+                ]
+            },
+            "searchTable": {
+                "columns": [
+                    "patient_name",
+                    "patient_id",
+                    "birthdate",
+                    "modalities",
+                    "study_date",
+                    "description",
+                    "accession",
+                    "referring_physician",
+                    "sex",
+                    "noi"
+                ]
+            },
+            "statusTable": {
+                "columns": [
+                    "patient_name",
+                    "description",
+                    "called_aet"
+                ]
+            }
+        },
+        "forwarding": {
+            "statusTable": {
+                "columns": [
+                    "patient_name",
+                    "description",
+                    "called_aet"
+                ]
+            }
+        },
+        "transfer": {
+            "statusTable": {
+                "columns": [
+                    "patient",
+                    "study"
+                ]
+            }
+        },
+        "media": {
+            "statusTable": {
+                "columns": [
+                    "production_date",
+                    "media_id",
+                    "job",
+                    "volume_name",
+                    "comment",
+                    "copies",
+                    "noi",
+                    "profile",
+                    "size",
+                    "mode",
+                    "password"
+                ]
+            }
+        }
+    }
+}
