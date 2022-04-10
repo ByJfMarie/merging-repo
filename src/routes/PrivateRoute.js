@@ -43,7 +43,7 @@ export default function PrivateRoute(props) {
     const isConnected = AuthService.getCurrentUser();
     if (isConnected) {
 
-        if (localStorage.getItem('userRole') !== "administrator" && props.path === "/") {
+        if (AuthService.getCurrentUser().role !== "administrator" && props.path === "/") {
             return window.location.href = "/studies"
         }
 
@@ -62,8 +62,7 @@ export default function PrivateRoute(props) {
         }} />)
 
     } else {
-        //redirect if there is no user
-        return window.location.href = "/login"
+        AuthService.logout();
     }
 
 }

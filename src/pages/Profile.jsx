@@ -6,13 +6,14 @@ import React, { useState } from 'react';
 import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
 import ChangePassword from "./settings/ChangePassword.jsx";
+import AuthService from "../services/api/auth.service";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function Settings(props) {
-    const privileges = JSON.parse(localStorage.getItem('privileges'))
+    const priviledges = AuthService.getCurrentUser().priviledges;
 
     const breakpoints = {
         default: 1,
@@ -163,7 +164,7 @@ function Settings(props) {
                                         flexDirection: 'column',
                                         color: '#333'
                                     }}>
-                                        <MultiSelect {...privileges} page="studies" />
+                                        <MultiSelect {...priviledges} page="studies" />
 
                                     </Grid>
                                 </Grid>
@@ -208,7 +209,7 @@ function Settings(props) {
                         </CardContent>
                     </Card>
 
-                    {Object.keys(privileges.privileges.pages).includes('aet') && (<Card className={classes.settingCard}>
+                    {Object.keys(priviledges.privileges.pages).includes('aet') && (<Card className={classes.settingCard}>
                         <CardContent>
 
                             <Typography variant="h6" align="left"> {t('remote_aet')} </Typography>

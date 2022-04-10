@@ -134,37 +134,54 @@ export default function CustomFilters(props) {
 
     /** MODALITY FIELD */
     const handleChangeModality = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setValues({
-            ...values,
-            modality: (typeof value === 'string') ? value.split(',') : value
-        });
+        const value = event.target.value;
+        const filter = {...values, modality: (typeof value === 'string') ? value.split(',') : value};
+        setValues(filter);
+        props.searchFunction(filter);
     };
 
     /** PRESET BUTTON ACTION */
-    const handleChangePreset = (event, newAlignment) => {
+    const handleDatePreset = (event, newAlignment) => {
         setAlignment(newAlignment);
     };
+
+    /** PRESET BUTTON FUNCTION */
+    const handleChangeDate = (param) => {
+        let filter = values;
+        switch (param) {
+            case 1:
+                filter = {...values, from: formatDate(), to: formatDate() };
+                break;
+            case 2:
+                filter = {...values, from: formatDate(3), to: formatDate() };
+                break;
+            case '*':
+                filter = {...values, from: "1970-01-01", to: "2999-01-01" };
+                break;
+            default:
+                filter = {...values, from: formatDate(param), to: formatDate() };
+        }
+
+        setValues(filter);
+        props.searchFunction(filter);
+    }
 
     /** RESET BUTTON */
     const clearValues = () => {
         setValues(emptyValues)
         setAlignment()
+        props.searchFunction(emptyValues);
     }
 
     /** SEND VALUE */
-    const submitValues = (value, id) => {
-        if (value !== undefined && value.length < 3 && value.length > 0) {
-            setOpen(true)
-            setValues({
-                ...values,
-                [id]: ""
-            })
-        } else {
-            console.log(values) //ERROR TOO SHORT
-        }
+    const handleSearch = (event) => {
+        let key = event.target.id;
+        let value = event.target.value;
+        if (event.target.id==="showDeleted") value = !values[key];
+
+        const filter = {...values, [key]: value};
+        setValues(filter);
+        props.searchFunction(filter);
     }
 
     const statusComponent = (
@@ -225,8 +242,7 @@ export default function CustomFilters(props) {
         fullWidth
         value={values.birthdate}
         InputLabelProps={{ shrink: true }}
-        onChange={(e) => { setValues({ ...values, birthdate: e.target.value }) }}
-        onBlur={(e) => submitValues(e.target.value, e.target.id)}
+        onChange={(e) => { handleSearch(e) }}
     />)
 
     /** RETURN DATE (PARAM = REMOVE x DAYs) */
@@ -244,23 +260,6 @@ export default function CustomFilters(props) {
             day = '0' + day;
 
         return [year, month, day].join('-');
-    }
-
-    /** PRESET BUTTON FUNCTION */
-    const changeDate = (param) => {
-        // DAY 1 = TODAY
-        if (param === 1) {
-            setValues({ ...values, from: formatDate(), to: formatDate() })
-        }
-        else if (param === 2) {
-            setValues({ ...values, from: formatDate(3), to: formatDate() })
-        }
-        else if (param === '*') {
-            setValues({ ...values, from: "1970-01-01", to: "2999-01-01" })
-        }
-        else {
-            setValues({ ...values, from: formatDate(param), to: formatDate() })
-        }
     }
 
 
@@ -325,8 +324,7 @@ export default function CustomFilters(props) {
                                         variant="standard"
                                         fullWidth
                                         value={values[value]}
-                                        onChange={(e) => { setValues({ ...values, [value]: e.target.value }) }}
-                                        onBlur={(e) => submitValues(e.target.value, e.target.id)}
+                                        onChange={(e) => handleSearch(e)}
                                     />
                                 </Grid>)
 
@@ -339,7 +337,7 @@ export default function CustomFilters(props) {
                                 color="primary"
                                 exclusive
                                 value={alignment}
-                                onChange={handleChangePreset}
+                                onChange={handleDatePreset}
                             >
                                 {props.settings[props.page].search.date_presets.map((value, key) => {
 
@@ -375,7 +373,7 @@ export default function CustomFilters(props) {
                                     return (
                                         <ToggleButton
                                             style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
-                                            onClick={() => changeDate(value)}
+                                            onClick={() => handleChangeDate(value)}
                                             value={value}
                                             className={key > 2 ? classes.presetPhone : ""}
                                         >
@@ -456,9 +454,7 @@ export default function CustomFilters(props) {
                                                     variant="standard"
                                                     fullWidth
                                                     value={values[value]}
-                                                    onChange={(e) => { setValues({ ...values, [value]: e.target.value }) }}
-                                                    onBlur={(e) => submitValues(e.target.value, e.target.id)}
-
+                                                    onChange={(e) => { handleSearch(e) }}
                                                 />
                                             </Grid>)
 
@@ -480,7 +476,7 @@ export default function CustomFilters(props) {
                                             <TextField
                                                 className={classes.root}
                                                 type="date"
-                                                id="outlined-basic"
+                                                id="from"
                                                 label={t('from')}
                                                 variant="standard"
                                                 value={values.from}
@@ -488,8 +484,8 @@ export default function CustomFilters(props) {
                                                 fullWidth
                                                 InputLabelProps={{ shrink: true }}
                                                 onChange={(e) => {
-                                                    setValues({ ...values, from: e.target.value })
-                                                    handleChangePreset(e, "")
+                                                    handleDatePreset(e, "");
+                                                    handleSearch(e);
                                                 }}
                                             />
                                         </Grid>
@@ -499,7 +495,7 @@ export default function CustomFilters(props) {
                                             <TextField
                                                 className={classes.root}
                                                 type="date"
-                                                id="outlined-basic"
+                                                id="to"
                                                 label={t('to')}
                                                 variant="standard"
                                                 value={values.to}
@@ -507,8 +503,8 @@ export default function CustomFilters(props) {
                                                 fullWidth
                                                 InputLabelProps={{ shrink: true }}
                                                 onChange={(e) => {
-                                                    setValues({ ...values, to: e.target.value })
-                                                    handleChangePreset(e, "")
+                                                    handleDatePreset(e, "");
+                                                    handleSearch(e);
                                                 }}
                                             />
                                         </Grid>
@@ -521,14 +517,10 @@ export default function CustomFilters(props) {
                                                     control={
                                                         <Checkbox
                                                             id="showDeleted"
-                                                            checked={values.showDeleted} />
+                                                            checked={values.showDeleted?"checked":""} />
                                                     }
                                                     label={t('show_deleted')}
-                                                    key={`${Math.floor((Math.random() * 10000))}-min`}
-                                                    onChange={(e) => {
-                                                        setValues({ ...values, showDeleted: e.target.checked })
-                                                        //submitValues() VERIFICATION NECESSAIRE
-                                                    }}
+                                                    onChange={(e) => {handleSearch(e)}}
                                                 />
                                             </FormGroup>)}
                                         </Grid>

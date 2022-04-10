@@ -1,4 +1,4 @@
-import api, {URL_USER_AUTH} from "./api";
+import api, {URL_USER_AUTH, URL_USER_LOGOUT} from "./api";
 import TokenService from "./token.service";
 
 class AuthService {
@@ -27,7 +27,9 @@ class AuthService {
     }
 
     logout() {
+        api.post(URL_USER_LOGOUT, {}).then(response => {});
         TokenService.removeUser();
+        window.location.href = "/login";
     }
 
     getCurrentUser() {

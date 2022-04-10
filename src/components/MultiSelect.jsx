@@ -3,6 +3,7 @@ import Select, { components, StylesConfig } from "react-select";
 import { SortableContainer, SortableElement, sortableHandle } from "react-sortable-hoc";
 import t from "../services/Translation.jsx";
 import { useTheme } from '@emotion/react';
+import AuthService from "../services/api/auth.service";
 
 function arrayMove(array, from, to) {
     array = array.slice();
@@ -56,7 +57,7 @@ export default function MultiSelectSort(props) {
         })
     };
 
-    const privileges = JSON.parse(localStorage.getItem('privileges'))
+    const priviledges = AuthService.getCurrentUser().priviledges;
 
     React.useEffect(() => {
     }, [props])
@@ -72,20 +73,20 @@ export default function MultiSelectSort(props) {
 
         var dif1 = option.diff(selectedOptions);
         /** CHANGE SECONDARY */
-        privileges.settings[props.page].search.secondary_fields = dif1.map((i) => i.value);
-        localStorage.setItem("privileges", JSON.stringify(privileges));
+        priviledges.settings[props.page].search.secondary_fields = dif1.map((i) => i.value);
+        localStorage.setItem("privileges", JSON.stringify(priviledges));
 
         /** CHANGE PRIMARY */
-        privileges.settings[props.page].search.primary_fields = selectedOptions.map((i) => i.value);
-        localStorage.setItem("privileges", JSON.stringify(privileges));
+        priviledges.settings[props.page].search.primary_fields = selectedOptions.map((i) => i.value);
+        localStorage.setItem("privileges", JSON.stringify(priviledges));
     }
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
         const newValue = arrayMove(selected, oldIndex, newIndex);
         setSelected(newValue);
 
-        privileges.settings[props.page].search.primary_fields = newValue.map((i) => i.value);
-        localStorage.setItem("privileges", JSON.stringify(privileges));
+        priviledges.settings[props.page].search.primary_fields = newValue.map((i) => i.value);
+        localStorage.setItem("privileges", JSON.stringify(priviledges));
 
         console.log(
             "Values sorted:",
@@ -94,7 +95,7 @@ export default function MultiSelectSort(props) {
     };
 
     useEffect(() => {
-        privileges.settings[props.page].search.primary_fields.map((field, index) => {
+        priviledges.settings[props.page].search.primary_fields.map((field, index) => {
             
             if(selected.includes(option[index])){
                 return(setOption(oldOption => [...oldOption, { value: field, label: t(field) }]))
@@ -106,7 +107,7 @@ export default function MultiSelectSort(props) {
                 )
             }
         })
-        privileges.settings[props.page].search.secondary_fields.map((field) => (
+        priviledges.settings[props.page].search.secondary_fields.map((field) => (
             // option.push({ value: field, label: t(field) })
             setOption(oldOption => [...oldOption, { value: field, label: t(field) }])
         ))

@@ -89,6 +89,10 @@ function Menu(props) {
         })
     }
 
+    const handleLogoutClick = () => {
+        AuthService.logout();
+    };
+
     /** LIST OF ITEMS */
     const drawer = (
         <div>
@@ -226,11 +230,9 @@ function Menu(props) {
                         </Grid>
 
                         <Grid item style={{ paddingRight: '12px' }}>
-                            <Link href="/login">
-                                <IconButton style={{ color: theme.palette.menu.text }}>
-                                    <ExitToAppIcon style={{ transform: 'scale(1.2)' }} />
-                                </IconButton>
-                            </Link>
+                            <IconButton style={{ color: theme.palette.menu.text }} onClick={handleLogoutClick}>
+                                <ExitToAppIcon style={{ transform: 'scale(1.2)' }} />
+                            </IconButton>
                         </Grid>
                     </Grid>
                 </Toolbar>

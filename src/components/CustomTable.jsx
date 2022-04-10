@@ -17,7 +17,7 @@ export default function CustomTable(props) {
             },
         },
         tableRow: {
-            height: "50px !important"
+            height: "60px !important"
         },
         tableCell: {
             padding: "0px 16px !important"
@@ -90,7 +90,11 @@ export default function CustomTable(props) {
                                 rows={row}
                                 checked={selectedRows.includes(row.id) ? true : false}
                                 onChange={handleSelect}
-                                actions={props.privileges.pages[props.page].searchTable.actionsRow} />
+                                columns={props.settings[props.page].searchTable.columns}
+                                actions={props.privileges.pages[props.page].searchTable.actionsRow}
+                                handleOpenDialogStudy={props.handleOpenDialogStudy}
+                                handleOpenDialoPermissions={props.handleOpenDialogPermissions}
+                            />
                         )
                     })}
                 </TableBody>

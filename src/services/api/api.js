@@ -1,10 +1,12 @@
 import axios from 'axios';
 import TokenService from "./token.service";
+import AuthService from './auth.service';
 import swal from "sweetalert";
 
-export const BASE_URL = "http://demo.perennity.io:9990/";
-export const URL_USER_AUTH = "auth";
-export const URL_REFRESH_TOKEN = "token/refresh";
+export const BASE_URL = "http://localhost:9999/";
+export const URL_USER_AUTH = "v2/auth";
+export const URL_REFRESH_TOKEN = "v2/token/refresh";
+export const URL_USER_LOGOUT = "v2/token/logout";
 
 //Define the miAPI as axios
 const miAPI = axios.create({
@@ -43,7 +45,7 @@ miAPI.interceptors.response.use(
         //Log the error
         //console.log("error: "+JSON.stringify(error));
         const originalConfig = err.config;
-        if (originalConfig.url !== URL_USER_AUTH && err.response) {
+        if (originalConfig.url !== URL_USER_AUTH && originalConfig.url !== URL_USER_LOGOUT && err.response) {
 
             //Access Token was expired
             if ((err.response.status == 401 || err.response.status == 403) && !originalConfig._retry) {
@@ -66,7 +68,7 @@ miAPI.interceptors.response.use(
                         buttons: false,
                         timer: 2000,
                     }).then(() => {
-                        window.location.href = "/login";
+                        AuthService.logout();
                     })
                     return;
                 }
