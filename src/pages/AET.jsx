@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import { Divider, Typography, Container, Grid, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
@@ -8,45 +8,13 @@ import CustomFilters from '../components/CustomFilters';
 import CustomStatusTable from '../components/CustomStatusTable';
 import CustomButton from '../components/CustomButton';
 import AuthService from "../services/api/auth.service";
+import QRService from "../services/api/queryRetrieve.service";
 
 export default function AET() {
   /** THEME */
   const theme = useTheme();
 
   const priviledges = AuthService.getCurrentUser().priviledges;
-
-  /** TABLE CONTENT */
-  var rows;
-  switch (AuthService.getCurrentUser().role) {
-    case 'administrator':
-      rows = [
-        { id: 1, patient_id: '157685934', patient_name: 'Theo Langlois', modality: "DX", description: "Shoulder", date: '01/09/2021', refering: 'Doctor Y', access: 'lorem', repot: 'PDF', permission: 'perm', noi: 5 },
-        { id: 2, patient_id: '946577235', patient_name: 'Lorry Kiavué', modality: "MRI", description: "Shoulder", date: '01/09/2021', refering: 'Doctor X', access: 'lorem', report: 'PDF', permission: 'perm', noi: 3 },
-      ]
-      break;
-    case 'patient':
-      rows = [
-        { id: 1, acc_num: '01125545', date: '01/09/2021', description: "Shoulder", modality: 'DX', facility: 'Perennity Hospital', report: 'PDF' },
-        { id: 2, acc_num: '15454823', date: '27/05/2020', description: "Crane", modality: 'MRI', facility: 'Perennity Hospital', report: 'PDF' },
-      ]
-      break;
-    case 'doctor':
-      rows = [
-        { id: 1, patient_name: 'Theo', patient_id: '157685934', birthdate: "01/09/2001" },
-        { id: 2, patient_name: 'Lorry', patient_id: '946577235', birthdate: "26/05/1987" },
-      ]
-      break;
-    case 'radiologist':
-      rows = [
-        { id: 1, patient_name: 'Theo', patient_id: '157685934', birthdate: "01/09/2001" },
-        { id: 2, patient_name: 'Lorry', patient_id: '946577235', birthdate: "26/05/1987" },
-      ]
-      break;
-    default:
-      rows = [
-        { id: 1, patient_name: 'Please go to "/login" and choose a role' },
-      ]
-  }
 
   const useStyles = makeStyles({
     root: {
@@ -61,6 +29,117 @@ export default function AET() {
 
   const classes = useStyles();
 
+  const [currentAET, setCurrentAET] = React.useState("");
+  const [aets, setAets] = React.useState([]);
+  const loadAETs = async() => {
+    //Load aet list
+    const response = await QRService.listAet(true, false, false);
+    if (response.error) {
+      console.log(response.error);
+      return;
+    }
+
+    Object.keys(response.items).map((row, i) => {
+      aets.push(response.items[row]);
+    })
+    setAets([...aets], aets)
+  }
+
+  const filtersInitValue = {
+    patient_id: "",
+    patient_name: "",
+    study: "",
+    accession_number: "",
+    status: "",
+    birthdate: "",
+    aet: "",
+    description: "",
+    referring_physician: "",
+    modality: [],
+    showDeleted: false,
+    date_preset: '*',
+    from: "",
+    to: "",
+  };
+  const [filters, setFilters] = useState(filtersInitValue);
+  const [rows, setRows] = useState([])
+  const [selectedRows, setSelectedRows] = useState([])
+  const [selectedRowsData, setSelectedRowsData] = useState([])
+
+  const setTableSelection = (rowsId, rowsData) => {
+    setSelectedRows(rowsId);
+    setSelectedRowsData(rowsData);
+  }
+
+  const queryStudies = async(values) => {
+    setFilters(values);
+
+    /** RESET RESULT */
+    const rows = []
+
+    if (currentAET === '') {
+      setRows(rows);
+      return;
+    }
+
+    const response = await QRService.query(currentAET, values);
+    if (response.error) {
+      console.log(response.error);
+      //window.location.href = "/login";
+      return;
+    }
+
+    Object.keys(response.items).map((row, i) => {
+      rows.push(response.items[row]);
+    })
+    setRows([...rows], rows)
+  }
+
+
+  const retrieveStudies = async(move_aet) => {
+      if (currentAET === '') return;
+      const response = await QRService.retrieve(currentAET, move_aet, selectedRowsData);
+      if (response.error) {
+          console.log(response.error);
+          return;
+      }
+
+      setSelectedRows([]);
+      setSelectedRowsData([]);
+      refreshOrders();
+  }
+
+  React.useEffect(() => {
+    loadAETs()
+  }, []);
+
+  React.useEffect(() => {
+    queryStudies(filters);
+  }, [currentAET]);
+
+
+  //Status
+  const [rowsStatus, setRowsStatus] = useState([]);
+  const refreshOrders = async() => {
+    const response = await QRService.getOrders({});
+
+    if (response.error) {
+      console.log(response.error);
+      return;
+    }
+
+    if (response.items==null) return;
+
+    let tmp = [];
+    response.items.map((row, i) => {
+      tmp.push(row);
+    })
+    setRowsStatus(tmp);
+  }
+  React.useEffect(() => {
+    refreshOrders();
+  }, []);
+
   return (
     <React.Fragment>
       <Container maxWidth="false" style={{ display: "flex", margin : 0, padding : 0, justifyContent: 'space-between' }}>
@@ -68,18 +147,24 @@ export default function AET() {
         <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main, width : "300px", marginTop : "auto" }} > {t('remote_aet')} </Typography>
 
         <FormControl className={classes.root} variant="filled"  style={{width : "300px"}}>
-          <InputLabel shrink="true" id="aet" >AET</InputLabel>
+          <InputLabel id="aet" >AET</InputLabel>
           <Select
             labelId="aet"
             id="aet"
-          //value={values.aet}
-          //onChange={(e) => { setValues({ ...values, aet: e.target.value }) }}
+            value={currentAET}
+            onChange={(e) => { setCurrentAET(e.target.value); queryStudies(filters); }}
           >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value={10}>In Progress</MenuItem>
-            <MenuItem value={20}>Download Locally</MenuItem>
-            <MenuItem value={30}>Download Remotely</MenuItem>
-            <MenuItem value={30}>Error</MenuItem>
+
+            {aets &&
+            aets.map((aet) => (
+                <MenuItem
+                    key={aet.key}
+                    value={aet.title}
+                >
+                  {aet.description}
+                </MenuItem>
+            ))}
+
           </Select>
         </FormControl>
 
@@ -94,16 +179,36 @@ export default function AET() {
 
       </Container>
 
-
       <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-      <CustomFilters {...priviledges} page="aet" />
+      <CustomFilters
+          {...priviledges}
+          initialValues={filtersInitValue}
+          searchFunction={queryStudies}
+          page="aet"
+      />
 
-      <CustomTable rows={rows} {...priviledges} page="aet" />
+      <CustomTable
+          rows={rows}
+          selectedRows={selectedRows}
+          selectionHandler={setTableSelection}
+          {...priviledges}
+          page="aet"
+      />
 
-      <CustomButton {...priviledges} page="aet"/>
+      <CustomButton
+          {...priviledges}
+          retrieveFunction={retrieveStudies}
+          page="aet"
+      />
       
-      <CustomStatusTable {...priviledges} page="aet"/>
+      <CustomStatusTable
+          {...priviledges}
+          page="aet"
+          rows={rowsStatus}
+          autoRefresh={false}
+          refresh={refreshOrders}
+      />
 
     </React.Fragment>
   );

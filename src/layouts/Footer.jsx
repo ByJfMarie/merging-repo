@@ -29,7 +29,7 @@ export default function Footer() {
       const classes = useStyles();
 
     return (
-        <Container maxWidth className={classes.mainContainer} style={{ backgroundColor: theme.palette.menu.background, position: 'absolute !important', bottom: '0 !important',color: '#b0b0b0', marginTop: '20px', textAlign :"center" }}>
+        <Container className={classes.mainContainer} style={{ backgroundColor: theme.palette.menu.background, position: 'absolute !important', bottom: '0 !important',color: '#b0b0b0', marginTop: '20px', textAlign :"center" }}>
             <Typography style={{ color: "#b0b0b0" }}>
                 {year} © Perennity
             </Typography>

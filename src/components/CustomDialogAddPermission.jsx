@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import CustomTable from "./CustomTable";
 import AuthService from "../services/api/auth.service";
+import StudiesService from "../services/api/studies.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import t from "../services/Translation";
@@ -77,11 +78,6 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-let rows = [
-    { id: 1, checked: true, login: 'bruno.physician', first_name: 'Bruno', last_name: "volant", title: "Dr.", expiration_date:""},
-    { id: 2, checked: false, login: 'rene.physician', first_name: 'Rene', last_name: "Cinderella", title: "Dr.", expiration_date:""},
-]
-
 export default function CustomDialogAddPermission({open, handleOpenDialog, handleCloseDialog, study}) {
 
     const theme = useTheme();
@@ -112,17 +108,22 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
 
     const priviledges = AuthService.getCurrentUser().priviledges;
 
-    const [values, setValues] = React.useState(null);
+    const [studyUID, setStudyUID] = React.useState(null);
+    const [rows, setRows] = React.useState(null);
+    const [filteredRows, setFilteredRows] = React.useState(null);
     const [searched, setSearched] = React.useState("");
 
     const requestSearch = (searchedVal) => {
+        if (rows==null) return;
+        setSearched(searchedVal);
+
         const filteredItems = rows.filter((item) => {
             if (item.login.toLowerCase().includes(searchedVal.toLowerCase())) return true;
-            if (item.first_name.toLowerCase().includes(searchedVal.toLowerCase())) return true;
-            if (item.last_name.toLowerCase().includes(searchedVal.toLowerCase())) return true;
+            if (item.first_name!=null && item.first_name.toLowerCase().includes(searchedVal.toLowerCase())) return true;
+            if (item.last_name!=null && item.last_name.toLowerCase().includes(searchedVal.toLowerCase())) return true;
             return false;
         });
-        setValues(filteredItems);
+        setFilteredRows(filteredItems);
     };
 
     const cancelSearch = () => {
@@ -130,23 +131,44 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
         requestSearch(searched);
     };
 
+    const searchPermissions = async(study) => {
+        if (study==null) return;
+
+        /** RESET RESULT */
+        const rows = []
+
+        const response = await StudiesService.getPermissions(study);
+        if (response.error) {
+            console.log(response.error);
+            //window.location.href = "/login";
+            return;
+        }
+
+        Object.keys(response.items).map((row, i) => {
+            rows.push(response.items[row]);
+        })
+        setRows([...rows])
+    }
+
     React.useEffect(() => {
-        setValues(rows)
+        setStudyUID(study);
+        searchPermissions(study);
     }, [study]);
 
-    const handleToggle = (row) => () => {
-        const newItems = values.map((item) => {
-            if (item.id === row.id) {
-                const updatedItem = {
-                    ...item,
-                    checked: !item.checked,
-                };
-                return updatedItem;
-            }
-            return item;
-        });
+    React.useEffect(() => {
+        requestSearch(searched);
+    }, [rows])
 
-        setValues(newItems);
+    const handleToggle = (row) => () => {
+        const newItems = rows.map((item) => {
+            if (item.key === row.key) {
+
+                StudiesService.setPermission(item.login, studyUID, !item.checked)
+                    .then((response) => {
+                        searchPermissions(studyUID);
+                    })
+            }
+        });
     };
 
     return (
@@ -162,7 +184,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
             </BootstrapDialogTitle>
             <DialogContent dividers>
                 {
-                    values &&
+                    filteredRows &&
 
                     <>
                         <SearchBar
@@ -172,7 +194,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                             placeholder="filter"
                         />
                         <List sx={{width: '100%', marginTop: '10px', bgcolor: 'background.paper'}} className={classes.root}>
-                            {values.map((row) => {
+                            {filteredRows.sort((a, b) => a.checked?-1:1).map((row) => {
                                 return (
                                     <>
                                         <ListItem
@@ -189,13 +211,13 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                                                 <ListItemIcon>
                                                     <Checkbox
                                                         edge="start"
-                                                        checked={row.checked?'checked':''}
+                                                        checked={row.checked}
                                                         tabIndex={-1}
                                                         disableRipple
                                                         inputProps={{ 'aria-labelledby': row.id }}
                                                     />
                                                 </ListItemIcon>
-                                                <ListItemText id={row.id} primary={row.title+" "+row.last_name+" "+row.first_name} />
+                                                <ListItemText id={row.key} primary={row.display_name} />
                                             </ListItemButton>
                                         </ListItem>
                                         <Divider variant="inset" component="li" />

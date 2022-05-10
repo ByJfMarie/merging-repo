@@ -7,9 +7,10 @@ import t from "../services/Translation";
 import BlockIcon from '@mui/icons-material/Block';
 import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import StudiesService from "../services/api/studies.service";
+import QRService from "../services/api/queryRetrieve.service";
 
 export default function CustomFilters(props) {
-
 
     /** MODALITY ELEMENTS */
     const names = [
@@ -98,30 +99,12 @@ export default function CustomFilters(props) {
     });
     const classes = useStyles();
 
-    /** ALL VAR */
-    var emptyValues = {
-        patient_id: "",
-        patient_name: "",
-        study: "",
-        accession_number: "",
-        status: "",
-        birthdate: "",
-        aet: "",
-        description: "",
-        referring_physician: "",
-        modality: [],
-        showDeleted: false,
-        from: "",
-        to: "",
-    }
-
-    var [values, setValues] = React.useState(emptyValues)
+    const [values, setValues] = React.useState(props.initialValues)
     const [open, setOpen] = React.useState(false);
-    const [alignment, setAlignment] = React.useState();
 
     useEffect(() => {
-    }, [props, values])
-
+        props.searchFunction(values);
+    }, [open])
 
     // eslint-disable-next-line
     const handleClickOpen = () => {
@@ -142,7 +125,8 @@ export default function CustomFilters(props) {
 
     /** PRESET BUTTON ACTION */
     const handleDatePreset = (event, newAlignment) => {
-        setAlignment(newAlignment);
+        const filter = {...values, alignment: newAlignment};
+        setValues(filter);
     };
 
     /** PRESET BUTTON FUNCTION */
@@ -168,9 +152,8 @@ export default function CustomFilters(props) {
 
     /** RESET BUTTON */
     const clearValues = () => {
-        setValues(emptyValues)
-        setAlignment()
-        props.searchFunction(emptyValues);
+        setValues(props.initialValues)
+        props.searchFunction(props.initialValues);
     }
 
     /** SEND VALUE */
@@ -185,7 +168,7 @@ export default function CustomFilters(props) {
     }
 
     const statusComponent = (
-        <FormControl className={classes.root} variant="standard" size="medium" fullWidth >
+        <FormControl className={classes.root} variant="standard" size="medium" >
             <InputLabel id="status" shrink>{t("status")}</InputLabel>
             <Select
                 labelId="status"
@@ -197,12 +180,12 @@ export default function CustomFilters(props) {
                 <MenuItem value={10}>In Progress</MenuItem>
                 <MenuItem value={20}>Download Locally</MenuItem>
                 <MenuItem value={30}>Download Remotely</MenuItem>
-                <MenuItem value={40}>Error</MenuItem>
+                <MenuItem value={30}>Error</MenuItem>
             </Select>
         </FormControl>)
 
     const modalityComponent = (
-        <FormControl className={classes.root} size="small" fullWidth >
+        <FormControl className={classes.root} size="small" fullWidth={true} >
             <InputLabel variant="standard" id="modality">{t("modality")}</InputLabel>
             <Select
                 labelId="modality"
@@ -297,25 +280,25 @@ export default function CustomFilters(props) {
 
                                 if (value === "status") {
                                     return (
-                                        <Grid item xs={6} sm>
+                                        <Grid key={value} item xs={6} sm>
                                             {statusComponent}
                                         </Grid>
                                     )
                                 }
 
                                 if (value === "modality") {
-                                    return (<Grid item xs={6} sm>
+                                    return (<Grid key={value} item xs={6} sm>
                                         {modalityComponent}
                                     </Grid>)
                                 }
 
                                 if (value === "birthdate") {
-                                    return (<Grid item xs={6} sm>
+                                    return (<Grid key={value} item xs={6} sm>
                                         {birthdateComponent}
                                     </Grid>)
                                 }
 
-                                return (<Grid item xs={6} sm>
+                                return (<Grid key={value} item xs={6} sm>
                                     <TextField
                                         key={key}
                                         className={classes.root}
@@ -336,7 +319,7 @@ export default function CustomFilters(props) {
                             <ToggleButtonGroup
                                 color="primary"
                                 exclusive
-                                value={alignment}
+                                value={values.date_preset}
                                 onChange={handleDatePreset}
                             >
                                 {props.settings[props.page].search.date_presets.map((value, key) => {
@@ -372,6 +355,7 @@ export default function CustomFilters(props) {
 
                                     return (
                                         <ToggleButton
+                                            key={key}
                                             style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
                                             onClick={() => handleChangeDate(value)}
                                             value={value}
@@ -404,10 +388,11 @@ export default function CustomFilters(props) {
                         <Popover
                             id={id}
                             open={openMore}
-                            anchorElMore={anchorElMore}
+                            anchorEl={anchorElMore}
                             onClose={handleCloseMore}
                             anchorOrigin={{
                                 horizontal: 'right',
+                                vertical: 'bottom'
                             }}
                             className={classes.popover}
                         >
@@ -426,7 +411,7 @@ export default function CustomFilters(props) {
 
                                             if (value === "status") {
                                                 return (
-                                                    <Grid item xs={6} md={6}>
+                                                    <Grid key={value} item xs={6} md={6}>
                                                         {statusComponent}
                                                     </Grid>
                                                 )
@@ -434,19 +419,19 @@ export default function CustomFilters(props) {
 
                                             if (value === "modality") {
                                                 return (
-                                                    <Grid item xs={6} md={6}>
+                                                    <Grid key={value} item xs={6} md={6}>
                                                         {modalityComponent}
                                                     </Grid>)
                                             }
 
                                             if (value === "birthdate") {
                                                 return (
-                                                    <Grid item xs={6} md={6}>
+                                                    <Grid key={value} item xs={6} md={6}>
                                                         {birthdateComponent}
                                                     </Grid>)
                                             }
 
-                                            return (<Grid item xs={6} md={6} >
+                                            return (<Grid key={value} item xs={6} md={6} >
                                                 <TextField
                                                     className={classes.root}
                                                     id={value}
@@ -512,12 +497,12 @@ export default function CustomFilters(props) {
                                     </Grid>
                                     <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
                                         <Grid item xs={12} sm={8} md={7} className={classes.delete}>
-                                            {props.settings[props.page].search.showDeleted && (<FormGroup fullWidth>
+                                            {props.settings[props.page].search.showDeleted && (<FormGroup>
                                                 <FormControlLabel size="small"
                                                     control={
                                                         <Checkbox
                                                             id="showDeleted"
-                                                            checked={values.showDeleted?"checked":""} />
+                                                            checked={values.showDeleted} />
                                                     }
                                                     label={t('show_deleted')}
                                                     onChange={(e) => {handleSearch(e)}}

@@ -23,7 +23,9 @@
                "aet": {
                   "searchTable": {
                      "actionsRow": [],
-                     "actionsTable": []
+                     "actionsTable": [
+                        "retrieve"
+                     ]
                   },
                   "statusTable": {
                      "actionsRow": [],
@@ -112,23 +114,21 @@
                },
                "searchTable": {
                   "columns": [
-                     "patient_name",
-                     "patient_id",
+                     "patient",
                      "modality",
-                     "description",
                      "study_date",
-                     "referring_physician",
+                     "description",
                      "accession_number",
-                     "birthdate",
-                     "sex",
+                     "referring_physician",
                      "noi"
                   ]
                },
                "statusTable": {
                   "columns": [
-                     "patient_name",
+                     "patient",
                      "description",
-                     "called_aet"
+                     "aet",
+                     "noi"
                   ]
                }
             },

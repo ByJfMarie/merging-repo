@@ -1,16 +1,22 @@
 import api, {URL_USER_AUTH} from "./api";
 import TokenService from "./token.service";
 
-class StudiesService {
+class QueryRetrieveService {
 
-    searchStudies(filters) {
+    listAet(queryRetrieve, store, forward) {
         let state = {
             items: [],
             error: ''
         }
 
+        let filters = {
+            qr: queryRetrieve,
+            store: store,
+            forward: forward
+        }
+
         return api
-            .post('/v2/studies/search', JSON.stringify(filters))
+            .post('/v2/qr/aets', JSON.stringify(filters))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -26,31 +32,14 @@ class StudiesService {
             });
     }
 
-    getThumbnail(study_uid, size) {
-        return api
-            .get('/v2/studies/thumbnail/' + study_uid + '/' + size, {
-                responseType: 'blob'
-            })
-            .then((response) => {
-                if (response.status === 200) {
-                    return response;
-                } else {
-                    return null;
-                }
-            })
-            .catch((error) => {
-                return null;
-            });
-    }
-
-    getReports(study_uid) {
+    query(aet, filters) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/studies/reports/' + study_uid + '/pdf')
+            .post('/v2/qr/studies.query/'+aet, JSON.stringify(filters))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -66,48 +55,14 @@ class StudiesService {
             });
     }
 
-    openReport(key) {
-        return api
-            .get('/v2/studies/reports.download/' + encodeURIComponent(key), {
-                responseType: 'blob'
-            })
-            .then((response) => {
-                if (response.status === 200) {
-                    return response;
-                } else {
-                    return null;
-                }
-            })
-            .catch((error) => {
-                return null;
-            });
-    }
-
-    openLoginSheet(key) {
-        return api
-            .get('/v2/studies/loginsheet.download/' + encodeURIComponent(key), {
-                responseType: 'blob'
-            })
-            .then((response) => {
-                if (response.status === 200) {
-                    return response;
-                } else {
-                    return null;
-                }
-            })
-            .catch((error) => {
-                return null;
-            });
-    }
-
-    getPermissions(study_uid) {
+    retrieve(retrieve_aet, move_aet, studies) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/studies/permissions.physicians/' + study_uid)
+            .post('/v2/qr/studies.retrieve/'+retrieve_aet+'/'+move_aet, JSON.stringify(studies))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -123,17 +78,14 @@ class StudiesService {
             });
     }
 
-    setPermission(login, study_uid, checked) {
+    getOrders(filter) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/studies/permissions.physicians/set/'+study_uid, {
-                login: login,
-                checked: checked
-            })
+            .post('/v2/qr/orders/', JSON.stringify(filter))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -150,4 +102,4 @@ class StudiesService {
     }
 }
 
-export default new StudiesService();
+export default new QueryRetrieveService();

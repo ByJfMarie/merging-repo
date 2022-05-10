@@ -4,6 +4,7 @@ import t from "../services/Translation";
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import RetrieveButton from "./RetrieveButton";
 
 const CustomButton = (props) => {
 
@@ -79,9 +80,28 @@ const CustomButton = (props) => {
                 <Grid item sm={8} xs={12} className={classes.right} style={{ display: "flex" }} >
                     {  // eslint-disable-next-line 
                         props.privileges.pages[props.page].searchTable.actionsTable.map((value, key) => {
-                            if (value !== "download") {
+                            if (value === "retrieve") {
                                 return (
-                                    <Button className={classes.buttonMain} variant="outlined" size="medium" color="primary" style={{ marginLeft: "10px" }}>
+                                    /*<Button
+                                        key={value}
+                                        className={classes.buttonMain}
+                                        variant="outlined"
+                                        size="medium"
+                                        color="primary"
+                                        style={{ marginLeft: "10px" }}
+                                        onClick={props.retrieveFunction}
+                                    >
+                                        {t(value)}
+                                    </Button>*/
+                                    <RetrieveButton
+                                        key={value}
+                                        retrieveFunction={props.retrieveFunction}
+                                    />
+                                )
+                            }
+                            else if (value !== "download") {
+                                return (
+                                    <Button key={value} className={classes.buttonMain} variant="outlined" size="medium" color="primary" style={{ marginLeft: "10px" }}>
                                         {t(value)}
                                     </Button>)
                             }

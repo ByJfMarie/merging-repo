@@ -18,9 +18,28 @@ export default function Studies() {
     /** THEME */
     const theme = useTheme();
 
+    const filtersInitValue = {
+        patient_id: "",
+        patient_name: "",
+        study: "",
+        accession_number: "",
+        status: "",
+        birthdate: "",
+        aet: "",
+        description: "",
+        referring_physician: "",
+        modality: [],
+        showDeleted: false,
+        date_preset: '*',
+        from: "",
+        to: "",
+    };
+    const [filters, setFilters] = useState(filtersInitValue);
     const [rows, setRows] = useState([])
 
     const searchStudies = async(values) => {
+        setFilters(values);
+
         /** RESET RESULT */
         const rows = []
 
@@ -37,6 +56,12 @@ export default function Studies() {
         setRows([...rows], rows)
     }
 
+    //Selection
+    const [selectedRows, setSelectedRows] = useState([])
+    const setTableSelection = (rows) => {
+        setSelectedRows(rows);
+    }
+
     // Manage Dialog Study Info
     const [dialogStudyOpen, setDialogStudyOpen] = React.useState(false)
     const [dialogStudy, setDialogStudy] = useState(null);
@@ -49,6 +74,23 @@ export default function Studies() {
         setDialogStudy(null)
     }
 
+    //Login Sheet
+    const handleActionLoginSheet = async (key) => {
+        const rsp = await StudiesService.openLoginSheet(key);
+        if (rsp && rsp.data && rsp.data.size) {
+            //Create a Blob from the PDF Stream
+            const file = new Blob(
+                [rsp.data],
+                {type: 'application/pdf'});
+
+            //Build a URL from the file
+            const fileURL = URL.createObjectURL(file);
+
+            //Open the URL on new Window
+            window.open(fileURL);
+        }
+    };
+
     // Manage Dialog Add Permission
     const [dialogPermissionsOpen, setDialogPermissionsOpen] = React.useState(false)
     const [dialogPermissions, setDialogPermissions] = useState(null);
@@ -59,6 +101,7 @@ export default function Studies() {
     const handleDialogPermissionsClose = () => {
         setDialogPermissionsOpen(false)
         setDialogPermissions(null)
+        searchStudies(filters);
     }
 
     return (
@@ -67,11 +110,28 @@ export default function Studies() {
                         style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('studies')} </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <CustomFilters {...priviledges} searchFunction={searchStudies} page="studies"/>
+            <CustomFilters
+                {...priviledges}
+                initialValues={filtersInitValue}
+                searchFunction={searchStudies}
+                page="studies"
+            />
 
-            <CustomTable rows={rows} {...priviledges} page="studies" key={rows} handleOpenDialogStudy={handleDialogStudyOpen} handleOpenDialogPermissions={handleDialogPermissionsOpen}/>
+            <CustomTable
+                rows={rows}
+                {...priviledges}
+                page="studies"
+                key={rows}
+                selectionHandler={setTableSelection}
+                handleOpenDialogStudy={handleDialogStudyOpen}
+                handleLoginSheet={handleActionLoginSheet}
+                handleOpenDialogPermissions={handleDialogPermissionsOpen}
+            />
 
-            <CustomButton {...priviledges} page="studies"/>
+            <CustomButton
+                {...priviledges}
+                page="studies"
+            />
 
             <CustomDialogStudyInfo
                 open={dialogStudyOpen}

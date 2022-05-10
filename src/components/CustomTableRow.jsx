@@ -57,69 +57,6 @@ export default function CustomTableRow(props) {
    align-items: center !important;
  `;
 
-    const [thumbnail, setThumbnail] = useState({})
-    const [reports, setReports] = useState({})
-
-    useEffect(() => {
-        loadThumbnail(props.rows.key);
-        loadReports(props.rows.key);
-    }, []);
-
-    const loadThumbnail = async (study_id) => {
-        /** TEST TOKEN */
-        /*const refreshResponse = await PryAPI.refreshToken();
-        PryAPI.setRefreshToken(refreshResponse);*/
-
-        const rsp = await StudiesService.getThumbnail(study_id, 50);
-
-        if (rsp && rsp.data && rsp.data.size) {
-            const dataInfo = rsp.data;
-            let reader = new window.FileReader();
-            reader.readAsArrayBuffer(dataInfo);
-            reader.onload = function (e) {
-                const result = e.target.result;
-                const contentType = dataInfo.type;
-                //  Generate blob images, need parameters (byte arrays, file types)
-                const blob = new Blob([result], {type: contentType});
-                //  Create a URL that points to the type array using blob, url.createObjecturl is a method of new blob file, you can generate a normal URL, you can use it directly, such as in img.src
-                const url = window.URL.createObjectURL(blob);
-
-                setThumbnail(url);
-            }
-        }
-    }
-
-    const loadReports = async (study_uid) => {
-        /** TEST TOKEN */
-        /*const refreshResponse = await PryAPI.refreshToken();
-        PryAPI.setRefreshToken(refreshResponse);*/
-
-        const response = await StudiesService.getReports(study_uid);
-        if (response.error) {
-            console.log(response.error);
-            //window.location.href = "/login";
-            return;
-        }
-
-        setReports(response.items);
-    }
-
-    const handleDownloadReport = async (key) => {
-        const rsp = await StudiesService.openReport(key);
-        if (rsp && rsp.data && rsp.data.size) {
-            //Create a Blob from the PDF Stream
-            const file = new Blob(
-                [rsp.data],
-                {type: 'application/pdf'});
-
-            //Build a URL from the file
-            const fileURL = URL.createObjectURL(file);
-
-            //Open the URL on new Window
-            window.open(fileURL);
-        }
-    }
-
     const [actionMenuAchorEl, setActionMenuAchorEl] = React.useState(null);
     const actionMenuOpen = Boolean(actionMenuAchorEl);
     const handleActionMenuClick = (event) => {
@@ -171,11 +108,12 @@ export default function CustomTableRow(props) {
                 {
                     Object.values(props.columns).map((col) => {
 
-                        if (col === 'study' || col === 'accession_number') {
+                        if (col === 'study') {
                             return (
                                 <TableCell align="left" className={classes.tableCell}>
                                     <Thumbnail>
-                                        <img src={thumbnail} alt="thumbnail" style={{
+
+                                        <img src="" alt="thumbnail" style={{
                                             width: "50px",
                                             padding: "auto",
                                             display: 'inline-flex',
@@ -190,6 +128,10 @@ export default function CustomTableRow(props) {
                                 </TableCell>
                             )
                         }
+                        else if (col === 'accession_number') {
+                            return (<TableCell align="left" className={classes.tableCell}>{props.rows['st_accession_number']}
+                            </TableCell>)
+                        }
                         else if (col === "patient") {
                             return (<TableCell align="left" className={classes.tableCell}>{props.rows['p_name']+" ("+props.rows['p_id']+')'}<br/>{props.rows['p_birthdate']}
                             </TableCell>)
@@ -201,7 +143,10 @@ export default function CustomTableRow(props) {
                             return (<TableCell align="left" className={classes.tableCell}>{props.rows['st_description']}</TableCell>)
                         }
                         else if (col === "modality") {
-                            return (<TableCell align="left" className={classes.tableCell}>{props.rows['st_modalities']}</TableCell>)
+                            return (<TableCell align="left" className={classes.tableCell}>{props.rows['st_modalities']+""}</TableCell>)
+                        }
+                        else if (col === "referring_physician") {
+                            return (<TableCell align="left" className={classes.tableCell}>{props.rows['st_ref_physician']}</TableCell>)
                         }
                         else if (col === "facility") {
                             return (<TableCell align="left" className={classes.tableCell}>{props.rows['st_institution']}</TableCell>)
@@ -209,13 +154,16 @@ export default function CustomTableRow(props) {
                         else if (col === "lite_viewer") {
                             return (<TableCell align="left" className={classes.tableCell}>{''}</TableCell>)
                         }
+                        else if (col === "noi") {
+                            return (<TableCell align="left" className={classes.tableCell}>{props.rows['nb_series']+" series - "+props.rows['nb_images']+" image(s)"}</TableCell>)
+                        }
                         else if (col === "report") {
                             return (
                                 <TableCell align="left" className={classes.tableCell}>
                                     {
-                                        Object.values(reports).map((report) => {
+                                        /*Object.values(reports).map((report) => {
                                             return (<IconButton onClick={() => handleDownloadReport(report.key)}><PictureAsPdfRoundedIcon fontSize="small"/></IconButton>)
-                                        })
+                                        })*/
                                     }
                                 </TableCell>
                             )
@@ -271,8 +219,8 @@ export default function CustomTableRow(props) {
                         >
                             <MenuItem onClick={() => handleActionStudyInfo(props.rows)}>Study info</MenuItem>
                             <MenuItem onClick={() => handleActionLoginSheet(props.rows['key'])}>Login Sheet</MenuItem>
+                            <MenuItem onClick={() => handleActionAddPermission(props.rows['key'])}>Set Permission</MenuItem>
                             <MenuItem onClick={() => handleActionAddReport(props.rows['key'])}>Add report</MenuItem>
-                            <MenuItem onClick={() => handleActionAddPermission(props.rows['key'])}>Add Permission</MenuItem>
                         </Menu>
 
                         {/* {props.actions.includes("delete") && (
