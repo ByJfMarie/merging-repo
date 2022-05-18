@@ -1,11 +1,7 @@
 import * as React from 'react';
-import {Button, Menu, MenuItem, Grid, IconButton} from "@mui/material";
-import t from "../services/Translation";
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import {IconButton} from "@mui/material";
 import {useEffect, useState} from "react";
-import StudiesService from "../services/api/studies.service";
+import StudiesService from "../../services/api/studies.service";
 import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
 
 const ReportCell = (props) => {

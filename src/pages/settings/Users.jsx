@@ -1,17 +1,15 @@
 import React from 'react';
-import { Typography, Divider, Card, CardContent, TextField, Grid, Button, Dialog, Slide, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
+import { Typography, Divider, Card, CardContent, TextField, Grid, Button, Slide, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
-import SettingsTable from "../../components/SettingsTable";
+import TableUsers from "../../components/settings/users/TableUsers";
 import t from "../../services/Translation";
 
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import DialogAddEdit from "../../components/settings/users/DialogAddEdit";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+const Users = (props) => {
 
-const Users = () => {
     /** THEME */
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -32,30 +30,23 @@ const Users = () => {
     });
     const classes = useStyles();
 
-    /** HEADERS AND ROWS FOR THE TABLE */
-    const headers = ["login", "name", "email", "role", "status"];
-    const rows = [
-        { "row": ["Admin", "Bruno Volant", "bruno@fix-it.be", "Administrator", "Active"] },
-        { "row": ["Test", "Name Test", "test@fix-it.be", "Test", "Active"] },
-    ];
-
-    /** ROLE SELECT */
-    const [addRole, setAddRole] = React.useState('');
-
-    const handleChangeAddRole = (event) => {
-        setAddRole(event.target.value);
-    };
+    /** FILTERS */
+    const [filters, setFilters] = React.useState({
+        username: "",
+        role: "all",
+        status: "all"
+    });
+    const handleFiltersChange = (id, value) => {
+        setFilters({...filters, [id]: value});
+    }
 
     /** ADD/EDIT POP UP */
-    const [open, setOpen] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [userValues, setUserValues] = React.useState(null);
+    const toggleDialog = () => {setShowDialog(!showDialog);}
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    /** FORCE REFRESH */
+    const [forceRefresh, setForceRefresh] = React.useState(false);
 
     return (
         <React.Fragment>
@@ -74,81 +65,62 @@ const Users = () => {
 
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={4}>
-                            <TextField className={classes.field} id="filled-basic" label={t("username/email")} variant="standard" />
+                            <TextField className={classes.field} id="filled-basic" label={t("username/email")} variant="standard" onChange={(e) => {handleFiltersChange("username", e.target.value)}} />
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField className={classes.field} id="filled-basic" label={t("role")} variant="standard" />
+                            <FormControl className={classes.root} variant="standard" fullWidth >
+                                <InputLabel id="role" >{t("role")}</InputLabel>
+                                <Select
+                                    labelId="role"
+                                    id="role"
+                                    value={filters.role}
+                                    onChange={(e) => {handleFiltersChange("role", e.target.value)}}
+                                >
+                                    <MenuItem value="all">All</MenuItem>
+                                    <MenuItem value="administrator">Administrator</MenuItem>
+                                    <MenuItem value="physician">Physician</MenuItem>
+                                    <MenuItem value="patient">Patient</MenuItem>
+                                    <MenuItem value="radiologist">Radiologist</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField style={{ width: '100%' }} id="filled-basic" label={t("status")} variant="standard" />
+                            <FormControl className={classes.root} variant="standard" fullWidth >
+                                <InputLabel id="status" >{t("status")}</InputLabel>
+                                <Select
+                                    labelId="status"
+                                    id="status"
+                                    value={filters.status}
+                                    onChange={(e) => {handleFiltersChange("status", e.target.value)}}
+                                >
+                                    <MenuItem value="all">All</MenuItem>
+                                    <MenuItem value={true}>Active</MenuItem>
+                                    <MenuItem value={false}>Not active</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Grid>
 
                         <Grid item xs />
 
                         <Grid item >
-                            <Button variant="contained" component="label" onClick={handleClickOpen}>+ {t('add')}</Button>
+                            <Button variant="contained" component="label" onClick={toggleDialog}>+ {t('add')}</Button>
                         </Grid>
                     </Grid>
 
-                    <SettingsTable headers={headers} rows={rows} actions />
+                    <TableUsers
+                        filters={filters}
+                        forceRefresh={forceRefresh}
+                        editUser={(values) => {setUserValues(values); toggleDialog();}}
+                    />
                 </CardContent>
             </Card>
 
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={open}
-                onClose={handleClose}
-                TransitionComponent={Transition}
-            >
-                <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
-                    <CardContent>
-
-                        <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                            <Grid item xs={12}>
-                                <TextField className={classes.field} id="filled-basic" label={t("username")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField className={classes.field} id="filled-basic" label={t("name")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField className={classes.field} id="filled-basic" label={t("email")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.field} variant="standard">
-                                    <InputLabel id="demo-simple-select-standard-label">{t("role")}</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-standard-label"
-                                        id="demo-simple-select-standard"
-                                        value={addRole}
-                                        onChange={handleChangeAddRole}
-                                        label="Age"
-                                    >
-                                        <MenuItem value={10}>{t('administrator')}</MenuItem>
-                                        <MenuItem value={20}>{t('doctor')}</MenuItem>
-                                        <MenuItem value={20}>{t('radiologist')}</MenuItem>
-                                        <MenuItem value={30}>{t('patient')}</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField className={classes.field} id="filled-basic" label={t("email")} variant="standard" />
-                            </Grid>
-
-                            <Grid item xs />
-
-                            <Grid item >
-                                <Button className={classes.button} variant="contained" component="label" onClick={handleClose}>{t('cancel')}</Button>
-                            </Grid>
-
-                            <Grid item >
-                                <Button variant="contained" component="label">{t('save')}</Button>
-                            </Grid>
-                        </Grid>
-
-                    </CardContent>
-                </Card>
-            </Dialog>
+            <DialogAddEdit
+                userValues={userValues}
+                isOpen={showDialog}
+                toggle={toggleDialog}
+                onSave={() => {setForceRefresh(!forceRefresh);}}
+            />
 
         </React.Fragment>
     )

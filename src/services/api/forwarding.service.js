@@ -1,58 +1,8 @@
 import api, {URL_USER_AUTH} from "./api";
 import TokenService from "./token.service";
-import moment from "moment";
+import moment from 'moment';
 
-class QueryRetrieveService {
-
-    query(aet, filters) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        //Format dates
-        if (filters.from instanceof Date) filters.from = moment(filters.from).format("YYYY-MM-DD");
-        if (filters.to instanceof Date) filters.to = moment(filters.to).format("YYYY-MM-DD");
-
-        return api
-            .post('/v2/qr/studies.query/'+aet, JSON.stringify(filters))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
-
-    retrieve(retrieve_aet, move_aet, studies) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/qr/studies.retrieve/'+retrieve_aet+'/'+move_aet, JSON.stringify(studies))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
+class ForwardingService {
 
     getOrders(filter) {
         let state = {
@@ -61,7 +11,7 @@ class QueryRetrieveService {
         }
 
         return api
-            .post('/v2/qr/orders/', JSON.stringify(filter))
+            .post('/v2/forwarding/orders/', JSON.stringify(filter))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -77,14 +27,38 @@ class QueryRetrieveService {
             });
     }
 
-    cancelOrders(id) {
+    forward(aet, studies_uid) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/qr/orders.cancel/'+id)
+            .post('/v2/forwarding/orders.create/'+aet, JSON.stringify(studies_uid))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+
+    cancelOrders(series_uid, called_aet) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/forwarding/orders.cancel/'+series_uid+'/'+called_aet)
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -107,7 +81,7 @@ class QueryRetrieveService {
         }
 
         return api
-            .post('/v2/qr/orders.retry/'+id)
+            .post('/v2/forwarding/orders.retry/'+id)
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -124,4 +98,4 @@ class QueryRetrieveService {
     }
 }
 
-export default new QueryRetrieveService();
+export default new ForwardingService();

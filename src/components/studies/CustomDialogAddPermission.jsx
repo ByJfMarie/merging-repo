@@ -7,30 +7,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import {
-    Checkbox,
-    Divider,
-    Grid,
-    List,
-    ListItem, ListItemButton, ListItemIcon,
-    ListItemText,
-    Table, TableBody,
-    TableCell,
-    TableContainer, TableHead,
-    TableRow
-} from "@mui/material";
-import CustomTable from "./CustomTable";
-import AuthService from "../services/api/auth.service";
-import StudiesService from "../services/api/studies.service";
+import {Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
+import AuthService from "../../services/api/auth.service";
+import StudiesService from "../../services/api/studies.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import t from "../services/Translation";
-import CustomTableRow from "./CustomTableRow";
-import SearchBar from "./SearchBar";
+import SearchBar from "../SearchBar";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {

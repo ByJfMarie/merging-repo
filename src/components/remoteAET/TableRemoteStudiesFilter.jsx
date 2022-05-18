@@ -3,14 +3,16 @@ import { Grid, Chip, MenuItem, Input, FormGroup, FormControlLabel, Checkbox, Con
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
 import { TextField } from "@mui/material";
-import t from "../services/Translation";
+import t from "../../services/Translation";
 import BlockIcon from '@mui/icons-material/Block';
 import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import StudiesService from "../services/api/studies.service";
-import QRService from "../services/api/queryRetrieve.service";
+import moment from "moment";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 
-export default function CustomFilters(props) {
+export default function TableRemoteStudiesFilter(props) {
 
     /** MODALITY ELEMENTS */
     const names = [
@@ -123,31 +125,28 @@ export default function CustomFilters(props) {
         props.searchFunction(filter);
     };
 
-    /** PRESET BUTTON ACTION */
-    const handleDatePreset = (event, newAlignment) => {
-        const filter = {...values, alignment: newAlignment};
-        setValues(filter);
-    };
-
     /** PRESET BUTTON FUNCTION */
     const handleChangeDate = (param) => {
-        let filter = values;
+
+        let items = values;
+        items = {...items, date_preset: param};
+
         switch (param) {
-            case 1:
-                filter = {...values, from: formatDate(), to: formatDate() };
+            case 0:
+                items = {...items, from: calcDate(), to: calcDate()};
                 break;
-            case 2:
-                filter = {...values, from: formatDate(3), to: formatDate() };
+            case 3:
+                items = {...items, from: calcDate(3), to: calcDate()};
                 break;
             case '*':
-                filter = {...values, from: "1970-01-01", to: "2999-01-01" };
+                items = {...items, from: "", to: ""};
                 break;
             default:
-                filter = {...values, from: formatDate(param), to: formatDate() };
+                items = {...items, from: calcDate(param), to: calcDate()};
         }
 
-        setValues(filter);
-        props.searchFunction(filter);
+        setValues(items);
+        props.searchFunction(items);
     }
 
     /** RESET BUTTON */
@@ -157,12 +156,15 @@ export default function CustomFilters(props) {
     }
 
     /** SEND VALUE */
-    const handleSearch = (event) => {
-        let key = event.target.id;
-        let value = event.target.value;
-        if (event.target.id==="showDeleted") value = !values[key];
+    const handleSearch = (id, value) => {
+        let filter = values;
 
-        const filter = {...values, [key]: value};
+        if (id==='from' || id==='to') {
+            filter = {...filter, date_preset: ""};
+            if (value && !moment(value).isValid()) return;
+        }
+        filter = {...filter, [id]: value};
+
         setValues(filter);
         props.searchFunction(filter);
     }
@@ -225,24 +227,15 @@ export default function CustomFilters(props) {
         fullWidth
         value={values.birthdate}
         InputLabelProps={{ shrink: true }}
-        onChange={(e) => { handleSearch(e) }}
+        onChange={(e) => { handleSearch("birthdate", e.target.value) }}
     />)
 
     /** RETURN DATE (PARAM = REMOVE x DAYs) */
-    const formatDate = (remove = 0) => {
-        var today = new Date();
-        var d = new Date();
+    const calcDate = (remove = 0) => {
+        let today = new Date();
+        let d = new Date();
         d.setDate(today.getDate() - remove);
-        var month = '' + (d.getMonth() + 1);
-        var day = '' + d.getDate();
-        var year = d.getFullYear();
-
-        if (month.length < 2)
-            month = '0' + month;
-        if (day.length < 2)
-            day = '0' + day;
-
-        return [year, month, day].join('-');
+        return d;
     }
 
 
@@ -307,7 +300,7 @@ export default function CustomFilters(props) {
                                         variant="standard"
                                         fullWidth
                                         value={values[value]}
-                                        onChange={(e) => handleSearch(e)}
+                                        onChange={(e) => handleSearch(value, e.target.value)}
                                     />
                                 </Grid>)
 
@@ -320,7 +313,6 @@ export default function CustomFilters(props) {
                                 color="primary"
                                 exclusive
                                 value={values.date_preset}
-                                onChange={handleDatePreset}
                             >
                                 {props.settings[props.page].search.date_presets.map((value, key) => {
 
@@ -439,7 +431,7 @@ export default function CustomFilters(props) {
                                                     variant="standard"
                                                     fullWidth
                                                     value={values[value]}
-                                                    onChange={(e) => { handleSearch(e) }}
+                                                    onChange={(e) => { handleSearch(value, e.target.value) }}
                                                 />
                                             </Grid>)
 
@@ -456,43 +448,33 @@ export default function CustomFilters(props) {
 
                                     <Grid container justifyContent="center" style={{ display: "flex", justifyContent: "center", direction: "column", alignItems: "center" }} spacing={2}>
 
-                                        {/* <Grid item xs={6} md={3}> */}
-                                        <Grid item xs={6} md={6}>
-                                            <TextField
-                                                className={classes.root}
-                                                type="date"
-                                                id="from"
-                                                label={t('from')}
-                                                variant="standard"
-                                                value={values.from}
-                                                size="small"
-                                                fullWidth
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={(e) => {
-                                                    handleDatePreset(e, "");
-                                                    handleSearch(e);
-                                                }}
-                                            />
-                                        </Grid>
-
-                                        {/* <Grid item xs={6} md={3}> */}
-                                        <Grid item xs={6} md={6}>
-                                            <TextField
-                                                className={classes.root}
-                                                type="date"
-                                                id="to"
-                                                label={t('to')}
-                                                variant="standard"
-                                                value={values.to}
-                                                size="small"
-                                                fullWidth
-                                                InputLabelProps={{ shrink: true }}
-                                                onChange={(e) => {
-                                                    handleDatePreset(e, "");
-                                                    handleSearch(e);
-                                                }}
-                                            />
-                                        </Grid>
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <Grid item xs={6} md={6}>
+                                                <DesktopDatePicker
+                                                    id="from"
+                                                    label={t('from')}
+                                                    //inputFormat="yyyy.MM.dd"
+                                                    value={values.from || null}
+                                                    onChange={(date, keyboardInputValue) => {
+                                                        if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
+                                                        handleSearch("from", date);}
+                                                    }
+                                                    renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
+                                                    dateAdapter={AdapterDateFns}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6} md={6}>
+                                                <DesktopDatePicker
+                                                    id="to"
+                                                    label={t('to')}
+                                                    //inputFormat="yyyy.MM.dd"
+                                                    value={values.to || null}
+                                                    onChange={(date) => {handleSearch("to", date);}}
+                                                    renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
+                                                    dateAdapter={AdapterDateFns}
+                                                />
+                                            </Grid>
+                                        </LocalizationProvider>
 
                                     </Grid>
                                     <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>

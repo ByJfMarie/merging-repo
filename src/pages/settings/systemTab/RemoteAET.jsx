@@ -4,6 +4,7 @@ import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
 import SettingsTable from '../../../components/SettingsTable';
+import SettingsService from "../../../services/api/settings.service";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -58,6 +59,22 @@ export default function RemoteAET() {
         setOpen(false);
     };
 
+    const [settingsValue, setSettingsValue] = React.useState({});
+    const refreshSettings = async() => {
+        /*const response = await SettingsService.getRemoteAET();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items==null) return;
+        setSettingsValue(response.items);*/
+    }
+
+    React.useEffect(() => {
+        refreshSettings();
+    }, []);
 
     return (
         <>

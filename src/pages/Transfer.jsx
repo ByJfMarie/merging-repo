@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider, Typography } from "@mui/material";
 import { useTheme } from '@emotion/react';
 import t from "../services/Translation";
-import CustomStatusTable from '../components/CustomStatusTable'
+import TableTransferStatus from '../components/transfer/TableTransferStatus';
 import AuthService from "../services/api/auth.service";
 
 export default function Transfer() {
@@ -16,7 +16,7 @@ export default function Transfer() {
             <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('transfer')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-            <CustomStatusTable {...priviledges} page="transfer" />
+            <TableTransferStatus {...priviledges} page="transfer" />
             
         </React.Fragment>
     );

@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { Button, Menu, MenuItem, Grid } from "@mui/material";
-import t from "../services/Translation";
+import t from "../../services/Translation";
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import RetrieveButton from "./RetrieveButton";
+import AuthService from "../../services/api/auth.service";
 
-const CustomButton = (props) => {
+const TableRemoteStudiesActions = (props) => {
+
+    const priviledges = AuthService.getCurrentUser().priviledges;
 
     /** STYLE AND CLASSES */
     const theme = useTheme();
@@ -32,7 +35,7 @@ const CustomButton = (props) => {
         buttonMain: {
             backgroundColor: theme.palette.button.background + "!important"
         },
-        buttonDownload: {
+        buttonRetrieve: {
             [theme.breakpoints.down('sm')]: {
                 display: "none !important"
             },
@@ -55,9 +58,9 @@ const CustomButton = (props) => {
         <React.Fragment>
             <Grid container spacing={2}>
                 <Grid item sm={4} xs={12} className={classes.left} style={{ display: "flex" }}>
-                    {props.privileges.pages[props.page].searchTable.actionsTable.includes('download') && (
+                    {priviledges.privileges.pages[props.page].searchTable.actionsTable.includes('download') && (
                         <>
-                            <Button variant="outlined" size="medium" className={classes.buttonDownload} onClick={handleClick}>
+                            <Button variant="outlined" size="medium" className={classes.buttonRetrieve} onClick={handleClick}>
                                 {t('download')}
                                 <ArrowDropDownIcon />
                             </Button>
@@ -79,20 +82,9 @@ const CustomButton = (props) => {
                 </Grid>
                 <Grid item sm={8} xs={12} className={classes.right} style={{ display: "flex" }} >
                     {  // eslint-disable-next-line 
-                        props.privileges.pages[props.page].searchTable.actionsTable.map((value, key) => {
+                        priviledges.privileges.pages[props.page].searchTable.actionsTable.map((value, key) => {
                             if (value === "retrieve") {
                                 return (
-                                    /*<Button
-                                        key={value}
-                                        className={classes.buttonMain}
-                                        variant="outlined"
-                                        size="medium"
-                                        color="primary"
-                                        style={{ marginLeft: "10px" }}
-                                        onClick={props.retrieveFunction}
-                                    >
-                                        {t(value)}
-                                    </Button>*/
                                     <RetrieveButton
                                         key={value}
                                         retrieveFunction={props.retrieveFunction}
@@ -112,4 +104,4 @@ const CustomButton = (props) => {
     )
 }
 
-export default CustomButton
+export default TableRemoteStudiesActions

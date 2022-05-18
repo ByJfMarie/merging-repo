@@ -1,32 +1,19 @@
-import {
-    Box,
-    Checkbox, IconButton,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TablePagination,
-    TableRow
-} from "@mui/material";
+import {Box, IconButton, Paper, TableContainer,} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
-import t from "../services/Translation";
+import t from "../../services/Translation";
 import * as React from 'react';
-import {DataGrid, GridActionsCellItem, GridSelectionModel} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import styled from "styled-components/macro";
 import {useState} from "react";
-import Thumbnail from "./Thumbnail";
 import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
-import ReportCell from "./ReportCell";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
 import UpdateIcon from "@mui/icons-material/Update";
 import InfoIcon from '@mui/icons-material/Info';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import LockIcon from '@mui/icons-material/Lock';
 
-function CustomTable(props) {
+function TableRemoteStudies(props) {
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -99,58 +86,12 @@ function CustomTable(props) {
                 encodeHtml: false,
                 renderCell: (params) => {
                     return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                        <Thumbnail
-                            study_uid={params.row.st_uid}
-                            size={50}
-                        />
                         <Box style={{paddingLeft: '15px'}}>
                             {params.row.st_date+" - "+params.row.st_accession_number+" - "+params.row.st_modalities}<br/>
                             {params.row.st_description}<br/>
                             {params.row.nb_series+" serie(s) - "+params.row.nb_images+" image(s)"}
                         </Box>
                     </div>
-                }
-            });
-        }
-        else if (row === 'report') {
-            columns.push({
-                field: "report",
-                headerName: t(row),
-                flex: 15,
-                maxWidth: 150,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return (
-                        <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                            <ReportCell
-                                study_uid={params.row.st_uid}
-                            />
-                        </div>
-                    )
-                }
-            });
-        }
-        else if (row === 'permissions') {
-            columns.push({
-                field: "permissions",
-                headerName: t(row),
-                flex: 10,
-                maxWidth: 100,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return (
-                        <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                            {
-                                (props.rows['nb_shares']>0)
-                                    ? <IconButton><ShortcutIcon fontSize="small"/></IconButton>
-                                    : <IconButton><UpdateIcon fontSize="small"/></IconButton>
-                            }
-
-                            {
-                                (props.rows['nb_shares']>0)?(props.rows['nb_shares']+" share(s)"):"To be processed"
-                            }
-                        </div>
-                    )
                 }
             });
         }
@@ -330,4 +271,4 @@ function CustomTable(props) {
     )
 }
 
-export default CustomTable;
+export default TableRemoteStudies;

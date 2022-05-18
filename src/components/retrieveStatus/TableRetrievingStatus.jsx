@@ -7,15 +7,15 @@ import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
 import Chip, {ChipProps} from "@mui/material/Chip";
-import t from "../services/Translation";
+import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
-import ContactPageIcon from "@mui/icons-material/ContactPage";
-import LockIcon from "@mui/icons-material/Lock";
+import CancelIcon from '@mui/icons-material/Cancel';
+import ReplayIcon from '@mui/icons-material/Replay';
+import QRService from "../../services/api/queryRetrieve.service";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
-const CustomStatusTable = (props) => {
+const TableRetrievingStatus = (props) => {
 
     const statusComponent = (params) => {
 
@@ -58,7 +58,7 @@ const CustomStatusTable = (props) => {
                 }
 
                 {
-                    params.value === 3 && (
+                    params.value === 100 && (
                         <Tooltip title={params.row.error}>
                             <Chip
                                 variant="filled"
@@ -90,6 +90,26 @@ const CustomStatusTable = (props) => {
 
     const [rows, setRows] = React.useState(props.rows);
 
+    const refreshOrders = async() => {
+        const response = await QRService.getOrders({});
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items==null) return;
+
+        let tmp = [];
+        response.items.map((row, i) => {
+            tmp.push(row);
+        })
+        setRows(tmp);
+    }
+    React.useEffect(() => {
+        refreshOrders();
+    }, []);
+
     React.useEffect(() => {
         setRows(props.rows);
 
@@ -100,6 +120,28 @@ const CustomStatusTable = (props) => {
             return () => clearInterval(interval);
         }
     }, [props.rows]);
+
+    const handleRetry = async(id) => {
+        const response = await QRService.retryOrders(id);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        props.refresh();
+    }
+
+    const handleCancel = async (id) => {
+        const response = await QRService.cancelOrders(id);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        props.refresh();
+    }
 
     const column = [
         {
@@ -168,19 +210,19 @@ const CustomStatusTable = (props) => {
             getActions: (params) => {
 
                 let actions = [];
-                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
+                if (params.row.status === 100) {
                     actions.push(<GridActionsCellItem
-                        //icon={<InfoIcon/>}
-                        label="Cancel"
-                        onClick={() => console.log("cancel")}
+                        icon={<ReplayIcon/>}
+                        label="Retry"
+                        onClick={() => handleRetry(params.row.id)}
                         showInMenu
                     />);
                 }
-                if (params.row.status === 3) {
+                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
                     actions.push(<GridActionsCellItem
-                        //icon={<InfoIcon/>}
-                        label="Retry"
-                        onClick={() => console.log("cancel")}
+                        icon={<CancelIcon/>}
+                        label="Cancel"
+                        onClick={() => handleCancel(params.row.id)}
                         showInMenu
                     />);
                 }
@@ -221,4 +263,4 @@ const CustomStatusTable = (props) => {
         </React.Fragment>
     )
 }
-export default CustomStatusTable
+export default TableRetrievingStatus

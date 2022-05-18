@@ -1,6 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Divider, Tab, Tabs, Box, Card, CardContent, TextField, Stack, Button, Tooltip, Container } from '@mui/material';
+import {
+    Typography,
+    Divider,
+    Tab,
+    Tabs,
+    Box,
+    Card,
+    CardContent,
+    TextField,
+    Stack,
+    Button,
+    Tooltip,
+    Container,
+} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../services/Translation";
@@ -8,6 +21,7 @@ import PhoneInput from "react-phone-input-2";
 import Editor from "../../components/Editor.jsx";
 import "react-phone-input-2/lib/high-res.css";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import SettingsService from "../../services/api/settings.service";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -23,7 +37,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }} style={{ padding: "30px 0px" }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -84,9 +98,25 @@ export default function SiteDesign() {
     };
 
     const handleContentChange = (html, id) => {
-        setText({ ...text, [id]: html })
-        console.log(text)
+        setText({ ...text, [id]: html });
     }
+
+    const [settingsValue, setSettingsValue] = React.useState({});
+    const refreshSettings = async() => {
+        const response = await SettingsService.getDesign();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items==null) return;
+        setSettingsValue(response.items);
+    }
+
+    React.useEffect(() => {
+        refreshSettings();
+    }, []);
 
     return (
         <React.Fragment>
@@ -114,11 +144,19 @@ export default function SiteDesign() {
 
                         >
                             <Container maxWidth="sm" style={{ marginLeft: "0px",  padding: "0px" }}>
+                                <Box
+                                    sx=
+                                        {{
+                                            display: 'grid',
+                                            gap: 3,
+                                            gridTemplateRows: 'repeat(3, 1fr)'
+                                        }}
+                                >
                                 <Container maxWidth="xl" style={{ display: "flex", padding: "0px" }}>
-                                    <TextField className={classes.field} id="filled-basic" label={t("institution")} variant="standard" /><Tooltip title="Lorry mange tous les chocolats"><InfoOutlinedIcon style={{ display: "flex", marginLeft: '5px', marginTop: 'auto', marginBottom: 'auto' }} /></Tooltip>
+                                    <TextField className={classes.field} id="filled-basic" label={t("institution")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_institution'] || ''}/><Tooltip title="Lorry mange tous les chocolats"><InfoOutlinedIcon style={{ display: "flex", marginLeft: '5px', marginTop: 'auto', marginBottom: 'auto' }} /></Tooltip>
                                 </Container>
-                                <TextField className={classes.field} id="filled-basic" label={t("departement")} variant="standard" />
-                                <TextField className={classes.field} id="filled-basic" label={t("country")} variant="standard" />
+                                <TextField className={classes.field} id="filled-basic" label={t("departement")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_department'] || ''}/>
+                                <TextField className={classes.field} id="filled-basic" label={t("country")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_country'] || ''}/>
                                 <PhoneInput
                                     style={{ width: '100%' }}
                                     inputStyle={{ backgroundColor: theme.palette.textfield.background, color: theme.palette.textfield.text }}
@@ -126,14 +164,15 @@ export default function SiteDesign() {
                                     searchStyle={{ backgroundColor: theme.palette.textfield.background }}
                                     buttonStyle={{ backgroundColor: theme.palette.textfield.button }}
                                     containerStyle={{ backgroundColor: theme.palette.background.paper }}
-                                    value='+32'
+                                    value={settingsValue['WEB.general_phone' || '']}
                                 />
-                                <TextField className={classes.field} id="filled-basic" label={t("address")} variant="standard" />
-                                <TextField className={classes.field} id="filled-basic" label={t("city")} variant="standard" />
-                                <TextField className={classes.field} id="filled-basic" label={t("website")} variant="standard" />
-                                <TextField className={classes.field} id="filled-basic" label={t("doctor_id")} variant="standard" />
-                                <TextField className={classes.field} id="filled-basic" label={t("external_address")} variant="standard" />
-                                <TextField className={classes.field} id="filled-basic" label={t("patient_login_method")} variant="standard" />
+                                <TextField className={classes.field} id="filled-basic" label={t("address")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_address'] || ''}/>
+                                <TextField className={classes.field} id="filled-basic" label={t("city")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_city'] || ''}/>
+                                <TextField className={classes.field} id="filled-basic" label={t("website")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_website'] || ''}/>
+                                <TextField className={classes.field} id="filled-basic" label={t("doctor_id")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_doctor_id'] || ''}/>
+                                <TextField className={classes.field} id="filled-basic" label={t("external_address")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_external_web_link'] || ''}/>
+                                <TextField className={classes.field} id="filled-basic" label={t("patient_login_method")} variant="standard" InputLabelProps={{ shrink: true }} value={settingsValue['WEB.general_login_type'] || ''}/>
+                                </Box>
                             </Container>
 
                         </Stack>
@@ -176,40 +215,40 @@ export default function SiteDesign() {
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('disclaimer')} </Typography>
                     <Divider style={{ marginBottom: theme.spacing(2) }} />
-                    <Editor onChange={handleContentChange} id="disclaimer" />
+                    <Editor onChange={handleContentChange} id="disclaimer" defaultValue={settingsValue['WEB.disclaimer'] || ''}/>
                 </Card>
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('privacyPolicy')} </Typography>
                     <Divider style={{ marginBottom: theme.spacing(2) }} />
-                    <Editor onChange={handleContentChange} id="privacy" />
+                    <Editor onChange={handleContentChange} id="privacy" defaultValue={settingsValue['WEB.privacy_policy'] || ''} />
                 </Card>
 
                 <Card className={classes.card} >
                     <Typography variant="h6" align="left"> {t('copyright')} </Typography>
                     <Divider style={{ marginBottom: theme.spacing(2) }} />
-                    <Editor onChange={handleContentChange} id="copyright" />
+                    <Editor onChange={handleContentChange} id="copyright" defaultValue={settingsValue['WEB.copyright'] || ''} />
                 </Card>
 
 
                 <Card className={classes.card} >
                     <Typography variant="h6" align="left"> {t('FAQ')} </Typography>
                     <Divider style={{ marginBottom: theme.spacing(2) }} />
-                    <Editor onChange={handleContentChange} id="FAQ" />
+                    <Editor onChange={handleContentChange} id="FAQ" defaultValue={settingsValue['WEB.faq'] || ''} />
                 </Card>
 
 
                 <Card className={classes.card} >
                     <Typography variant="h6" align="left"> {t('terms&Conditions')} </Typography>
                     <Divider style={{ marginBottom: theme.spacing(2) }} />
-                    <Editor onChange={handleContentChange} id="terms" />
+                    <Editor onChange={handleContentChange} id="terms" defaultValue={settingsValue['WEB.terms'] || ''} />
                 </Card>
 
 
                 <Card className={classes.card} >
                     <Typography variant="h6" align="left"> {t('contactUs')} </Typography>
                     <Divider style={{ marginBottom: theme.spacing(2) }} />
-                    <Editor onChange={handleContentChange} id="contact" />
+                    <Editor onChange={handleContentChange} id="contact"  defaultValue={settingsValue['WEB.contactus'] || ''} />
                 </Card>
 
             </TabPanel>

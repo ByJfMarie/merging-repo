@@ -3,12 +3,13 @@ import { Divider, Typography, Container, Grid, FormControl, InputLabel, MenuItem
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../services/Translation";
-import CustomTable from '../components/CustomTable';
-import CustomFilters from '../components/CustomFilters';
-import CustomStatusTable from '../components/CustomStatusTable';
-import CustomButton from '../components/CustomButton';
+import TableRemoteStudies from '../components/remoteAET/TableRemoteStudies';
+import TableRemoteStudiesFilter from '../components/remoteAET/TableRemoteStudiesFilter';
+import TableRetrievingStatus from '../components/retrieveStatus/TableRetrievingStatus';
+import TableRemoteStudiesActions from '../components/remoteAET/TableRemoteStudiesActions';
 import AuthService from "../services/api/auth.service";
 import QRService from "../services/api/queryRetrieve.service";
+import QueryAETSelect from "../components/remoteAET/QueryAETSelect";
 
 export default function AET() {
   /** THEME */
@@ -30,20 +31,6 @@ export default function AET() {
   const classes = useStyles();
 
   const [currentAET, setCurrentAET] = React.useState("");
-  const [aets, setAets] = React.useState([]);
-  const loadAETs = async() => {
-    //Load aet list
-    const response = await QRService.listAet(true, false, false);
-    if (response.error) {
-      console.log(response.error);
-      return;
-    }
-
-    Object.keys(response.items).map((row, i) => {
-      aets.push(response.items[row]);
-    })
-    setAets([...aets], aets)
-  }
 
   const filtersInitValue = {
     patient_id: "",
@@ -110,10 +97,6 @@ export default function AET() {
   }
 
   React.useEffect(() => {
-    loadAETs()
-  }, []);
-
-  React.useEffect(() => {
     queryStudies(filters);
   }, [currentAET]);
 
@@ -148,24 +131,10 @@ export default function AET() {
 
         <FormControl className={classes.root} variant="filled"  style={{width : "300px"}}>
           <InputLabel id="aet" >AET</InputLabel>
-          <Select
-            labelId="aet"
-            id="aet"
-            value={currentAET}
-            onChange={(e) => { setCurrentAET(e.target.value); queryStudies(filters); }}
-          >
-
-            {aets &&
-            aets.map((aet) => (
-                <MenuItem
-                    key={aet.key}
-                    value={aet.title}
-                >
-                  {aet.description}
-                </MenuItem>
-            ))}
-
-          </Select>
+          <QueryAETSelect
+              currentAet={currentAET}
+              setCurrentAET={setCurrentAET}
+          />
         </FormControl>
 
       </Container>
@@ -181,14 +150,14 @@ export default function AET() {
 
       <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-      <CustomFilters
+      <TableRemoteStudiesFilter
           {...priviledges}
           initialValues={filtersInitValue}
           searchFunction={queryStudies}
           page="aet"
       />
 
-      <CustomTable
+      <TableRemoteStudies
           rows={rows}
           selectedRows={selectedRows}
           selectionHandler={setTableSelection}
@@ -196,13 +165,13 @@ export default function AET() {
           page="aet"
       />
 
-      <CustomButton
+      <TableRemoteStudiesActions
           {...priviledges}
           retrieveFunction={retrieveStudies}
           page="aet"
       />
       
-      <CustomStatusTable
+      <TableRetrievingStatus
           {...priviledges}
           page="aet"
           rows={rowsStatus}

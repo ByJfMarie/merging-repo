@@ -7,6 +7,7 @@ import { makeStyles } from "@mui/styles";
 import t from "../../services/Translation";
 import Editor from "../../components/Editor.jsx"
 import "react-phone-input-2/lib/high-res.css";
+import SettingsService from "../../services/api/settings.service";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -22,7 +23,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }} style={{ padding: "30px 0px" }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -51,7 +52,7 @@ export default function Emailing() {
         },
 
         gap: {
-            paddingLeft: "200px !important",
+            //paddingLeft: "200px !important",
 
             [theme.breakpoints.down('sm')]: {
                 padding: '24px !important',
@@ -74,6 +75,23 @@ export default function Emailing() {
     const handleContentChange = (html) => {
         console.log(html)
     }
+
+    const [settingsValue, setSettingsValue] = React.useState({});
+    const refreshSettings = async() => {
+        const response = await SettingsService.getEmailing();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items==null) return;
+        setSettingsValue(response.items);
+    }
+
+    React.useEffect(() => {
+        refreshSettings();
+    }, []);
 
     return (
         <React.Fragment>
@@ -105,24 +123,71 @@ export default function Emailing() {
                             >
                                 <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                                     <Grid item xs={9}>
-                                        <TextField className={classes.field} id="filled-basic" label={t("host")} variant="standard" />
+                                        <TextField
+                                            className={classes.field}
+                                            id="filled-basic"
+                                            label={t("host")}
+                                            variant="standard"
+                                            value={settingsValue['NOT.smtp_host'] || ''}
+                                        />
                                     </Grid>
                                     <Grid item xs={3}>
-                                        <TextField className={classes.field} id="filled-basic" label={t("port")} variant="standard" />
+                                        <TextField
+                                            className={classes.field}
+                                            id="filled-basic"
+                                            label={t("port")}
+                                            variant="standard"
+                                            value={settingsValue['NOT.smtp_port'] || ''}
+                                        />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <TextField style={{ width: '100%' }} id="filled-basic" label={t("from")} variant="standard" />
+                                        <TextField
+                                            style={{ width: '100%' }}
+                                            id="filled-basic"
+                                            label={t("from")}
+                                            variant="standard"
+                                            value={settingsValue['NOT.smtp_from'] || ''}
+                                        />
                                     </Grid>
                                 </Grid>
 
                                 <FormGroup>
-                                    <FormControlLabel control={<Checkbox defaultChecked />} label={t("authentification")} />
+                                    <FormControlLabel
+                                        control={<Checkbox checked={settingsValue['NOT.smtp_authentication']==='true' || false} />}
+                                        label={t("authentification")}
+                                    />
                                 </FormGroup>
 
-                                <Container className={classes.gap} style={{ marginBottom: '15px', display: " flex", flexDirection: 'column' }}>
-                                    <TextField style={{ maxWidth: '400px' }} id="filled-basic" label={t("user")} variant="standard" />
-                                    <TextField style={{ maxWidth: '400px' }} id="filled-basic" label={t("password")} variant="standard" />
-                                    <TextField style={{ maxWidth: '400px' }} id="filled-basic" label={t("security")} variant="standard" />
+                                <Container style={{ marginBottom: '15px', display: " flex", flexDirection: 'column' }}>
+                                    <Grid container direction="row-reverse" rowSpacing={2} style={{ marginBottom: '15px' }}>
+                                        <Grid item xs={11} >
+                                            <TextField
+                                                style={{ maxWidth: '400px' }}
+                                                id="filled-basic"
+                                                label={t("user")}
+                                                variant="standard"
+                                                value={settingsValue['NOT.smtp_user'] || ''}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={11}>
+                                            <TextField
+                                                style={{ maxWidth: '400px' }}
+                                                id="filled-basic"
+                                                label={t("password")}
+                                                variant="standard"
+                                                value={settingsValue['NOT.smtp_password'] || ''}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={11}>
+                                            <TextField
+                                                style={{ maxWidth: '400px' }}
+                                                id="filled-basic"
+                                                label={t("security")}
+                                                variant="standard"
+                                                value={settingsValue['NOT.smtp_security'] || ''}
+                                            />
+                                        </Grid>
+                                    </Grid>
                                 </Container>
 
                             </Stack>

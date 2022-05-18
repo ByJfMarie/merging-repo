@@ -1,5 +1,6 @@
 import api, {URL_USER_AUTH} from "./api";
 import TokenService from "./token.service";
+import moment from 'moment';
 
 class StudiesService {
 
@@ -8,6 +9,10 @@ class StudiesService {
             items: [],
             error: ''
         }
+
+        //Format dates
+        if (filters.from instanceof Date) filters.from = moment(filters.from).format("YYYY-MM-DD");
+        if (filters.to instanceof Date) filters.to = moment(filters.to).format("YYYY-MM-DD");
 
         return api
             .post('/v2/studies/search', JSON.stringify(filters))

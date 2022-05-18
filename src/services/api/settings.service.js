@@ -2,20 +2,16 @@ import api, {URL_USER_AUTH} from "./api";
 import TokenService from "./token.service";
 import moment from "moment";
 
-class QueryRetrieveService {
+class SettingsService {
 
-    query(aet, filters) {
+    getDesign() {
         let state = {
             items: [],
             error: ''
         }
 
-        //Format dates
-        if (filters.from instanceof Date) filters.from = moment(filters.from).format("YYYY-MM-DD");
-        if (filters.to instanceof Date) filters.to = moment(filters.to).format("YYYY-MM-DD");
-
         return api
-            .post('/v2/qr/studies.query/'+aet, JSON.stringify(filters))
+            .get('/v2/settings/design.get')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -31,14 +27,14 @@ class QueryRetrieveService {
             });
     }
 
-    retrieve(retrieve_aet, move_aet, studies) {
+    getUsers(filters) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/qr/studies.retrieve/'+retrieve_aet+'/'+move_aet, JSON.stringify(studies))
+            .post('/v2/settings/users.get', JSON.stringify(filters))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -54,14 +50,14 @@ class QueryRetrieveService {
             });
     }
 
-    getOrders(filter) {
+    addUser(fields) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/qr/orders/', JSON.stringify(filter))
+            .post('/v2/settings/users.add/', JSON.stringify(fields))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -77,14 +73,14 @@ class QueryRetrieveService {
             });
     }
 
-    cancelOrders(id) {
+    editUser(id, fields) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/qr/orders.cancel/'+id)
+            .post('/v2/settings/users.edit/'+id, JSON.stringify(fields))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -100,14 +96,83 @@ class QueryRetrieveService {
             });
     }
 
-    retryOrders(id) {
+    deleteUser(id) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/qr/orders.retry/'+id)
+            .post('/v2/settings/users.delete/'+id)
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    getEmailing() {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .get('/v2/settings/emailing.get')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    getLocalServer() {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .get('/v2/settings/localServer.get')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    getStorage() {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .get('/v2/settings/storage.get')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -124,4 +189,4 @@ class QueryRetrieveService {
     }
 }
 
-export default new QueryRetrieveService();
+export default new SettingsService();

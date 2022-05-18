@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {Button, Menu, MenuItem, Grid, IconButton} from "@mui/material";
-import t from "../services/Translation";
+import t from "../../services/Translation";
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import QRService from "../services/api/queryRetrieve.service";
+import AETService from "../../services/api/aet.service";
 
 const RetrieveButton = (props) => {
 
@@ -31,7 +31,7 @@ const RetrieveButton = (props) => {
     const [aets, setAets] = React.useState([]);
     const loadAETs = async() => {
         //Load aet list
-        const response = await QRService.listAet(false, true, false);
+        const response = await AETService.search(false, true, false);
         if (response.error) {
             console.log(response.error);
             return;

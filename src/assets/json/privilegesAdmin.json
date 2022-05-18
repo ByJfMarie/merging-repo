@@ -135,9 +135,10 @@
             "forwarding": {
                "statusTable": {
                   "columns": [
-                     "patient_name",
+                     "patient",
                      "description",
-                     "called_aet"
+                     "aet",
+                     "noi"
                   ]
                }
             },
