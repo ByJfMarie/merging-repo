@@ -7,16 +7,13 @@ const QueryAETSelect = (props) => {
     const [aets, setAets] = React.useState([]);
     const loadAETs = async() => {
         //Load aet list
-        const response = await AETService.search(true, false, false);
+        const response = await AETService.search(props.queryRetrieve || false, props.store || false, props.forward || false);
         if (response.error) {
             console.log(response.error);
             return;
         }
 
-        Object.keys(response.items).map((row, i) => {
-            aets.push(response.items[row]);
-        })
-        setAets([...aets], aets)
+        setAets(response.items);
     }
     React.useEffect(() => {
         loadAETs()

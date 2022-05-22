@@ -96,6 +96,98 @@ class ForwardingService {
                 return state;
             });
     }
+
+    getRules() {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .get('/v2/forwarding/rules.get/')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    addRule(fields) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/forwarding/rules.add/', JSON.stringify(fields))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    editRule(id, fields) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/forwarding/rules.edit/'+id, JSON.stringify(fields))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    deleteRule(id) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/forwarding/rules.delete/'+id)
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
 }
 
 export default new ForwardingService();

@@ -132,6 +132,7 @@ export default function AET() {
         <FormControl className={classes.root} variant="filled"  style={{width : "300px"}}>
           <InputLabel id="aet" >AET</InputLabel>
           <QueryAETSelect
+              queryRetrieve={true}
               currentAet={currentAET}
               setCurrentAET={setCurrentAET}
           />

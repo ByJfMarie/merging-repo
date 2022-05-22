@@ -3,8 +3,8 @@ import { Card, CardContent, FormGroup, FormControlLabel, TextField, Checkbox, Bu
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
-import SettingsTable from '../../../components/SettingsTable';
-import SettingsService from "../../../services/api/settings.service";
+import DialogAddEdit from "../../../components/settings/aets/DialogAddEdit";
+import TableAets from "../../../components/settings/aets/Table";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -39,42 +39,13 @@ export default function RemoteAET() {
     });
     const classes = useStyles();
 
-    /** HEADERS AND ROWS FOR THE TABLE */
-    const headers = ["aet", "ip", "port", "capabilities", "description"];
-    const rows = [
-        { "row": ["TEST", "localhost", "104", "Query | Retrieve | Forward", "AET de test"] },
-        { "row": ["", "", "", "", ""] },
-        { "row": ["", "", "", "", ""] },
-        { "row": ["", "", "", "", ""] },
-    ];
-
     /** ADD/EDIT POP UP */
-    const [open, setOpen] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [settingsValue, setSettingsValue] = React.useState(null);
+    const toggleDialog = () => {setShowDialog(!showDialog);}
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const [settingsValue, setSettingsValue] = React.useState({});
-    const refreshSettings = async() => {
-        /*const response = await SettingsService.getRemoteAET();
-
-        if (response.error) {
-            console.log(response.error);
-            return;
-        }
-
-        if (response.items==null) return;
-        setSettingsValue(response.items);*/
-    }
-
-    React.useEffect(() => {
-        refreshSettings();
-    }, []);
+    /** FORCE REFRESH */
+    const [forceRefresh, setForceRefresh] = React.useState(false);
 
     return (
         <>
@@ -90,55 +61,24 @@ export default function RemoteAET() {
                         <Grid item xs />
 
                         <Grid item className={classes.userNameGrid}>
-                            <Button variant="contained" component="label" onClick={handleClickOpen}>+ Add</Button><br />
+                            <Button variant="contained" component="label" onClick={toggleDialog}>+ Add</Button><br />
                         </Grid>
                     </Grid>
 
-                    <SettingsTable headers={headers} rows={rows} actions/>
+                    <TableAets
+                        filters={null}
+                        forceRefresh={forceRefresh}
+                        edit={(values) => {setSettingsValue(values); toggleDialog();}}
+                    />
                 </CardContent>
             </Card>
 
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={open}
-                onClose={handleClose}
-                TransitionComponent={Transition}
-            >
-                <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
-                    <CardContent>
-
-                        <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                            <Grid item xs={12} style={{ marginBottom: '10px' }}>
-                                <TextField className={classes.field} id="filled-basic" label={t("aet")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12} style={{ marginBottom: '10px' }}>
-                                <TextField className={classes.field} id="filled-basic" label={t("ip")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12} style={{ marginBottom: '10px' }}>
-                                <TextField className={classes.field} id="filled-basic" label={t("port")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12} style={{ marginBottom: '10px' }}>
-                                <TextField className={classes.field} id="filled-basic" label={t("capabilities")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12} style={{ marginBottom: '10px' }}>
-                                <TextField className={classes.field} id="filled-basic" label={t("description")} variant="standard" />
-                            </Grid>
-
-                            <Grid item xs />
-
-                            <Grid item >
-                                <Button variant="contained" className={classes.button} component="label" onClick={handleClose}>{t('cancel')}</Button>
-                            </Grid>
-
-                            <Grid item >
-                                <Button variant="contained" component="label">{t('save')}</Button>
-                            </Grid>
-                        </Grid>
-
-                    </CardContent>
-                </Card>
-            </Dialog>
+            <DialogAddEdit
+                values={settingsValue}
+                isOpen={showDialog}
+                toggle={toggleDialog}
+                onSave={() => {setForceRefresh(!forceRefresh);}}
+            />
         </>
     )
 }

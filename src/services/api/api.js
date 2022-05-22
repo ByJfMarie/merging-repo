@@ -37,11 +37,11 @@ miAPI.interceptors.request.use(
 // the token. On success, we will post the original request again.
 miAPI.interceptors.response.use(
 
-    (res) => {
+    res => {
         return res;
     },
 
-    async (err) => {
+    err => {
         //Log the error
         //console.log("error: "+JSON.stringify(error));
         const originalConfig = err.config;
@@ -52,15 +52,28 @@ miAPI.interceptors.response.use(
                 originalConfig._retry = true;
 
                 try {
-                    const rs = await axios.post(BASE_URL+URL_REFRESH_TOKEN, {
+                    axios.post(BASE_URL+URL_REFRESH_TOKEN, {
                         token: TokenService.getLocalAccessToken(),
                         refresh_token: TokenService.getLocalRefreshToken(),
+                    }).then(rs => {
+                        TokenService.updateLocalAccessToken(rs.data.acces_token);
+                        TokenService.updateLocalAccessTokenExp(rs.data.access_token_exp);
+                        TokenService.updateLocalRefreshToken(rs.data.refresh_token);
+                        return miAPI(originalConfig);
+                    }).catch(error => {
+                        if ((err.response.status == 401 || err.response.status == 403)) {
+                            let msg = "Your session has expired!";
+                            //if (error.response && error.response.statusText) error = _error.response.statusText;
+                            swal("Erreur", msg, "error", {
+                                buttons: false,
+                                timer: 2000,
+                            }).then(() => {
+                                AuthService.logout();
+                            })
+                            return;
+                        }
+                        return Promise.reject(error);
                     });
-
-                    TokenService.updateLocalAccessToken(rs.data.acces_token);
-                    TokenService.updateLocalAccessTokenExp(rs.data.access_token_exp);
-                    TokenService.updateLocalRefreshToken(rs.data.refresh_token);
-                    return miAPI(originalConfig);
                 } catch (_error) {
                     let error = "Your session has expired!";
                     //if (error.response && error.response.statusText) error = _error.response.statusText;

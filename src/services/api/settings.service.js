@@ -187,6 +187,121 @@ class SettingsService {
                 return state;
             });
     }
+
+    getAETs() {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .get('/v2/settings/aets.get')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    echoAET(id) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .get('/v2/settings/aets.echo/'+id)
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    addAET(fields) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/settings/aets.add/', JSON.stringify(fields))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    editAET(id, fields) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/settings/aets.edit/'+id, JSON.stringify(fields))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    deleteAET(id) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/settings/aets.delete/'+id)
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
 }
 
 export default new SettingsService();
