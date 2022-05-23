@@ -1,6 +1,4 @@
-import api, {URL_USER_AUTH} from "./api";
-import TokenService from "./token.service";
-import moment from "moment";
+import api from "./api";
 
 class AETService {
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Button, TextField, Grid, Dialog, Slide } from '@mui/material';
+import { Card, CardContent, Button, TextField, Grid } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
@@ -7,10 +7,6 @@ import TableTransferRules from '../../../components/settings/transfer/Table';
 import SettingsService from "../../../services/api/settings.service";
 import TransferService from "../../../services/api/transfer.service";
 import DialogAddEdit from "../../../components/settings/transfer/DialogAddEdit";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function Transfer() {
     const theme = useTheme();

@@ -16,7 +16,7 @@ import Transfer from './systemTab/Transfer';
 import Status from './systemTab/Status';
 import Plugins from './systemTab/Plugins';
 import RemoteAET from './systemTab/RemoteAET';
-import MediaBurner from './systemTab/MediaBurner';
+//import MediaBurner from './systemTab/MediaBurner';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

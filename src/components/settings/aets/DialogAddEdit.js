@@ -1,13 +1,11 @@
 import {
     Button,
     Card,
-    CardContent, Checkbox,
+    CardContent,
     Dialog,
-    FormControl, FormControlLabel, FormGroup, FormLabel,
+    FormControlLabel, FormLabel,
     Grid,
-    InputLabel,
-    MenuItem,
-    Select, Slide, Switch,
+    Slide, Switch,
     TextField
 } from "@mui/material";
 import t from "../../../services/Translation";

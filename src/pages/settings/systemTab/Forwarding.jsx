@@ -1,14 +1,10 @@
 import React from 'react';
-import { Card, Button, CardContent, Grid, TextField, Dialog, Slide } from '@mui/material';
+import { Card, Button, CardContent, Grid } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
 import TableForwarding from "../../../components/settings/forwarding/Table";
 import DialogAddEdit from "../../../components/settings/forwarding/DialogAddEdit";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function Storage() {
     const theme = useTheme();

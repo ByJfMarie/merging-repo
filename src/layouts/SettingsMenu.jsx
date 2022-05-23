@@ -24,7 +24,6 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';  
 import GroupIcon from '@mui/icons-material/Group';
-import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';

@@ -41,9 +41,9 @@ miAPI.interceptors.request.use(
 miAPI.interceptors.response.use(
 
     function (response) {
-        if (requestArray.length != 0) {
+        if (requestArray.length !== 0) {
             requestArray.forEach(function (x, i) {
-                if (response.config.url == x.url) {
+                if (response.config.url === x.url) {
                     requestArray.splice(i, 1);
                 }
             });
@@ -68,11 +68,11 @@ miAPI.interceptors.response.use(
                 })
                     .then(res => {
                         let response = res.data;
-                        if (res.status == 200) {
+                        if (res.status === 200) {
                             TokenService.updateLocalAccessToken(response.acces_token);
                             TokenService.updateLocalAccessTokenExp(response.access_token_exp);
                             TokenService.updateLocalRefreshToken(response.refresh_token);
-                            if (requestArray.length != 0) {
+                            if (requestArray.length !== 0) {
                                 requestArray.forEach(x => {
                                     try {
                                         x.headers.Authorization = `Bearer ${response.acces_token}`;

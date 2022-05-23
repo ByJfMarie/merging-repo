@@ -1,25 +1,10 @@
-import {Box, Card, CardContent, Divider, Grid, Link, Stack, Typography} from '@mui/material';
+import {Box, Card, CardContent, Divider, Grid, Stack, Typography} from '@mui/material';
 import {useTheme} from '@emotion/react';
-import {makeStyles} from "@mui/styles";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function Status() {
     const theme = useTheme();
-    const useStyles = makeStyles({
-        spaceAfter: {
-            marginRight: "15px !important",
-        },
-
-        div: {
-            display: "flex",
-            [theme.breakpoints.down('sm')]: {
-                flexDirection: 'flex'
-            }
-        }
-
-    });
-    const classes = useStyles();
 
     function serviceStatusComponent(name, operational) {
         return (

@@ -1,14 +1,11 @@
 import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import TransferService from "../../../services/api/transfer.service";
-import {Box, Chip, Grid, IconButton, Typography} from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
+import {Box, Chip} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ClearIcon from '@mui/icons-material/Clear';
-import SyncAltIcon from '@mui/icons-material/SyncAlt';
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
@@ -39,12 +36,7 @@ const TableTransferRules = (props) => {
         }
 
         if (response.items==null) return;
-
-        let tmp = [];
-        response.items.map((row, i) => {
-            tmp.push(row);
-        })
-        setRows(tmp);
+        setRows(response.items);
     }
 
     React.useEffect(() => {

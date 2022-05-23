@@ -1,15 +1,11 @@
 import React from 'react';
-import { Card, CardContent, FormGroup, FormControlLabel, TextField, Checkbox, Button, Grid, Dialog, Slide } from '@mui/material';
+import { Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
 import DialogAddEdit from "../../../components/settings/aets/DialogAddEdit";
 import TableAets from "../../../components/settings/aets/Table";
 import AETSettings from "../../../services/api/settings.service";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function RemoteAET() {
     const theme = useTheme();

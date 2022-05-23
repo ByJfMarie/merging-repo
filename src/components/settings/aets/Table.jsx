@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import AETService from "../../../services/api/aet.service";
 import {Grid, IconButton, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
@@ -39,12 +39,7 @@ const TableAets = (props) => {
         }
 
         if (response.items==null) return;
-
-        let tmp = [];
-        response.items.map((row, i) => {
-            tmp.push(row);
-        })
-        setRows(tmp);
+        setRows(response.items);
     }
 
     React.useEffect(() => {
