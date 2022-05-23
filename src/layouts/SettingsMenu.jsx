@@ -118,10 +118,12 @@ function SettingsMenu(props) {
                     <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("users")} />
                 </ListItem>
 
-                <ListItem button classes={{ selected: classes.selected }} component="a" href="/roles" selected={location === '/roles'}>
-                    <LockIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("roles_perm")} />
-                </ListItem>
+                {
+                    /*<ListItem button classes={{ selected: classes.selected }} component="a" href="/roles" selected={location === '/roles'}>
+                        <LockIcon />
+                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("roles_perm")} />
+                    </ListItem>   */
+                }
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/emailing" selected={location === '/emailing'} >
                     <EmailIcon />

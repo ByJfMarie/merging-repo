@@ -2,8 +2,8 @@ import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
-import AETService from "../../../services/api/aet.service";
-import {Grid, IconButton, Typography} from "@mui/material";
+import TransferService from "../../../services/api/transfer.service";
+import {Box, Chip, Grid, IconButton, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,7 +12,7 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
-const TableAets = (props) => {
+const TableTransferRules = (props) => {
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -31,7 +31,7 @@ const TableAets = (props) => {
     const [rows, setRows] = React.useState([]);
 
     const refresh = async() => {
-        const response = await AETService.getAETs();
+        const response = await TransferService.getRules();
 
         if (response.error) {
             console.log(response.error);
@@ -51,23 +51,12 @@ const TableAets = (props) => {
         refresh();
     }, [props.forceRefresh]);
 
-    const handleEcho = async (row) => {
-        const response = await AETService.echoAET(row.id);
-
-        if (response.error) {
-            console.log(response.error);
-            return;
-        }
-
-        console.log("Echo OK");
-    }
-
     const handleEdit = async (row) => {
         props.edit(row);
     }
 
     const handleDelete = async (id) => {
-        const response = await AETService.deleteAET(id);
+        const response = await TransferService.deleteRule(id);
 
         if (response.error) {
             console.log(response.error);
@@ -79,64 +68,31 @@ const TableAets = (props) => {
 
     const column = [
         {
-            field: "aet",
-            headerName: "AET",
+            field: "ae_title",
+            headerName: "AET Condition",
             flex: 3,
             minWidth: 110,
             description: "Login",
             headerAlign: "left",
-            renderCell: (params) => {
-                return <div style={{ lineHeight: "normal" }}>{params.row.title || ''} <br/> {params.row.description}</div>;
-            }
         },
         {
-            field: "ip",
-            headerName: "IP Address",
+            field: "destinations",
+            headerName: "Destination(s)",
             flex: 2,
             minWidth: 110,
             description: "Name",
-            headerAlign: "left"
-        },
-        {
-            field: "port",
-            headerName: "Port",
-            flex: 1,
-            minWidth: 110,
-            description: "Email",
-            headerAlign: "left",
-        },
-        {
-            field: "capabilities",
-            headerName: "Capabilities",
-            flex: 8,
-            minWidth: 110,
-            description: "Role",
             headerAlign: "left",
             renderCell: (params) => {
                 return (
-                        <Grid container spacing={0}>
-                            <Grid item xs={4}>
-                                {
-                                    (params.row.store)
-                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>Store</Typography>)
-                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>Store</Typography>)
-                                }
-                            </Grid>
-                            <Grid item xs={4}>
-                                {
-                                    (params.row.forward)
-                                        ? (<Typography><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>Forward</Typography>)
-                                        : (<Typography><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>Forward</Typography>)
-                                }
-                            </Grid>
-                            <Grid item xs={4}>
-                                {
-                                    (params.row.qr)
-                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>Q/R</Typography>)
-                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>Q/R</Typography>)
-                                }
-                            </Grid>
-                        </Grid>
+                    <div style={{ lineHeight: "normal" }}>
+                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                        {
+                            params.row.destinations.map((key) =>
+                                <Chip key={key} label={props.remoteSites[key] || key}/>
+                            )
+                        }
+                        </Box>
+                    </div>
                 )
             }
         },
@@ -146,13 +102,6 @@ const TableAets = (props) => {
             width: 80,
             getActions: (params) => {
                 let actions = [];
-
-                actions.push(<GridActionsCellItem
-                    icon={<SyncAltIcon/>}
-                    label="Echo"
-                    onClick={() => handleEcho(params.row)}
-                    showInMenu
-                />);
 
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
@@ -208,4 +157,4 @@ const TableAets = (props) => {
         </React.Fragment>
     )
 }
-export default TableAets
+export default TableTransferRules;

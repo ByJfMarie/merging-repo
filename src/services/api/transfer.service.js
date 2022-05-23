@@ -1,23 +1,17 @@
 import api, {URL_USER_AUTH} from "./api";
 import TokenService from "./token.service";
-import moment from "moment";
+import moment from 'moment';
 
-class AETService {
+class TransferService {
 
-    search(queryRetrieve, store, forward) {
+    getLocalSite() {
         let state = {
             items: [],
             error: ''
         }
 
-        let filters = {
-            qr: queryRetrieve,
-            store: store,
-            forward: forward
-        }
-
         return api
-            .post('/v2/aet/search', JSON.stringify(filters))
+            .get('/v2/transfer/localSite/')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -33,14 +27,14 @@ class AETService {
             });
     }
 
-    getAETs() {
+    getRemoteSites() {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/aet/list')
+            .get('/v2/transfer/remoteSites/')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -56,14 +50,14 @@ class AETService {
             });
     }
 
-    echoAET(id) {
+    getOrders(filter) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/aet/echo/'+id)
+            .post('/v2/transfer/orders/', JSON.stringify(filter))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -79,14 +73,14 @@ class AETService {
             });
     }
 
-    addAET(fields) {
+    transfer(aet, studies_uid) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/aet/add/', JSON.stringify(fields))
+            .post('/v2/transfer/orders.create/'+aet, JSON.stringify(studies_uid))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -102,14 +96,15 @@ class AETService {
             });
     }
 
-    editAET(id, fields) {
+
+    cancelOrders(study_uid, site_id) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/aet/edit/'+id, JSON.stringify(fields))
+            .post('/v2/transfer/orders.cancel/'+study_uid+'/'+site_id)
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -125,14 +120,106 @@ class AETService {
             });
     }
 
-    deleteAET(id) {
+    retryOrders(id) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/aet/delete/'+id)
+            .post('/v2/transfer/orders.retry/'+id)
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    getRules() {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .get('/v2/transfer/rules.get/')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    addRule(fields) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/transfer/rules.add/', JSON.stringify(fields))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    editRule(id, fields) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/transfer/rules.edit/'+id, JSON.stringify(fields))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    deleteRule(id) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/transfer/rules.delete/'+id)
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -149,4 +236,4 @@ class AETService {
     }
 }
 
-export default new AETService();
+export default new TransferService();

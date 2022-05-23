@@ -72,11 +72,13 @@ export default function System() {
                     <Tab label={t('remote_aets')} {...a11yProps(2)} />
                     <Tab label={t('forwarding')} {...a11yProps(3)} />
                     <Tab label={t('transfer')} {...a11yProps(4)} />
-                    <Tab label={t('media_burner')} {...a11yProps(5)} />
-                    <Tab label={t('reporting')} {...a11yProps(6)} />
-                    <Tab label={t('database')} {...a11yProps(7)} />
-                    <Tab label={t('plugins')} {...a11yProps(8)} />
-                    <Tab label={t('status')} {...a11yProps(9)} />
+                    {
+                        //<Tab label={t('media_burner')} {...a11yProps(5)} />
+                    }
+                    <Tab label={t('reporting')} {...a11yProps(5)} />
+                    <Tab label={t('database')} {...a11yProps(6)} />
+                    <Tab label={t('plugins')} {...a11yProps(7)} />
+                    <Tab label={t('status')} {...a11yProps(8)} />
                 </Tabs>
             </Box>
 
@@ -106,27 +108,27 @@ export default function System() {
             </TabPanel>
 
             {/* MEDIA BURNER */}
-            <TabPanel value={value} index={5} dir="ltr">
+            {/*<TabPanel value={value} index={5} dir="ltr">
                 <MediaBurner />
-            </TabPanel>
+            </TabPanel>*/}
 
             {/* REPORTING */}
-            <TabPanel value={value} index={6} dir="ltr">
+            <TabPanel value={value} index={5} dir="ltr">
                 <Reporting />
             </TabPanel>
 
             {/* DATABASE */}
-            <TabPanel value={value} index={7} dir="ltr">
+            <TabPanel value={value} index={6} dir="ltr">
                 <Database />
             </TabPanel>
 
             {/* PLUGINS */}
-            <TabPanel value={value} index={8} dir="ltr">
+            <TabPanel value={value} index={7} dir="ltr">
                 <Plugins />
             </TabPanel>
 
             {/* STATUS */}
-            <TabPanel value={value} index={9} dir="ltr">
+            <TabPanel value={value} index={8} dir="ltr">
                 <Status />
             </TabPanel>
 

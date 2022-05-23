@@ -143,12 +143,12 @@ function Menu(props) {
                     </ListItem>
                 )}
 
-                {items.indexOf('media_output') !== -1 && (
+                {/*items.indexOf('media_output') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/media_output" selected={location === '/media_output'}>
                         <MediationIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("media_output")} />
                     </ListItem>
-                )}
+                )*/}
 
             </List>
 

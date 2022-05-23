@@ -65,6 +65,7 @@ const DialogAddEdit = (props) => {
 
         props.toggle();
         setSaveValues({});
+        setAddMode(true);
         props.onSave();
     }
 
