@@ -5,6 +5,7 @@ import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
 import DialogAddEdit from "../../../components/settings/aets/DialogAddEdit";
 import TableAets from "../../../components/settings/aets/Table";
+import AETSettings from "../../../services/api/settings.service";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -39,6 +40,21 @@ export default function RemoteAET() {
     });
     const classes = useStyles();
 
+    const [config, setConfig] = React.useState({});
+    const refresh = async() => {
+        const response = await AETSettings.getRemoteAET();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setConfig(response.items);
+    }
+    React.useEffect(() => {
+        refresh();
+    }, []);
+
     /** ADD/EDIT POP UP */
     const [showDialog, setShowDialog] = React.useState(false);
     const [settingsValue, setSettingsValue] = React.useState(null);
@@ -54,7 +70,7 @@ export default function RemoteAET() {
                     <Grid container style={{ marginBottom: '15px' }}>
                         <Grid item className={classes.userNameGrid}>
                             <FormGroup>
-                                <FormControlLabel control={<Checkbox />} label={t("allow_all_remote_server")} />
+                                <FormControlLabel control={<Checkbox checked={config['DCMS.allow_all_scp']==='true' || false}/>} label={t("allow_all_remote_server")} />
                             </FormGroup>
                         </Grid>
 

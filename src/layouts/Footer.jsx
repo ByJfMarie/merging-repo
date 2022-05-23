@@ -1,7 +1,7 @@
-import { Container, Typography, Link } from "@mui/material";
-import { useTheme } from '@emotion/react';
+import {Container, Typography, Link} from "@mui/material";
+import {useTheme} from '@emotion/react';
 import t from "../services/Translation";
-import { makeStyles } from "@mui/styles";
+import {makeStyles} from "@mui/styles";
 
 export default function Footer() {
     /** THEME */
@@ -11,51 +11,50 @@ export default function Footer() {
 
     const useStyles = makeStyles({
         mainContainer: {
-
-    
-          [theme.breakpoints.up('md')]: {
-            padding: '0px calc(20px + 5%) 0px calc(260px + 5%) !important',
-          },
-    
-          [theme.breakpoints.between('sm', 'md')]: {
-            padding: '0px 5% 0px !important',
-          },
-    
-          [theme.breakpoints.down('sm')]: {
-            padding: '0px 2% 0px !important',
-          },
         },
-      });
-      const classes = useStyles();
+    });
+    const classes = useStyles();
+
+    const style = {
+        backgroundColor: theme.palette.menu.background,
+        //position: 'absolute !important',
+        position: 'fixed',
+        left: "0",
+        bottom: '0',
+        color: '#b0b0b0',
+        marginTop: '20px',
+        textAlign: "center",
+        width: "100%"
+    }
 
     return (
-        <Container className={classes.mainContainer} style={{ backgroundColor: theme.palette.menu.background, position: 'absolute !important', bottom: '0 !important',color: '#b0b0b0', marginTop: '20px', textAlign :"center" }}>
-            <Typography style={{ color: "#b0b0b0" }}>
+        <div className={classes.mainContainer} style={style}>
+            <Typography style={{color: "#b0b0b0"}}>
                 {year} © Perennity
             </Typography>
 
 
-            <Link style={{ margin: theme.spacing(1) }} underline="none">
+            <Link style={{margin: theme.spacing(1)}} underline="none">
                 {t('contactUs')}
             </Link>
 
             -
 
-            <Link style={{ margin: theme.spacing(1) }} underline="none">
+            <Link style={{margin: theme.spacing(1)}} underline="none">
                 FAQ
             </Link>
 
             -
 
-            <Link style={{ margin: theme.spacing(1) }} underline="none">
+            <Link style={{margin: theme.spacing(1)}} underline="none">
                 {t('privacyPolicy')}
             </Link>
 
             -
 
-            <Link style={{ margin: theme.spacing(1) }} underline="none">
+            <Link style={{margin: theme.spacing(1)}} underline="none">
                 {t("terms&Conditions")}
             </Link>
-        </Container>
+        </div>
     )
 }

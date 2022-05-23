@@ -27,98 +27,6 @@ class SettingsService {
             });
     }
 
-    getUsers(filters) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/users.get', JSON.stringify(filters))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
-
-    addUser(fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/users.add/', JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
-
-    editUser(id, fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/users.edit/'+id, JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
-
-    deleteUser(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/users.delete/'+id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
-
     getEmailing() {
         let state = {
             items: [],
@@ -188,14 +96,14 @@ class SettingsService {
             });
     }
 
-    getAETs() {
+    getRemoteAET() {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/settings/aets.get')
+            .get('/v2/settings/remoteAET.get')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -211,14 +119,14 @@ class SettingsService {
             });
     }
 
-    echoAET(id) {
+    getTransfer() {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/settings/aets.echo/'+id)
+            .get('/v2/settings/transfer.get')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -234,14 +142,14 @@ class SettingsService {
             });
     }
 
-    addAET(fields) {
+    getReporting() {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/settings/aets.add/', JSON.stringify(fields))
+            .get('/v2/settings/reporting.get')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -257,37 +165,14 @@ class SettingsService {
             });
     }
 
-    editAET(id, fields) {
+    getDatabase() {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/settings/aets.edit/'+id, JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
-
-    deleteAET(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/aets.delete/'+id)
+            .get('/v2/settings/database.get')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;

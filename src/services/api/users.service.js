@@ -1,23 +1,17 @@
 import api, {URL_USER_AUTH} from "./api";
 import TokenService from "./token.service";
-import moment from "moment";
+import moment from 'moment';
 
-class AETService {
+class UsersService {
 
-    search(queryRetrieve, store, forward) {
+    getUsers(filters) {
         let state = {
             items: [],
             error: ''
         }
 
-        let filters = {
-            qr: queryRetrieve,
-            store: store,
-            forward: forward
-        }
-
         return api
-            .post('/v2/aet/search', JSON.stringify(filters))
+            .post('/v2/users/list', JSON.stringify(filters))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -33,14 +27,14 @@ class AETService {
             });
     }
 
-    getAETs() {
+    addUser(fields) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/aet/list')
+            .post('/v2/users/add/', JSON.stringify(fields))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -56,14 +50,14 @@ class AETService {
             });
     }
 
-    echoAET(id) {
+    editUser(id, fields) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .get('/v2/aet/echo/'+id)
+            .post('/v2/users/edit/' + id, JSON.stringify(fields))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -79,14 +73,14 @@ class AETService {
             });
     }
 
-    addAET(fields) {
+    deleteUser(id) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post('/v2/aet/add/', JSON.stringify(fields))
+            .post('/v2/users/delete/' + id)
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -102,51 +96,6 @@ class AETService {
             });
     }
 
-    editAET(id, fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/aet/edit/'+id, JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
-
-    deleteAET(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/aet/delete/'+id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
-    }
 }
 
-export default new AETService();
+export default new UsersService();

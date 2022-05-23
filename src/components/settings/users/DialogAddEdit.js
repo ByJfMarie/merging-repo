@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import t from "../../../services/Translation";
 import React from "react";
-import SettingsService from "../../../services/api/settings.service";
+import UsersService from "../../../services/api/users.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 
@@ -55,8 +55,8 @@ const DialogAddEdit = (props) => {
     }
     const handleSaveUser = async() => {
         let response = null;
-        if (saveUserValues.login) response = await SettingsService.editUser(saveUserValues.login, saveUserValues);
-        else response = await SettingsService.addUser(saveUserValues);
+        if (saveUserValues.login) response = await UsersService.editUser(saveUserValues.login, saveUserValues);
+        else response = await UsersService.addUser(saveUserValues);
 
         if (response.error) {
             console.log(response.error);

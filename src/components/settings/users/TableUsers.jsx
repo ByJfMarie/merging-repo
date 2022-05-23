@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
-import SettingsService from "../../../services/api/settings.service";
+import UsersService from "../../../services/api/users.service";
 import {IconButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
@@ -29,7 +29,7 @@ const TableUsers = (props) => {
     const [rows, setRows] = React.useState([]);
 
     const refreshUsers = async(filters) => {
-        const response = await SettingsService.getUsers(filters);
+        const response = await UsersService.getUsers(filters);
 
         if (response.error) {
             console.log(response.error);
@@ -54,7 +54,7 @@ const TableUsers = (props) => {
     }
 
     const handleDelete = async (id) => {
-        const response = await SettingsService.deleteUser(id);
+        const response = await UsersService.deleteUser(id);
 
         if (response.error) {
             console.log(response.error);

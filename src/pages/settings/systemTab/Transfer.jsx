@@ -3,7 +3,10 @@ import { Card, CardContent, Button, TextField, Grid, Dialog, Slide } from '@mui/
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
-import SettingsTable from '../../../components/SettingsTable';
+import TableTransferRules from '../../../components/settings/transfer/Table';
+import SettingsService from "../../../services/api/settings.service";
+import TransferService from "../../../services/api/transfer.service";
+import DialogAddEdit from "../../../components/settings/transfer/DialogAddEdit";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -38,25 +41,40 @@ export default function Transfer() {
     });
     const classes = useStyles();
 
-    /** HEADERS AND ROWS FOR THE TABLE */
-    const headers = ["aet", "destination"];
-    const rows = [
-        { "row": ["", "" ] },
-        { "row": ["", "" ] },
-        { "row": ["", "" ] },
-        { "row": ["", "" ] },
-    ];
+    const [config, setConfig] = React.useState({});
+    const [remoteSites, setRemoteSites] = React.useState([]);
+    const refresh = async() => {
+        const response = await SettingsService.getTransfer();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setConfig(response.items);
+    }
+    const refreshRemoteSites = async() => {
+        const response = await TransferService.getRemoteSites();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setRemoteSites(response.items);
+    }
+    React.useEffect(() => {
+        refresh();
+        refreshRemoteSites();
+    }, []);
 
     /** ADD/EDIT POP UP */
-    const [open, setOpen] = React.useState(false);
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [settingsValue, setSettingsValue] = React.useState(null);
+    const toggleDialog = () => {setShowDialog(!showDialog);}
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    /** FORCE REFRESH */
+    const [forceRefresh, setForceRefresh] = React.useState(false);
 
 
     return (
@@ -64,22 +82,59 @@ export default function Transfer() {
             <CardContent>
                 <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                     <Grid item xs={12}>
-                        <TextField style={{ width: '100%' }} id="filled-basic" label={t("alias")} variant="standard" />
+                        <TextField
+                            style={{ width: '100%' }}
+                            id="filled-basic"
+                            label={t("alias")}
+                            variant="standard"
+                            value={config['DCMT.alias'] || ''}
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField style={{ width: '100%' }} id="filled-basic" label={t("working_folder_group")} variant="standard" />
+                        <TextField
+                            style={{ width: '100%' }}
+                            id="filled-basic"
+                            label={t("working_folder_group")}
+                            variant="standard"
+                            value={config['DCMT.sftp_container'] || ''}
+                        />
                     </Grid>
                     <Grid item xs={9}>
-                        <TextField className={classes.field} id="filled-basic" label={t("host")} variant="standard" />
+                        <TextField
+                            className={classes.field}
+                            id="filled-basic"
+                            label={t("host")}
+                            variant="standard"
+                            value={config['DCMT.sftp_host'] || ''}
+                        />
                     </Grid>
                     <Grid item xs={3}>
-                        <TextField className={classes.field} id="filled-basic" label={t("port")} variant="standard" />
+                        <TextField
+                            className={classes.field}
+                            id="filled-basic"
+                            label={t("port")}
+                            variant="standard"
+                            value={config['DCMT.sftp_port'] || ''}
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField style={{ width: '100%' }} id="filled-basic" label={t("user")} variant="standard" />
+                        <TextField
+                            style={{ width: '100%' }}
+                            id="filled-basic"
+                            label={t("user")}
+                            variant="standard"
+                            value={config['DCMT.sftp_user'] || ''}
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField style={{ width: '100%' }} id="filled-basic" label={t("password")} variant="standard" />
+                        <TextField
+                            style={{ width: '100%' }}
+                            id="filled-basic"
+                            label={t("password")}
+                            type="password"
+                            variant="standard"
+                            value={config['DCMT.sftp_password'] || ''}
+                        />
                     </Grid>
                 </Grid>
             </CardContent>
@@ -89,45 +144,26 @@ export default function Transfer() {
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs />
                         <Grid item >
-                            <Button variant="contained" component="label" style={{ marginTop: '15px' }} onClick={handleClickOpen}>+ {t('add')}</Button>
+                            <Button variant="contained" component="label" style={{ marginTop: '15px' }} onClick={toggleDialog}>+ {t('add')}</Button>
                         </Grid>
                     </Grid>
-                    <SettingsTable headers={headers} rows={rows} actions />
+
+                    <TableTransferRules
+                        remoteSites={remoteSites}
+                        filters={null}
+                        forceRefresh={forceRefresh}
+                        edit={(values) => {setSettingsValue(values); toggleDialog();}}
+                    />
                 </CardContent>
             </Card>
 
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={open}
-                onClose={handleClose}
-                TransitionComponent={Transition}
-            >
-                <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
-                    <CardContent>
-
-                        <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                            <Grid item xs={12}>
-                                <TextField className={classes.field} id="filled-basic" label={t("aet")} variant="standard" />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField className={classes.field} id="filled-basic" label={t("description")} variant="standard" />
-                            </Grid>
-
-                            <Grid item xs />
-
-                            <Grid item >
-                                <Button className={classes.button} variant="contained" component="label" onClick={handleClose}>{t('cancel')}</Button>
-                            </Grid>
-
-                            <Grid item >
-                                <Button variant="contained" component="label">{t('save')}</Button>
-                            </Grid>
-                        </Grid>
-
-                    </CardContent>
-                </Card>
-            </Dialog>
+            <DialogAddEdit
+                remoteSites={remoteSites}
+                values={settingsValue}
+                isOpen={showDialog}
+                toggle={toggleDialog}
+                onSave={() => {setForceRefresh(!forceRefresh);}}
+            />
 
         </>)
 }

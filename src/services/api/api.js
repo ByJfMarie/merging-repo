@@ -11,15 +11,18 @@ export const URL_USER_LOGOUT = "v2/token/logout";
 //Define the miAPI as axios
 const miAPI = axios.create({
     baseURL: BASE_URL,
+    timeout: 10000,
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json",
     },
 });
+const requestArray = [];
 
 miAPI.interceptors.request.use(
 
-    (config) => {
-        const token = TokenService.getLocalAccessToken();
+    async config => {
+        let token = await TokenService.getLocalAccessToken();
         if (token) {
             config.headers['Authorization'] = 'Bearer ' +token;
         }
@@ -37,58 +40,65 @@ miAPI.interceptors.request.use(
 // the token. On success, we will post the original request again.
 miAPI.interceptors.response.use(
 
-    res => {
-        return res;
+    function (response) {
+        if (requestArray.length != 0) {
+            requestArray.forEach(function (x, i) {
+                if (response.config.url == x.url) {
+                    requestArray.splice(i, 1);
+                }
+            });
+        }
+        return response;
     },
 
-    err => {
-        //Log the error
-        //console.log("error: "+JSON.stringify(error));
-        const originalConfig = err.config;
-        if (originalConfig.url !== URL_USER_AUTH && originalConfig.url !== URL_USER_LOGOUT && err.response) {
-
-            //Access Token was expired
-            if ((err.response.status == 401 || err.response.status == 403) && !originalConfig._retry) {
-                originalConfig._retry = true;
-
-                try {
-                    axios.post(BASE_URL+URL_REFRESH_TOKEN, {
-                        token: TokenService.getLocalAccessToken(),
-                        refresh_token: TokenService.getLocalRefreshToken(),
-                    }).then(rs => {
-                        TokenService.updateLocalAccessToken(rs.data.acces_token);
-                        TokenService.updateLocalAccessTokenExp(rs.data.access_token_exp);
-                        TokenService.updateLocalRefreshToken(rs.data.refresh_token);
-                        return miAPI(originalConfig);
-                    }).catch(error => {
-                        if ((err.response.status == 401 || err.response.status == 403)) {
-                            let msg = "Your session has expired!";
-                            //if (error.response && error.response.statusText) error = _error.response.statusText;
-                            swal("Erreur", msg, "error", {
-                                buttons: false,
-                                timer: 2000,
-                            }).then(() => {
-                                AuthService.logout();
-                            })
-                            return;
+    function (error) {
+        const originalRequest = error.config;
+        requestArray.push(originalRequest);
+        let reqData = {
+            token: TokenService.getLocalAccessToken(),
+            refresh_token: TokenService.getLocalRefreshToken()
+        };
+        if (error.response.status === 401 || error.response.status === 403) {
+            if (!originalRequest._retry) {
+                originalRequest._retry = true;
+                return axios({
+                    method: 'post',
+                    url: BASE_URL+URL_REFRESH_TOKEN,
+                    data: reqData
+                })
+                    .then(res => {
+                        let response = res.data;
+                        if (res.status == 200) {
+                            TokenService.updateLocalAccessToken(response.acces_token);
+                            TokenService.updateLocalAccessTokenExp(response.access_token_exp);
+                            TokenService.updateLocalRefreshToken(response.refresh_token);
+                            if (requestArray.length != 0) {
+                                requestArray.forEach(x => {
+                                    try {
+                                        x.headers.Authorization = `Bearer ${response.acces_token}`;
+                                        miAPI(x)
+                                    } catch (e) {
+                                        console.log(e)
+                                    }
+                                });
+                            }
+                            return miAPI(originalRequest);
                         }
-                        return Promise.reject(error);
-                    });
-                } catch (_error) {
-                    let error = "Your session has expired!";
-                    //if (error.response && error.response.statusText) error = _error.response.statusText;
-                    swal("Erreur", error, "error", {
-                        buttons: false,
-                        timer: 2000,
-                    }).then(() => {
-                        AuthService.logout();
                     })
-                    return;
-                }
+                    .catch(err => {
+                        let error = "Your session has expired!";
+                        //if (error.response && error.response.statusText) error = _error.response.statusText;
+                        swal("Erreur", error, "error", {
+                            buttons: false,
+                            timer: 2000,
+                        }).then(() => {
+                            AuthService.logout();
+                        })
+                        return;
+                    });
             }
         }
-
-        return Promise.reject(err);
+        return Promise.reject(error);
     }
 );
 
