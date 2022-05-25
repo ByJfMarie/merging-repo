@@ -1,5 +1,4 @@
-import api, {URL_USER_AUTH} from "./api";
-import TokenService from "./token.service";
+import api from "./apiManager";
 import moment from 'moment';
 
 class StudiesService {

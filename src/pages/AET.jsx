@@ -96,7 +96,7 @@ export default function AET() {
     React.useEffect(() => {
         if (!currentAET) return;
         queryStudies(filters);
-    });
+    }, [currentAET]);
 
 
     //Status

@@ -17,7 +17,7 @@ const QueryAETSelect = (props) => {
     }
     React.useEffect(() => {
         loadAETs()
-    });
+    }, []);
 
     return (
         <Select

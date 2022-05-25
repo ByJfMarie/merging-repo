@@ -31,7 +31,7 @@ const RetrieveButton = (props) => {
     const [aets, setAets] = React.useState([]);
     const loadAETs = async() => {
         //Load aet list
-        const response = await AETService.search(false, true, false);
+        const response = await AETService.search(true, false, false);
         if (response.error) {
             console.log(response.error);
             return;

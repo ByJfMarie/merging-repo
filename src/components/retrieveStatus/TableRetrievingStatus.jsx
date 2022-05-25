@@ -89,27 +89,6 @@ const TableRetrievingStatus = (props) => {
     const classes = useStyles();
 
     const [rows, setRows] = React.useState(props.rows);
-
-    const refreshOrders = async() => {
-        const response = await QRService.getOrders({});
-
-        if (response.error) {
-            console.log(response.error);
-            return;
-        }
-
-        if (response.items==null) return;
-
-        let tmp = [];
-        response.items.map((row, i) => {
-            tmp.push(row);
-        })
-        setRows(tmp);
-    }
-    React.useEffect(() => {
-        refreshOrders();
-    }, []);
-
     React.useEffect(() => {
         setRows(props.rows);
 

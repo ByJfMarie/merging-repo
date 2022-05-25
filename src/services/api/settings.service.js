@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "./apiManager";
 
 class SettingsService {
 
@@ -10,6 +10,29 @@ class SettingsService {
 
         return api
             .get('/v2/settings/design.get')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    saveDesign(settings) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/settings/design.set', JSON.stringify(settings))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
