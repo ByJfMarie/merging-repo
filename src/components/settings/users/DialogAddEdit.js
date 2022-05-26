@@ -42,21 +42,26 @@ const DialogAddEdit = (props) => {
     });
     const classes = useStyles();
 
-    const [saveUserValues, setSaveUserValues] = React.useState({
+    const [addMode, setAddMode] = React.useState(true);
+    /*const [saveUserValues, setSaveUserValues] = React.useState({
         role: ''
-    });
+    });*/
 
+    const getUserValue = (id) => {
+        if (!props.values) return '';
+        return props.values[id] || '';
+    }
     const handleSaveUserChange = (id, value) => {
-        setSaveUserValues({...saveUserValues, [id]: value});
+        props.setValues({...props.values, [id]: value});
     }
     const handleCancel = () => {
         props.toggle();
-        setSaveUserValues({role: ''});
+        props.setValues({role: ''});
     }
     const handleSaveUser = async() => {
         let response = null;
-        if (saveUserValues.login) response = await UsersService.editUser(saveUserValues.login, saveUserValues);
-        else response = await UsersService.addUser(saveUserValues);
+        if (!addMode) response = await UsersService.editUser(props.values.login, props.values);
+        else response = await UsersService.addUser(props.values);
 
         if (response.error) {
             console.log(response.error);
@@ -64,14 +69,21 @@ const DialogAddEdit = (props) => {
         }
 
         props.toggle();
-        setSaveUserValues({role: ''});
+        props.setValues({role: ''});
+        setAddMode(true);
         props.onSave();
     }
 
     React.useEffect(() => {
-        if (!props.userValues) return;
-        setSaveUserValues(props.userValues);
-    }, [props.userValues]);
+        if (!props.isOpen) return;
+
+        if (!props.values || !props.values.login) {
+            setAddMode(true);
+            return;
+        }
+
+        setAddMode(false);
+    }, [props.isOpen]);
 
 
     return (
@@ -92,10 +104,10 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("username")}
                                 variant="standard"
-                                value={saveUserValues.login || ''}
+                                value={getUserValue("login")}
                                 onChange={(e) => {handleSaveUserChange('login', e.target.value);}}
                                 InputProps={{
-                                    readOnly: saveUserValues.login,
+                                    readOnly: !addMode,
                                 }}
                             />
                         </Grid>
@@ -105,7 +117,7 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("name")}
                                 variant="standard"
-                                value={saveUserValues.first_name || ''}
+                                value={getUserValue("first_name")}
                                 onChange={(e) => {handleSaveUserChange('first_name', e.target.value);}}
                             />
                         </Grid>
@@ -115,7 +127,7 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("email")}
                                 variant="standard"
-                                value={saveUserValues.mail || ''}
+                                value={getUserValue("mail")}
                                 onChange={(e) => {handleSaveUserChange('mail', e.target.value);}}
                             />
                         </Grid>
@@ -125,7 +137,7 @@ const DialogAddEdit = (props) => {
                                 <Select
                                     labelId="demo-simple-select-standard-label"
                                     id="demo-simple-select-standard"
-                                    value={saveUserValues.role}
+                                    value={getUserValue("role")}
                                     onChange={(e) => {handleSaveUserChange('role', e.target.value);}}
                                     label="Age"
                                 >
@@ -135,14 +147,6 @@ const DialogAddEdit = (props) => {
                                     <MenuItem value="radiologist">Radiologist</MenuItem>
                                 </Select>
                             </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                className={classes.field}
-                                id="filled-basic"
-                                label={t("email")}
-                                variant="standard"
-                            />
                         </Grid>
 
                         <Grid item xs />

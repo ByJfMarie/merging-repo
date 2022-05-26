@@ -1,6 +1,7 @@
 import axios from 'axios';
 import createAuthRefreshInterceptor, {AxiosAuthRefreshOptions} from 'axios-auth-refresh';
 import AuthService from "./auth.service";
+import swal from "sweetalert";
 
 export const BASE_URL = "http://localhost:9999/";
 export const URL_REFRESH_TOKEN = "v2/token/refresh";
@@ -48,7 +49,14 @@ const refreshAuthLogic = failedRequest =>
             return Promise.resolve();
         })
         .catch(() => {
-            AuthService.logout();
+            let error = "Your session has expired!";
+            //if (error.response && error.response.statusText) error = _error.response.statusText;
+            swal("Erreur", error, "error", {
+                buttons: false,
+                timer: 2000,
+            }).then(() => {
+                AuthService.logout();
+            })
         });
 
 // Instantiate the interceptor

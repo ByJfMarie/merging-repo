@@ -71,6 +71,29 @@ class SettingsService {
             });
     }
 
+    saveEmailing(settings) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/settings/emailing.set', JSON.stringify(settings))
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
     getLocalServer() {
         let state = {
             items: [],
@@ -79,6 +102,29 @@ class SettingsService {
 
         return api
             .get('/v2/settings/localServer.get')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = error.response ? error.response.data : "Unknown error";
+            })
+            .then(() => {
+                return state;
+            });
+    }
+
+    saveLocalServer(settings) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('/v2/settings/localServer.set', JSON.stringify(settings))
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;

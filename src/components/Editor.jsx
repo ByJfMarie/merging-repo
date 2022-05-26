@@ -5,6 +5,9 @@ import "react-quill/dist/quill.snow.css";
 export default function Editor(props) {
 
     const [text, setText] = useState(props.defaultValue === undefined ? "" : props.defaultValue)
+    React.useEffect(() => {
+        setText(props.defaultValue);
+    }, [props.defaultValue]);
 
     const modules = {
         toolbar: [

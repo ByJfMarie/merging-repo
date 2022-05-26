@@ -59,58 +59,59 @@ export default function Storage() {
     }, []);
 
     return (
-        <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", paddingLeft: '10px', paddingRight: '0px' }}>
+        <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
             <CardContent>
-                <Stack
-                    component="form"
-                    sx={{
-                        width: '100%'
-                    }}
-                    spacing={2}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                        <TextField
-                            className={classes.field}
-                            id="filled-basic"
-                            label={t("storage_path")}
-                            variant="standard"
-                            value={settingsValue['DCMS.storage_folder'] || ''}
-                        />
-                        <TextField
-                            className={classes.field}
-                            id="filled-basic"
-                            label={t("secondary_path")}
-                            variant="standard"
-                            value={settingsValue['DCMS.storage_folder_secondary'] || ''}
-                        />
-                    </Grid>
-
-                    <div style={{ marginBottom: '15px', display: "flex" }}>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={<Checkbox checked={settingsValue['SDS.keep_images']==='true' || false} />}
-                                label={t("keep_images_for")}
+                <Container maxWidth="sm" style={{ marginLeft: "0px", marginBottom: '15px', paddingLeft : "0px" }}>
+                    <Grid container rowSpacing={2} style={{ marginBottom: '15px' }}>
+                        <Grid item xs={12} >
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("storage_path")}
+                                variant="standard"
+                                value={settingsValue['DCMS.storage_folder'] || ''}
                             />
-                        </FormGroup>
-                        <TextField
-                            style={{ width: '50px' }}
-                            id="filled-basic"
-                            variant="standard"
-                            value={settingsValue['SDS.keep_images_retention'] || ''}
-                        />
-                        <Typography style={{ marginLeft: '10px' ,marginTop: '8px' }}>{t("days")}</Typography>
-                    </div>
-
-                    <FormGroup>
-                            <FormControlLabel
-                                control={<Checkbox checked={settingsValue['SDS.use_treshold']==='true' || false} />}
-                                label={t("capacity_treshold")}
+                        </Grid>
+                        <Grid item xs={12} >
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("secondary_path")}
+                                variant="standard"
+                                value={settingsValue['DCMS.storage_folder_secondary'] || ''}
                             />
-                        </FormGroup>
-
-                    <Container maxWidth="md" >
+                        </Grid>
+                        <Grid item xs={12} >
+                            <Grid container>
+                                <Grid item xs="auto">
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={<Checkbox checked={settingsValue['SDS.keep_images']==='true' || false} />}
+                                            label={t("keep_images_for")}
+                                        />
+                                    </FormGroup>
+                                </Grid>
+                                <Grid item xs="auto">
+                                    <TextField
+                                        style={{ width: '50px' }}
+                                        id="filled-basic"
+                                        variant="standard"
+                                        value={settingsValue['SDS.keep_images_retention'] || ''}
+                                    />
+                                </Grid>
+                                <Grid item xs="auto">
+                                    <Typography style={{ marginLeft: '10px' ,marginTop: '8px' }}>{t("days")}</Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} >
+                            <FormGroup>
+                                <FormControlLabel
+                                    control={<Checkbox checked={settingsValue['SDS.use_treshold']==='true' || false} />}
+                                    label={t("capacity_treshold")}
+                                />
+                            </FormGroup>
+                        </Grid>
                         <Grid container direction="row-reverse" rowSpacing={2} style={{ marginBottom: '15px' }}>
                             <Grid item xs={11} >
                                 <TextField
@@ -131,10 +132,8 @@ export default function Storage() {
                                 />
                             </Grid>
                         </Grid>
-                    </Container>
-
-
-                </Stack>
+                    </Grid>
+                </Container>
             </CardContent>
         </Card>)
 }

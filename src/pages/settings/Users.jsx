@@ -103,7 +103,7 @@ const Users = (props) => {
                         <Grid item xs />
 
                         <Grid item >
-                            <Button variant="contained" component="label" onClick={toggleDialog}>+ {t('add')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {setUserValues({}); toggleDialog();}}>+ {t('add')}</Button>
                         </Grid>
                     </Grid>
 
@@ -116,7 +116,8 @@ const Users = (props) => {
             </Card>
 
             <DialogAddEdit
-                userValues={userValues}
+                values={userValues}
+                setValues={setUserValues}
                 isOpen={showDialog}
                 toggle={toggleDialog}
                 onSave={() => {setForceRefresh(!forceRefresh);}}

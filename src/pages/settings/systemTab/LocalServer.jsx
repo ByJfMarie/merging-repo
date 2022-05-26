@@ -1,4 +1,3 @@
-
 import {
     Card,
     CardContent,
@@ -8,10 +7,10 @@ import {
     FormControlLabel,
     Checkbox,
     Container,
-    Grid
+    Grid, Button
 } from '@mui/material';
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
+import {useTheme} from '@emotion/react';
+import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
 import * as React from "react";
 import SettingsService from "../../../services/api/settings.service";
@@ -19,6 +18,11 @@ import SettingsService from "../../../services/api/settings.service";
 export default function LocalServer() {
     const theme = useTheme();
     const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        },
         field: {
             width: '100%'
         },
@@ -42,8 +46,9 @@ export default function LocalServer() {
     });
     const classes = useStyles();
 
+    /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
-    const refreshSettings = async() => {
+    const refreshSettings = async () => {
         const response = await SettingsService.getLocalServer();
 
         if (response.error) {
@@ -51,7 +56,7 @@ export default function LocalServer() {
             return;
         }
 
-        if (response.items==null) return;
+        if (response.items == null) return;
         setSettingsValue(response.items);
     }
 
@@ -59,154 +64,276 @@ export default function LocalServer() {
         refreshSettings();
     }, []);
 
+    const getSettingsValue = (id) => {
+        if (!settingsValue[id]) return '';
+        return settingsValue[id]['value'] || '';
+    }
+    const handleSettingsChange = (id, value) => {
+        let cfg = settingsValue[id];
+        if (!cfg) return;
+        cfg['value'] = value;
+        setSettingsValue({...settingsValue, [id]: cfg});
+    }
+    const handleSettingsTSChange = (id, value) => {
+        let cfg = settingsValue['DCMS.accepted_ts'];
+        if (!cfg) return;
+        cfg['value'][id] = value;
+        setSettingsValue({...settingsValue, ['DCMS.accepted_ts']: cfg});
+    }
+
+    const handleSave = async () => {
+        const response = await SettingsService.saveLocalServer(settingsValue);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        refreshSettings();
+    };
+
+    const handleCancel = () => {
+        refreshSettings();
+    };
+
     return (
-        <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
-            <CardContent>
-                <Container maxWidth="sm" style={{ marginLeft: "0px", marginBottom: '15px', paddingLeft : "0px" }}>
-                    <Grid container direction="row-reverse" rowSpacing={2} style={{ marginBottom: '15px' }}>
-                        <Grid item xs={12} >
-                            <TextField
-                                className={classes.field} id="filled-basic"
-                                label={t("aet")}
-                                variant="standard"
-                                value={settingsValue['DCMS.server_aet'] || ''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} >
-                            <TextField
-                                style={{ width: '100%' }}
-                                id="filled-basic"
-                                label={t("port")}
-                                variant="standard"
-                                value={settingsValue['DCMS.port_dicom'] || ''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} >
-                            <TextField
-                                style={{ width: '100%' }}
-                                id="filled-basic"
-                                label={t("latency")}
-                                variant="standard"
-                                value={settingsValue['DCMS.latency_time'] || ''}
-                            />
-                        </Grid>
+        <>
+            <Card className={classes.card} style={{margin: "0 0 20px 0"}}>
+                <Grid container spacing={2} direction={"row-reverse"}>
+                    <Grid item xs="auto">
+                        <Button variant="contained" component="label" onClick={() => {
+                            handleSave()
+                        }}>{t('save')}</Button>
                     </Grid>
-                </Container>
+                    <Grid item xs="auto">
+                        <Button variant="outlined" component="label"
+                                onClick={handleCancel}>{t('cancel')}</Button>
+                    </Grid>
+                    <Grid item xs>
+                    </Grid>
+                </Grid>
+            </Card>
+            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+                <CardContent>
+                    <Container maxWidth="sm" style={{marginLeft: "0px", marginBottom: '15px', paddingLeft: "0px"}}>
+                        <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    className={classes.field} id="filled-basic"
+                                    label={t("aet")}
+                                    variant="standard"
+                                    value={settingsValue['DCMS.server_aet'] || ''}
+                                    value={getSettingsValue('DCMS.server_aet')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('DCMS.server_aet', e.target.value)
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    style={{width: '100%'}}
+                                    id="filled-basic"
+                                    label={t("port")}
+                                    variant="standard"
+                                    value={getSettingsValue('DCMS.port_dicom')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('DCMS.port_dicom', e.target.value)
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    style={{width: '100%'}}
+                                    id="filled-basic"
+                                    label={t("latency")}
+                                    variant="standard"
+                                    value={getSettingsValue('DCMS.latency_time')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('DCMS.latency_time', e.target.value)
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Container>
 
 
-                <FormGroup>
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2']==='true' || false}/>}
-                        label={t("implicit_vr_endian")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.1']==='true' || false}/>}
-                        label={t("explicit_vr_little_endian")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.2']==='true' || false}/>}
-                        label={t("explicit_vr_big_endian")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.50']==='true' || false}/>}
-                        label={t("jpeg_baseline_(process 1)")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.51']==='true' || false}/>}
-                        label={t("jpeg_baseline_(process 2 & 4)")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.57']==='true' || false}/>}
-                        label={t("jpeg_lossless, nonhierarchical_(processes 14)")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.70']==='true' || false}/>}
-                        label={t("JPEG Lossless, Nonhierarchical, First- Order Prediction (Processes 14 [Selection Value 1])")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.80']==='true' || false}/>}
-                        label={t("JPEG-LS_lossless_image_compression")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.81']==='true' || false}/>}
-                        label={t("JPEG-LS_Lossy_(Near- Lossless)_image_compression")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.90']==='true' || false}/>}
-                        label={t("JPEG_2000_image_compression_(Lossless Only)")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.91']==='true' || false}/>}
-                        label={t("JPEG_2000_image_compression")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.92']==='true' || false}/>}
-                        label={t("JPEG 2000 Part 2 Multicomponent Image Compression (Lossless Only)")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.93']==='true' || false}/>}
-                        label={t("JPEG 2000 Part 2 Multicomponent Image Compression")}
-                    />
-                </FormGroup>
+                    <FormGroup>
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2'] : false}
+                                    onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2', e.target.checked)}
+                                />
+                            }
+                            label={t("implicit_vr_endian")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.1'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.1', e.target.checked)}
+                            />}
+                            label={t("explicit_vr_little_endian")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.2'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.2', e.target.checked)}
+                            />}
+                            label={t("explicit_vr_big_endian")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.50'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.50', e.target.checked)}
+                            />}
+                            label={t("jpeg_baseline_(process 1)")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.51'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.51', e.target.checked)}
+                            />}
+                            label={t("jpeg_baseline_(process 2 & 4)")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.57'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.57', e.target.checked)}
+                            />}
+                            label={t("jpeg_lossless, nonhierarchical_(processes 14)")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.70'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.70', e.target.checked)}
+                            />}
+                            label={t("JPEG Lossless, Nonhierarchical, First- Order Prediction (Processes 14 [Selection Value 1])")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.80'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.80', e.target.checked)}
+                            />}
+                            label={t("JPEG-LS_lossless_image_compression")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.81'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.81', e.target.checked)}
+                            />}
+                            label={t("JPEG-LS_Lossy_(Near- Lossless)_image_compression")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.90'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.90', e.target.checked)}
+                            />}
+                            label={t("JPEG_2000_image_compression_(Lossless Only)")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.91'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.91', e.target.checked)}
+                            />}
+                            label={t("JPEG_2000_image_compression")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.92'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.92', e.target.checked)}
+                            />}
+                            label={t("JPEG 2000 Part 2 Multicomponent Image Compression (Lossless Only)")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.93'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.93', e.target.checked)}
+                            />}
+                            label={t("JPEG 2000 Part 2 Multicomponent Image Compression")}
+                        />
+                    </FormGroup>
 
-                <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }} />
+                    <Divider style={{marginBottom: theme.spacing(2), marginTop: theme.spacing(2)}}/>
 
-                <FormGroup>
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.94']==='true' || false}/>}
-                        label={t("JPIP Referenced")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.95']==='true' || false}/>}
-                        label={t("JPIP Referenced Deflate")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.5']==='true' || false}/>}
-                        label={t("RLE Lossless")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.6.1']==='true' || false}/>}
-                        label={t("RFC 2557 MIME Encapsulation")}
-                    />
-                </FormGroup>
+                    <FormGroup>
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.94'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.94', e.target.checked)}
+                            />}
+                            label={t("JPIP Referenced")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.95'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.95', e.target.checked)}
+                            />}
+                            label={t("JPIP Referenced Deflate")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.5'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.5', e.target.checked)}
+                            />}
+                            label={t("RLE Lossless")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.6.1'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.6.1', e.target.checked)}
+                            />}
+                            label={t("RFC 2557 MIME Encapsulation")}
+                        />
+                    </FormGroup>
 
-                <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }} />
+                    <Divider style={{marginBottom: theme.spacing(2), marginTop: theme.spacing(2)}}/>
 
-                <FormGroup>
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.100']==='true' || false}/>}
-                        label={t("MPEG2 Main Profile Main Level")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.102']==='true' || false}/>}
-                        label={t("MPEG-4 AVC/H.264 High Profile / Level 4.1")}
-                    />
-                    <FormControlLabel
-                        classes={{ label: classes.label }}
-                        control={<Checkbox checked={settingsValue['DCMS.1.2.840.10008.1.2.4.103']==='true' || false}/>}
-                        label={t("MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1")}
-                    />
-                </FormGroup>
+                    <FormGroup>
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.100'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.100', e.target.checked)}
+                            />}
+                            label={t("MPEG2 Main Profile Main Level")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.102'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.102', e.target.checked)}
+                            />}
+                            label={t("MPEG-4 AVC/H.264 High Profile / Level 4.1")}
+                        />
+                        <FormControlLabel
+                            classes={{label: classes.label}}
+                            control={<Checkbox
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.103'] : false}
+                                onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.103', e.target.checked)}
+                            />}
+                            label={t("MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1")}
+                        />
+                    </FormGroup>
 
-            </CardContent>
-        </Card>)
+                </CardContent>
+            </Card>
+        </>
+    )
 }
