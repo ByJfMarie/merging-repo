@@ -1,236 +1,45 @@
-import api from "./apiManager";
+import {apiGET, apiPOST} from "./apiManager";
 
 class TransferService {
 
     getLocalSite() {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/transfer/localSite/')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('transfer/localSite/');
     }
 
     getRemoteSites() {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/transfer/remoteSites/')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('transfer/remoteSites/');
     }
 
     getOrders(filter) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/transfer/orders/', JSON.stringify(filter))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('transfer/orders/', filter);
     }
 
     transfer(aet, studies_uid) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/transfer/orders.create/'+aet, JSON.stringify(studies_uid))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('transfer/orders.create/'+aet, studies_uid);
     }
 
-
     cancelOrders(study_uid, site_id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/transfer/orders.cancel/'+study_uid+'/'+site_id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('transfer/orders.cancel/'+study_uid+'/'+site_id);
     }
 
     retryOrders(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/transfer/orders.retry/'+id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('transfer/orders.retry/'+id);
     }
 
     getRules() {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/transfer/rules.get/')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('transfer/rules.get/');
     }
 
     addRule(fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/transfer/rules.add/', JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('transfer/rules.add/', fields);
     }
 
     editRule(id, fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/transfer/rules.edit/'+id, JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('transfer/rules.edit/'+id, fields);
     }
 
     deleteRule(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/transfer/rules.delete/'+id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('transfer/rules.delete/'+id);
     }
 }
 

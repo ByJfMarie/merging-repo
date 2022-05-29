@@ -1,62 +1,18 @@
 import * as React from 'react';
-import { Button, Menu, MenuItem, Grid } from "@mui/material";
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
+import { Grid } from "@mui/material";
 import AuthService from "../../services/api/auth.service";
 import DownloadButton from "./DownloadButton";
 import ForwardButton from "./ForwardButton";
+import TransferButton from "./TransferButton";
 
 const TableLocalStudiesActions = (props) => {
 
     const priviledges = AuthService.getCurrentUser().priviledges;
 
-    /** STYLE AND CLASSES */
-    const theme = useTheme();
-    const useStyles = makeStyles({
-        left: {
-            [theme.breakpoints.down('sm')]: {
-                justifyContent: "center"
-            },
-            [theme.breakpoints.up('sm')]: {
-                justifyContent: "flex-start"
-            },
-        },
-
-        right: {
-            [theme.breakpoints.down('sm')]: {
-                justifyContent: "center"
-            },
-            [theme.breakpoints.up('sm')]: {
-                justifyContent: "flex-end"
-            },
-        },
-
-        buttonMain: {
-            backgroundColor: theme.palette.button.background + "!important"
-        },
-        buttonDownload: {
-            [theme.breakpoints.down('sm')]: {
-                display: "none !important"
-            },
-            backgroundColor: theme.palette.button.background + "!important"
-        }
-    });
-    const classes = useStyles();
-
-    /** DOWNLOAD BUTTON */
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
     return (
         <React.Fragment>
             <Grid container spacing={2}>
-                <Grid item sm={4} xs={12} className={classes.left} style={{ display: "flex" }}>
+                <Grid item sm={4} sx={{display: {xs: 'none', sm:'block'}}}>
                     {priviledges.privileges.pages[props.page].searchTable.actionsTable.includes('download') && (
                         <DownloadButton
                             key='download'
@@ -64,33 +20,31 @@ const TableLocalStudiesActions = (props) => {
                         />
                     )}
                 </Grid>
-                <Grid item sm={8} xs={12} className={classes.right} style={{ display: "flex" }} >
+                <Grid item xs={12} sm={8}  >
+                    <Grid container spacing={1} direction={"row-reverse"}>
                     {  // eslint-disable-next-line 
                         priviledges.privileges.pages[props.page].searchTable.actionsTable.map((value, key) => {
                             if (value === "forward") {
                                 return (
+                                    <Grid item xs="auto">
                                     <ForwardButton
                                         key={value}
                                         forwardFunction={props.forwardFunction}
                                     />
+                                    </Grid>
                                 )
                             }
-                            /*else if (value === "transfer") {
+                            else if (value === "transfer") {
                                 return (
-                                    <Button
+                                    <Grid item xs="auto">
+                                    <TransferButton
                                         key={value}
-                                        className={classes.buttonMain}
-                                        variant="outlined"
-                                        size="medium"
-                                        color="primary"
-                                        style={{ marginLeft: "10px" }}
-                                        onClick={() => {props.transferFunction();}}
-                                    >
-                                        {t(value)}
-                                    </Button>
+                                        transferFunction={props.transferFunction}
+                                    />
+                                    </Grid>
                                 )
                             }
-                            else if (value === "media") {
+                            /*else if (value === "media") {
                                 return (
                                     <Button
                                         key={value}
@@ -106,6 +60,7 @@ const TableLocalStudiesActions = (props) => {
                                 )
                             }*/
                         })}
+                    </Grid>
                 </Grid>
             </Grid>
         </React.Fragment>

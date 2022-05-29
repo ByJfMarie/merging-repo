@@ -1,258 +1,69 @@
-import api from "./apiManager";
+import {apiGET, apiPOST} from "./apiManager";
 
 class SettingsService {
 
     getDesign() {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/settings/design.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('settings/design.get');
     }
 
     saveDesign(settings) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/design.set', JSON.stringify(settings))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('settings/design.set', settings);
     }
 
     getEmailing() {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/settings/emailing.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('settings/emailing.get');
     }
 
     saveEmailing(settings) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/emailing.set', JSON.stringify(settings))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('settings/emailing.set', settings);
     }
 
     getLocalServer() {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/settings/localServer.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('settings/localServer.get');
     }
 
     saveLocalServer(settings) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/settings/localServer.set', JSON.stringify(settings))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('settings/localServer.set', settings);
     }
 
     getStorage() {
-        let state = {
-            items: [],
-            error: ''
-        }
+        return apiGET('settings/storage.get');
+    }
 
-        return api
-            .get('/v2/settings/storage.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+    saveStorage(settings) {
+        return apiPOST('settings/storage.set', settings);
     }
 
     getRemoteAET() {
-        let state = {
-            items: [],
-            error: ''
-        }
+        return apiGET('settings/remoteAET.get');
+    }
 
-        return api
-            .get('/v2/settings/remoteAET.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+    saveRemoteAET(settings) {
+        return apiPOST('settings/remoteAET.set', settings);
     }
 
     getTransfer() {
-        let state = {
-            items: [],
-            error: ''
-        }
+        return apiGET('settings/transfer.get');
+    }
 
-        return api
-            .get('/v2/settings/transfer.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+    saveTransfer(settings) {
+        return apiPOST('settings/transfer.set', settings);
     }
 
     getReporting() {
-        let state = {
-            items: [],
-            error: ''
-        }
+        return apiGET('settings/reporting.get');
+    }
 
-        return api
-            .get('/v2/settings/reporting.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+    saveReporting(settings) {
+        return apiPOST('settings/reporting.set', settings);
     }
 
     getDatabase() {
-        let state = {
-            items: [],
-            error: ''
-        }
+        return apiGET('settings/database.get');
+    }
 
-        return api
-            .get('/v2/settings/database.get')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+    saveDatabase(settings) {
+        return apiPOST('settings/database.set', settings);
     }
 }
 

@@ -1,99 +1,26 @@
-import api from "./apiManager";
+import {apiGET, apiPOST} from "./apiManager";
 
 class UsersService {
 
-    getUsers(filters) {
-        let state = {
-            items: [],
-            error: ''
-        }
+    me() {
+        return apiGET('/users/me');
+    }
 
-        return api
-            .post('/v2/users/list', JSON.stringify(filters))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+    getUsers(filters) {
+        return apiPOST('/users/list', filters);
     }
 
     addUser(fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/users/add/', JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/users/add', fields);
     }
 
     editUser(id, fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/users/edit/' + id, JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/users/edit/' + id, fields);
     }
 
     deleteUser(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/users/delete/' + id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/users/delete/' + id);
     }
-
 }
 
 export default new UsersService();

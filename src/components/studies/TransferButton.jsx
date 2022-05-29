@@ -4,9 +4,9 @@ import t from "../../services/Translation";
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import AETService from "../../services/api/aet.service";
+import TransferService from "../../services/api/transfer.service";
 
-const ForwardButton = (props) => {
+const TransferButton = (props) => {
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -25,33 +25,33 @@ const ForwardButton = (props) => {
         setAnchorEl(null);
     };
 
-    const [aets, setAets] = React.useState([]);
-    const loadAETs = async() => {
+    const [remoteSites, setRemoteSites] = React.useState([]);
+    const loadRemoteSites = async() => {
         //Load aet list
-        const response = await AETService.search(false, false, true);
+        const response = await TransferService.getRemoteSites();
         if (response.error) {
             console.log(response.error);
             return;
         }
 
-        setAets(response.items);
+        setRemoteSites(Object.entries(response.items));
     }
 
-    const handleForward = async (move_aet) => {
-        props.forwardFunction(move_aet);
+    const handleTransfer = async (site) => {
+        props.transferFunction(site);
         setAnchorEl(null);
     }
 
     React.useEffect(() => {
-        loadAETs()
+        loadRemoteSites()
     }, []);
 
     return (
         <>
-            {aets.length > 1 &&
+            {remoteSites.length > 1 &&
                 <>
                     <Button variant="outlined" size="medium" className={classes.buttonForward} onClick={handleClick}>
-                        {t('forward')}
+                        {t('transfer')}
                         <ArrowDropDownIcon />
                     </Button>
                     <Menu
@@ -64,8 +64,8 @@ const ForwardButton = (props) => {
                         }}
                     >
                         {
-                            aets.map((aet) => {
-                                return (<MenuItem key={aet.key} onClick={() => {handleForward(aet.key)}}>{aet.description}</MenuItem>);
+                            remoteSites.map(([key, value]) => {
+                                return (<MenuItem key={key} onClick={() => {handleTransfer(key)}}>{value}</MenuItem>);
                             })
                         }
 
@@ -73,18 +73,18 @@ const ForwardButton = (props) => {
                 </>
             }
 
-            {aets.length===1 &&
+            {remoteSites.length===1 &&
                 <>
                     <Button
-                        key={aets[0].key}
+                        key={remoteSites[0].key}
                         className={classes.buttonForward}
                         variant="outlined"
                         size="medium"
                         color="primary"
                         style={{ marginLeft: "10px" }}
-                        onClick={() => {handleForward(aets[0].key)}}
+                        onClick={() => {handleTransfer(remoteSites[0].key)}}
                     >
-                        {t('forward')}
+                        {t('transfer')}
                     </Button>
                 </>
             }
@@ -95,4 +95,4 @@ const ForwardButton = (props) => {
     )
 }
 
-export default ForwardButton;
+export default TransferButton;

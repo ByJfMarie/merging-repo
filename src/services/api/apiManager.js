@@ -1,10 +1,10 @@
 import axios from 'axios';
-import createAuthRefreshInterceptor, {AxiosAuthRefreshOptions} from 'axios-auth-refresh';
+import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import AuthService from "./auth.service";
 import swal from "sweetalert";
 
-export const BASE_URL = "http://localhost:9999/";
-export const URL_REFRESH_TOKEN = "v2/token/refresh";
+export const BASE_URL = "http://localhost:9999/v2/";
+export const URL_REFRESH_TOKEN = "token/refresh";
 
 const miAPI = axios.create({
     baseURL: BASE_URL,
@@ -14,6 +14,71 @@ const miAPI = axios.create({
         "Content-Type": "application/json",
     },
 });
+
+export const apiGET = (url) => {
+    let state = {
+        items: [],
+        error: ''
+    }
+
+    return miAPI
+        .get(url)
+        .then((response) => {
+            if (response.status === 200) {
+                state.items = response.data;
+            } else {
+                state.error = "Unknown error";
+            }
+        })
+        .catch((error) => {
+            if (!error.status) {
+                networkError();
+                return;
+            }
+            state.error = error.response ? error.response.data : "Unknown error";
+        })
+        .then(() => {
+            return state;
+        });
+}
+
+export const apiPOST = (url, data) => {
+    let state = {
+        items: [],
+        error: ''
+    }
+
+    return miAPI
+        .post(url, JSON.stringify(data))
+        .then((response) => {
+            if (response.status === 200) {
+                state.items = response.data;
+            } else {
+                state.error = "Unknown error";
+            }
+        })
+        .catch((error) => {
+            if (!error.status) {
+                networkError();
+                return;
+            }
+            state.error = error.response ? error.response.data : "Unknown error";
+        })
+        .then(() => {
+            return state;
+        });
+}
+
+const networkError = () => {
+    let error = "No response from the server!";
+    //if (error.response && error.response.statusText) error = _error.response.statusText;
+    swal("Erreur", error, "error", {
+        buttons: false,
+        timer: 2000,
+    }).then(() => {
+        AuthService.logout();
+    })
+}
 
 // Obtain the fresh token each time the function is called
 function getAccessToken(){

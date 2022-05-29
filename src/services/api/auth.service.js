@@ -1,4 +1,4 @@
-import api, {URL_USER_AUTH, URL_USER_LOGOUT} from "./api";
+import api from "./apiManager";
 import TokenService from "./token.service";
 
 class AuthService {
@@ -10,7 +10,7 @@ class AuthService {
         }
 
         return api
-            .post(URL_USER_AUTH, { username: username, password: password })
+            .post("auth", { username: username, password: password })
             .then((response) => {
                 if (response.status === 200) {
                     TokenService.setUser(response.data);
@@ -19,7 +19,7 @@ class AuthService {
                 }
             })
             .catch((error) => {
-                state.error = error.response?error.response.data:"Unknown error";
+                state.error = error.response?error.response.data:"Unknown error";;
             })
             .then (() => {
                 return state;
@@ -27,7 +27,7 @@ class AuthService {
     }
 
     logout() {
-        api.post(URL_USER_LOGOUT, {}).then(response => {});
+        api.post( "token/logout", {}).then(response => {});
         TokenService.removeUser();
         window.location.href = "/login";
     }

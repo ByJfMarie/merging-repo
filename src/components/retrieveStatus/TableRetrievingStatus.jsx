@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
-import Chip, {ChipProps} from "@mui/material/Chip";
+import Chip from "@mui/material/Chip";
 import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -90,7 +90,7 @@ const TableRetrievingStatus = (props) => {
 
     const [rows, setRows] = React.useState(props.rows);
     React.useEffect(() => {
-        setRows(props.rows);
+        if (props.rows) setRows(props.rows);
 
         if (props.autoRefresh) {
             const interval = setInterval(() => {
@@ -98,7 +98,7 @@ const TableRetrievingStatus = (props) => {
             }, 5000);
             return () => clearInterval(interval);
         }
-    }, [props.rows]);
+    }, [props]);
 
     const handleRetry = async(id) => {
         const response = await QRService.retryOrders(id);
@@ -144,7 +144,7 @@ const TableRetrievingStatus = (props) => {
                     "headerName": t(row),
                     "flex": 2,
                     "minWidth": 200
-                })
+                });
         }
         else if (row === 'description') {
             column.push(
@@ -153,7 +153,7 @@ const TableRetrievingStatus = (props) => {
                     "headerName": t(row),
                     "flex": 3,
                     "minWidth": 200
-                })
+                });
         }
         else if (row === 'aet') {
             column.push(
@@ -165,7 +165,7 @@ const TableRetrievingStatus = (props) => {
                     renderCell: (params) => {
                         return <div style={{ lineHeight: "normal" }}>{params.row.called_aet || ''} to {params.row.move_aet || ''} </div>;
                     }
-                })
+                });
         }
         else if (row === "noi") {
             column.push(
@@ -177,8 +177,9 @@ const TableRetrievingStatus = (props) => {
                     renderCell: (params) => {
                         return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
                     }
-                })
+                });
         }
+        return true;
     });
 
     column.push(
@@ -197,7 +198,7 @@ const TableRetrievingStatus = (props) => {
                         showInMenu
                     />);
                 }
-                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
+                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
                         label="Cancel"

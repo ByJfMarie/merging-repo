@@ -2,10 +2,31 @@ import { Container, Typography } from "@mui/material"
 import React from 'react';
 import { useTheme } from '@emotion/react';
 import t from "../services/Translation"
-
+import UsersService from "../services/api/users.service";
 const Home = () => {
 
     const theme = useTheme();
+
+    const [user, setUser] = React.useState([]);
+    const loadUser = async() => {
+        //Load aet list
+        const response = await UsersService.me();
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setUser(response.items);
+    }
+    React.useEffect(() => {
+        loadUser();
+    }, []);
+
+    const UserName = function() {
+        if (!user) return <>{"Hello"}</>;
+        if (user.last_name)return <>{user.title}+" "+{user.last_name}+" "+{user.first_name}</>;
+        return  <>{user.login}</>;
+    }
 
     return (
         <Container>
@@ -14,7 +35,7 @@ const Home = () => {
             </Typography>
 
             <Typography variant="h5">
-                Firstname Lastname
+                <UserName/>
             </Typography>
         </Container>
     )

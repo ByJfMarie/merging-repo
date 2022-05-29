@@ -1,13 +1,10 @@
 import {Box, IconButton, Paper, TableContainer,} from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
 import t from "../../services/Translation";
 import * as React from 'react';
-import {DataGrid, GridActionsCellItem, GridSelectionModel} from "@mui/x-data-grid";
-import styled from "styled-components/macro";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import {useState} from "react";
 import Thumbnail from "./Thumbnail";
-import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
 import ReportCell from "./ReportCell";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
 import UpdateIcon from "@mui/icons-material/Update";
@@ -45,21 +42,6 @@ function TableLocalStudies(props) {
 
     /** THEME AND CSS */
     const theme = useTheme();
-    const useStyles = makeStyles({
-        root: {
-            "& .MuiTableCell-head": {
-                color: theme.palette.table.text,
-                backgroundColor: theme.palette.table.head
-            },
-        },
-        tableRow: {
-            height: "60px !important"
-        },
-        tableCell: {
-            padding: "0px 16px !important"
-        }
-    });
-    const classes = useStyles();
 
     const [filters, setFilters] = useState(filtersInitValue);
     const [rows, setRows] = React.useState([]);
@@ -67,20 +49,15 @@ function TableLocalStudies(props) {
     const searchStudies = async(values) => {
         setFilters(values);
 
-        /** RESET RESULT */
-        const rows = []
-
         const response = await StudiesService.searchStudies(values);
+
         if (response.error) {
             console.log(response.error);
             //window.location.href = "/login";
             return;
         }
 
-        Object.keys(response.items).map((row, i) => {
-            rows.push(response.items[row]);
-        })
-        setRows([...rows], rows)
+        setRows(response.items)
     }
 
 
@@ -128,9 +105,6 @@ function TableLocalStudies(props) {
 
     //Selection
     const [selectedRows, setSelectedRows] = useState([])
-    const setTableSelection = (rows) => {
-        setSelectedRows(rows);
-    }
 
     //Download
     const downloadStudies = async(type) => {
@@ -150,8 +124,8 @@ function TableLocalStudies(props) {
     };
 
     //Transfer
-    const transferStudies = async() => {
-        console.log("Transfer "+selectedRows);
+    const transferStudies = async(site) => {
+        console.log("Transfer "+selectedRows+" to "+site);
     };
 
     //Media
@@ -167,7 +141,7 @@ function TableLocalStudies(props) {
             columns.push({
                 field: "patient_full",
                 headerName: t(row),
-                flex: 25,
+                flex: 3,
                 maxWidth: 250,
                 //resizable: true,
                 encodeHtml: false,
@@ -181,7 +155,7 @@ function TableLocalStudies(props) {
             columns.push({
                 field: "study_full",
                 headerName: t(row),
-                flex: 25,
+                flex: 4,
                 maxWidth: 250,
                 encodeHtml: false,
                 renderCell: (params) => {
@@ -203,7 +177,7 @@ function TableLocalStudies(props) {
             columns.push({
                 field: "report",
                 headerName: t(row),
-                flex: 15,
+                flex: 2,
                 maxWidth: 150,
                 encodeHtml: false,
                 renderCell: (params) => {
@@ -221,7 +195,7 @@ function TableLocalStudies(props) {
             columns.push({
                 field: "permissions",
                 headerName: t(row),
-                flex: 10,
+                flex: 2,
                 maxWidth: 100,
                 encodeHtml: false,
                 renderCell: (params) => {
@@ -244,7 +218,7 @@ function TableLocalStudies(props) {
         else if (row === 'accession_number') {
             columns.push(
                 {
-                    flex: 5,
+                    flex: 2,
                     field: 'st_accession_number',
                     headerName: t('accession_number'),
                 }
@@ -253,7 +227,7 @@ function TableLocalStudies(props) {
         else if (row === 'modality') {
             columns.push(
                 {
-                    flex: 5,
+                    flex: 2,
                     field: 'st_modalities',
                     headerName: t('modality'),
                 }
@@ -262,7 +236,7 @@ function TableLocalStudies(props) {
         else if (row === 'date') {
             columns.push(
                 {
-                    flex: 5,
+                    flex: 2,
                     field: 'st_date',
                     headerName: t('date')
                 }
@@ -271,7 +245,7 @@ function TableLocalStudies(props) {
         else if (row === 'description') {
             columns.push(
                 {
-                    flex: 10,
+                    flex: 2,
                     field: 'st_description',
                     headerName: t('description'),
                 }
@@ -280,7 +254,7 @@ function TableLocalStudies(props) {
         else if (row === 'referring_physician') {
             columns.push(
                 {
-                    flex: 15,
+                    flex: 2,
                     field: 'st_ref_physician',
                     headerName: t('referring_physician')
                 }
@@ -289,7 +263,7 @@ function TableLocalStudies(props) {
         else if (row === 'noi') {
             columns.push(
                 {
-                    flex: 10,
+                    flex: 1,
                     field: 'noi',
                     headerName: t('noi'),
                     renderCell: (params) => {
@@ -298,6 +272,8 @@ function TableLocalStudies(props) {
                 }
             );
         }
+
+        return true;
     });
 
     if (priviledges.privileges.pages[props.page].searchTable.actionsRow.length !== 0) {

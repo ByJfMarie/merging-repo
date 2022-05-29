@@ -10,6 +10,7 @@ const ReportCell = (props) => {
 
     const loadReports = async (study_uid) => {
         const response = await StudiesService.getReports(study_uid);
+
         if (response.error) {
             console.log(response.error);
             //window.location.href = "/login";
@@ -37,7 +38,7 @@ const ReportCell = (props) => {
 
     useEffect(() => {
         loadReports(props.study_uid);
-    }, []);
+    }, [props]);
 
     return (
             Object.values(reports).map((report) => {

@@ -1,5 +1,5 @@
 
-import { Card, CardContent, TextField, Grid } from '@mui/material';
+import {Card, CardContent, TextField, Grid, Button} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
@@ -30,6 +30,7 @@ export default function Database() {
     });
     const classes = useStyles();
 
+    /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
     const refresh = async() => {
         const response = await SettingsService.getDatabase();
@@ -45,6 +46,28 @@ export default function Database() {
         refresh();
     }, []);
 
+    const getSettingsValue = (id) => {
+        return config[id] || '';
+    }
+    const handleSettingsChange = (id, value) => {
+        setConfig({...config, [id]: value});
+    }
+
+    const handleSave = async () => {
+        const response = await SettingsService.saveDatabase(config);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        refresh();
+    };
+
+    const handleCancel = () => {
+        refresh();
+    };
+
     return (
         <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
             <CardContent>
@@ -55,7 +78,10 @@ export default function Database() {
                             id="filled-basic"
                             label={t("host")}
                             variant="standard"
-                            value={config["DB.host"] || ""}
+                            value={getSettingsValue('DB.host')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.host', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={3}>
@@ -64,7 +90,10 @@ export default function Database() {
                             id="filled-basic"
                             label={t("port")}
                             variant="standard"
-                            value={config["DB.port"] || ""}
+                            value={getSettingsValue('DB.port')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.port', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -73,7 +102,10 @@ export default function Database() {
                             id="filled-basic"
                             label={t("user")}
                             variant="standard"
-                            value={config["DB.user"] || ""}
+                            value={getSettingsValue('DB.user')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.user', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -83,7 +115,10 @@ export default function Database() {
                             label={t("password")}
                             type={"password"}
                             variant="standard"
-                            value={config["DB.password"] || ""}
+                            value={getSettingsValue('DB.password')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.password', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -92,8 +127,24 @@ export default function Database() {
                             id="filled-basic"
                             label={t("database_name")}
                             variant="standard"
-                            value={config["DB.name"] || ""}
+                            value={getSettingsValue('DB.name')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.name', e.target.value)
+                            }}
                         />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2} direction={"row-reverse"}>
+                    <Grid item xs="auto">
+                        <Button variant="contained" component="label" onClick={() => {
+                            handleSave()
+                        }}>{t('save')}</Button>
+                    </Grid>
+                    <Grid item xs="auto">
+                        <Button variant="outlined" component="label"
+                                onClick={handleCancel}>{t('cancel')}</Button>
+                    </Grid>
+                    <Grid item xs>
                     </Grid>
                 </Grid>
             </CardContent>

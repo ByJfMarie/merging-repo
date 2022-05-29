@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Menu, MenuItem, Grid, IconButton} from "@mui/material";
+import {Button, Menu, MenuItem} from "@mui/material";
 import t from "../../services/Translation";
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
@@ -10,9 +10,6 @@ const DownloadButton = (props) => {
     const theme = useTheme();
     const useStyles = makeStyles({
         buttonDownload: {
-            [theme.breakpoints.down('sm')]: {
-                display: "none !important"
-            },
             backgroundColor: theme.palette.button.background + "!important"
         }
     });

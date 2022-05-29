@@ -1,12 +1,29 @@
 import React from 'react';
-import { MenuItem, FormGroup, FormControlLabel, Checkbox, Grid, Select, InputLabel, FormControl, Card, CardContent, Link, Typography, TextField } from "@mui/material";
+import {
+    MenuItem,
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
+    Grid,
+    Select,
+    InputLabel,
+    FormControl,
+    Card,
+    CardContent,
+    Link,
+    Typography,
+    TextField,
+    Button
+} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import SettingsService from "../../../services/api/settings.service";
+import t from "../../../services/Translation";
 // import t from "../../../services/Translation";
 
 export default function Reporting(props) {
     const theme = useTheme();
 
+    /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
     const refresh = async() => {
         const response = await SettingsService.getReporting();
@@ -22,18 +39,54 @@ export default function Reporting(props) {
         refresh();
     }, []);
 
+    const getSettingsValue = (id) => {
+        if (!config[id]) return '';
+        return config[id]['value'] || '';
+    }
+    const handleSettingsChange = (id, value) => {
+        let cfg = config[id];
+        if (!cfg) return;
+        cfg['value'] = value;
+        setConfig({...config, [id]: cfg});
+    }
+
+    const handleSave = async () => {
+        const response = await SettingsService.saveReporting(config);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        refresh();
+    };
+
+    const handleCancel = () => {
+        refresh();
+    };
+
     return (<Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
         <CardContent>
             <FormGroup>
                 <FormControlLabel
-                    control={<Checkbox checked={config["RRS.enabled"]==="true" || false}/>}
+                    control={
+                        <Checkbox
+                            checked={getSettingsValue('RRS.enabled')==="true"}
+                            onChange={(e) => handleSettingsChange('RRS.enabled', e.target.checked+"")}
+                        />
+                    }
                     label="Enable"
                 />
                 <Grid container spacing={2}>
 
                     <Grid item xs={12} sm={4} lg={2} style={{ display: "flex" }}>
                         <FormControlLabel
-                            control={<Checkbox checked={config["RRS.print_report"]==="true" || false}/>}
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('RRS.print_report')==="true"}
+                                    onChange={(e) => handleSettingsChange('RRS.print_report', e.target.checked+"")}
+                                />
+                            }
                             label="Print Report"
                         />
                     </Grid>
@@ -56,7 +109,12 @@ export default function Reporting(props) {
 
                     <Grid item xs={12} sm={4} lg={2} style={{ display: "flex" }}>
                         <FormControlLabel
-                            control={<Checkbox checked={config["RRS.useHtmlTemplate"]==="true" || false}/>}
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('RRS.useHtmlTemplate')==="true"}
+                                    onChange={(e) => handleSettingsChange('RRS.useHtmlTemplate', e.target.checked+"")}
+                                />
+                            }
                             label="Template"
                         />
                     </Grid>
@@ -97,10 +155,24 @@ export default function Reporting(props) {
                     multiline={true}
                     rows={4}
                     style ={{maxWidth : "700px"}}
-                    value={config["RRS.requestURL"] || ''}
+                    value={getSettingsValue('NOT.requestURL')}
+                    onChange={(e) => {handleSettingsChange('NOT.requestURL', e.target.value)}}
                 />
 
             </FormGroup>
+            <Grid container spacing={2} direction={"row-reverse"}>
+                <Grid item xs="auto">
+                    <Button variant="contained" component="label" onClick={() => {
+                        handleSave()
+                    }}>{t('save')}</Button>
+                </Grid>
+                <Grid item xs="auto">
+                    <Button variant="outlined" component="label"
+                            onClick={handleCancel}>{t('cancel')}</Button>
+                </Grid>
+                <Grid item xs>
+                </Grid>
+            </Grid>
         </CardContent>
     </Card >)
 }

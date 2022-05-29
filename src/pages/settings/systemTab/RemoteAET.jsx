@@ -1,11 +1,12 @@
 import React from 'react';
-import { Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid } from '@mui/material';
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
+import {Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid} from '@mui/material';
+import {useTheme} from '@emotion/react';
+import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
 import DialogAddEdit from "../../../components/settings/aets/DialogAddEdit";
 import TableAets from "../../../components/settings/aets/Table";
 import AETSettings from "../../../services/api/settings.service";
+import SettingsService from "../../../services/api/settings.service";
 
 export default function RemoteAET() {
     const theme = useTheme();
@@ -37,7 +38,7 @@ export default function RemoteAET() {
     const classes = useStyles();
 
     const [config, setConfig] = React.useState({});
-    const refresh = async() => {
+    const refresh = async () => {
         const response = await AETSettings.getRemoteAET();
 
         if (response.error) {
@@ -51,36 +52,76 @@ export default function RemoteAET() {
         refresh();
     }, []);
 
+    const getSettingsValue = (id) => {
+        if (!config[id]) return '';
+        return config[id]['value'] || '';
+    }
+    const handleSettingsChange = (id, value) => {
+        let cfg = config[id];
+        if (!cfg) return;
+        cfg['value'] = value;
+        setConfig({...config, [id]: cfg});
+        handleSave();
+    }
+
+    const handleSave = async () => {
+        const response = await SettingsService.saveRemoteAET(config);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        refresh();
+    };
+
     /** ADD/EDIT POP UP */
     const [showDialog, setShowDialog] = React.useState(false);
     const [settingsValue, setSettingsValue] = React.useState(null);
-    const toggleDialog = () => {setShowDialog(!showDialog);}
+    const toggleDialog = () => {
+        setShowDialog(!showDialog);
+    }
 
     /** FORCE REFRESH */
     const [forceRefresh, setForceRefresh] = React.useState(false);
 
     return (
         <>
-            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }}>
+            <Card style={{
+                backgroundColor: theme.palette.card.color,
+                width: "100% !important",
+                padding: '25px 0px',
+                margin: '0px 0px'
+            }}>
                 <CardContent>
-                    <Grid container style={{ marginBottom: '15px' }}>
+                    <Grid container style={{marginBottom: '15px'}}>
                         <Grid item className={classes.userNameGrid}>
                             <FormGroup>
-                                <FormControlLabel control={<Checkbox checked={config['DCMS.allow_all_scp']==='true' || false}/>} label={t("allow_all_remote_server")} />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={getSettingsValue('DCMS.allow_all_scp')==="true"}
+                                            onChange={(e) => handleSettingsChange('DCMS.allow_all_scp', e.target.checked+"")}
+                                        />
+                                    }
+                                    label={t("allow_all_remote_server")}/>
                             </FormGroup>
                         </Grid>
 
-                        <Grid item xs />
+                        <Grid item xs/>
 
                         <Grid item className={classes.userNameGrid}>
-                            <Button variant="contained" component="label" onClick={toggleDialog}>+ Add</Button><br />
+                            <Button variant="contained" component="label" onClick={toggleDialog}>+ Add</Button><br/>
                         </Grid>
                     </Grid>
 
                     <TableAets
                         filters={null}
                         forceRefresh={forceRefresh}
-                        edit={(values) => {setSettingsValue(values); toggleDialog();}}
+                        edit={(values) => {
+                            setSettingsValue(values);
+                            toggleDialog();
+                        }}
                     />
                 </CardContent>
             </Card>
@@ -89,7 +130,9 @@ export default function RemoteAET() {
                 values={settingsValue}
                 isOpen={showDialog}
                 toggle={toggleDialog}
-                onSave={() => {setForceRefresh(!forceRefresh);}}
+                onSave={() => {
+                    setForceRefresh(!forceRefresh);
+                }}
             />
         </>
     )

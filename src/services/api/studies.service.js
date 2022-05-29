@@ -1,38 +1,19 @@
-import api from "./apiManager";
+import api, {apiGET, apiPOST} from "./apiManager";
 import moment from 'moment';
 
 class StudiesService {
 
     searchStudies(filters) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
         //Format dates
         if (filters.from instanceof Date) filters.from = moment(filters.from).format("YYYY-MM-DD");
         if (filters.to instanceof Date) filters.to = moment(filters.to).format("YYYY-MM-DD");
 
-        return api
-            .post('/v2/studies/search', JSON.stringify(filters))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('studies/search', filters);
     }
 
     getThumbnail(study_uid, size) {
         return api
-            .get('/v2/studies/thumbnail/' + study_uid + '/' + size, {
+            .get('/studies/thumbnail/' + study_uid + '/' + size, {
                 responseType: 'blob'
             })
             .then((response) => {
@@ -48,31 +29,12 @@ class StudiesService {
     }
 
     getReports(study_uid) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/studies/reports/' + study_uid + '/pdf')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('studies/reports/'+study_uid+'/pdf');
     }
 
     openReport(key) {
         return api
-            .get('/v2/studies/reports.download/' + encodeURIComponent(key), {
+            .get('studies/reports.download/' + encodeURIComponent(key), {
                 responseType: 'blob'
             })
             .then((response) => {
@@ -89,7 +51,7 @@ class StudiesService {
 
     openLoginSheet(key) {
         return api
-            .get('/v2/studies/loginsheet.download/' + encodeURIComponent(key), {
+            .get('studies/loginsheet.download/' + encodeURIComponent(key), {
                 responseType: 'blob'
             })
             .then((response) => {
@@ -105,52 +67,14 @@ class StudiesService {
     }
 
     getPermissions(study_uid) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/studies/permissions.physicians/' + study_uid)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('studies/permissions.physicians/'+study_uid);
     }
 
     setPermission(login, study_uid, checked) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/studies/permissions.physicians/set/'+study_uid, {
-                login: login,
-                checked: checked
-            })
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('studies/permissions.physicians/set/'+study_uid, {
+            login: login,
+            checked: checked
+        });
     }
 }
 

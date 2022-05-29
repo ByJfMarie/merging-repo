@@ -1,190 +1,38 @@
-import api from "./apiManager";
+import {apiGET, apiPOST} from "./apiManager";
 
 class ForwardingService {
 
     getOrders(filter) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/forwarding/orders/', JSON.stringify(filter))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/forwarding/orders', filter);
     }
 
     forward(aet, studies_uid) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/forwarding/orders.create/'+aet, JSON.stringify(studies_uid))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/forwarding/orders.create/'+aet, studies_uid);
     }
 
 
     cancelOrders(series_uid, called_aet) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/forwarding/orders.cancel/'+series_uid+'/'+called_aet)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/forwarding/orders.cancel/'+series_uid+'/'+called_aet);
     }
 
     retryOrders(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/forwarding/orders.retry/'+id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/forwarding/orders.retry/'+id);
     }
 
     getRules() {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .get('/v2/forwarding/rules.get/')
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiGET('/forwarding/rules.get/');
     }
 
     addRule(fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/forwarding/rules.add/', JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/forwarding/rules.add/', fields);
     }
 
     editRule(id, fields) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/forwarding/rules.edit/'+id, JSON.stringify(fields))
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/forwarding/rules.edit/'+id, fields);
     }
 
     deleteRule(id) {
-        let state = {
-            items: [],
-            error: ''
-        }
-
-        return api
-            .post('/v2/forwarding/rules.delete/'+id)
-            .then((response) => {
-                if (response.status === 200) {
-                    state.items = response.data;
-                } else {
-                    state.error = "Unknown error";
-                }
-            })
-            .catch((error) => {
-                state.error = error.response ? error.response.data : "Unknown error";
-            })
-            .then(() => {
-                return state;
-            });
+        return apiPOST('/forwarding/rules.edit/'+id);
     }
 }
 

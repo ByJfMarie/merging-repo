@@ -37,6 +37,7 @@ export default function Transfer() {
     });
     const classes = useStyles();
 
+    /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
     const [remoteSites, setRemoteSites] = React.useState([]);
     const refresh = async() => {
@@ -64,6 +65,32 @@ export default function Transfer() {
         refreshRemoteSites();
     }, []);
 
+    const getSettingsValue = (id) => {
+        if (!config[id]) return '';
+        return config[id]['value'] || '';
+    }
+    const handleSettingsChange = (id, value) => {
+        let cfg = config[id];
+        if (!cfg) return;
+        cfg['value'] = value;
+        setConfig({...config, [id]: cfg});
+    }
+
+    const handleSave = async () => {
+        const response = await SettingsService.saveTransfer(config);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        refresh();
+    };
+
+    const handleCancel = () => {
+        refresh();
+    };
+
     /** ADD/EDIT POP UP */
     const [showDialog, setShowDialog] = React.useState(false);
     const [settingsValue, setSettingsValue] = React.useState(null);
@@ -83,7 +110,10 @@ export default function Transfer() {
                             id="filled-basic"
                             label={t("alias")}
                             variant="standard"
-                            value={config['DCMT.alias'] || ''}
+                            value={getSettingsValue('DCMT.alias')}
+                            onChange={(e) => {
+                                handleSettingsChange('DCMT.alias', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -92,7 +122,10 @@ export default function Transfer() {
                             id="filled-basic"
                             label={t("working_folder_group")}
                             variant="standard"
-                            value={config['DCMT.sftp_container'] || ''}
+                            value={getSettingsValue('DCMT.sftp_container')}
+                            onChange={(e) => {
+                                handleSettingsChange('DCMT.sftp_container', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={9}>
@@ -101,7 +134,10 @@ export default function Transfer() {
                             id="filled-basic"
                             label={t("host")}
                             variant="standard"
-                            value={config['DCMT.sftp_host'] || ''}
+                            value={getSettingsValue('DCMT.sftp_host')}
+                            onChange={(e) => {
+                                handleSettingsChange('DCMT.sftp_host', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={3}>
@@ -110,7 +146,10 @@ export default function Transfer() {
                             id="filled-basic"
                             label={t("port")}
                             variant="standard"
-                            value={config['DCMT.sftp_port'] || ''}
+                            value={getSettingsValue('DCMT.sftp_port')}
+                            onChange={(e) => {
+                                handleSettingsChange('DCMT.sftp_port', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -119,7 +158,10 @@ export default function Transfer() {
                             id="filled-basic"
                             label={t("user")}
                             variant="standard"
-                            value={config['DCMT.sftp_user'] || ''}
+                            value={getSettingsValue('DCMT.sftp_user')}
+                            onChange={(e) => {
+                                handleSettingsChange('DCMT.sftp_user', e.target.value)
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -129,8 +171,24 @@ export default function Transfer() {
                             label={t("password")}
                             type="password"
                             variant="standard"
-                            value={config['DCMT.sftp_password'] || ''}
+                            value={getSettingsValue('DCMT.sftp_password')}
+                            onChange={(e) => {
+                                handleSettingsChange('DCMT.sftp_password', e.target.value)
+                            }}
                         />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2} direction={"row-reverse"}>
+                    <Grid item xs="auto">
+                        <Button variant="contained" component="label" onClick={() => {
+                            handleSave()
+                        }}>{t('save')}</Button>
+                    </Grid>
+                    <Grid item xs="auto">
+                        <Button variant="outlined" component="label"
+                                onClick={handleCancel}>{t('cancel')}</Button>
+                    </Grid>
+                    <Grid item xs>
                     </Grid>
                 </Grid>
             </CardContent>

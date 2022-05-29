@@ -1,7 +1,17 @@
-
-import { Card, CardContent, TextField, Grid, FormGroup, FormControlLabel, Checkbox, Stack, Container, Typography } from '@mui/material';
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
+import {
+    Card,
+    CardContent,
+    TextField,
+    Grid,
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
+    Container,
+    Typography,
+    Button
+} from '@mui/material';
+import {useTheme} from '@emotion/react';
+import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
 import * as React from "react";
 import SettingsService from "../../../services/api/settings.service";
@@ -9,6 +19,11 @@ import SettingsService from "../../../services/api/settings.service";
 export default function Storage() {
     const theme = useTheme();
     const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        },
         field: {
             width: '100%'
         },
@@ -41,8 +56,9 @@ export default function Storage() {
     });
     const classes = useStyles();
 
+    /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
-    const refreshSettings = async() => {
+    const refreshSettings = async () => {
         const response = await SettingsService.getStorage();
 
         if (response.error) {
@@ -50,7 +66,7 @@ export default function Storage() {
             return;
         }
 
-        if (response.items==null) return;
+        if (response.items == null) return;
         setSettingsValue(response.items);
     }
 
@@ -58,82 +74,152 @@ export default function Storage() {
         refreshSettings();
     }, []);
 
+    const getSettingsValue = (id) => {
+        if (!settingsValue[id]) return '';
+        return settingsValue[id]['value'] || '';
+    }
+    const handleSettingsChange = (id, value) => {
+        let cfg = settingsValue[id];
+        if (!cfg) return;
+        cfg['value'] = value;
+        setSettingsValue({...settingsValue, [id]: cfg});
+    }
+
+    const handleSave = async () => {
+        const response = await SettingsService.saveStorage(settingsValue);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        refreshSettings();
+    };
+
+    const handleCancel = () => {
+        refreshSettings();
+    };
+
     return (
-        <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
-            <CardContent>
-                <Container maxWidth="sm" style={{ marginLeft: "0px", marginBottom: '15px', paddingLeft : "0px" }}>
-                    <Grid container rowSpacing={2} style={{ marginBottom: '15px' }}>
-                        <Grid item xs={12} >
-                            <TextField
-                                className={classes.field}
-                                id="filled-basic"
-                                label={t("storage_path")}
-                                variant="standard"
-                                value={settingsValue['DCMS.storage_folder'] || ''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} >
-                            <TextField
-                                className={classes.field}
-                                id="filled-basic"
-                                label={t("secondary_path")}
-                                variant="standard"
-                                value={settingsValue['DCMS.storage_folder_secondary'] || ''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} >
-                            <Grid container>
-                                <Grid item xs="auto">
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            control={<Checkbox checked={settingsValue['SDS.keep_images']==='true' || false} />}
-                                            label={t("keep_images_for")}
+        <>
+            <Card className={classes.card} style={{margin: "0 0 20px 0"}}>
+                <Grid container spacing={2} direction={"row-reverse"}>
+                    <Grid item xs="auto">
+                        <Button variant="contained" component="label" onClick={() => {
+                            handleSave()
+                        }}>{t('save')}</Button>
+                    </Grid>
+                    <Grid item xs="auto">
+                        <Button variant="outlined" component="label"
+                                onClick={handleCancel}>{t('cancel')}</Button>
+                    </Grid>
+                    <Grid item xs>
+                    </Grid>
+                </Grid>
+            </Card>
+            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+                <CardContent>
+                    <Container maxWidth="sm" style={{marginLeft: "0px", marginBottom: '15px', paddingLeft: "0px"}}>
+                        <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    className={classes.field}
+                                    id="filled-basic"
+                                    label={t("storage_path")}
+                                    variant="standard"
+                                    value={getSettingsValue('DCMS.storage_folder')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('DCMS.storage_folder', e.target.value)
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    className={classes.field}
+                                    id="filled-basic"
+                                    label={t("secondary_path")}
+                                    variant="standard"
+                                    value={getSettingsValue('DCMS.storage_folder_secondary')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('DCMS.storage_folder_secondary', e.target.value)
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Grid container>
+                                    <Grid item xs="auto">
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={getSettingsValue('SDS.keep_images') === "true"}
+                                                        onChange={(e) => handleSettingsChange('SDS.keep_images', e.target.checked + "")}
+                                                    />
+                                                }
+                                                label={t("keep_images_for")}
+                                            />
+                                        </FormGroup>
+                                    </Grid>
+                                    <Grid item xs="auto">
+                                        <TextField
+                                            style={{width: '50px'}}
+                                            id="filled-basic"
+                                            variant="standard"
+                                            value={getSettingsValue('SDS.keep_images_retention')}
+                                            onChange={(e) => {
+                                                handleSettingsChange('SDS.keep_images_retention', e.target.value)
+                                            }}
                                         />
-                                    </FormGroup>
+                                    </Grid>
+                                    <Grid item xs="auto">
+                                        <Typography
+                                            style={{marginLeft: '10px', marginTop: '8px'}}>{t("days")}</Typography>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs="auto">
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormGroup>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={getSettingsValue('SDS.use_treshold') === "true"}
+                                                onChange={(e) => handleSettingsChange('SDS.use_treshold', e.target.checked + "")}
+                                            />
+                                        }
+                                        label={t("capacity_treshold")}
+                                    />
+                                </FormGroup>
+                            </Grid>
+                            <Grid container direction="row-reverse" rowSpacing={2} style={{marginBottom: '15px'}}>
+                                <Grid item xs={11}>
                                     <TextField
-                                        style={{ width: '50px' }}
+                                        className={classes.field}
                                         id="filled-basic"
+                                        label={t("maximum")}
                                         variant="standard"
-                                        value={settingsValue['SDS.keep_images_retention'] || ''}
+                                        value={getSettingsValue('SDS.clean_auto_treshold')}
+                                        onChange={(e) => {
+                                            handleSettingsChange('SDS.clean_auto_treshold', e.target.value)
+                                        }}
                                     />
                                 </Grid>
-                                <Grid item xs="auto">
-                                    <Typography style={{ marginLeft: '10px' ,marginTop: '8px' }}>{t("days")}</Typography>
+                                <Grid item xs={11}>
+                                    <TextField
+                                        className={classes.field}
+                                        id="filled-basic"
+                                        label={t("drop_to")}
+                                        variant="standard"
+                                        value={getSettingsValue('SDS.clean_auto_treshold_target')}
+                                        onChange={(e) => {
+                                            handleSettingsChange('SDS.clean_auto_treshold_target', e.target.value)
+                                        }}
+                                    />
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={12} >
-                            <FormGroup>
-                                <FormControlLabel
-                                    control={<Checkbox checked={settingsValue['SDS.use_treshold']==='true' || false} />}
-                                    label={t("capacity_treshold")}
-                                />
-                            </FormGroup>
-                        </Grid>
-                        <Grid container direction="row-reverse" rowSpacing={2} style={{ marginBottom: '15px' }}>
-                            <Grid item xs={11} >
-                                <TextField
-                                    className={classes.field}
-                                    id="filled-basic"
-                                    label={t("maximum")}
-                                    variant="standard"
-                                    value={settingsValue['SDS.clean_auto_treshold'] || ''}
-                                />
-                            </Grid>
-                            <Grid item xs={11} >
-                                <TextField
-                                    className={classes.field}
-                                    id="filled-basic"
-                                    label={t("drop_to")}
-                                    variant="standard"
-                                    value={settingsValue['SDS.clean_auto_treshold_target'] || ''}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Container>
-            </CardContent>
-        </Card>)
+                    </Container>
+                </CardContent>
+            </Card>
+        </>
+    )
 }
