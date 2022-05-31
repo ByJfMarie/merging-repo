@@ -12,10 +12,14 @@ import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
+import {useState} from "react";
+import AuthService from "../../services/api/auth.service";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
 const TableRetrievingStatus = (props) => {
+
+    const priviledges = AuthService.getCurrentUser().priviledges;
 
     const statusComponent = (params) => {
 
@@ -88,17 +92,35 @@ const TableRetrievingStatus = (props) => {
     });
     const classes = useStyles();
 
-    const [rows, setRows] = React.useState(props.rows);
-    React.useEffect(() => {
-        if (props.rows) setRows(props.rows);
+    //Status
+    const [rowsStatus, setRowsStatus] = useState([]);
+    const refreshOrders = async () => {
+        const response = await QRService.getOrders({});
 
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items == null) return;
+        setRowsStatus(response.items);
+    }
+    React.useEffect(() => {
+        refreshOrders();
+    }, []);
+
+    React.useEffect(() => {
         if (props.autoRefresh) {
             const interval = setInterval(() => {
-                props.refresh();
+                refreshOrders();
             }, 5000);
             return () => clearInterval(interval);
         }
     }, [props]);
+
+    React.useEffect(()=> {
+        refreshOrders();
+    }, [props.forceRefresh])
 
     const handleRetry = async(id) => {
         const response = await QRService.retryOrders(id);
@@ -108,7 +130,7 @@ const TableRetrievingStatus = (props) => {
             return;
         }
 
-        props.refresh();
+        refreshOrders();
     }
 
     const handleCancel = async (id) => {
@@ -119,7 +141,7 @@ const TableRetrievingStatus = (props) => {
             return;
         }
 
-        props.refresh();
+        refreshOrders();
     }
 
     const column = [
@@ -136,7 +158,7 @@ const TableRetrievingStatus = (props) => {
         }
     ];
 
-    props.settings[props.page].statusTable.columns.map((row) => {
+    priviledges.settings[props.page].statusTable.columns.map((row) => {
         if (row === 'patient') {
             column.push(
                 {
@@ -212,7 +234,7 @@ const TableRetrievingStatus = (props) => {
     );
 
     return (
-        rows &&
+        rowsStatus &&
         <React.Fragment>
             <div style={{width: '100%'}}>
                 <DataGrid
@@ -220,7 +242,7 @@ const TableRetrievingStatus = (props) => {
                     style={{marginTop: '25px'}}
                     autoWidth={true}
                     autoHeight={true}
-                    rows={rows}
+                    rows={rowsStatus}
                     columns={column}
                     pageSize={10}
                     rowsPrPageOptions={[10]}

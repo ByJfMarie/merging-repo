@@ -76,6 +76,32 @@ class StudiesService {
             checked: checked
         });
     }
+
+    prepareDownload(type, rows) {
+        return apiPOST('studies/download.prepare', {
+            format: type,
+            studies: rows
+        });
+    }
+
+    statusDownload(id) {
+        return apiGET('studies/download.status/'+id);
+    }
+
+    download(id, config) {
+        return api
+            .get('studies/download/'+id, config)
+            .then((response) => {
+                if (response.status === 200) {
+                    return response;
+                } else {
+                    return null;
+                }
+            })
+            .catch((error) => {
+                return null;
+            });
+    }
 }
 
 export default new StudiesService();

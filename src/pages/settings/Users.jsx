@@ -1,5 +1,19 @@
 import React from 'react';
-import { Typography, Divider, Card, CardContent, TextField, Grid, Button, Slide, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
+import {
+    Typography,
+    Divider,
+    Card,
+    CardContent,
+    TextField,
+    Grid,
+    Button,
+    Slide,
+    FormControl,
+    Select,
+    MenuItem,
+    InputLabel,
+    Alert, Snackbar
+} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import TableUsers from "../../components/settings/users/TableUsers";
@@ -30,6 +44,13 @@ const Users = (props) => {
     });
     const classes = useStyles();
 
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+
     /** FILTERS */
     const [filters, setFilters] = React.useState({
         username: "",
@@ -52,6 +73,12 @@ const Users = (props) => {
         <React.Fragment>
             <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('users')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
+
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
 
             <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
                 <CardContent>
@@ -111,6 +138,7 @@ const Users = (props) => {
                         filters={filters}
                         forceRefresh={forceRefresh}
                         editUser={(values) => {setUserValues(values); toggleDialog();}}
+                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
@@ -121,6 +149,7 @@ const Users = (props) => {
                 isOpen={showDialog}
                 toggle={toggleDialog}
                 onSave={() => {setForceRefresh(!forceRefresh);}}
+                alertMessage={(message) => setMessage(message)}
             />
 
         </React.Fragment>

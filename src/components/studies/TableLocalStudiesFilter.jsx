@@ -427,7 +427,7 @@ export default function TableLocalStudiesFilter(props) {
                                                     label={t(value)}
                                                     variant="standard"
                                                     fullWidth
-                                                    value={values.patient_id}
+                                                    value={values[value]}
                                                     onChange={(e) => { handleSearch(value, e.target.value) }}
                                                 />
                                             </Grid>)

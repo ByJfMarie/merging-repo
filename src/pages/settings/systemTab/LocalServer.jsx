@@ -7,13 +7,14 @@ import {
     FormControlLabel,
     Checkbox,
     Container,
-    Grid, Button
+    Grid, Button, Alert, Snackbar
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
 import * as React from "react";
 import SettingsService from "../../../services/api/settings.service";
+import ResetSave from "../../../components/settings/ResetSave";
 
 export default function LocalServer() {
     const theme = useTheme();
@@ -45,6 +46,13 @@ export default function LocalServer() {
 
     });
     const classes = useStyles();
+
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
 
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
@@ -85,11 +93,22 @@ export default function LocalServer() {
         const response = await SettingsService.saveLocalServer(settingsValue);
 
         if (response.error) {
-            console.log(response.error);
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         refreshSettings();
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Settings successfully saved!"
+        });
     };
 
     const handleCancel = () => {
@@ -98,21 +117,11 @@ export default function LocalServer() {
 
     return (
         <>
-            <Card className={classes.card} style={{margin: "0 0 20px 0"}}>
-                <Grid container spacing={2} direction={"row-reverse"}>
-                    <Grid item xs="auto">
-                        <Button variant="contained" component="label" onClick={() => {
-                            handleSave()
-                        }}>{t('save')}</Button>
-                    </Grid>
-                    <Grid item xs="auto">
-                        <Button variant="outlined" component="label"
-                                onClick={handleCancel}>{t('cancel')}</Button>
-                    </Grid>
-                    <Grid item xs>
-                    </Grid>
-                </Grid>
-            </Card>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
             <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <Container maxWidth="sm" style={{marginLeft: "0px", marginBottom: '15px', paddingLeft: "0px"}}>
@@ -331,7 +340,10 @@ export default function LocalServer() {
                             label={t("MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1")}
                         />
                     </FormGroup>
-
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
                 </CardContent>
             </Card>
         </>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Grid, Chip, MenuItem, Input, FormGroup, FormControlLabel, Checkbox, Container, Divider, Box, Select, InputLabel, FormControl, Dialog, DialogContent, DialogContentText, Button, DialogActions, DialogTitle, Card, CardContent, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
@@ -11,8 +11,11 @@ import moment from "moment";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import AuthService from "../../services/api/auth.service";
 
 export default function TableRemoteStudiesFilter(props) {
+
+    const priviledges = AuthService.getCurrentUser().priviledges;
 
     /** MODALITY ELEMENTS */
     const names = [
@@ -101,12 +104,7 @@ export default function TableRemoteStudiesFilter(props) {
     });
     const classes = useStyles();
 
-    const [values, setValues] = React.useState(props.initialValues)
     const [open, setOpen] = React.useState(false);
-
-    useEffect(() => {
-        props.searchFunction(values);
-    }, [open])
 
     // eslint-disable-next-line
     const handleClickOpen = () => {
@@ -120,16 +118,14 @@ export default function TableRemoteStudiesFilter(props) {
     /** MODALITY FIELD */
     const handleChangeModality = (event) => {
         const value = event.target.value;
-        const filter = {...values, modality: (typeof value === 'string') ? value.split(',') : value};
-        setValues(filter);
-        props.searchFunction(filter);
+        const filter = {...props.filters, modality: (typeof value === 'string') ? value.split(',') : value};
+        props.setFilters(filter);
     };
 
     /** PRESET BUTTON FUNCTION */
     const handleChangeDate = (param) => {
 
-        let items = values;
-        items = {...items, date_preset: param};
+        let items = {...props.filters, date_preset: param};
 
         switch (param) {
             case 0:
@@ -144,29 +140,24 @@ export default function TableRemoteStudiesFilter(props) {
             default:
                 items = {...items, from: calcDate(param), to: calcDate()};
         }
-
-        setValues(items);
-        props.searchFunction(items);
+        props.setFilters(items);
     }
 
     /** RESET BUTTON */
     const clearValues = () => {
-        setValues(props.initialValues)
-        props.searchFunction(props.initialValues);
+        props.setFilters(props.initialValues);
     }
 
     /** SEND VALUE */
     const handleSearch = (id, value) => {
-        let filter = values;
+        let filter = props.filters;
 
         if (id==='from' || id==='to') {
             filter = {...filter, date_preset: ""};
             if (value && !moment(value).isValid()) return;
         }
         filter = {...filter, [id]: value};
-
-        setValues(filter);
-        props.searchFunction(filter);
+        props.setFilters(filter);
     }
 
     const statusComponent = (
@@ -175,8 +166,8 @@ export default function TableRemoteStudiesFilter(props) {
             <Select
                 labelId="status"
                 id="status"
-                value={values.status}
-                onChange={(e) => { setValues({ ...values, status: e.target.value }) }}
+                value={props.filters.status}
+                onChange={(e) => { props.setFilters({ ...props.filters, status: e.target.value }) }}
             >
                 <MenuItem value="">All</MenuItem>
                 <MenuItem value={10}>In Progress</MenuItem>
@@ -193,7 +184,7 @@ export default function TableRemoteStudiesFilter(props) {
                 labelId="modality"
                 id="modality"
                 multiple
-                value={values.modality}
+                value={props.filters.modality}
                 onChange={handleChangeModality}
                 input={<Input id="select-multiple-chip" label="Chip" />}
                 renderValue={(selected) => (
@@ -225,7 +216,7 @@ export default function TableRemoteStudiesFilter(props) {
         variant="standard"
         size="normal"
         fullWidth
-        value={values.birthdate}
+        value={props.filters.birthdate}
         InputLabelProps={{ shrink: true }}
         onChange={(e) => { handleSearch("birthdate", e.target.value) }}
     />)
@@ -269,7 +260,7 @@ export default function TableRemoteStudiesFilter(props) {
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                            {props.settings[props.page].search.primary_fields.map((value, key) => {
+                            {priviledges.settings[props.page].search.primary_fields.map((value, key) => {
 
                                 if (value === "status") {
                                     return (
@@ -299,7 +290,7 @@ export default function TableRemoteStudiesFilter(props) {
                                         label={t(value)}
                                         variant="standard"
                                         fullWidth
-                                        value={values[value]}
+                                        value={props.filters[value]}
                                         onChange={(e) => handleSearch(value, e.target.value)}
                                     />
                                 </Grid>)
@@ -312,9 +303,9 @@ export default function TableRemoteStudiesFilter(props) {
                             <ToggleButtonGroup
                                 color="primary"
                                 exclusive
-                                value={values.date_preset}
+                                value={props.filters.date_preset}
                             >
-                                {props.settings[props.page].search.date_presets.map((value, key) => {
+                                {priviledges.settings[props.page].search.date_presets.map((value, key) => {
 
 
                                     var label;
@@ -390,7 +381,7 @@ export default function TableRemoteStudiesFilter(props) {
                         >
                             <Container style={{ maxWidth: "500px" }}>
 
-                                {props.settings[props.page].search.secondary_fields.length !== 0 ? (<>
+                                {priviledges.settings[props.page].search.secondary_fields.length !== 0 ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
                                         <Chip size="medium" label={t('moreFilters')} style={{ backgroundColor: theme.palette.chip.color }} />
@@ -398,7 +389,7 @@ export default function TableRemoteStudiesFilter(props) {
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                                        {props.settings[props.page].search.secondary_fields.map((value, key) => {
+                                        {priviledges.settings[props.page].search.secondary_fields.map((value, key) => {
 
 
                                             if (value === "status") {
@@ -430,7 +421,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                     label={t(value)}
                                                     variant="standard"
                                                     fullWidth
-                                                    value={values[value]}
+                                                    value={props.filters[value]}
                                                     onChange={(e) => { handleSearch(value, e.target.value) }}
                                                 />
                                             </Grid>)
@@ -454,7 +445,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                     id="from"
                                                     label={t('from')}
                                                     //inputFormat="yyyy.MM.dd"
-                                                    value={values.from || null}
+                                                    value={props.filters.from || null}
                                                     onChange={(date, keyboardInputValue) => {
                                                         if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
                                                         handleSearch("from", date);}
@@ -468,7 +459,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                     id="to"
                                                     label={t('to')}
                                                     //inputFormat="yyyy.MM.dd"
-                                                    value={values.to || null}
+                                                    value={props.filters.to || null}
                                                     onChange={(date) => {handleSearch("to", date);}}
                                                     renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
                                                     dateAdapter={AdapterDateFns}
@@ -479,12 +470,12 @@ export default function TableRemoteStudiesFilter(props) {
                                     </Grid>
                                     <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
                                         <Grid item xs={12} sm={8} md={7} className={classes.delete}>
-                                            {props.settings[props.page].search.showDeleted && (<FormGroup>
+                                            {priviledges.settings[props.page].search.showDeleted && (<FormGroup>
                                                 <FormControlLabel size="small"
                                                     control={
                                                         <Checkbox
                                                             id="showDeleted"
-                                                            checked={values.showDeleted} />
+                                                            checked={props.filters.showDeleted} />
                                                     }
                                                     label={t('show_deleted')}
                                                     onChange={(e) => {handleSearch(e)}}

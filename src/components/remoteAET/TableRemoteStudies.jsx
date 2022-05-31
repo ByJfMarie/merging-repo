@@ -1,67 +1,193 @@
-import {Box, IconButton, Paper, TableContainer,} from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import {Alert, Box, Paper, Snackbar, TableContainer,} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import t from "../../services/Translation";
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
-import styled from "styled-components/macro";
-import {useState} from "react";
-import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
-import ShortcutIcon from "@mui/icons-material/Shortcut";
-import UpdateIcon from "@mui/icons-material/Update";
 import InfoIcon from '@mui/icons-material/Info';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import LockIcon from '@mui/icons-material/Lock';
+import TableRemoteStudiesFilter from "./TableRemoteStudiesFilter";
+import TableRemoteStudiesActions from "./TableRemoteStudiesActions";
+import AuthService from "../../services/api/auth.service";
+import {useState} from "react";
+import QRService from "../../services/api/queryRetrieve.service";
+import Thumbnail from "../studies/Thumbnail";
 
 function TableRemoteStudies(props) {
 
     /** THEME AND CSS */
     const theme = useTheme();
-    const useStyles = makeStyles({
-        root: {
-            "& .MuiTableCell-head": {
-                color: theme.palette.table.text,
-                backgroundColor: theme.palette.table.head
-            },
-        },
-        tableRow: {
-            height: "60px !important"
-        },
-        tableCell: {
-            padding: "0px 16px !important"
-        }
+
+    const priviledges = AuthService.getCurrentUser().priviledges;
+
+    const filtersInitValue = {
+        patient_id: "",
+        patient_name: "",
+        study: "",
+        accession_number: "",
+        status: "",
+        birthdate: "",
+        aet: "",
+        description: "",
+        referring_physician: "",
+        modality: [],
+        showDeleted: false,
+        date_preset: '*',
+        from: "",
+        to: "",
+    };
+
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: 'success',
+        message: ''
     });
-    const classes = useStyles();
+    const messageAlert = (severity, message) => {
+        setMessage({
+            ...message,
+            show: true,
+            severity: severity,
+            message: message
+        });
+    }
 
-    /* USESTATE */
-    const [rows, setRows] = React.useState(props.rows)
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    /* FILTERS */
+    const [filters, setFilters] = useState(filtersInitValue);
+    const [rows, setRows] = React.useState([]);
+    const checkFilters = (aet, filters) => {
+        if (!filters) return false;
 
+        if (filters.patient_id && filters.patient_id.length<3) {
+            messageAlert('error', 'Patient ID is too short (Min 3 characters allowed...)')
+            return false;
+        }
 
-    /** PAGINATION FUNCTIONS */
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+        if (filters.patient_name && filters.patient_name.length<3) {
+            messageAlert('error', 'Patient Name is too short (Min 3 characters allowed...)')
+            return false;
+        }
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+        if (filters.description && filters.description.length<3) {
+            messageAlert('error', 'Study Description is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        if (filters.accession_number && filters.accession_number.length<3) {
+            messageAlert('error', 'Accession Number is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        if (filters.referring_physician && filters.referring_physician.length<3) {
+            messageAlert('error', 'Referring Physician is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        //if Aet && all is empty => error
+        if (aet) {
+            let empty = true;
+            if (filters.patient_id) empty = false;
+            if (filters.patient_name) empty = false;
+            if (filters.accession_number) empty = false;
+            if (filters.birthdate) empty = false;
+            if (filters.description) empty = false;
+            if (filters.referring_physician) empty = false;
+            if (filters.modality.length>0) empty = false;
+            if (filters.from) empty = false;
+            if (filters.to) empty = false;
+
+            if(empty) {
+                messageAlert('error', 'You can\'t query studies without criteria!');
+                return false;
+            }
+        }
+
+        setMessage({...message, show: false})
+        return true;
+    }
+
+    const queryStudies = async (aet, filt) => {
+        /** RESET RESULT */
+        const rows = [];
+
+        if (aet === '') {
+            setRows(rows);
+            return;
+        }
+
+        if (!checkFilters(aet, filt)) return;
+
+        const response = await QRService.query(aet, filt);
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setRows(response.items)
+    }
+
+    const retrieveStudies = async (move_aet) => {
+        if (props.currentAET === '') return;
+        const response = await QRService.retrieve(props.currentAET, move_aet, selectedRowsData);
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setSelectedRows([]);
+        setSelectedRowsData([]);
+        props.actiontrigger();
+    }
 
     React.useEffect(() => {
-        setRows(props.rows.slice((page) * rowsPerPage, (page + 1) * rowsPerPage))
-    }, [props.rows])
+        if (props.currentAET) queryStudies(props.currentAET, filters).then();
+    }, [props.currentAET, filters]);
 
-    React.useEffect(() => {
-        setRows(props.rows.slice((page) * rowsPerPage, (page + 1) * rowsPerPage))
-    }, [page, rowsPerPage])
-
-    const [thumbnail, setThumbnail] = useState({})
+    //Selection
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedRowsData, setSelectedRowsData] = useState([]);
 
     //Create Columns
-    const columns = [];
-    props.settings[props.page].searchTable.columns.map((row) => {
+    const columns = [
+        {
+            field: "patient_full",
+            headerName: t("patient"),
+            flex: 3,
+            maxWidth: 250,
+            //resizable: true,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return <div
+                    style={{lineHeight: "normal"}}>{params.row.p_name || ''} ({params.row.p_id || ''})<br/>{params.row.p_birthdate || ''}
+                </div>
+            }
+        },
+        {
+            field: "study_full",
+            headerName: t('study'),
+            flex: 4,
+            maxWidth: 250,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                    <Box>
+                        {params.row.st_date+" - "+params.row.st_accession_number+" - "+params.row.st_modalities}<br/>
+                        {params.row.st_description}<br/>
+                        {params.row.nb_series+" serie(s) - "+params.row.nb_images+" image(s)"}
+                    </Box>
+                </div>
+            }
+        },
+        {
+            flex: 2,
+            field: 'st_ref_physician',
+            headerName: t('referring_physician')
+        },
+    ];
+
+
+
+
+    /*priviledges.settings[props.page].searchTable.columns.map((row) => {
 
         if (row === 'patient') {
             columns.push({
@@ -152,9 +278,10 @@ function TableRemoteStudies(props) {
                 }
             );
         }
-    });
+        return true;
+    });*/
 
-    if (props.privileges.pages[props.page].searchTable.actionsRow.length !== 0) {
+    if (priviledges.privileges.pages[props.page].searchTable.actionsRow.length !== 0) {
         columns.push(
             {
                 field: 'actions',
@@ -195,79 +322,49 @@ function TableRemoteStudies(props) {
     }
 
     return (
-        <TableContainer component={Paper} style={{ marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
-            <DataGrid
-                columns={columns}
-                rows={rows}
-                //loading={!rows.length}
-                //error={error}
-                rowHeight={60}
-                pageSize={20}
-                autoHeight={true}
-                rowsPerPageOptions={[20]}
-                getRowId={(row) => row.key}
-                checkboxSelection
-                selectionModel={props.selectedRows}
-                onSelectionModelChange={(ids) => {
-                    const selectedIDs = new Set(ids);
-                    const selectedRowData = rows.filter((row) =>
-                        selectedIDs.has(row.key.toString())
-                    );
-                    props.selectionHandler(ids, selectedRowData);
+        <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
 
-                }}
-            />
-        </TableContainer>
-
-        /*&&
-
-        <TableContainer component={Paper} style={{ marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table" className={classes.root}>
-                <TableHead>
-                    <TableRow className={classes.tableRow}>
-                        <TableCell width="2%" align="left" className={classes.tableCell} >
-                            <Checkbox onChange={(e) => handleAllSelect(e)} checked={selectAll} />
-                        </TableCell>
-                        {props.settings[props.page].searchTable.columns.map((row) => (
-                            <>
-                                <TableCell style={row === "actions" ? {width: '100px', padding: 0} : {}} height="60px" align="left" className={classes.tableCell}> {row === "actions" ? "" : t(row)} </TableCell>
-                            </>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        rows &&
-
-                        rows.map((row) => {
-                        return (
-                            <CustomTableRow
-                                rows={row}
-                                checked={selectedRows.includes(row.id) ? true : false}
-                                onChange={handleSelect}
-                                columns={props.settings[props.page].searchTable.columns}
-                                actions={props.privileges.pages[props.page].searchTable.actionsRow}
-                                handleOpenDialogStudy={props.handleOpenDialogStudy}
-                                handleOpenDialoPermissions={props.handleOpenDialogPermissions}
-                            />
-                        )
-                    })}
-                </TableBody>
-            </Table>
-
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={props.rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                style={{ backgroundColor: theme.palette.table.head }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage={t('rowsPerPage') + ' :'}
+            <TableRemoteStudiesFilter
+                initialValues={filtersInitValue}
+                filters={filters}
+                setFilters={(filters) => setFilters(filters)}
+                page="aet"
             />
 
-        </TableContainer>*/
+            <TableContainer component={Paper} style={{ marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                    //loading={!rows.length}
+                    //error={error}
+                    rowHeight={60}
+                    pageSize={20}
+                    autoHeight={true}
+                    rowsPerPageOptions={[20]}
+                    getRowId={(row) => row.key}
+                    checkboxSelection
+                    selectionModel={selectedRows}
+                    onSelectionModelChange={(ids) => {
+                        const selectedIDs = new Set(ids);
+                        const selectedRowData = rows.filter((row) =>
+                            selectedIDs.has(row.key.toString())
+                        );
+                        setSelectedRows(ids);
+                        setSelectedRowsData(selectedRowData);
+                    }}
+                />
+            </TableContainer>
+
+            <TableRemoteStudiesActions
+                page="aet"
+                retrieveFunction={retrieveStudies}
+            />
+        </>
     )
 }
 

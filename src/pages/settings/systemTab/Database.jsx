@@ -1,10 +1,11 @@
 
-import {Card, CardContent, TextField, Grid, Button} from '@mui/material';
+import {Card, CardContent, TextField, Grid, Button, Alert, Snackbar} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
 import React from "react";
 import SettingsService from "../../../services/api/settings.service";
+import ResetSave from "../../../components/settings/ResetSave";
 
 export default function Database() {
     /** STYLE & THEME */
@@ -29,6 +30,17 @@ export default function Database() {
 
     });
     const classes = useStyles();
+
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+    function Message() {
+        if (!message || !message.show) return <></>;
+        return <Alert severity={message.severity}>{message.message}</Alert>;
+    }
 
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
@@ -57,11 +69,22 @@ export default function Database() {
         const response = await SettingsService.saveDatabase(config);
 
         if (response.error) {
-            console.log(response.error);
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         refresh();
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Settings successfully saved!"
+        });
     };
 
     const handleCancel = () => {
@@ -69,6 +92,12 @@ export default function Database() {
     };
 
     return (
+        <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
         <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
             <CardContent>
                 <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -134,19 +163,12 @@ export default function Database() {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={2} direction={"row-reverse"}>
-                    <Grid item xs="auto">
-                        <Button variant="contained" component="label" onClick={() => {
-                            handleSave()
-                        }}>{t('save')}</Button>
-                    </Grid>
-                    <Grid item xs="auto">
-                        <Button variant="outlined" component="label"
-                                onClick={handleCancel}>{t('cancel')}</Button>
-                    </Grid>
-                    <Grid item xs>
-                    </Grid>
-                </Grid>
+                <ResetSave
+                    handleSave={handleSave}
+                    handleCancel={handleCancel}
+                />
             </CardContent>
-        </Card>)
+        </Card>
+            </>
+            )
 }

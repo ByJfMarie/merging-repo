@@ -26,19 +26,17 @@ const TableLocalStudiesActions = (props) => {
                         priviledges.privileges.pages[props.page].searchTable.actionsTable.map((value, key) => {
                             if (value === "forward") {
                                 return (
-                                    <Grid item xs="auto">
-                                    <ForwardButton
-                                        key={value}
-                                        forwardFunction={props.forwardFunction}
-                                    />
+                                    <Grid key={value} item xs="auto">
+                                        <ForwardButton
+                                            forwardFunction={props.forwardFunction}
+                                        />
                                     </Grid>
                                 )
                             }
                             else if (value === "transfer") {
                                 return (
-                                    <Grid item xs="auto">
+                                    <Grid key={value} item xs="auto">
                                     <TransferButton
-                                        key={value}
                                         transferFunction={props.transferFunction}
                                     />
                                     </Grid>

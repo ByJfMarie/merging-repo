@@ -20,7 +20,7 @@ import {
     InputLabel,
     FormControlLabel,
     Checkbox,
-    Button
+    Button, Alert, Snackbar
 } from '@mui/material';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@emotion/react';
@@ -29,6 +29,7 @@ import t from "../../services/Translation";
 import Editor from "../../components/Editor.jsx"
 import "react-phone-input-2/lib/high-res.css";
 import SettingsService from "../../services/api/settings.service";
+import ResetSave from "../../components/settings/ResetSave";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -93,6 +94,17 @@ export default function Emailing() {
     const handleChange = (event, newValue) => {setValue(newValue);};
     const handleChangeIndex = (index) => {setValue(index);};
 
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+    function Message() {
+        if (!message || !message.show) return <></>;
+        return <Alert severity={message.severity}>{message.message}</Alert>;
+    }
+
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
     const refreshSettings = async() => {
@@ -126,11 +138,22 @@ export default function Emailing() {
         const response = await SettingsService.saveEmailing(settingsValue);
 
         if (response.error) {
-            console.log(response.error);
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         refreshSettings();
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Settings successfully saved!"
+        });
     };
 
     const handleCancel = () => {
@@ -157,6 +180,12 @@ export default function Emailing() {
             <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }}> {t("emailing")}  </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label={t('general')} {...a11yProps(0)} />
@@ -170,21 +199,6 @@ export default function Emailing() {
             >
 
                 <TabPanel value={value} index={0} dir="ltr">
-                    <Card className={classes.card} style={{margin: "0 0 20px 0"}}>
-                        <Grid container spacing={2} direction={"row-reverse"}>
-                            <Grid item xs="auto">
-                                <Button variant="contained" component="label" onClick={() => {
-                                    handleSave()
-                                }}>{t('save')}</Button>
-                            </Grid>
-                            <Grid item xs="auto">
-                                <Button variant="outlined" component="label"
-                                        onClick={handleCancel}>{t('cancel')}</Button>
-                            </Grid>
-                            <Grid item xs>
-                            </Grid>
-                        </Grid>
-                    </Card>
                     <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                         <CardContent>
                             <Stack
@@ -278,28 +292,16 @@ export default function Emailing() {
                                         </Grid>
                                     </Grid>
                                 </Container>
-
                             </Stack>
+                            <ResetSave
+                                handleSave={handleSave}
+                                handleCancel={handleCancel}
+                            />
                         </CardContent>
                     </Card>
                 </TabPanel>
 
                 <TabPanel value={value} index={1} dir="ltr">
-                    <Card className={classes.card} style={{margin: "0 0 20px 0"}}>
-                        <Grid container spacing={2} direction={"row-reverse"}>
-                            <Grid item xs="auto">
-                                <Button variant="contained" component="label" onClick={() => {
-                                    handleSave()
-                                }}>{t('save')}</Button>
-                            </Grid>
-                            <Grid item xs="auto">
-                                <Button variant="outlined" component="label"
-                                        onClick={handleCancel}>{t('cancel')}</Button>
-                            </Grid>
-                            <Grid item xs>
-                            </Grid>
-                        </Grid>
-                    </Card>
                     <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '10px' }}>
 
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -356,7 +358,10 @@ export default function Emailing() {
                             defaultValue={template.body || ''}
                             onChange={(value) => {handleSettingsChange(template.name+'_body', value)}}
                         />
-
+                        <ResetSave
+                            handleSave={handleSave}
+                            handleCancel={handleCancel}
+                        />
                     </Card>
                 </TabPanel>
             </SwipeableViews>

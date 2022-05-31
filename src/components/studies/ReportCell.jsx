@@ -20,8 +20,8 @@ const ReportCell = (props) => {
         setReports(response.items);
     }
 
-    const handleDownloadReport = async (key) => {
-        const rsp = await StudiesService.openReport(key);
+    const handleDownloadReport = async (path) => {
+        const rsp = await StudiesService.openReport(path);
         if (rsp && rsp.data && rsp.data.size) {
             //Create a Blob from the PDF Stream
             const file = new Blob(
@@ -38,11 +38,11 @@ const ReportCell = (props) => {
 
     useEffect(() => {
         loadReports(props.study_uid);
-    }, [props]);
+    }, [props.study_uid]);
 
     return (
             Object.values(reports).map((report) => {
-                return (<IconButton key={report.key} onClick={() => handleDownloadReport(report.key)}><PictureAsPdfRoundedIcon fontSize="small"/></IconButton>);
+                return (<IconButton key={report.key} onClick={() => handleDownloadReport(report.path)}><PictureAsPdfRoundedIcon fontSize="small"/></IconButton>);
             })
     )
 }

@@ -1,4 +1,4 @@
-import {Box, IconButton, Paper, TableContainer,} from "@mui/material";
+import {Alert, Box, IconButton, Paper, Snackbar, TableContainer,} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import t from "../../services/Translation";
 import * as React from 'react';
@@ -18,6 +18,7 @@ import CustomDialogAddPermission from "./CustomDialogAddPermission";
 import AuthService from "../../services/api/auth.service";
 import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
 import TableLocalStudiesActions from "../studies/TableLocalStudiesActions";
+import DownloadStudies from "./DownloadStudies";
 
 function TableLocalStudies(props) {
 
@@ -43,11 +44,61 @@ function TableLocalStudies(props) {
     /** THEME AND CSS */
     const theme = useTheme();
 
+    /** Timer */
+    function timeout(delay) {
+        return new Promise( res => setTimeout(res, delay) );
+    }
+
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: 'success',
+        message: ''
+    });
+    const messageAlert = (severity, message) => {
+        setMessage({
+                ...message,
+                show: true,
+                severity: severity,
+                message: message
+            });
+    }
+
     const [filters, setFilters] = useState(filtersInitValue);
     const [rows, setRows] = React.useState([]);
+    const checkFilters = (filters) => {
+        if (!filters) return false;
 
+        if (filters.patient_id && filters.patient_id.length<3) {
+            messageAlert('error', 'Patient ID is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        if (filters.patient_name && filters.patient_name.length<3) {
+            messageAlert('error', 'Patient Name is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        if (filters.description && filters.description.length<3) {
+            messageAlert('error', 'Study Description is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        if (filters.accession_number && filters.accession_number.length<3) {
+            messageAlert('error', 'Accession Number is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        if (filters.referring_physician && filters.referring_physician.length<3) {
+            messageAlert('error', 'Referring Physician is too short (Min 3 characters allowed...)')
+            return false;
+        }
+
+        setMessage({...message, show: false})
+        return true;
+    }
     const searchStudies = async(values) => {
         setFilters(values);
+        if (!checkFilters(values)) return;
 
         const response = await StudiesService.searchStudies(values);
 
@@ -106,9 +157,79 @@ function TableLocalStudies(props) {
     //Selection
     const [selectedRows, setSelectedRows] = useState([])
 
+
     //Download
+    const [downloadOpen, setDownloadOpen] = useState(false)
+    const [downloadProgress, setDownloadProgress] = useState(0)
+    const [downloadMessage, setDownloadMessage] = useState("")
     const downloadStudies = async(type) => {
-        console.log("Download ("+type+") "+selectedRows);
+        //Init Download dialog
+        setDownloadProgress(0);
+        setDownloadMessage("Creating ZIP File");
+        setDownloadOpen(true);
+
+        //Start Download
+        let response = await StudiesService.prepareDownload(type, selectedRows);
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+        if (!response.items.id) return;
+
+        //Waiting zip creation
+        let download_id = response.items.id;
+        let file_name = response.items.name;
+        let finished = false;
+        while (!finished) {
+            response = await StudiesService.statusDownload(download_id);
+            if (response.error) {
+                console.log(response.error);
+                return;
+            }
+
+            setDownloadProgress(response.items.percent);
+            if (response.items.percent===100) {
+                finished = true;
+                continue;
+            }
+            await timeout(1000);
+        }
+
+        //Download
+        setDownloadProgress(0);
+        setDownloadMessage("Downloading file");
+        StudiesService
+            .download(download_id,
+            {
+                responseType: 'blob',
+                onDownloadProgress : progressEvent => {
+                    const percentage = Math.round((progressEvent.loaded / progressEvent.total)*100);
+                    setDownloadProgress(percentage);
+                    if (percentage === 100) {
+                        setDownloadMessage("Download Completed");
+
+                        setTimeout(() => {
+                            setDownloadOpen(false);
+                        }, 1000);
+                    }
+                }
+            })
+            .then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', file_name+".zip");
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+
+                setSelectedRows([]);
+
+                setTimeout(() => {
+                    setDownloadOpen(false);
+                }, 1000);
+            });
     };
 
     //Forward
@@ -134,147 +255,119 @@ function TableLocalStudies(props) {
     };
 
     //Create Columns
-    const columns = [];
-    priviledges.settings[props.page].searchTable.columns.map((row) => {
-
-        if (row === 'patient') {
-            columns.push({
-                field: "patient_full",
-                headerName: t(row),
-                flex: 3,
-                maxWidth: 250,
-                //resizable: true,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return <div
-                        style={{lineHeight: "normal"}}>{params.row.p_name || ''} ({params.row.p_id || ''})<br/>{params.row.p_birthdate || ''}
-                    </div>
-                }
-            });
-        } else if (row === 'study') {
-            columns.push({
-                field: "study_full",
-                headerName: t(row),
-                flex: 4,
-                maxWidth: 250,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                        <Thumbnail
+    const columns = [
+        {
+            field: "patient_full",
+            headerName: t("patient"),
+            flex: 3,
+            maxWidth: 250,
+            //resizable: true,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return <div
+                    style={{lineHeight: "normal"}}>{params.row.p_name || ''} ({params.row.p_id || ''})<br/>{params.row.p_birthdate || ''}
+                </div>
+            }
+        },
+        {
+            field: "study_full",
+            headerName: t('study'),
+            flex: 4,
+            maxWidth: 250,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                    <Thumbnail
+                        study_uid={params.row.st_uid}
+                        size={50}
+                    />
+                    <Box style={{paddingLeft: '15px'}}>
+                        {params.row.st_date+" - "+params.row.st_accession_number+" - "+params.row.st_modalities}<br/>
+                        {params.row.st_description}<br/>
+                        {params.row.nb_series+" serie(s) - "+params.row.nb_images+" image(s)"}
+                    </Box>
+                </div>
+            }
+        },
+        {
+            flex: 2,
+            field: 'st_ref_physician',
+            headerName: t('referring_physician')
+        },
+        {
+            field: "report",
+            headerName: t('report'),
+            flex: 2,
+            maxWidth: 150,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return (
+                    <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                        <ReportCell
                             study_uid={params.row.st_uid}
-                            size={50}
                         />
-                        <Box style={{paddingLeft: '15px'}}>
-                            {params.row.st_date+" - "+params.row.st_accession_number+" - "+params.row.st_modalities}<br/>
-                            {params.row.st_description}<br/>
-                            {params.row.nb_series+" serie(s) - "+params.row.nb_images+" image(s)"}
-                        </Box>
                     </div>
-                }
-            });
-        }
-        else if (row === 'report') {
-            columns.push({
-                field: "report",
-                headerName: t(row),
-                flex: 2,
-                maxWidth: 150,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return (
-                        <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                            <ReportCell
-                                study_uid={params.row.st_uid}
-                            />
-                        </div>
-                    )
-                }
-            });
-        }
-        else if (row === 'permissions') {
-            columns.push({
-                field: "permissions",
-                headerName: t(row),
-                flex: 2,
-                maxWidth: 100,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return (
-                       <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                            {
-                                (params.row.nb_shares>0)
-                                    ? <IconButton><ShortcutIcon fontSize="small"/></IconButton>
-                                    : <IconButton><UpdateIcon fontSize="small"/></IconButton>
-                            }
+                )
+            }
+        },
+        {
+            field: "permissions",
+            headerName: t('permissions'),
+            flex: 2,
+            maxWidth: 100,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return (
+                    <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                        {
+                            (params.row.nb_shares>0)
+                                ? <IconButton><ShortcutIcon fontSize="small"/></IconButton>
+                                : <IconButton><UpdateIcon fontSize="small"/></IconButton>
+                        }
 
-                            {
-                                (params.row.nb_shares>0)?(params.row.nb_shares+" share(s)"):"To be processed"
-                            }
-                        </div>
-                    )
-                }
-            });
-        }
-        else if (row === 'accession_number') {
-            columns.push(
-                {
-                    flex: 2,
-                    field: 'st_accession_number',
-                    headerName: t('accession_number'),
-                }
-            );
-        }
-        else if (row === 'modality') {
-            columns.push(
-                {
-                    flex: 2,
-                    field: 'st_modalities',
-                    headerName: t('modality'),
-                }
-            );
-        }
-        else if (row === 'date') {
-            columns.push(
-                {
-                    flex: 2,
-                    field: 'st_date',
-                    headerName: t('date')
-                }
-            );
-        }
-        else if (row === 'description') {
-            columns.push(
-                {
-                    flex: 2,
-                    field: 'st_description',
-                    headerName: t('description'),
-                }
-            );
-        }
-        else if (row === 'referring_physician') {
-            columns.push(
-                {
-                    flex: 2,
-                    field: 'st_ref_physician',
-                    headerName: t('referring_physician')
-                }
-            );
-        }
-        else if (row === 'noi') {
-            columns.push(
-                {
-                    flex: 1,
-                    field: 'noi',
-                    headerName: t('noi'),
-                    renderCell: (params) => {
-                        return <div style={{ lineHeight: "normal" }}>{params.row.nb_series || ''} serie(s)<br/>{params.row.nb_images || ''} image(s)</div>;
-                    }
-                }
-            );
-        }
+                        {
+                            (params.row.nb_shares>0)?(params.row.nb_shares+" share(s)"):"To be processed"
+                        }
+                    </div>
+                )
+            }
+        },
+        /*{
+            flex: 2,
+            field: 'st_accession_number',
+            headerName: t('accession_number'),
+            hide: true
+        },
+        {
+            flex: 2,
+            field: 'st_modalities',
+            headerName: t('modality'),
+        },
+        {
+            flex: 2,
+            field: 'st_date',
+            headerName: t('date')
+        },
+        {
+            flex: 2,
+            field: 'st_description',
+            headerName: t('description'),
+        },
+        {
+            flex: 2,
+            field: 'st_ref_physician',
+            headerName: t('referring_physician')
+        },
+        {
+            flex: 1,
+            field: 'noi',
+            headerName: t('noi'),
+            renderCell: (params) => {
+                return <div style={{ lineHeight: "normal" }}>{params.row.nb_series || ''} serie(s)<br/>{params.row.nb_images || ''} image(s)</div>;
+            }
+        }*/
+    ];
 
-        return true;
-    });
 
     if (priviledges.privileges.pages[props.page].searchTable.actionsRow.length !== 0) {
         columns.push(
@@ -318,6 +411,12 @@ function TableLocalStudies(props) {
 
     return (
         <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <TableLocalStudiesFilter
                 initialValues={filtersInitValue}
                 searchFunction={searchStudies}
@@ -363,6 +462,12 @@ function TableLocalStudies(props) {
                 handleOpenDialog={handleDialogPermissionsOpen}
                 handleCloseDialog={handleDialogPermissionsClose}
                 study={dialogPermissions}
+            />
+
+            <DownloadStudies
+                isOpen={downloadOpen}
+                progress={downloadProgress}
+                message={downloadMessage}
             />
         </>
     )

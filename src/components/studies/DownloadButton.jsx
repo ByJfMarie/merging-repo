@@ -44,9 +44,9 @@ const DownloadButton = (props) => {
                         'aria-labelledby': 'basic-button',
                     }}
                 >
-                    <MenuItem onClick={() => {props.downloadFunction("jpeg");}}>JPEG</MenuItem>
-                    <MenuItem onClick={() => {props.downloadFunction("jpeg-overlay");}}>JPEG Overlay</MenuItem>
-                    <MenuItem onClick={() => {props.downloadFunction("dicom");}}>DICOM Files</MenuItem>
+                    <MenuItem onClick={() => {handleDownload("jpg");}}>JPEG</MenuItem>
+                    <MenuItem onClick={() => {handleDownload("jpg-overlay");}}>JPEG Overlay</MenuItem>
+                    <MenuItem onClick={() => {handleDownload("dcm");}}>DICOM Files</MenuItem>
                 </Menu>
             </>
     )

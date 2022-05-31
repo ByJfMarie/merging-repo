@@ -3,7 +3,7 @@ import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import UsersService from "../../../services/api/users.service";
-import {IconButton} from "@mui/material";
+import {Alert, IconButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -52,11 +52,20 @@ const TableUsers = (props) => {
         const response = await UsersService.deleteUser(id);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         refreshUsers(props.filters);
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully deleted!"
+        });
     }
 
     const column = [

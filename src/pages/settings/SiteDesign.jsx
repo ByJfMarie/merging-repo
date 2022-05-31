@@ -22,6 +22,7 @@ import Editor from "../../components/Editor.jsx";
 import "react-phone-input-2/lib/high-res.css";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
+import ResetSave from "../../components/settings/ResetSave";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -181,43 +182,10 @@ export default function SiteDesign() {
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0} dir="ltr">
-                <Card className={classes.card} style={{margin: "0 0 20px 0"}}>
-                    <Grid container spacing={2} direction={"row-reverse"}>
-                        <Grid item xs="auto">
-                            <Button variant="contained" component="label" onClick={() => {
-                                handleSave()
-                            }}>{t('save')}</Button>
-                        </Grid>
-                        <Grid item xs="auto">
-                            <Button variant="outlined" component="label"
-                                    onClick={handleCancel}>{t('cancel')}</Button>
-                        </Grid>
-                        <Grid item xs>
-                            <Message></Message>
-                        </Grid>
-                    </Grid>
-                </Card>
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                     <CardContent>
-                        <Stack
-                            component="form"
-                            sx={{
-                                width: '100%'
-                            }}
-                            spacing={2}
-                            noValidate
-                            autoComplete="off"
-
-                        >
-                            <Box
-                                sx=
-                                    {{
-                                        display: 'grid',
-                                        gap: 3,
-                                        gridTemplateRows: 'repeat(3, 1fr)'
-                                    }}
-                            >
-                                <Container maxWidth="xl" style={{display: "flex", padding: "0px"}}>
+                        <Grid container spacing={2}>
+                            <Grid item xs>
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
@@ -227,6 +195,8 @@ export default function SiteDesign() {
                                         value={getSettingsValue('WEB.general_institution')}
                                         onChange={(e) => {handleSettingsChange('WEB.general_institution', e.target.value)}}
                                     />
+                            </Grid>
+                            <Grid item xs="auto" style={{ display: "flex", alignItems: "center" }}>
                                     <Tooltip title="Lorry mange tous les chocolats">
                                         <InfoOutlinedIcon
                                             style={{
@@ -237,7 +207,8 @@ export default function SiteDesign() {
                                             }}
                                         />
                                     </Tooltip>
-                                </Container>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
@@ -247,6 +218,8 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_department')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_department', e.target.value)}}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
@@ -269,6 +242,8 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_phone')}
                                     onChange={(value) => {handleSettingsChange('WEB.general_phone', value)}}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
@@ -278,6 +253,8 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_address')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_address', e.target.value)}}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic" label={t("city")}
@@ -285,6 +262,8 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_city')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_city', e.target.value)}}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
@@ -294,6 +273,8 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_website')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_website', e.target.value)}}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
@@ -303,6 +284,8 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_doctor_id')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_doctor_id', e.target.value)}}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
@@ -312,6 +295,8 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_external_web_link')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_external_web_link', e.target.value)}}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
@@ -321,8 +306,12 @@ export default function SiteDesign() {
                                     value={getSettingsValue('WEB.general_login_type')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_login_type', e.target.value)}}
                                 />
-                            </Box>
-                        </Stack>
+                            </Grid>
+                        </Grid>
+                        <ResetSave
+                            handleSave={handleSave}
+                            handleCancel={handleCancel}
+                        />
                     </CardContent>
                 </Card>
             </TabPanel>
@@ -359,20 +348,6 @@ export default function SiteDesign() {
 
             <TabPanel value={value} index={2} dir="ltr">
 
-                <Card className={classes.card} style={{margin: "0 0 20px 0"}}>
-                    <Grid container spacing={2} direction={"row-reverse"}>
-                        <Grid item>
-                            <Button variant="contained" component="label" onClick={() => {
-                                handleSave()
-                            }}>{t('save')}</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" component="label"
-                                    onClick={handleCancel}>{t('cancel')}</Button>
-                        </Grid>
-                    </Grid>
-                </Card>
-
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('disclaimer')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
@@ -380,6 +355,10 @@ export default function SiteDesign() {
                         id="disclaimer"
                         defaultValue={getSettingsValue('WEB.disclaimer')}
                         onChange={(value) => {handleSettingsChange('WEB.disclaimer', value)}}
+                    />
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
                     />
                 </Card>
 
@@ -391,6 +370,10 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.privacy_policy')}
                         onChange={(value) => {handleSettingsChange('WEB.privacy_policy', value)}}
                     />
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
                 </Card>
 
                 <Card className={classes.card}>
@@ -401,6 +384,10 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.copyright')}
                         onChange={(value) => {handleSettingsChange('WEB.copyright', value)}}
                     />
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
                 </Card>
 
                 <Card className={classes.card}>
@@ -410,6 +397,10 @@ export default function SiteDesign() {
                         id="faq"
                         defaultValue={getSettingsValue('WEB.faq')}
                         onChange={(value) => {handleSettingsChange('WEB.faq', value)}}
+                    />
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
                     />
                 </Card>
 
@@ -422,8 +413,11 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.terms')}
                         onChange={(value) => {handleSettingsChange('WEB.terms', value)}}
                     />
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
                 </Card>
-
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('contactUs')} </Typography>
@@ -432,6 +426,10 @@ export default function SiteDesign() {
                         id="contactus"
                         defaultValue={getSettingsValue('WEB.contactus')}
                         onChange={(value) => {handleSettingsChange('WEB.contactus', value)}}
+                    />
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
                     />
                 </Card>
 

@@ -31,11 +31,18 @@ export const apiGET = (url) => {
             }
         })
         .catch((error) => {
-            if (!error.status) {
-                networkError();
-                return;
+            state.error = "Unknown error";
+            if (error.response) {
+                state.error = error.response.data.error || error.message;
+                networkError(state.error, 5000);
             }
-            state.error = error.response ? error.response.data : "Unknown error";
+            else if (error.message) {
+                state.error = error.message;
+                networkError(state.error, 2000);
+            }
+            else {
+                networkError(state.error, 2000);
+            }
         })
         .then(() => {
             return state;
@@ -58,25 +65,30 @@ export const apiPOST = (url, data) => {
             }
         })
         .catch((error) => {
-            if (!error.status) {
-                networkError();
-                return;
+            state.error = "Unknown error";
+            if (error.response) {
+                state.error = error.response.data.error || error.message;
+                networkError(state.error, 5000);
             }
-            state.error = error.response ? error.response.data : "Unknown error";
+            else if (error.message) {
+                state.error = error.message;
+                networkError(state.error, 2000);
+            }
+            else {
+                networkError(state.error, 2000);
+            }
         })
         .then(() => {
             return state;
         });
 }
 
-const networkError = () => {
-    let error = "No response from the server!";
-    //if (error.response && error.response.statusText) error = _error.response.statusText;
-    swal("Erreur", error, "error", {
+const networkError = (message, timer) => {
+    swal("Error", message, "error", {
         buttons: false,
-        timer: 2000,
+        timer: {timer},
     }).then(() => {
-        AuthService.logout();
+        //AuthService.logout();
     })
 }
 
@@ -116,7 +128,7 @@ const refreshAuthLogic = failedRequest =>
         .catch(() => {
             let error = "Your session has expired!";
             //if (error.response && error.response.statusText) error = _error.response.statusText;
-            swal("Erreur", error, "error", {
+            swal("Error", error, "error", {
                 buttons: false,
                 timer: 2000,
             }).then(() => {

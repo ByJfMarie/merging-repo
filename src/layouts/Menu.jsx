@@ -31,6 +31,7 @@ import LocationOn from '@mui/icons-material/LocationOn';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import AuthService from '../services/api/auth.service';
+import UsersService from "../services/api/users.service";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -69,6 +70,18 @@ function Menu(props) {
     });
     const classes = useStyles();
 
+    const [user, setUser] = React.useState([]);
+    const loadUser = async() => {
+        //Load aet list
+        const response = await UsersService.me();
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setUser(response.items);
+    }
+
     /** DROPDOWN MENU ON MOBILE */
     const {window} = props;
     const [mobileOpen, setMobileOpen] = React.useState(false)
@@ -92,6 +105,16 @@ function Menu(props) {
         AuthService.logout();
     };
 
+    React.useEffect(() => {
+        loadUser();
+    }, []);
+
+    const UserName = function() {
+        if (!user) return <>{"Hello"}</>;
+        if (user.last_name)return <>{user.title}+" "+{user.last_name}+" "+{user.first_name}</>;
+        return  <>{user.login}</>;
+    }
+
     /** LIST OF ITEMS */
     const drawer = (
         <div>
@@ -107,12 +130,12 @@ function Menu(props) {
             <Divider classes={{ root: classes.divider }} />
 
             <List>
-                {items.indexOf('home') !== -1 && (
+                {/*items.indexOf('home') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/" selected={location === '/'}>
                         <HomeIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("home")} />
                     </ListItem>
-                )}
+                )*/}
 
                 {items.indexOf('studies') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/studies" selected={location === '/studies'} >
@@ -198,7 +221,7 @@ function Menu(props) {
 
                         <Grid item className={classes.userNameGrid}>
                             <Typography variant="" noWrap style={{ fontWeight: "", marginTop: '5px' }}>
-                                Firstname Lastname
+                                <UserName/>
                             </Typography>
                         </Grid>
 

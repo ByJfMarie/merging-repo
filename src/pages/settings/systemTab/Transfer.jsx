@@ -1,12 +1,13 @@
 import React from 'react';
-import { Card, CardContent, Button, TextField, Grid } from '@mui/material';
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
+import {Card, CardContent, Button, TextField, Grid, Alert, Snackbar} from '@mui/material';
+import {useTheme} from '@emotion/react';
+import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
 import TableTransferRules from '../../../components/settings/transfer/Table';
 import SettingsService from "../../../services/api/settings.service";
 import TransferService from "../../../services/api/transfer.service";
 import DialogAddEdit from "../../../components/settings/transfer/DialogAddEdit";
+import ResetSave from "../../../components/settings/ResetSave";
 
 export default function Transfer() {
     const theme = useTheme();
@@ -37,10 +38,22 @@ export default function Transfer() {
     });
     const classes = useStyles();
 
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+
+    function Message() {
+        if (!message || !message.show) return <></>;
+        return <Alert severity={message.severity}>{message.message}</Alert>;
+    }
+
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
     const [remoteSites, setRemoteSites] = React.useState([]);
-    const refresh = async() => {
+    const refresh = async () => {
         const response = await SettingsService.getTransfer();
 
         if (response.error) {
@@ -50,7 +63,7 @@ export default function Transfer() {
 
         setConfig(response.items);
     }
-    const refreshRemoteSites = async() => {
+    const refreshRemoteSites = async () => {
         const response = await TransferService.getRemoteSites();
 
         if (response.error) {
@@ -80,11 +93,22 @@ export default function Transfer() {
         const response = await SettingsService.saveTransfer(config);
 
         if (response.error) {
-            console.log(response.error);
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         refresh();
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Settings successfully saved!"
+        });
     };
 
     const handleCancel = () => {
@@ -94,111 +118,116 @@ export default function Transfer() {
     /** ADD/EDIT POP UP */
     const [showDialog, setShowDialog] = React.useState(false);
     const [settingsValue, setSettingsValue] = React.useState(null);
-    const toggleDialog = () => {setShowDialog(!showDialog);}
+    const toggleDialog = () => {
+        setShowDialog(!showDialog);
+    }
 
     /** FORCE REFRESH */
     const [forceRefresh, setForceRefresh] = React.useState(false);
 
 
     return (
-        <><Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", margin: '0px 0px' }}>
-            <CardContent>
-                <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                    <Grid item xs={12}>
-                        <TextField
-                            style={{ width: '100%' }}
-                            id="filled-basic"
-                            label={t("alias")}
-                            variant="standard"
-                            value={getSettingsValue('DCMT.alias')}
-                            onChange={(e) => {
-                                handleSettingsChange('DCMT.alias', e.target.value)
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            style={{ width: '100%' }}
-                            id="filled-basic"
-                            label={t("working_folder_group")}
-                            variant="standard"
-                            value={getSettingsValue('DCMT.sftp_container')}
-                            onChange={(e) => {
-                                handleSettingsChange('DCMT.sftp_container', e.target.value)
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={9}>
-                        <TextField
-                            className={classes.field}
-                            id="filled-basic"
-                            label={t("host")}
-                            variant="standard"
-                            value={getSettingsValue('DCMT.sftp_host')}
-                            onChange={(e) => {
-                                handleSettingsChange('DCMT.sftp_host', e.target.value)
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={3}>
-                        <TextField
-                            className={classes.field}
-                            id="filled-basic"
-                            label={t("port")}
-                            variant="standard"
-                            value={getSettingsValue('DCMT.sftp_port')}
-                            onChange={(e) => {
-                                handleSettingsChange('DCMT.sftp_port', e.target.value)
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            style={{ width: '100%' }}
-                            id="filled-basic"
-                            label={t("user")}
-                            variant="standard"
-                            value={getSettingsValue('DCMT.sftp_user')}
-                            onChange={(e) => {
-                                handleSettingsChange('DCMT.sftp_user', e.target.value)
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            style={{ width: '100%' }}
-                            id="filled-basic"
-                            label={t("password")}
-                            type="password"
-                            variant="standard"
-                            value={getSettingsValue('DCMT.sftp_password')}
-                            onChange={(e) => {
-                                handleSettingsChange('DCMT.sftp_password', e.target.value)
-                            }}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={2} direction={"row-reverse"}>
-                    <Grid item xs="auto">
-                        <Button variant="contained" component="label" onClick={() => {
-                            handleSave()
-                        }}>{t('save')}</Button>
-                    </Grid>
-                    <Grid item xs="auto">
-                        <Button variant="outlined" component="label"
-                                onClick={handleCancel}>{t('cancel')}</Button>
-                    </Grid>
-                    <Grid item xs>
-                    </Grid>
-                </Grid>
-            </CardContent>
-        </Card>
-            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", margin: '30px 0px' }}>
+        <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                      onClose={() => {
+                          setMessage({...message, show: !message.show})
+                      }}>
+                <Alert onClose={() => {
+                    setMessage({...message, show: !message.show})
+                }} severity={message.severity} sx={{width: '100%'}}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important", margin: '0px 0px'}}>
                 <CardContent>
-                    <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                        <Grid item xs />
-                        <Grid item >
-                            <Button variant="contained" component="label" style={{ marginTop: '15px' }} onClick={toggleDialog}>+ {t('add')}</Button>
+                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
+                        <Grid item xs={12}>
+                            <TextField
+                                style={{width: '100%'}}
+                                id="filled-basic"
+                                label={t("alias")}
+                                variant="standard"
+                                value={getSettingsValue('DCMT.alias')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMT.alias', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                style={{width: '100%'}}
+                                id="filled-basic"
+                                label={t("working_folder_group")}
+                                variant="standard"
+                                value={getSettingsValue('DCMT.sftp_container')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMT.sftp_container', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("host")}
+                                variant="standard"
+                                value={getSettingsValue('DCMT.sftp_host')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMT.sftp_host', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("port")}
+                                variant="standard"
+                                value={getSettingsValue('DCMT.sftp_port')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMT.sftp_port', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                style={{width: '100%'}}
+                                id="filled-basic"
+                                label={t("user")}
+                                variant="standard"
+                                value={getSettingsValue('DCMT.sftp_user')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMT.sftp_user', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                style={{width: '100%'}}
+                                id="filled-basic"
+                                label={t("password")}
+                                type="password"
+                                variant="standard"
+                                value={getSettingsValue('DCMT.sftp_password')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMT.sftp_password', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
+                </CardContent>
+            </Card>
+            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important", margin: '30px 0px'}}>
+                <CardContent>
+                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
+                        <Grid item xs/>
+                        <Grid item>
+                            <Button variant="contained" component="label" style={{marginTop: '15px'}}
+                                    onClick={toggleDialog}>+ {t('add')}</Button>
                         </Grid>
                     </Grid>
 
@@ -206,7 +235,10 @@ export default function Transfer() {
                         remoteSites={remoteSites}
                         filters={null}
                         forceRefresh={forceRefresh}
-                        edit={(values) => {setSettingsValue(values); toggleDialog();}}
+                        edit={(values) => {
+                            setSettingsValue(values);
+                            toggleDialog();
+                        }}
                     />
                 </CardContent>
             </Card>
@@ -216,7 +248,9 @@ export default function Transfer() {
                 values={settingsValue}
                 isOpen={showDialog}
                 toggle={toggleDialog}
-                onSave={() => {setForceRefresh(!forceRefresh);}}
+                onSave={() => {
+                    setForceRefresh(!forceRefresh);
+                }}
             />
 
         </>)

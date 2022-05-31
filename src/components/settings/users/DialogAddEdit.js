@@ -1,4 +1,5 @@
 import {
+    Alert,
     Button,
     Card,
     CardContent,
@@ -64,7 +65,11 @@ const DialogAddEdit = (props) => {
         else response = await UsersService.addUser(props.values);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
@@ -72,6 +77,12 @@ const DialogAddEdit = (props) => {
         props.setValues({role: ''});
         setAddMode(true);
         props.onSave();
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully "+(addMode?"added":"edited")+"!"
+        });
     }
 
     React.useEffect(() => {
