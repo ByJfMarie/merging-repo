@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, CardContent, Grid } from '@mui/material';
+import {Card, Button, CardContent, Grid, Alert, Snackbar} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
@@ -35,6 +35,13 @@ export default function Storage() {
     });
     const classes = useStyles();
 
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+
     /** ADD/EDIT POP UP */
     const [showDialog, setShowDialog] = React.useState(false);
     const [settingsValue, setSettingsValue] = React.useState(null);
@@ -45,6 +52,11 @@ export default function Storage() {
 
     return (
         <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
             <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin : '0px 0px' }}>
                 <CardContent>
                     <Grid container style={{ marginBottom: '15px' }}>
@@ -59,15 +71,18 @@ export default function Storage() {
                         filters={null}
                         forceRefresh={forceRefresh}
                         edit={(values) => {setSettingsValue(values); toggleDialog();}}
+                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
 
             <DialogAddEdit
                 values={settingsValue}
+                setValues={setSettingsValue}
                 isOpen={showDialog}
                 toggle={toggleDialog}
                 onSave={() => {setForceRefresh(!forceRefresh);}}
+                alertMessage={(message) => setMessage(message)}
             />
         </>
     )

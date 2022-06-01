@@ -5,15 +5,16 @@ import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
+const useStyles = makeStyles((theme) => ({
+    buttonDownload: {
+        backgroundColor: theme.palette.button.background + "!important"
+    }
+}));
+
 const DownloadButton = (props) => {
 
     const theme = useTheme();
-    const useStyles = makeStyles({
-        buttonDownload: {
-            backgroundColor: theme.palette.button.background + "!important"
-        }
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);

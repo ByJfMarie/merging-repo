@@ -34,40 +34,41 @@ import AuthService from "../services/api/auth.service";
 const drawerWidth = 240;
 const location = window.location.pathname;
 
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        background: theme.palette.menu.background + ' !important',
+        color: '#fff !important',
+        fontWeight: 'bold',
+    },
+    selected: {
+        '&.Mui-selected': {
+            fontWeight: 500,
+            color: theme.palette.primary.main
+        }
+    },
+    divider: {
+        // Theme Color, or use css color in quote
+        background: theme.palette.menu.divider,
+    },
+    div: {
+        borderRight: '0px !important'
+    },
+
+    userNameGrid: {
+        paddingTop: '8px',
+        paddingRight: '12px',
+        [theme.breakpoints.down('md')]: {
+            display: "none",
+        },
+    }
+}));
+
 function SettingsMenu(props) {
     const priviledges = AuthService.getCurrentUser().priviledges;
 
     /** THEME AND CSS */
     const theme = useTheme();
-    const useStyles = makeStyles({
-        paper: {
-            background: theme.palette.menu.background + ' !important',
-            color: '#fff !important',
-            fontWeight: 'bold',
-        },
-        selected: {
-            '&.Mui-selected': {
-                fontWeight: 500,
-                color: theme.palette.primary.main
-            }
-        },
-        divider: {
-            // Theme Color, or use css color in quote
-            background: theme.palette.menu.divider,
-        },
-        div: {
-            borderRight: '0px !important'
-        },
-
-        userNameGrid: {
-            paddingTop: '8px',
-            paddingRight: '12px',
-            [theme.breakpoints.down('md')]: {
-                display: "none",
-            },
-        }
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     /** DROPDOWN MENU ON MOBILE */
     const { window } = props;

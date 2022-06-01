@@ -88,6 +88,7 @@ const TableForwardingStatus = (props) => {
     });
     const classes = useStyles();
 
+    const [pageSize, setPageSize] = React.useState(20);
     const [rows, setRows] = React.useState([]);
 
     const refreshOrders = async() => {
@@ -236,8 +237,9 @@ const TableForwardingStatus = (props) => {
                     autoHeight={true}
                     rows={rows}
                     columns={column}
-                    pageSize={10}
-                    rowsPrPageOptions={[10]}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    rowsPerPageOptions={[10,20,50]}
                     sx={{
                         '& .MuiDataGrid-row:hover': {
                             transition: '0.3s ',

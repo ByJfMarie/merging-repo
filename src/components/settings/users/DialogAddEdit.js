@@ -1,5 +1,4 @@
 import {
-    Alert,
     Button,
     Card,
     CardContent,
@@ -17,6 +16,23 @@ import UsersService from "../../../services/api/users.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 
+const useStyles = makeStyles((theme) => ({
+    field: {
+        width: '100%'
+    },
+    card: {
+        "&.MuiCard-root": {
+            padding: '0px !important'
+        }
+    },
+    button: {
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.chip.color + "!important",
+        marginRight: '10px !important'
+    },
+
+}));
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -24,29 +40,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const DialogAddEdit = (props) => {
 
     const theme = useTheme();
-
-    const useStyles = makeStyles({
-        field: {
-            width: '100%'
-        },
-        card: {
-            "&.MuiCard-root": {
-                padding: '0px !important'
-            }
-        },
-        button: {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.chip.color + "!important",
-            marginRight: '10px !important'
-        },
-
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const [addMode, setAddMode] = React.useState(true);
-    /*const [saveUserValues, setSaveUserValues] = React.useState({
-        role: ''
-    });*/
 
     const getUserValue = (id) => {
         if (!props.values) return '';

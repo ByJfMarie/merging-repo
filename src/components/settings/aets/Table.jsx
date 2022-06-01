@@ -27,7 +27,7 @@ const TableAets = (props) => {
     });
     const classes = useStyles();
 
-    const [pageSize, setPageSize] = React.useState(5);
+    const [pageSize, setPageSize] = React.useState(10);
     const [rows, setRows] = React.useState([]);
 
     const refresh = async() => {
@@ -50,11 +50,19 @@ const TableAets = (props) => {
         const response = await AETService.echoAET(row.id);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: "Impossible to make an ECHO: "+response.error
+            });
             return;
         }
 
-        console.log("Echo OK");
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "ECHO successful!"
+        });
     }
 
     const handleEdit = async (row) => {
@@ -65,11 +73,20 @@ const TableAets = (props) => {
         const response = await AETService.deleteAET(id);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         refresh();
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully deleted!"
+        });
     }
 
     const column = [
@@ -182,7 +199,7 @@ const TableAets = (props) => {
                     columns={column}
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[5,10,20]}
+                    rowsPerPageOptions={[10,20,50]}
                     pagination
                     sx={{
                         '& .MuiDataGrid-row:hover': {

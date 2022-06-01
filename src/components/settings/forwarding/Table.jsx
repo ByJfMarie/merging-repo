@@ -23,7 +23,7 @@ const TableForwarding = (props) => {
     });
     const classes = useStyles();
 
-    const [pageSize, setPageSize] = React.useState(5);
+    const [pageSize, setPageSize] = React.useState(10);
     const [rows, setRows] = React.useState([]);
 
     const refresh = async() => {
@@ -50,11 +50,20 @@ const TableForwarding = (props) => {
         const response = await ForwardingService.deleteRule(id);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         refresh();
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully deleted!"
+        });
     }
 
     const column = [
@@ -114,7 +123,7 @@ const TableForwarding = (props) => {
                     columns={column}
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[5,10,20]}
+                    rowsPerPageOptions={[10,20,50]}
                     pagination
                     sx={{
                         '& .MuiDataGrid-row:hover': {

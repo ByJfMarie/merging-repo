@@ -11,6 +11,26 @@ import AuthService from "../services/api/auth.service";
 // import { UserContext } from '../service/UserContext';
 // import Loading from '../layouts/Loading';
 
+const useStyles = makeStyles((theme) => ({
+    mainContainer: {
+
+        minHeight: '100vh',
+        position: "relative",
+
+        [theme.breakpoints.up('md')]: {
+            padding: '80px calc(20px + 5%) 40px calc(260px + 5%) !important',
+        },
+
+        [theme.breakpoints.between('sm', 'md')]: {
+            padding: '70px 5% 0px !important',
+        },
+
+        [theme.breakpoints.down('sm')]: {
+            padding: '70px 2% 0px !important',
+        },
+    },
+}));
+
 export default function PrivateRoute(props) {
 
     // const { user, isLoading } = useContext(UserContext);
@@ -18,27 +38,7 @@ export default function PrivateRoute(props) {
 
 
     const theme = useTheme();
-
-    const useStyles = makeStyles({
-        mainContainer: {
-
-            minHeight: '100vh',
-            position: "relative",
-
-            [theme.breakpoints.up('md')]: {
-                padding: '80px calc(20px + 5%) 40px calc(260px + 5%) !important',
-            },
-
-            [theme.breakpoints.between('sm', 'md')]: {
-                padding: '70px 5% 0px !important',
-            },
-
-            [theme.breakpoints.down('sm')]: {
-                padding: '70px 2% 0px !important',
-            },
-        },
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const isConnected = AuthService.getCurrentUser();
     if (isConnected) {

@@ -5,34 +5,33 @@ import { Avatar as MuiAvatar, Badge, Box, Button, IconButton, List, ListItem, Li
 import { Bell, Home, UserPlus, Server } from "react-feather";
 import { useTheme } from '@emotion/react';
 
-
-function NotificationsDropdown() {
-
-    const theme = useTheme();
-
-    const Popover = styled(MuiPopover)`
+const Popover = styled(MuiPopover)`
   .MuiPaper-root {
     width: 300px;
-    border: 1px solid ${theme.palette.menu.border};
+    border: 1px solid ${props => props.theme.palette.menu.border};
   }
 `;
 
-    const Indicator = styled(Badge)`
+const Indicator = styled(Badge)`
   .MuiBadge-badge {
     background: #ff1744;
     color: #fff;
   }
 `;
 
-    const Avatar = styled(MuiAvatar)`
+const Avatar = styled(MuiAvatar)`
   background: #fff;
 `;
 
-    const NotificationHeader = styled(Box)`
+const NotificationHeader = styled(Box)`
   text-align: center;
-  border-bottom: 1px solid ${theme.palette.menu.border};
+  border-bottom: 1px solid ${props => props.theme.palette.menu.border};
 `;
 
+
+function NotificationsDropdown() {
+
+    const theme = useTheme();
 
     const ref = useRef(null);
     const [isOpen, setOpen] = useState(false);
@@ -49,7 +48,7 @@ function NotificationsDropdown() {
         return (
             <ListItem divider component={Link} to="#">
                 <ListItemAvatar>
-                    <Avatar style={{ backgroundColor: theme.palette.avatar.background }}>
+                    <Avatar theme={theme} style={{ backgroundColor: theme.palette.avatar.background }}>
                         <SvgIcon fontSize="small">
                             <Icon />
                         </SvgIcon>
@@ -77,6 +76,7 @@ function NotificationsDropdown() {
                 </IconButton>
             </Tooltip>
             <Popover
+                theme={theme}
                 anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "center",
@@ -85,7 +85,7 @@ function NotificationsDropdown() {
                 onClose={handleClose}
                 open={isOpen}
             >
-                <NotificationHeader p={2} style={{ backgroundColor: theme.palette.card.color }}>
+                <NotificationHeader theme={theme} p={2} style={{ backgroundColor: theme.palette.card.color }}>
                     <Typography variant="subtitle1" color="textPrimary">
                         7 New Notifications
                     </Typography>

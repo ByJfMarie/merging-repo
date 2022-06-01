@@ -1,13 +1,11 @@
 import './assets/App.css';
-import React, { useEffect } from 'react';
+import React from 'react';
 import darktheme from './styles/darktheme';
 import lighttheme from './styles/lighttheme';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
 import { useState } from 'react';
 import PrivateRoute from "./routes/PrivateRoute";
-import { makeStyles } from "@mui/styles";
-import swal from 'sweetalert';
 
 /** PAGE */
 import Home from './pages/Home';
@@ -50,29 +48,6 @@ function App() {
   const handleLanguage = (props) => {
     setLanguage(props)
   }
-
-  // const path = window.location.pathname;
-
-  // eslint-disable-next-line
-  const useStyles = makeStyles({
-    mainContainer: {
-
-      minHeight: '100vh',
-      position: "relative",
-
-      [theme.breakpoints.up('md')]: {
-        padding: '80px calc(20px + 5%) 40px calc(260px + 5%) !important',
-      },
-
-      [theme.breakpoints.between('sm', 'md')]: {
-        padding: '70px 5% 0px !important',
-      },
-
-      [theme.breakpoints.down('sm')]: {
-        padding: '70px 2% 0px !important',
-      },
-    },
-  });
 
   return (
     <Router>

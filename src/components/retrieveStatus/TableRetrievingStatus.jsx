@@ -245,7 +245,7 @@ const TableRetrievingStatus = (props) => {
                     rows={rowsStatus}
                     columns={column}
                     pageSize={10}
-                    rowsPrPageOptions={[10]}
+                    rowsPerPageOptions={[10]}
                     sx={{
                         '& .MuiDataGrid-row:hover': {
                             transition: '0.3s ',

@@ -32,7 +32,7 @@ class ForwardingService {
     }
 
     deleteRule(id) {
-        return apiPOST('/forwarding/rules.edit/'+id);
+        return apiPOST('/forwarding/rules.delete/'+id);
     }
 }
 

@@ -14,6 +14,23 @@ import AETService from "../../../services/api/aet.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 
+const useStyles = makeStyles((theme) => ({
+    field: {
+        width: '100%'
+    },
+    card: {
+        "&.MuiCard-root": {
+            padding: '0px !important'
+        }
+    },
+    button: {
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.chip.color + "!important",
+        marginRight: '10px !important'
+    },
+
+}));
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -21,58 +38,56 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const DialogAddEdit = (props) => {
 
     const theme = useTheme();
-
-    const useStyles = makeStyles({
-        field: {
-            width: '100%'
-        },
-        card: {
-            "&.MuiCard-root": {
-                padding: '0px !important'
-            }
-        },
-        button: {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.chip.color + "!important",
-            marginRight: '10px !important'
-        },
-
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const [addMode, setAddMode] = React.useState(true);
-    const [saveValues, setSaveValues] = React.useState({});
 
+    const getValue = (id) => {
+        if (!props.values) return '';
+        return props.values[id] || '';
+    }
     const handleChange = (id, value) => {
-        setSaveValues({...saveValues, [id]: value});
+        props.setValues({...props.values, [id]: value});
     }
     const handleCancel = () => {
         props.toggle();
-        setSaveValues({});
+        props.setValues({});
     }
     const handleSave = async() => {
         let response = null;
-        if (!addMode) response = await AETService.editAET(saveValues.title, saveValues);
-        else response = await AETService.addAET(saveValues);
+        if (!addMode) response = await AETService.editAET(props.values.title, props.values);
+        else response = await AETService.addAET(props.values);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         props.toggle();
-        setSaveValues({});
+        props.setValues({});
+        setAddMode(true);
         props.onSave();
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully "+(addMode?"added":"edited")+"!"
+        });
     }
 
     React.useEffect(() => {
-        if (!props.values) {
+        if (!props.isOpen) return;
+
+        if (!props.values || !props.values.title) {
             setAddMode(true);
             return;
         }
         setAddMode(false);
-        setSaveValues(props.values);
-    }, [props.values]);
+    }, [props.isOpen]);
 
 
     return (
@@ -93,7 +108,7 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("aet")}
                                 variant="standard"
-                                value={saveValues.title || ''}
+                                value={getValue('title')}
                                 onChange={(e) => {handleChange('title', e.target.value);}}
                             />
                         </Grid>
@@ -103,7 +118,7 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("ip")}
                                 variant="standard"
-                                value={saveValues.ip || ''}
+                                value={getValue('ip')}
                                 onChange={(e) => {handleChange('ip', e.target.value);}}
                             />
                         </Grid>
@@ -113,7 +128,7 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("port")}
                                 variant="standard"
-                                value={saveValues.port || ''}
+                                value={getValue('port')}
                                 onChange={(e) => {handleChange('port', e.target.value);}}
                             />
                         </Grid>
@@ -123,7 +138,7 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("description")}
                                 variant="standard"
-                                value={saveValues.description || ''}
+                                value={getValue('description')}
                                 onChange={(e) => {handleChange('description', e.target.value);}}
                             />
                         </Grid>
@@ -134,21 +149,21 @@ const DialogAddEdit = (props) => {
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
-                                        control={<Switch color="primary" checked={saveValues.store || false} onChange={(e) => {handleChange('store', !saveValues.store);}}/>}
+                                        control={<Switch color="primary" checked={getValue('store') || false} onChange={(e) => {handleChange('store', !props.values.store);}}/>}
                                         label={"Store"}
                                     />
                                 </Grid>
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
-                                        control={<Switch color="primary" checked={saveValues.forward || false} onChange={(e) => {handleChange('forward', !saveValues.forward);}}/>}
+                                        control={<Switch color="primary" checked={getValue('forward') || false} onChange={(e) => {handleChange('forward', !props.values.forward);}}/>}
                                         label={"Forward"}
                                     />
                                 </Grid>
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
-                                        control={<Switch color="primary" checked={saveValues.qr || false} onChange={(e) => {handleChange('qr', !saveValues.qr);}}/>}
+                                        control={<Switch color="primary" checked={getValue('qr') || false} onChange={(e) => {handleChange('qr', !props.values.qr);}}/>}
                                         label={"Query / Retrieve"}
                                     />
                                 </Grid>

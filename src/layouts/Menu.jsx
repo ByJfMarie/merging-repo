@@ -37,38 +37,39 @@ import UsersService from "../services/api/users.service";
 const drawerWidth = 240;
 const location = window.location.pathname;
 
-function Menu(props) {
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        background: theme.palette.menu.background + ' !important',
+        color: '#fff !important',
+        fontWeight: 'bold',
+    },
+    selected: {
+        '&.Mui-selected': {
+            fontWeight: 500,
+            color: theme.palette.primary.main
+        }
+    },
+    divider: {
+        // Theme Color, or use css color in quote
+        background: theme.palette.menu.divider,
+    },
+    div: {
+        borderRight: '0px !important'
+    },
+
+    userNameGrid: {
+        paddingTop: '8px',
+        paddingRight: '12px',
+        [theme.breakpoints.down('md')]: {
+            display: "none",
+        },
+    }
+}));
+
+function MenuBackup(props) {
     /** THEME AND CSS */
     const theme = useTheme();
-    const useStyles = makeStyles({
-        paper: {
-            background: theme.palette.menu.background + ' !important',
-            color: '#fff !important',
-            fontWeight: 'bold',
-        },
-        selected: {
-            '&.Mui-selected': {
-                fontWeight: 500,
-                color: theme.palette.primary.main
-            }
-        },
-        divider: {
-            // Theme Color, or use css color in quote
-            background: theme.palette.menu.divider,
-        },
-        div: {
-            borderRight: '0px !important'
-        },
-
-        userNameGrid: {
-            paddingTop: '8px',
-            paddingRight: '12px',
-            [theme.breakpoints.down('md')]: {
-                display: "none",
-            },
-        }
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const [user, setUser] = React.useState([]);
     const loadUser = async() => {
@@ -233,20 +234,6 @@ function Menu(props) {
                             </Link>
                         </Grid>
 
-                        {/* <Grid item style={{ paddingRight: '12px' }}>
-              <IconButton style={{ color: theme.palette.menu.text }}>
-                <Badge
-                  badgeContent={4}
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "#2db4eb"
-                    }
-                  }}>
-                  <NotificationsIcon style={{ transform: 'scale(1.2)', color: theme.palette.menu.text }} />
-                </Badge>
-              </IconButton>
-            </Grid> */}
-
                         <Grid item style={{ paddingRight: '12px' }}>
                             <NotificationsDropdown />
                         </Grid>
@@ -259,6 +246,7 @@ function Menu(props) {
                     </Grid>
                 </Toolbar>
             </AppBar>
+
 
             <Box
                 component="nav"
@@ -299,4 +287,4 @@ function Menu(props) {
     );
 }
 
-export default Menu;
+export default MenuBackup;

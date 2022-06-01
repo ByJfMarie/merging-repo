@@ -44,39 +44,53 @@ const DialogAddEdit = (props) => {
     const classes = useStyles();
 
     const [addMode, setAddMode] = React.useState(true);
-    const [saveValues, setSaveValues] = React.useState({});
 
+    const getValue = (id) => {
+        if (!props.values) return '';
+        return props.values[id] || '';
+    }
     const handleChange = (id, value) => {
-        setSaveValues({...saveValues, [id]: value});
+        props.setValues({...props.values, [id]: value});
     }
     const handleCancel = () => {
         props.toggle();
-        setSaveValues({});
+        props.setValues({});
     }
     const handleSave = async () => {
         let response = null;
-        if (!addMode) response = await TransferService.editRule(saveValues.id, saveValues);
-        else response = await TransferService.addRule(saveValues);
+        if (!addMode) response = await TransferService.editRule(props.values.id, props.values);
+        else response = await TransferService.addRule(props.values);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         props.toggle();
-        setSaveValues({});
+        props.setValues({});
         setAddMode(true);
         props.onSave();
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully "+(addMode?"added":"edited")+"!"
+        });
     }
 
     React.useEffect(() => {
-        if (!props.values) {
+        if (!props.isOpen) return;
+
+        if (!props.values || !props.values.id) {
             setAddMode(true);
             return;
         }
         setAddMode(false);
-        setSaveValues(props.values);
-    }, [props.values]);
+    }, [props.isOpen]);
 
 
     return (
@@ -102,8 +116,11 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("aet")}
                                 variant="standard"
-                                value={saveValues.ae_title || ''}
+                                value={getValue('ae_title')}
                                 onChange={(e) => handleChange("ae_title", e.target.value)}
+                                InputProps={{
+                                    readOnly: !addMode,
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -114,7 +131,7 @@ const DialogAddEdit = (props) => {
                                     labelId="destinations"
                                     id="destinations"
                                     multiple
-                                    value={saveValues.destinations || []}
+                                    value={getValue('destinations') || []}
                                     onChange={(e) => handleChange("destinations", e.target.value)}
                                     input={<Input id="select-multiple-chip" label="Chip"/>}
                                     renderValue={(selected) => (

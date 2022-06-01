@@ -2,14 +2,13 @@ import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
-import TransferService from "../../../services/api/transfer.service";
-import {Box, Chip} from "@mui/material";
+import ForwardingService from "../../../services/api/forwarding.service";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
-const TableTransferRules = (props) => {
+const TablePlugins = (props) => {
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -24,11 +23,13 @@ const TableTransferRules = (props) => {
     });
     const classes = useStyles();
 
-    const [pageSize, setPageSize] = React.useState(10);
-    const [rows, setRows] = React.useState([]);
+    const [rows, setRows] = React.useState([
+        {'key':'meddream', 'id':'meddream', 'name':"Meddream Viewer", 'version': "7.6.0", 'type': "DICOM Viewer"},
+        {'key':'perennity', 'id':'meddream', 'name':"Perennity Viewer", 'version': "7.6.0", 'type': "DICOM Viewer"}
+        ]);
 
     const refresh = async() => {
-        const response = await TransferService.getRules();
+        const response = await ForwardingService.getRules();
 
         if (response.error) {
             console.log(response.error);
@@ -40,62 +41,35 @@ const TableTransferRules = (props) => {
     }
 
     React.useEffect(() => {
-        refresh();
+        //refresh();
     }, [props.forceRefresh]);
 
-    const handleEdit = async (row) => {
-        props.edit(row);
-    }
-
-    const handleDelete = async (id) => {
-        const response = await TransferService.deleteRule(id);
-
-        if (response.error) {
-            props.alertMessage({
-                show: true,
-                severity: "error",
-                message: response.error
-            });
-            return;
-        }
-
-        refresh();
-        props.alertMessage({
-            show: true,
-            severity: "success",
-            message: "User has been successfully deleted!"
-        });
-    }
-
+    /** HEADERS AND ROWS FOR THE TABLE */
+    const headers = ['name', 'version', 'type', 'vide'];
     const column = [
         {
-            field: "ae_title",
-            headerName: "AET Condition",
+            field: "name",
+            headerName: "Name",
             flex: 3,
             minWidth: 110,
             description: "Login",
-            headerAlign: "left",
+            headerAlign: "left"
         },
         {
-            field: "destinations",
-            headerName: "Destination(s)",
+            field: "version",
+            headerName: "Version",
             flex: 2,
             minWidth: 110,
             description: "Name",
-            headerAlign: "left",
-            renderCell: (params) => {
-                return (
-                    <div style={{ lineHeight: "normal" }}>
-                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
-                        {
-                            params.row.destinations.map((key) =>
-                                <Chip key={key} label={props.remoteSites[key] || key}/>
-                            )
-                        }
-                        </Box>
-                    </div>
-                )
-            }
+            headerAlign: "left"
+        },
+        {
+            field: "type",
+            headerName: "Type",
+            flex: 2,
+            minWidth: 110,
+            description: "Name",
+            headerAlign: "left"
         },
         {
             field: 'actions',
@@ -103,22 +77,6 @@ const TableTransferRules = (props) => {
             width: 80,
             getActions: (params) => {
                 let actions = [];
-
-                actions.push(<GridActionsCellItem
-                    icon={<EditIcon/>}
-                    label="Edit"
-                    onClick={() => handleEdit(params.row)}
-                    showInMenu
-                />);
-
-                actions.push(<GridActionsCellItem
-                    icon={<DeleteIcon/>}
-                    label="Delete"
-                    color="error"
-                    onClick={() => handleDelete(params.row.id)}
-                    showInMenu
-                />);
-
                 return actions;
             }
         }
@@ -135,9 +93,8 @@ const TableTransferRules = (props) => {
                     rowHeight={80}
                     rows={rows}
                     columns={column}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[10,20,50]}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
                     pagination
                     sx={{
                         '& .MuiDataGrid-row:hover': {
@@ -158,4 +115,4 @@ const TableTransferRules = (props) => {
         </React.Fragment>
     )
 }
-export default TableTransferRules;
+export default TablePlugins;

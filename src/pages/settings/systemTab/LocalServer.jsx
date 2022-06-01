@@ -7,7 +7,7 @@ import {
     FormControlLabel,
     Checkbox,
     Container,
-    Grid, Button, Alert, Snackbar
+    Grid, Alert, Snackbar
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -16,36 +16,37 @@ import * as React from "react";
 import SettingsService from "../../../services/api/settings.service";
 import ResetSave from "../../../components/settings/ResetSave";
 
-export default function LocalServer() {
-    const theme = useTheme();
-    const useStyles = makeStyles({
-        card: {
-            padding: "20px",
-            margin: "20px 0px",
-            backgroundColor: theme.palette.card.color + "!important"
+const useStyles = makeStyles((theme) => ({
+    card: {
+        padding: "20px",
+        margin: "20px 0px",
+        backgroundColor: theme.palette.card.color + "!important"
+    },
+    field: {
+        width: '100%'
+    },
+    tableCell: {
+        padding: "0px 16px !important",
+        height: "50px !important",
+        borderColor: theme.palette.textfield.border + " !important",
+    },
+    hover: {
+        "&:hover": {
+            transition: '0.3s',
+            backgroundColor: theme.palette.table.hover + "! important"
         },
-        field: {
-            width: '100%'
-        },
-        tableCell: {
-            padding: "0px 16px !important",
-            height: "50px !important",
-            borderColor: theme.palette.textfield.border + " !important",
-        },
-        hover: {
-            "&:hover": {
-                transition: '0.3s',
-                backgroundColor: theme.palette.table.hover + "! important"
-            },
-            height: "50px ! important",
-            backgroundColor: theme.palette.textfield.background + "! important"
-        },
-        label: {
-            fontSize: '14px !important',
-        }
+        height: "50px ! important",
+        backgroundColor: theme.palette.textfield.background + "! important"
+    },
+    label: {
+        fontSize: '14px !important',
+    }
+}));
 
-    });
-    const classes = useStyles();
+export default function LocalServer() {
+
+    const theme = useTheme();
+    const classes = useStyles(theme);
 
     /** MESSAGES */
     const [message, setMessage] = React.useState({
@@ -131,7 +132,6 @@ export default function LocalServer() {
                                     className={classes.field} id="filled-basic"
                                     label={t("aet")}
                                     variant="standard"
-                                    value={settingsValue['DCMS.server_aet'] || ''}
                                     value={getSettingsValue('DCMS.server_aet')}
                                     onChange={(e) => {
                                         handleSettingsChange('DCMS.server_aet', e.target.value)
@@ -171,7 +171,7 @@ export default function LocalServer() {
                             classes={{label: classes.label}}
                             control={
                                 <Checkbox
-                                    checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2'] : false}
+                                    checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2'] || false : false}
                                     onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2', e.target.checked)}
                                 />
                             }
@@ -180,7 +180,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.1'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.1'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.1', e.target.checked)}
                             />}
                             label={t("explicit_vr_little_endian")}
@@ -188,7 +188,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.2'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.2'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.2', e.target.checked)}
                             />}
                             label={t("explicit_vr_big_endian")}
@@ -196,7 +196,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.50'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.50'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.50', e.target.checked)}
                             />}
                             label={t("jpeg_baseline_(process 1)")}
@@ -204,7 +204,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.51'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.51'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.51', e.target.checked)}
                             />}
                             label={t("jpeg_baseline_(process 2 & 4)")}
@@ -212,7 +212,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.57'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.57'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.57', e.target.checked)}
                             />}
                             label={t("jpeg_lossless, nonhierarchical_(processes 14)")}
@@ -220,7 +220,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.70'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.70'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.70', e.target.checked)}
                             />}
                             label={t("JPEG Lossless, Nonhierarchical, First- Order Prediction (Processes 14 [Selection Value 1])")}
@@ -228,7 +228,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.80'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.80'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.80', e.target.checked)}
                             />}
                             label={t("JPEG-LS_lossless_image_compression")}
@@ -236,7 +236,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.81'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.81'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.81', e.target.checked)}
                             />}
                             label={t("JPEG-LS_Lossy_(Near- Lossless)_image_compression")}
@@ -244,7 +244,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.90'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.90'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.90', e.target.checked)}
                             />}
                             label={t("JPEG_2000_image_compression_(Lossless Only)")}
@@ -252,7 +252,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.91'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.91'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.91', e.target.checked)}
                             />}
                             label={t("JPEG_2000_image_compression")}
@@ -260,7 +260,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.92'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.92'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.92', e.target.checked)}
                             />}
                             label={t("JPEG 2000 Part 2 Multicomponent Image Compression (Lossless Only)")}
@@ -268,7 +268,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.93'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.93'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.93', e.target.checked)}
                             />}
                             label={t("JPEG 2000 Part 2 Multicomponent Image Compression")}
@@ -281,7 +281,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.94'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.94'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.94', e.target.checked)}
                             />}
                             label={t("JPIP Referenced")}
@@ -289,7 +289,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.95'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.95'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.95', e.target.checked)}
                             />}
                             label={t("JPIP Referenced Deflate")}
@@ -297,7 +297,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.5'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.5'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.5', e.target.checked)}
                             />}
                             label={t("RLE Lossless")}
@@ -305,7 +305,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.6.1'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.6.1'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.6.1', e.target.checked)}
                             />}
                             label={t("RFC 2557 MIME Encapsulation")}
@@ -318,7 +318,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.100'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.100'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.100', e.target.checked)}
                             />}
                             label={t("MPEG2 Main Profile Main Level")}
@@ -326,7 +326,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.102'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.102'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.102', e.target.checked)}
                             />}
                             label={t("MPEG-4 AVC/H.264 High Profile / Level 4.1")}
@@ -334,7 +334,7 @@ export default function LocalServer() {
                         <FormControlLabel
                             classes={{label: classes.label}}
                             control={<Checkbox
-                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.103'] : false}
+                                checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.103'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.103', e.target.checked)}
                             />}
                             label={t("MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1")}

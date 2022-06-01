@@ -64,6 +64,7 @@ function TableLocalStudies(props) {
     }
 
     const [filters, setFilters] = useState(filtersInitValue);
+    const [pageSize, setPageSize] = React.useState(20);
     const [rows, setRows] = React.useState([]);
     const checkFilters = (filters) => {
         if (!filters) return false;
@@ -430,9 +431,10 @@ function TableLocalStudies(props) {
                     //loading={!rows.length}
                     //error={error}
                     rowHeight={60}
-                    pageSize={20}
                     autoHeight={true}
-                    rowsPerPageOptions={[20]}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    rowsPerPageOptions={[10,20,50]}
                     getRowId={(row) => row.key}
                     checkboxSelection
                     selectionModel={selectedRows}

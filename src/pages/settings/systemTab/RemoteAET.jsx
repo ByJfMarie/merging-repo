@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid} from '@mui/material';
+import {Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid, Alert, Snackbar} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
@@ -36,6 +36,13 @@ export default function RemoteAET() {
 
     });
     const classes = useStyles();
+
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
 
     const [config, setConfig] = React.useState({});
     const refresh = async () => {
@@ -87,6 +94,11 @@ export default function RemoteAET() {
 
     return (
         <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
             <Card style={{
                 backgroundColor: theme.palette.card.color,
                 width: "100% !important",
@@ -122,17 +134,20 @@ export default function RemoteAET() {
                             setSettingsValue(values);
                             toggleDialog();
                         }}
+                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
 
             <DialogAddEdit
                 values={settingsValue}
+                setValues={setSettingsValue}
                 isOpen={showDialog}
                 toggle={toggleDialog}
                 onSave={() => {
                     setForceRefresh(!forceRefresh);
                 }}
+                alertMessage={(message) => setMessage(message)}
             />
         </>
     )

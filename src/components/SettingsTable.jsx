@@ -59,18 +59,19 @@ const SettingsTable = (props) => {
                     <TableBody>
                         {rows.map((row, k) => (
                             <TableRow
+                                key={k}
                                 hover
                                 classes={{ hover: classes.hover }}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 {Object.keys(row).map((rowCell) => (
                                     row[rowCell].map((key) => (
-                                        <TableCell className={classes.tableCell}>{key}</TableCell>
+                                        <TableCell key={key} className={classes.tableCell}>{key}</TableCell>
                                     ))
                                 ))}
 
                                 {(props.actions === true) && (
-                                    <TableCell className={classes.tableCell}>
+                                    <TableCell key={k} className={classes.tableCell}>
                                         <Button
                                             id="basic-button"
                                             aria-controls={open ? 'basic-menu' : undefined}

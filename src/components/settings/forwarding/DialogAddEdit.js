@@ -16,6 +16,23 @@ import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import QueryAETSelect from "../../remoteAET/QueryAETSelect";
 
+const useStyles = makeStyles((theme) => ({
+    field: {
+        width: '100%'
+    },
+    card: {
+        "&.MuiCard-root": {
+            padding: '0px !important'
+        }
+    },
+    button: {
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.chip.color + "!important",
+        marginRight: '10px !important'
+    },
+
+}));
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -23,59 +40,56 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const DialogAddEdit = (props) => {
 
     const theme = useTheme();
-
-    const useStyles = makeStyles({
-        field: {
-            width: '100%'
-        },
-        card: {
-            "&.MuiCard-root": {
-                padding: '0px !important'
-            }
-        },
-        button: {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.chip.color + "!important",
-            marginRight: '10px !important'
-        },
-
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const [addMode, setAddMode] = React.useState(true);
-    const [saveValues, setSaveValues] = React.useState({});
 
+    const getValue = (id) => {
+        if (!props.values) return '';
+        return props.values[id] || '';
+    }
     const handleChange = (id, value) => {
-        setSaveValues({...saveValues, [id]: value});
+        props.setValues({...props.values, [id]: value});
     }
     const handleCancel = () => {
         props.toggle();
-        setSaveValues({});
+        props.setValues({});
     }
     const handleSave = async() => {
         let response = null;
-        if (!addMode) response = await ForwardingService.editRule(saveValues.id, saveValues);
-        else response = await ForwardingService.addRule(saveValues);
+        if (!addMode) response = await ForwardingService.editRule(props.values.id, props.values);
+        else response = await ForwardingService.addRule(props.values);
 
         if (response.error) {
-            console.log(response.error);
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
         props.toggle();
-        setSaveValues({});
+        props.setValues({});
         setAddMode(true);
         props.onSave();
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully "+(addMode?"added":"edited")+"!"
+        });
     }
 
     React.useEffect(() => {
-        if (!props.values) {
+        if (!props.isOpen) return;
+
+        if (!props.values || !props.values.id) {
             setAddMode(true);
             return;
         }
         setAddMode(false);
-        setSaveValues(props.values);
-    }, [props.values]);
+    }, [props.isOpen]);
 
 
     return (
@@ -96,7 +110,7 @@ const DialogAddEdit = (props) => {
                                 id="filled-basic"
                                 label={t("ae_title")}
                                 variant="standard"
-                                value={saveValues.aet_condition || ''}
+                                value={getValue('aet_condition')}
                                 onChange={(e) => {handleChange('aet_condition', e.target.value);}}
                             />
                         </Grid>
@@ -105,7 +119,7 @@ const DialogAddEdit = (props) => {
                                 <InputLabel id="aet" >Forward To</InputLabel>
                                 <QueryAETSelect
                                     forward={true}
-                                    currentAet={saveValues.value || ''}
+                                    currentAet={getValue('value')}
                                     setCurrentAET={(e) => {handleChange("value", e)}}
                                 />
                             </FormControl>

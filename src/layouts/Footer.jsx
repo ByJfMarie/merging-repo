@@ -3,19 +3,8 @@ import {useTheme} from '@emotion/react';
 import t from "../services/Translation";
 import {makeStyles} from "@mui/styles";
 
-export default function Footer() {
-    /** THEME */
-    const theme = useTheme();
-
-    const year = new Date().getFullYear()
-
-    const useStyles = makeStyles({
-        mainContainer: {
-        },
-    });
-    const classes = useStyles();
-
-    const style = {
+const useStyles = makeStyles((theme) => ({
+    mainContainer: {
         backgroundColor: theme.palette.menu.background,
         //position: 'absolute !important',
         position: 'fixed',
@@ -25,34 +14,45 @@ export default function Footer() {
         marginTop: '20px',
         textAlign: "center",
         width: "100%"
+    },
+    link: {
+        margin: theme.spacing(1)
     }
+}));
+
+export default function Footer() {
+    /** THEME */
+    const theme = useTheme();
+    const classes = useStyles(theme);
+
+    const year = new Date().getFullYear()
 
     return (
-        <div className={classes.mainContainer} style={style}>
+        <div className={classes.mainContainer}>
             <Typography style={{color: "#b0b0b0"}}>
                 {year} © Perennity
             </Typography>
 
 
-            <Link style={{margin: theme.spacing(1)}} underline="none">
+            <Link className={classes.link} underline="none">
                 {t('contactUs')}
             </Link>
 
             -
 
-            <Link style={{margin: theme.spacing(1)}} underline="none">
+            <Link className={classes.link} underline="none">
                 FAQ
             </Link>
 
             -
 
-            <Link style={{margin: theme.spacing(1)}} underline="none">
+            <Link className={classes.link} underline="none">
                 {t('privacyPolicy')}
             </Link>
 
             -
 
-            <Link style={{margin: theme.spacing(1)}} underline="none">
+            <Link className={classes.link} underline="none">
                 {t("terms&Conditions")}
             </Link>
         </div>

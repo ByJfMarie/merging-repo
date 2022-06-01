@@ -25,7 +25,7 @@ const TableUsers = (props) => {
     });
     const classes = useStyles();
 
-    const [pageSize, setPageSize] = React.useState(5);
+    const [pageSize, setPageSize] = React.useState(10);
     const [rows, setRows] = React.useState([]);
 
     const refreshUsers = async(filters) => {
@@ -161,7 +161,7 @@ const TableUsers = (props) => {
                     columns={column}
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[5,10,20]}
+                    rowsPerPageOptions={[10,20,50]}
                     pagination
                     sx={{
                         '& .MuiDataGrid-row:hover': {

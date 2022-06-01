@@ -45,11 +45,6 @@ export default function Transfer() {
         message: ""
     });
 
-    function Message() {
-        if (!message || !message.show) return <></>;
-        return <Alert severity={message.severity}>{message.message}</Alert>;
-    }
-
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
     const [remoteSites, setRemoteSites] = React.useState([]);
@@ -144,7 +139,7 @@ export default function Transfer() {
                         <Grid item xs={12}>
                             <TextField
                                 style={{width: '100%'}}
-                                id="filled-basic"
+                                id="DCMT.alias"
                                 label={t("alias")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.alias')}
@@ -156,7 +151,7 @@ export default function Transfer() {
                         <Grid item xs={12}>
                             <TextField
                                 style={{width: '100%'}}
-                                id="filled-basic"
+                                id="DCMT.sftp_container"
                                 label={t("working_folder_group")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_container')}
@@ -168,7 +163,7 @@ export default function Transfer() {
                         <Grid item xs={9}>
                             <TextField
                                 className={classes.field}
-                                id="filled-basic"
+                                id="DCMT.sftp_host"
                                 label={t("host")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_host')}
@@ -180,7 +175,7 @@ export default function Transfer() {
                         <Grid item xs={3}>
                             <TextField
                                 className={classes.field}
-                                id="filled-basic"
+                                id="DCMT.sftp_port"
                                 label={t("port")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_port')}
@@ -192,7 +187,7 @@ export default function Transfer() {
                         <Grid item xs={12}>
                             <TextField
                                 style={{width: '100%'}}
-                                id="filled-basic"
+                                id="DCMT.sftp_user"
                                 label={t("user")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_user')}
@@ -204,7 +199,7 @@ export default function Transfer() {
                         <Grid item xs={12}>
                             <TextField
                                 style={{width: '100%'}}
-                                id="filled-basic"
+                                id="DCMT.sftp_password"
                                 label={t("password")}
                                 type="password"
                                 variant="standard"
@@ -239,6 +234,7 @@ export default function Transfer() {
                             setSettingsValue(values);
                             toggleDialog();
                         }}
+                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
@@ -246,11 +242,13 @@ export default function Transfer() {
             <DialogAddEdit
                 remoteSites={remoteSites}
                 values={settingsValue}
+                setValues={setSettingsValue}
                 isOpen={showDialog}
                 toggle={toggleDialog}
                 onSave={() => {
                     setForceRefresh(!forceRefresh);
                 }}
+                alertMessage={(message) => setMessage(message)}
             />
 
         </>)

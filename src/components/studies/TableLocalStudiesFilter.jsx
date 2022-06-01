@@ -13,6 +13,55 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        // "& .MuiFilledInput-underline:after": {
+        //     borderBottomColor: theme.palette.input.borderBottom
+        // },
+        // "& .MuiInputBase-root.Mui-focused": {
+        //     boxShadow: '0px 0px 5px 2px rgba(45, 180, 235,0.60)'
+        // },
+    },
+
+    popover: {
+        "& .MuiPopover-paper": {
+            backgroundColor: theme.palette.card.color
+        }
+    },
+
+    clear: {
+        display: "flex",
+
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: "center",
+        },
+        [theme.breakpoints.up('sm')]: {
+            justifyContent: "flex-end"
+        },
+    },
+
+    delete: {
+        display: "flex",
+
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: "center",
+        }
+    },
+
+    button: {
+        color: theme.palette.text.primary,
+        float: 'right',
+        backgroundColor: theme.palette.chip.color + "!important",
+        margin: '10px !important'
+    },
+
+    presetPhone: {
+        [theme.breakpoints.down('sm')]: {
+            display: "none !important",
+        }
+    }
+}));
+
 export default function TableLocalStudiesFilter(props) {
 
     const priviledges = AuthService.getCurrentUser().priviledges;
@@ -53,55 +102,7 @@ export default function TableLocalStudiesFilter(props) {
     };
 
     const theme = useTheme();
-    const useStyles = makeStyles({
-        root: {
-            // "& .MuiFilledInput-underline:after": {
-            //     borderBottomColor: theme.palette.input.borderBottom
-            // },
-            // "& .MuiInputBase-root.Mui-focused": {
-            //     boxShadow: '0px 0px 5px 2px rgba(45, 180, 235,0.60)'
-            // },
-        },
-
-        popover: {
-            "& .MuiPopover-paper": {
-                backgroundColor: theme.palette.card.color
-            }
-        },
-
-        clear: {
-            display: "flex",
-
-            [theme.breakpoints.down('sm')]: {
-                justifyContent: "center",
-            },
-            [theme.breakpoints.up('sm')]: {
-                justifyContent: "flex-end"
-            },
-        },
-
-        delete: {
-            display: "flex",
-
-            [theme.breakpoints.down('sm')]: {
-                justifyContent: "center",
-            }
-        },
-
-        button: {
-            color: theme.palette.text.primary,
-            float: 'right',
-            backgroundColor: theme.palette.chip.color + "!important",
-            margin: '10px !important'
-        },
-
-        presetPhone: {
-            [theme.breakpoints.down('sm')]: {
-                display: "none !important",
-            }
-        }
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const [values, setValues] = React.useState(props.initialValues);
     const [open, setOpen] = React.useState(false);

@@ -8,21 +8,21 @@ export const URL_REFRESH_TOKEN = "token/refresh";
 
 const miAPI = axios.create({
     baseURL: BASE_URL,
-    timeout: 10000,
+    timeout: 1000,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
     },
 });
 
-export const apiGET = (url) => {
+export const apiGET = (url, config) => {
     let state = {
         items: [],
         error: ''
     }
 
     return miAPI
-        .get(url)
+        .get(url, config)
         .then((response) => {
             if (response.status === 200) {
                 state.items = response.data;
@@ -34,7 +34,8 @@ export const apiGET = (url) => {
             state.error = "Unknown error";
             if (error.response) {
                 state.error = error.response.data.error || error.message;
-                networkError(state.error, 5000);
+                if (error.response.status===401 || error.response.status===403) return state;
+                else networkError(state.error, 5000);
             }
             else if (error.message) {
                 state.error = error.message;
@@ -68,7 +69,8 @@ export const apiPOST = (url, data) => {
             state.error = "Unknown error";
             if (error.response) {
                 state.error = error.response.data.error || error.message;
-                networkError(state.error, 5000);
+                if (error.response.status===401 || error.response.status===403) return state;
+                else networkError(state.error, 5000);
             }
             else if (error.message) {
                 state.error = error.message;
@@ -132,8 +134,9 @@ const refreshAuthLogic = failedRequest =>
                 buttons: false,
                 timer: 2000,
             }).then(() => {
+                console.log("here");
                 AuthService.logout();
-            })
+            });
         });
 
 // Instantiate the interceptor

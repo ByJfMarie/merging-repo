@@ -104,7 +104,7 @@ export default function Database() {
                     <Grid item xs={9}>
                         <TextField
                             className={classes.field}
-                            id="filled-basic"
+                            id="DB.host"
                             label={t("host")}
                             variant="standard"
                             value={getSettingsValue('DB.host')}
@@ -116,7 +116,7 @@ export default function Database() {
                     <Grid item xs={3}>
                         <TextField
                             className={classes.field}
-                            id="filled-basic"
+                            id="DB.port"
                             label={t("port")}
                             variant="standard"
                             value={getSettingsValue('DB.port')}
@@ -128,7 +128,7 @@ export default function Database() {
                     <Grid item xs={12}>
                         <TextField
                             style={{ width: '100%' }}
-                            id="filled-basic"
+                            id="DB.user"
                             label={t("user")}
                             variant="standard"
                             value={getSettingsValue('DB.user')}
@@ -140,7 +140,7 @@ export default function Database() {
                     <Grid item xs={12}>
                         <TextField
                             style={{ width: '100%' }}
-                            id="filled-basic"
+                            id="DB.password"
                             label={t("password")}
                             type={"password"}
                             variant="standard"
@@ -153,7 +153,7 @@ export default function Database() {
                     <Grid item xs={12}>
                         <TextField
                             style={{ width: '100%' }}
-                            id="filled-basic"
+                            id="DB.name"
                             label={t("database_name")}
                             variant="standard"
                             value={getSettingsValue('DB.name')}

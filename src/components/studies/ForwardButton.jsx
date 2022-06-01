@@ -6,15 +6,16 @@ import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AETService from "../../services/api/aet.service";
 
+const useStyles = makeStyles((theme) => ({
+    buttonDownload: {
+        backgroundColor: theme.palette.button.background + "!important"
+    }
+}));
+
 const ForwardButton = (props) => {
 
     const theme = useTheme();
-    const useStyles = makeStyles({
-        buttonForward: {
-            backgroundColor: theme.palette.button.background + "!important"
-        }
-    });
-    const classes = useStyles();
+    const classes = useStyles(theme);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
