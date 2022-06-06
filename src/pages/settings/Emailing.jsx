@@ -30,6 +30,7 @@ import Editor from "../../components/Editor.jsx"
 import "react-phone-input-2/lib/high-res.css";
 import SettingsService from "../../services/api/settings.service";
 import ResetSave from "../../components/settings/ResetSave";
+import MailingService from "../../services/api/mailing.service";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -132,6 +133,28 @@ export default function Emailing() {
         if (!cfg) return;
         cfg['value'] = value;
         setSettingsValue({...settingsValue, [id]: cfg});
+    }
+
+    const [testRecipient, setTestRecipient] = React.useState(null);
+    const handleTest = async () => {
+        const response = await MailingService.test(testRecipient, settingsValue);
+
+        if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
+            return;
+        }
+
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Settings successfully saved!"
+        });
     }
 
     const handleSave = async () => {
@@ -275,6 +298,7 @@ export default function Emailing() {
                                                 id="filled-basic"
                                                 label={t("password")}
                                                 variant="standard"
+                                                type="password"
                                                 value={getSettingsValue('NOT.smtp_password')}
                                                 onChange={(e) => {handleSettingsChange('NOT.smtp_password', e.target.value)}}
                                             />
@@ -292,6 +316,36 @@ export default function Emailing() {
                                         </Grid>
                                     </Grid>
                                 </Container>
+
+                                <Grid
+                                    container
+                                    spacing={0}
+                                    direction="row"
+                                    alignItems="center"
+                                    justify="center"
+                                >
+                                    <Grid item xs={6}>
+                                        <TextField
+                                            fullWidth
+                                            label={"Test SMTP"}
+                                            variant="outlined"
+                                            placeholder="Recipient"
+                                            value={testRecipient || ''}
+                                            onChange={(event) => {setTestRecipient(event.target.value)}}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                            <Button
+                                                variant="text"
+                                                color="success"
+                                                disableElevation
+                                                onClick={() => handleTest()}
+
+                                            >
+                                                Send Test Email
+                                            </Button>
+                                    </Grid>
+                                </Grid>
                             </Stack>
                             <ResetSave
                                 handleSave={handleSave}
@@ -305,7 +359,7 @@ export default function Emailing() {
                     <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '10px' }}>
 
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                            <Grid item md={6} xs={12}>
+                            <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
                                     <InputLabel>{t('template')}</InputLabel>
                                     <Select
@@ -337,15 +391,14 @@ export default function Emailing() {
                                     </Select>
                                 </FormControl>
                             </Grid>
-
-                            <Grid item md={6} xs={0}></Grid>
                              
-                            <Grid item md={6} xs={12}>
+                            <Grid item xs={12}>
                                 <TextField
                                     id="Subject"
+                                    fullWidth
                                     label={t('subject')}
                                     variant="standard"
-                                    style={{ marginBottom: "10px", width: "100%" }}
+                                    //style={{ marginBottom: "10px", width: "100%" }}
                                     value={template.subject || ''}
                                     onChange={(e) => {handleSettingsChange(template.name+'_title', e.target.value)}}
                                 />

@@ -3,6 +3,7 @@ import { Typography, Divider, Link, Card, CardContent } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
 import t from "../../services/Translation";
+import SystemService from "../../services/api/system.service";
 
 const About = () => {
     /** THEME */
@@ -23,6 +24,25 @@ const About = () => {
     });
 const classes = useStyles();
 
+    const [version, setVersion] = React.useState({
+        version: '',
+        build: ''
+    });
+    const refresh = async () => {
+        const response = await SystemService.getVersion();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setVersion(response.items);
+    }
+
+    React.useEffect(() => {
+        refresh();
+    }, []);
+
 return (
     <React.Fragment>
 
@@ -32,7 +52,7 @@ return (
         <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
             <CardContent>
                 <Typography variant="h6" >Perennity iMAGE Portal</Typography>
-                <Typography variant="h6" >Version 6.00 build 108</Typography>
+                <Typography variant="h6" >Version {version.version} build {version.build}</Typography>
                 <br/>
                 <div className={classes.div}>
                     <Typography className={classes.spaceAfter}> Our Website </Typography>

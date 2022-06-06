@@ -15,6 +15,14 @@ export default function ResetSave(props) {
             </Grid>
             <Grid item xs>
             </Grid>
+            {
+                props.handleTest &&
+
+                <Grid item xs="auto">
+                    <Button variant="outlined" color="success" component="label"
+                            onClick={props.handleTest}>{"Test Settings"}</Button>
+                </Grid>
+            }
         </Grid>
     );
 }

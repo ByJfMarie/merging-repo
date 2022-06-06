@@ -65,6 +65,10 @@ class SettingsService {
     saveDatabase(settings) {
         return apiPOST('settings/database.set', settings);
     }
+
+    getPrinters() {
+        return apiGET('settings/printers.list');
+    }
 }
 
 export default new SettingsService();

@@ -7,7 +7,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import TransferService from "../../services/api/transfer.service";
 
 const useStyles = makeStyles((theme) => ({
-    buttonDownload: {
+    buttonTransfer: {
         backgroundColor: theme.palette.button.background + "!important"
     }
 }));
@@ -51,7 +51,7 @@ const TransferButton = (props) => {
         <>
             {remoteSites.length > 1 &&
                 <>
-                    <Button variant="outlined" size="medium" className={classes.buttonForward} onClick={handleClick}>
+                    <Button variant="outlined" size="medium" className={classes.buttonTransfer} onClick={handleClick}>
                         {t('transfer')}
                         <ArrowDropDownIcon />
                     </Button>

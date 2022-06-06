@@ -84,6 +84,27 @@ export default function Transfer() {
         setConfig({...config, [id]: cfg});
     }
 
+    const handleTest = async () => {
+        const response = await TransferService.testTransfer(config);
+
+        if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
+            return;
+        }
+
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Settings successfully saved!"
+        });
+    }
+
     const handleSave = async () => {
         const response = await SettingsService.saveTransfer(config);
 
@@ -211,6 +232,7 @@ export default function Transfer() {
                         </Grid>
                     </Grid>
                     <ResetSave
+                        handleTest={handleTest}
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />

@@ -7,7 +7,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AETService from "../../services/api/aet.service";
 
 const useStyles = makeStyles((theme) => ({
-    buttonDownload: {
+    buttonForward: {
         backgroundColor: theme.palette.button.background + "!important"
     }
 }));

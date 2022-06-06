@@ -9,14 +9,14 @@ export default function Transfer() {
     /** THEME */
     const theme = useTheme();
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
-
     return (
         <React.Fragment>
             <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('transfer')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-            <TableTransferStatus {...priviledges} page="transfer" />
+            <TableTransferStatus
+                page="transfer"
+            />
             
         </React.Fragment>
     );

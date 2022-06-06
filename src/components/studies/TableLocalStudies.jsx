@@ -11,9 +11,11 @@ import UpdateIcon from "@mui/icons-material/Update";
 import InfoIcon from '@mui/icons-material/Info';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import TableLocalStudiesFilter from "./TableLocalStudiesFilter";
 import StudiesService from "../../services/api/studies.service";
 import ForwardingService from "../../services/api/forwarding.service";
+import ViewersService from "../../services/api/viewers.service";
 import CustomDialogAddPermission from "./CustomDialogAddPermission";
 import AuthService from "../../services/api/auth.service";
 import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
@@ -154,6 +156,19 @@ function TableLocalStudies(props) {
             window.open(fileURL);
         }
     };
+
+    //Viewer
+    const handleViewStudy = async (study) => {
+        const response = await ViewersService.getURL(study.key);
+
+        if (response.error) {
+            messageAlert('error', "Impossible to open viewer: "+response.error);
+            return;
+        }
+
+        //Open link in new tab
+        window.open(response.items);
+    }
 
     //Selection
     const [selectedRows, setSelectedRows] = useState([])
@@ -369,7 +384,6 @@ function TableLocalStudies(props) {
         }*/
     ];
 
-
     if (priviledges.privileges.pages[props.page].searchTable.actionsRow.length !== 0) {
         columns.push(
             {
@@ -378,8 +392,14 @@ function TableLocalStudies(props) {
                 width: 80,
                 getActions: (params) =>
                     priviledges.privileges.pages[props.page].searchTable.actionsRow.map((action) => {
-
-                        if (action ==='info') {
+                        if (action ==='view') {
+                            return <GridActionsCellItem
+                                icon={<VisibilityIcon/>}
+                                label="View Study"
+                                onClick={() => handleViewStudy(params.row)}
+                            />
+                        }
+                        else if (action ==='info') {
                             return <GridActionsCellItem
                                 icon={<InfoIcon/>}
                                 label="Study Info"

@@ -125,7 +125,6 @@ export default function LocalServer() {
             </Snackbar>
             <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
-                    <Container maxWidth="sm" style={{marginLeft: "0px", marginBottom: '15px', paddingLeft: "0px"}}>
                         <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
                             <Grid item xs={12}>
                                 <TextField
@@ -163,7 +162,6 @@ export default function LocalServer() {
                                 />
                             </Grid>
                         </Grid>
-                    </Container>
 
 
                     <FormGroup>

@@ -37,6 +37,7 @@ export default function Reporting(props) {
 
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
+    const [printers, setPrinters] = React.useState({});
     const refresh = async () => {
         const response = await SettingsService.getReporting();
 
@@ -47,8 +48,19 @@ export default function Reporting(props) {
 
         setConfig(response.items);
     }
+    const refreshPrinters = async () => {
+        const response = await SettingsService.getPrinters();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setPrinters(response.items);
+    }
     React.useEffect(() => {
         refresh();
+        refreshPrinters();
     }, []);
 
     const getSettingsValue = (id) => {
@@ -127,17 +139,19 @@ export default function Reporting(props) {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8} lg={10} style={{display: "flex"}}>
-                                <FormControl style={{width: "200px"}}>
-                                    <InputLabel id="print_selection">Print Selection</InputLabel>
+                                <FormControl fullWidth variant="standard">
                                     <Select
                                         labelId="print_selection"
                                         id="print_selection"
                                         label="Print Selection"
-                                        value={config["RRS.printer_name"] || ''}
+                                        value={getSettingsValue("RRS.printer_name")}
+                                        onChange={(e) => handleSettingsChange('RRS.printer_name', e.target.value)}
                                     >
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
+                                        {
+                                            Object.keys(printers).map((printer) => {
+                                                return <MenuItem value={printer}>{printer}</MenuItem>
+                                            })
+                                        }
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -166,37 +180,43 @@ export default function Reporting(props) {
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} sm={8} lg={10} style={{display: "flex"}}>
-                                <FormControl style={{width: "200px"}}>
-                                    <InputLabel id="Request_Type">Request Type</InputLabel>
+
                                     <Select
                                         labelId="Request_Type"
                                         id="Request_Type"
+                                        fullWidth
+                                        variant="standard"
                                         label="Request Type"
-                                        value={config["RRS.requestType"] || ''}
+                                        value={getSettingsValue("RRS.requestType")}
+                                        onChange={(e) => handleSettingsChange('RRS.requestType', e.target.value)}
                                     >
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
+                                        <MenuItem value={0}>Http request</MenuItem>
+                                        <MenuItem value={1}>UNC Request (txt, pdf, SR)</MenuItem>
+                                        <MenuItem value={2}>Mitra Broker</MenuItem>
+                                        <MenuItem value={3}>Database General Electrics request</MenuItem>
+                                        <MenuItem value={4}>Fuji Synapse Http Request</MenuItem>
+                                        <MenuItem value={5}>Dicom receive</MenuItem>
                                     </Select>
-                                </FormControl>
+
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h8" style={{textAlign: 'left'}}>
+                                    Request
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    multiline={true}
+                                    rows={4}
+                                    fullWidth
+                                    value={getSettingsValue('NOT.requestURL')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('NOT.requestURL', e.target.value)
+                                    }}
+                                />
                             </Grid>
                         </Grid>
-
-                        <Typography variant="h8" style={{textAlign: 'left'}}>
-                            Request
-                        </Typography>
-
-                        <TextField
-                            variant="outlined"
-                            multiline={true}
-                            rows={4}
-                            style={{maxWidth: "700px"}}
-                            value={getSettingsValue('NOT.requestURL')}
-                            onChange={(e) => {
-                                handleSettingsChange('NOT.requestURL', e.target.value)
-                            }}
-                        />
-
                     </FormGroup>
                     <ResetSave
                         handleSave={handleSave}
