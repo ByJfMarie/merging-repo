@@ -1,4 +1,4 @@
-import {apiGET, apiPOST} from "./apiManager";
+import {apiGET, apiUPLOAD} from "./apiManager";
 
 class SystemService {
 
@@ -8,6 +8,13 @@ class SystemService {
 
     getLicense() {
         return apiGET('system/license.get');
+    }
+
+    setLicense(file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        return apiUPLOAD('system/license.set', formData);
     }
 }
 

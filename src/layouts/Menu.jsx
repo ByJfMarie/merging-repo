@@ -120,11 +120,8 @@ function MenuBackup(props) {
     const drawer = (
         <div>
             <Toolbar>
-                <Link href="/" underline="none" style={{ display: "flex", alignItems: 'center' }}>
-                    <img src="/images/perennity.png" alt="Logo" height="50" width="50" />
-                    <Typography variant="h6" noWrap component="div" color={'#2db5e9'}>
-                        PERENNITY
-                    </Typography>
+                <Link href="/studies" underline="none" style={{ display: "flex", alignItems: 'center' }}>
+                    <img src="/images/logo.svg" alt="Logo" width="100%"/>
                 </Link>
             </Toolbar>
 
@@ -234,9 +231,10 @@ function MenuBackup(props) {
                             </Link>
                         </Grid>
 
-                        <Grid item style={{ paddingRight: '12px' }}>
+                        {/*<Grid item style={{ paddingRight: '12px' }}>
                             <NotificationsDropdown />
-                        </Grid>
+                        </Grid>*/
+                        }
 
                         <Grid item style={{ paddingRight: '12px' }}>
                             <IconButton style={{ color: theme.palette.menu.text }} onClick={handleLogoutClick}>

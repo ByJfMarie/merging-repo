@@ -1,4 +1,4 @@
-import {apiGET, apiPOST} from "./apiManager";
+import {apiGET, apiPOST, apiUPLOAD} from "./apiManager";
 
 class SettingsService {
 
@@ -68,6 +68,27 @@ class SettingsService {
 
     getPrinters() {
         return apiGET('settings/printers.list');
+    }
+
+    uploadLogo(file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        return apiUPLOAD('settings/logo.upload', formData);
+    }
+
+    uploadHelp(file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        return apiUPLOAD('settings/help.upload', formData);
+    }
+
+    uploadLoginSheet(file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        return apiUPLOAD('settings/loginSheet.upload', formData);
     }
 }
 

@@ -85,6 +85,45 @@ export const apiPOST = (url, data) => {
         });
 }
 
+export const apiUPLOAD = (url, data) => {
+    let state = {
+        items: [],
+        error: ''
+    }
+
+    return miAPI
+        .post(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                state.items = response.data;
+            } else {
+                state.error = "Unknown error";
+            }
+        })
+        .catch((error) => {
+            state.error = "Unknown error";
+            if (error.response) {
+                state.error = error.response.data.error || error.message;
+                if (error.response.status===401 || error.response.status===403) return state;
+                else networkError(state.error, 5000);
+            }
+            else if (error.message) {
+                state.error = error.message;
+                networkError(state.error, 2000);
+            }
+            else {
+                networkError(state.error, 2000);
+            }
+        })
+        .then(() => {
+            return state;
+        });
+}
+
 const networkError = (message, timer) => {
     swal("Error", message, "error", {
         buttons: false,

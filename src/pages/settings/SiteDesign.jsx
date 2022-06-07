@@ -161,6 +161,53 @@ export default function SiteDesign() {
         refreshSettings();
     };
 
+    /** LOGO */
+    const handleUploadLogo = async (event) => {
+        const response = await SettingsService.uploadLogo(event.target.files[0]);
+
+        if (response.error) {
+            return;
+        }
+
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Logo File successfully uploaded!"
+        });
+    }
+
+    const handleUploadHelp = async (event) => {
+        const response = await SettingsService.uploadHelp(event.target.files[0]);
+
+        if (response.error) {
+            return;
+        }
+
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Help File successfully uploaded!"
+        });
+    }
+
+    const handleUploadLoginSheet = async (event) => {
+        const response = await SettingsService.uploadLoginSheet(event.target.files[0]);
+
+        if (response.error) {
+            return;
+        }
+
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "LoginSheet File successfully uploaded!"
+        });
+    }
+
+
     return (
         <React.Fragment>
             <Typography variant="h4"
@@ -321,25 +368,40 @@ export default function SiteDesign() {
                     <CardContent>
                         <div className={classes.div}>
                             <Typography className={classes.spaceAfter}>{t('company_logo')}</Typography>
-                            <Button size="small" variant="contained" component="label" style={{float: 'left'}}>
-                                Upload
-                                <input type="file" hidden/>
-                            </Button>
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    component="label"
+                                    style={{float: 'left'}}
+                                >
+                                    Upload File
+                                    <input type="file" hidden onChange={handleUploadLogo}/>
+                                </Button>
                         </div>
                         <br/>
                         <div className={classes.div}>
                             <Typography className={classes.spaceAfter}>{t('help_file')}</Typography>
-                            <Button size="small" variant="contained" component="label" style={{float: 'left'}}>
-                                Upload
-                                <input type="file" hidden/>
+                            <Button
+                                size="small"
+                                variant="contained"
+                                component="label"
+                                style={{float: 'left'}}
+                            >
+                                Upload File
+                                <input type="file" hidden onChange={handleUploadHelp}/>
                             </Button>
                         </div>
                         <br/>
                         <div className={classes.div}>
                             <Typography className={classes.spaceAfter}>{t('login_sheet')}</Typography>
-                            <Button size="small" variant="contained" component="label" style={{float: 'left'}}>
-                                Upload
-                                <input type="file" hidden/>
+                            <Button
+                                size="small"
+                                variant="contained"
+                                component="label"
+                                style={{float: 'left'}}
+                            >
+                                Upload File
+                                <input type="file" hidden onChange={handleUploadLoginSheet}/>
                             </Button>
                         </div>
                     </CardContent>

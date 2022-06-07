@@ -1,9 +1,21 @@
 import React from 'react';
-import {Typography, Divider, Link, Card, CardContent, TextField, FormControlLabel, Checkbox, Grid} from '@mui/material';
+import {
+    Typography,
+    Divider,
+    Link,
+    Card,
+    CardContent,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Grid,
+    Button, Alert, Snackbar, Box
+} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../../services/Translation";
 import SystemService from "../../services/api/system.service";
+import SettingsService from "../../services/api/settings.service";
 
 const License = () => {
     /** THEME */
@@ -15,6 +27,13 @@ const License = () => {
         }
     });
     const classes = useStyles();
+
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
 
     const [license, setLicense] = React.useState({});
     const refresh = async () => {
@@ -36,6 +55,21 @@ const License = () => {
         if (!date) return '';
         if (!date.day || !date.month || !date.year) return '';
         return date.day + "/" + date.month + '/' + date.year;
+    }
+
+    const handleUploadLicense = async (event) => {
+        const response = await SystemService.setLicense(event.target.files[0]);
+
+        if (response.error) {
+            return;
+        }
+
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Logo File successfully uploaded!"
+        });
     }
 
     const DisplayFeature = (params) => {
@@ -62,80 +96,110 @@ const License = () => {
                         style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('license')} </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                      onClose={() => {
+                          setMessage({...message, show: !message.show})
+                      }}>
+                <Alert onClose={() => {
+                    setMessage({...message, show: !message.show})
+                }} severity={message.severity} sx={{width: '100%'}}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("serial")}
-                        variant="standard"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={license.serial || ''}
-                    />
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("computer_id")}
-                        variant="standard"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={license.hardware_id || ''}
-                    />
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("exp_date")}
-                        variant="standard"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={getDate(license.exp_date)}
-                    />
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("amp_valid_until")}
-                        variant="standard"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={getDate(license.amp)}
-                    />
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={"Dicom Nodes"}
-                        variant="standard"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={license.dicom_nodes || '0'}
-                    />
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={"Portal Users"}
-                        variant="standard"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={license.portal_users || '0'}
-                    />
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={"Retention Days"}
-                        variant="standard"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={license.retention_days || '0'}
-                    />
+                    <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("serial")}
+                                variant="standard"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                value={license.serial || ''}
+                            />
+                        </Grid>
 
-                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("computer_id")}
+                                variant="standard"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                value={license.hardware_id || ''}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("exp_date")}
+                                variant="standard"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                value={getDate(license.exp_date)}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("amp_valid_until")}
+                                variant="standard"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                value={getDate(license.amp)}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={"Dicom Nodes"}
+                                variant="standard"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                value={license.dicom_nodes || '0'}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={"Portal Users"}
+                                variant="standard"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                value={license.portal_users || '0'}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={"Retention Days"}
+                                variant="standard"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                value={license.retention_days || '0'}
+                            />
+                        </Grid>
 
                         <Grid item xs={12}>
                             <Grid item xs={12}>
@@ -243,13 +307,22 @@ const License = () => {
                         <Grid item xs={12}>
                             <Divider style={{marginBottom: theme.spacing(2), marginTop: theme.spacing(2)}}/>
                         </Grid>
-                    </Grid>
 
-                    <Typography variant="h6" style={{textAlign: 'right', marginTop: '15px'}}><Link>Upload License
-                        File</Link></Typography>
+                        <Grid item xs={10}/>
+                        <Grid item xs/>
+                        <Grid item xs="auto">
+                            <Button
+                                size="small"
+                                variant="contained"
+                                component="label"
+                            >
+                                Upload License File
+                                <input type="file" hidden onChange={handleUploadLicense} accept=".txt"/>
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </CardContent>
             </Card>
-
         </React.Fragment>
     )
 }

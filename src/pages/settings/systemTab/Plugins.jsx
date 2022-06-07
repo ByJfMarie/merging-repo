@@ -14,6 +14,9 @@ export default function Plugins() {
         message: ""
     });
 
+    /** FORCE REFRESH */
+    const [forceRefresh, setForceRefresh] = React.useState(false);
+
     return (
         <>
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
@@ -37,12 +40,18 @@ export default function Plugins() {
                         <Grid item xs/>
 
                         <Grid item>
-                            <Button variant="contained" component="label">{t('force_refresh')}</Button>
+                            <Button
+                                variant="outlined"
+                                component="label"
+                                onClick={() => {setForceRefresh(!forceRefresh);}}
+                            >
+                                {t('force_refresh')}
+                            </Button>
                         </Grid>
                     </Grid>
                     <TablePlugins
                         filters={null}
-                        forceRefresh={null}
+                        forceRefresh={forceRefresh}
                         alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>

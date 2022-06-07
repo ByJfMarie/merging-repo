@@ -2,9 +2,10 @@ import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
-import ForwardingService from "../../../services/api/forwarding.service";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import PluginsService from "../../../services/api/plugins.service";
+import DownloadIcon from '@mui/icons-material/Download';
+import FileDownloadOffIcon from '@mui/icons-material/FileDownloadOff';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
@@ -23,13 +24,10 @@ const TablePlugins = (props) => {
     });
     const classes = useStyles();
 
-    const [rows, setRows] = React.useState([
-        {'key':'meddream', 'id':'meddream', 'name':"Meddream Viewer", 'version': "7.6.0", 'type': "DICOM Viewer"},
-        {'key':'perennity', 'id':'meddream', 'name':"Perennity Viewer", 'version': "7.6.0", 'type': "DICOM Viewer"}
-        ]);
+    const [rows, setRows] = React.useState([]);
 
-    const refresh = async() => {
-        const response = await ForwardingService.getRules();
+    const refresh = async(forceRefresh) => {
+        const response = await PluginsService.list(forceRefresh);
 
         if (response.error) {
             console.log(response.error);
@@ -41,8 +39,62 @@ const TablePlugins = (props) => {
     }
 
     React.useEffect(() => {
-        //refresh();
+        refresh(true);
     }, [props.forceRefresh]);
+
+    const handleInstall = async(id) => {
+        const response = await PluginsService.install(id);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items==null) return;
+        refresh(true);
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "Plugin successfully installed!"
+        });
+    }
+
+    const handleUninstall = async(id) => {
+        const response = await PluginsService.uninstall(id);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items==null) return;
+        refresh(true);
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "Plugin successfully uninstalled!"
+        });
+    }
+
+    const handleDelete = async(id) => {
+        const response = await PluginsService.delete(id);
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.items==null) return;
+        refresh(true);
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "Plugin successfully deleted!"
+        });
+    }
 
     /** HEADERS AND ROWS FOR THE TABLE */
     const headers = ['name', 'version', 'type', 'vide'];
@@ -77,6 +129,28 @@ const TablePlugins = (props) => {
             width: 80,
             getActions: (params) => {
                 let actions = [];
+                if (params.row.installed) {
+                    actions.push(<GridActionsCellItem
+                        icon={<FileDownloadOffIcon/>}
+                        label="Uninstall"
+                        onClick={() => handleUninstall(params.row.id)}
+                        showInMenu
+                    />);
+                    actions.push(<GridActionsCellItem
+                        icon={<DeleteForeverIcon/>}
+                        label="Delete"
+                        onClick={() => handleDelete(params.row.id)}
+                        showInMenu
+                    />);
+                } else {
+                    actions.push(<GridActionsCellItem
+                        icon={<DownloadIcon/>}
+                        label="Install"
+                        onClick={() => handleInstall(params.row.id)}
+                        showInMenu
+                    />);
+                }
+
                 return actions;
             }
         }
