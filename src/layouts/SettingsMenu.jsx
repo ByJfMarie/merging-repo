@@ -20,7 +20,7 @@ import NotificationsDropdown from '../components/NotificationsDropdown';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-
+import LockIcon from '@mui/icons-material/Lock';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';  
 import GroupIcon from '@mui/icons-material/Group';
@@ -28,8 +28,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
-import AuthService from "../services/api/auth.service";
-import UsersService from "../services/api/users.service";
+import UserStorage from "../services/storage/user.storage";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -65,23 +64,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SettingsMenu(props) {
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    /** User & privileges */
+    const[user] = React.useState(UserStorage.getUser());
+    const[privileges] = React.useState(UserStorage.getPrivileges());
 
     /** THEME AND CSS */
     const theme = useTheme();
     const classes = useStyles(theme);
-
-    const [user, setUser] = React.useState([]);
-    const loadUser = async() => {
-        //Load aet list
-        const response = await UsersService.me();
-        if (response.error) {
-            console.log(response.error);
-            return;
-        }
-
-        setUser(response.items);
-    }
 
     /** DROPDOWN MENU ON MOBILE */
     const { window } = props;
@@ -91,17 +80,6 @@ function SettingsMenu(props) {
     };
 
     const container = window !== undefined ? () => window().document.body : undefined;
-
-    /** HIDE MENU ITEMM */
-    const [items] = React.useState([]);
-
-    Object.keys(priviledges.privileges.pages).map((page) => {
-        return (items.push(page))
-    })
-
-    React.useEffect(() => {
-        loadUser();
-    }, []);
 
     const UserName = function() {
         if (!user) return <>{"Hello"}</>;
@@ -141,12 +119,10 @@ function SettingsMenu(props) {
                     <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("users")} />
                 </ListItem>
 
-                {
-                    /*<ListItem button classes={{ selected: classes.selected }} component="a" href="/roles" selected={location === '/roles'}>
-                        <LockIcon />
-                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("roles_perm")} />
-                    </ListItem>   */
-                }
+                <ListItem button classes={{ selected: classes.selected }} component="a" href="/roles" selected={location === '/roles'}>
+                    <LockIcon />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("roles_perm")} />
+                </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/emailing" selected={location === '/emailing'} >
                     <EmailIcon />

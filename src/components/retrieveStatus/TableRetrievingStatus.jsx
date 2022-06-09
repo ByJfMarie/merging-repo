@@ -13,13 +13,14 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
 import {useState} from "react";
-import AuthService from "../../services/api/auth.service";
+
+import UserStorage from "../../services/storage/user.storage";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
 const TableRetrievingStatus = (props) => {
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    const[privileges] = React.useState(UserStorage.getPrivileges());
 
     const statusComponent = (params) => {
 
@@ -155,54 +156,38 @@ const TableRetrievingStatus = (props) => {
             renderCell: (params) => {
                 return statusComponent(params);
             }
+        },
+        {
+            "field": 'p_name',
+            "headerName": t("patient"),
+            "flex": 2,
+            "minWidth": 200
+        },
+        {
+            "field": 'st_description',
+            "headerName": t("description"),
+            "flex": 3,
+            "minWidth": 200
+        },
+        {
+            "field": 'aet',
+            "headerName": t("aet"),
+            "flex": 2,
+            "minWidth": 200,
+            renderCell: (params) => {
+                return <div style={{ lineHeight: "normal" }}>{params.row.called_aet || ''} to {params.row.move_aet || ''} </div>;
+            }
+        },
+        {
+            "field": 'noi',
+            "headerName": t("noi"),
+            "flex": 1,
+            "minWidth": 200,
+            renderCell: (params) => {
+                return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
+            }
         }
     ];
-
-    priviledges.settings[props.page].statusTable.columns.map((row) => {
-        if (row === 'patient') {
-            column.push(
-                {
-                    "field": 'p_name',
-                    "headerName": t(row),
-                    "flex": 2,
-                    "minWidth": 200
-                });
-        }
-        else if (row === 'description') {
-            column.push(
-                {
-                    "field": 'st_description',
-                    "headerName": t(row),
-                    "flex": 3,
-                    "minWidth": 200
-                });
-        }
-        else if (row === 'aet') {
-            column.push(
-                {
-                    "field": 'aet',
-                    "headerName": t(row),
-                    "flex": 2,
-                    "minWidth": 200,
-                    renderCell: (params) => {
-                        return <div style={{ lineHeight: "normal" }}>{params.row.called_aet || ''} to {params.row.move_aet || ''} </div>;
-                    }
-                });
-        }
-        else if (row === "noi") {
-            column.push(
-                {
-                    "field": 'noi',
-                    "headerName": t(row),
-                    "flex": 1,
-                    "minWidth": 200,
-                    renderCell: (params) => {
-                        return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
-                    }
-                });
-        }
-        return true;
-    });
 
     column.push(
         {

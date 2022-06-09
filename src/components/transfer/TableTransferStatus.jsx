@@ -12,7 +12,7 @@ import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
-import AuthService from "../../services/api/auth.service";
+import UserStorage from "../../services/storage/user.storage";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 const statusComponent = (params) => {
@@ -74,7 +74,7 @@ const statusComponent = (params) => {
 
 const TableTransferStatus = (props) => {
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    const[privileges] = React.useState(UserStorage.getPrivileges());
 
     /** THEME AND CSS */
     const theme = useTheme();

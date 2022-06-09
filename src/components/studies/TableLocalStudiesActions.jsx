@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { Grid } from "@mui/material";
-import AuthService from "../../services/api/auth.service";
 import DownloadButton from "./DownloadButton";
 import ForwardButton from "./ForwardButton";
 import TransferButton from "./TransferButton";
 
+import UserStorage from "../../services/storage/user.storage";
+
 const TableLocalStudiesActions = (props) => {
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    const privileges = UserStorage.getPrivileges();
 
     return (
         <React.Fragment>
             <Grid container spacing={2}>
                 <Grid item sm={4} sx={{display: {xs: 'none', sm:'block'}}}>
-                    {priviledges.privileges.pages[props.page].searchTable.actionsTable.includes('download') && (
+                    {privileges.tables[props.page].actions.includes('download') && (
                         <DownloadButton
                             key='download'
                             downloadFunction={props.downloadFunction}
@@ -23,7 +24,7 @@ const TableLocalStudiesActions = (props) => {
                 <Grid item xs={12} sm={8}  >
                     <Grid container spacing={1} direction={"row-reverse"}>
                     {  // eslint-disable-next-line 
-                        priviledges.privileges.pages[props.page].searchTable.actionsTable.map((value, key) => {
+                        privileges.tables[props.page].actions.map((value, key) => {
                             if (value === "forward") {
                                 return (
                                     <Grid key={value} item xs="auto">

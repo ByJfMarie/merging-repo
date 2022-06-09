@@ -7,7 +7,6 @@ import t from "../../services/Translation";
 import BlockIcon from '@mui/icons-material/Block';
 import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AuthService from "../../services/api/auth.service";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -64,9 +63,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TableLocalStudiesFilter(props) {
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
-
-
+    const settings = {
+        primary_fields: [
+            "patient_id",
+            "patient_name",
+            "accession_number",
+            "description"
+        ],
+        secondary_fields: [
+            "referring_physician",
+            "modality",
+            "birthdate"
+        ],
+        date_presets: [
+            "0",
+            "3",
+            "*"
+        ],
+        showDeleted: true
+    }
 
     /** MODALITY ELEMENTS */
     const names = [
@@ -267,7 +282,7 @@ export default function TableLocalStudiesFilter(props) {
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                            {priviledges.settings[props.page].search.primary_fields.map((value, key) => {
+                            {settings.primary_fields.map((value, key) => {
 
                                 if (value === "status") {
                                     return (
@@ -312,7 +327,7 @@ export default function TableLocalStudiesFilter(props) {
                                 exclusive
                                 value={values.date_preset}
                             >
-                                {priviledges.settings[props.page].search.date_presets.map((value, key) => {
+                                {settings.date_presets.map((value, key) => {
 
 
                                     var label;
@@ -388,7 +403,7 @@ export default function TableLocalStudiesFilter(props) {
                         >
                             <Container style={{ maxWidth: "500px" }}>
 
-                                {priviledges.settings[props.page].search.secondary_fields.length !== 0 ? (<>
+                                {settings.secondary_fields.length !== 0 ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
                                         <Chip size="medium" label={t('moreFilters')} style={{ backgroundColor: theme.palette.chip.color }} />
@@ -396,7 +411,7 @@ export default function TableLocalStudiesFilter(props) {
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                                        {priviledges.settings[props.page].search.secondary_fields.map((value, key) => {
+                                        {settings.secondary_fields.map((value, key) => {
 
 
                                             if (value === "status") {
@@ -477,7 +492,7 @@ export default function TableLocalStudiesFilter(props) {
                                     </Grid>
                                     <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
                                         <Grid item xs={12} sm={8} md={7} className={classes.delete}>
-                                            {priviledges.settings[props.page].search.showDeleted && (<FormGroup>
+                                            {settings.showDeleted && (<FormGroup>
                                                 <FormControlLabel size="small"
                                                     control={
                                                         <Checkbox

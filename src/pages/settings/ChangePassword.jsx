@@ -10,56 +10,18 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-export default function ChangePassword() {
+export default function ChangePassword(props) {
     const theme = useTheme();
 
-    const [oldPassword, setOldPassword] = React.useState({
-        password: '',
-        showPassword: false,
-    });
+    const getValue = (id) => {
+        if (!props.password) return '';
+        return props.password[id] || '';
+    }
 
-    const [newPassword, setNewPassword] = React.useState({
-        password: '',
-        showPassword: false,
-    });
-
-    const [repeatPassword, setRepeatPassword] = React.useState({
-        password: '',
-        showPassword: false,
-    });
-
-    const handleChangeOP = (prop) => (event) => {
-        setOldPassword({ ...oldPassword, [prop]: event.target.value });
-    };
-
-    const handleClickShowOldPassword = () => {
-        setOldPassword({
-            ...oldPassword,
-            showPassword: !oldPassword.showPassword,
-        });
-    };
-
-    const handleChangeNP = (prop) => (event) => {
-        setNewPassword({ ...newPassword, [prop]: event.target.value });
-    };
-
-    const handleClickShowNewPassword = () => {
-        setNewPassword({
-            ...newPassword,
-            showPassword: !newPassword.showPassword,
-        });
-    };
-
-    const handleChangeRP = (prop) => (event) => {
-        setRepeatPassword({ ...repeatPassword, [prop]: event.target.value });
-    };
-
-    const handleClickShowRepeatPassword = () => {
-        setRepeatPassword({
-            ...repeatPassword,
-            showPassword: !repeatPassword.showPassword,
-        });
-    };
+    const handleValue = (id, value) => {
+        if (!props.password) return '';
+        props.setPassword({...props.password, [id]: value});
+    }
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -75,19 +37,19 @@ export default function ChangePassword() {
                     <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
                         <InputLabel htmlFor="filled-adornment-password">{t('old_password')}</InputLabel>
                         <Input
-                            id="filled-adornment-password"
-                            type={oldPassword.showPassword ? 'text' : 'password'}
-                            value={oldPassword.password}
-                            onChange={handleChangeOP('password')}
+                            id="pwd"
+                            type={getValue('old_show') ? 'text' : 'password'}
+                            value={getValue('old') || ''}
+                            onChange={(e) => {handleValue('old', e.target.value)}}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={handleClickShowOldPassword}
+                                        onClick={() => {handleValue('old_show', !getValue('old_show'))}}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
                                     >
-                                        {oldPassword.showPassword ? <VisibilityOff /> : <Visibility />}
+                                        {getValue('old_show') ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -98,19 +60,19 @@ export default function ChangePassword() {
                     <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
                         <InputLabel htmlFor="filled-adornment-password">{t('new_password')}</InputLabel>
                         <Input
-                            id="filled-adornment-password"
-                            type={newPassword.showPassword ? 'text' : 'password'}
-                            value={newPassword.password}
-                            onChange={handleChangeNP('password')}
+                            id="new"
+                            type={getValue('new_show') ? 'text' : 'password'}
+                            value={getValue('new')}
+                            onChange={(e) => {handleValue('new', e.target.value)}}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={handleClickShowNewPassword}
+                                        onClick={() => {handleValue('new_show', !getValue('new_show'))}}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
                                     >
-                                        {newPassword.showPassword ? <VisibilityOff /> : <Visibility />}
+                                        {getValue('new_show') ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -121,19 +83,19 @@ export default function ChangePassword() {
                     <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
                         <InputLabel htmlFor="filled-adornment-password">{t('repeat_password')}</InputLabel>
                         <Input
-                            id="filled-adornment-password"
-                            type={repeatPassword.showPassword ? 'text' : 'password'}
-                            value={repeatPassword.password}
-                            onChange={handleChangeRP('password')}
+                            id="repeat"
+                            type={getValue('repeat_show') ? 'text' : 'password'}
+                            value={getValue('repeat')}
+                            onChange={(e) => {handleValue('repeat', e.target.value)}}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={handleClickShowRepeatPassword}
+                                        onClick={() => {handleValue('repeat_show', !getValue('repeat_show'))}}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
                                     >
-                                        {repeatPassword.showPassword ? <VisibilityOff /> : <Visibility />}
+                                        {getValue('repeat_show') ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                             }

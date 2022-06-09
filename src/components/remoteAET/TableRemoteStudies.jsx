@@ -8,17 +8,16 @@ import ContactPageIcon from '@mui/icons-material/ContactPage';
 import LockIcon from '@mui/icons-material/Lock';
 import TableRemoteStudiesFilter from "./TableRemoteStudiesFilter";
 import TableRemoteStudiesActions from "./TableRemoteStudiesActions";
-import AuthService from "../../services/api/auth.service";
 import {useState} from "react";
 import QRService from "../../services/api/queryRetrieve.service";
-import Thumbnail from "../studies/Thumbnail";
+import UserStorage from "../../services/storage/user.storage";
 
 function TableRemoteStudies(props) {
 
     /** THEME AND CSS */
     const theme = useTheme();
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    const[privileges] = React.useState(UserStorage.getPrivileges());
 
     const filtersInitValue = {
         patient_id: "",
@@ -282,14 +281,14 @@ function TableRemoteStudies(props) {
         return true;
     });*/
 
-    if (priviledges.privileges.pages[props.page].searchTable.actionsRow.length !== 0) {
+    if (privileges.tables[props.page].actions_rows) {
         columns.push(
             {
                 field: 'actions',
                 type: 'actions',
                 width: 80,
                 getActions: (params) =>
-                    props.privileges.pages[props.page].searchTable.actionsRow.map((action) => {
+                    privileges.tables[props.page].actions_rows.map((action) => {
 
                         if (action ==='info') {
                             return <GridActionsCellItem
@@ -363,7 +362,7 @@ function TableRemoteStudies(props) {
             </TableContainer>
 
             <TableRemoteStudiesActions
-                page="aet"
+                page={props.page}
                 retrieveFunction={retrieveStudies}
             />
         </>

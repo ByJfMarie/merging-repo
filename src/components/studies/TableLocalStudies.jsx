@@ -21,10 +21,11 @@ import AuthService from "../../services/api/auth.service";
 import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
 import TableLocalStudiesActions from "../studies/TableLocalStudiesActions";
 import DownloadStudies from "./DownloadStudies";
+import UserStorage from "../../services/storage/user.storage";
 
 function TableLocalStudies(props) {
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    const[privileges] = React.useState(UserStorage.getPrivileges());
 
     const filtersInitValue = {
         patient_id: "",
@@ -384,14 +385,14 @@ function TableLocalStudies(props) {
         }*/
     ];
 
-    if (priviledges.privileges.pages[props.page].searchTable.actionsRow.length !== 0) {
+    if (privileges.tables[props.page].actions_rows.length !== 0) {
         columns.push(
             {
                 field: 'actions',
                 type: 'actions',
                 width: 80,
                 getActions: (params) =>
-                    priviledges.privileges.pages[props.page].searchTable.actionsRow.map((action) => {
+                    privileges.tables[props.page].actions_rows.map((action) => {
                         if (action ==='view') {
                             return <GridActionsCellItem
                                 icon={<VisibilityIcon/>}

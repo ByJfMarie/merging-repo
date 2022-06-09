@@ -4,6 +4,7 @@ import { SortableContainer, SortableElement, sortableHandle } from "react-sortab
 import t from "../services/Translation.jsx";
 import { useTheme } from '@emotion/react';
 import AuthService from "../services/api/auth.service";
+import UserStorage from "../services/storage/user.storage";
 
 function arrayMove(array, from, to) {
     array = array.slice();
@@ -57,8 +58,6 @@ export default function MultiSelectSort(props) {
         })
     };
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
-
     React.useEffect(() => {
     }, [props])
 
@@ -73,20 +72,17 @@ export default function MultiSelectSort(props) {
 
         var dif1 = option.diff(selectedOptions);
         /** CHANGE SECONDARY */
-        priviledges.settings[props.page].search.secondary_fields = dif1.map((i) => i.value);
-        localStorage.setItem("privileges", JSON.stringify(priviledges));
+        //settings.tables[props.page].secondary_fields = dif1.map((i) => i.value);
 
         /** CHANGE PRIMARY */
-        priviledges.settings[props.page].search.primary_fields = selectedOptions.map((i) => i.value);
-        localStorage.setItem("privileges", JSON.stringify(priviledges));
+        //settings.tables[props.page].primary_fields = selectedOptions.map((i) => i.value);
     }
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
         const newValue = arrayMove(selected, oldIndex, newIndex);
         setSelected(newValue);
 
-        priviledges.settings[props.page].search.primary_fields = newValue.map((i) => i.value);
-        localStorage.setItem("privileges", JSON.stringify(priviledges));
+        //settings.tables[props.page].primary_fields = newValue.map((i) => i.value);
 
         console.log(
             "Values sorted:",
@@ -95,7 +91,7 @@ export default function MultiSelectSort(props) {
     };
 
     useEffect(() => {
-        priviledges.settings[props.page].search.primary_fields.map((field, index) => {
+        /*settings.tables[props.page].primary_fields.map((field, index) => {
             
             if(selected.includes(option[index])){
                 return(setOption(oldOption => [...oldOption, { value: field, label: t(field) }]))
@@ -107,10 +103,10 @@ export default function MultiSelectSort(props) {
                 )
             }
         })
-        priviledges.settings[props.page].search.secondary_fields.map((field) => (
+        settings.tables[props.page].secondary_fields.map((field) => (
             // option.push({ value: field, label: t(field) })
             setOption(oldOption => [...oldOption, { value: field, label: t(field) }])
-        ))
+        ))*/
     }, []);
 
     return (

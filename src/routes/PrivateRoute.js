@@ -5,11 +5,8 @@ import { makeStyles } from "@mui/styles";
 import { Container } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import Footer from '../layouts/Footer';
-
-import AuthService from "../services/api/auth.service";
-
-// import { UserContext } from '../service/UserContext';
-// import Loading from '../layouts/Loading';
+import UsersService from "../services/api/users.service";
+import UserStorage from "../services/storage/user.storage";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -40,10 +37,55 @@ export default function PrivateRoute(props) {
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    const isConnected = AuthService.getCurrentUser();
-    if (isConnected) {
+    const [user, setUser] = React.useState();
+    const loadUser = () => {
+        let current_user = UserStorage.getUser();
+        if (current_user) {
+            setUser(current_user);
+            return;
+        }
 
-        if (AuthService.getCurrentUser().role !== "administrator" && props.path === "/") {
+        UsersService
+            .me()
+            .then((rsp) => {
+                UserStorage.setUser(rsp.items);
+                setUser(rsp.items);
+                return;
+            });
+    }
+
+    const [privileges, setPrivileges] = React.useState();
+    const loadPrivileges = () => {
+        let privileges = UserStorage.getPrivileges();
+        if (privileges) {
+            setPrivileges(privileges);
+            return;
+        }
+
+        UsersService
+            .privileges()
+            .then((rsp) => {
+                UserStorage.setPrivileges(rsp.items);
+                setPrivileges(rsp.items);
+                return;
+            });
+    }
+
+    const [settings, setSettings] = React.useState();
+    const loadSettings = async() => {
+        let set = await UserStorage.getSettings();
+        setSettings(set);
+    }
+
+    React.useEffect(() => {
+        loadUser();
+        loadPrivileges();
+        loadSettings();
+    }, [])
+
+    if (user && privileges) {
+
+        if (privileges.role !== "administrator" && props.path === "/") {
             return window.location.href = "/studies"
         }
 
@@ -62,7 +104,8 @@ export default function PrivateRoute(props) {
         }} />)
 
     } else {
-        AuthService.logout();
+        //AuthService.logout();
+        return (<></>)
     }
 
 }

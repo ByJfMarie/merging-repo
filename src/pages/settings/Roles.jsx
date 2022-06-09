@@ -1,9 +1,26 @@
 import React from 'react';
-import { Typography, Divider, Card, CardContent, Grid, Button, TextField, Dialog, Slide, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
+import {
+    Typography,
+    Divider,
+    Card,
+    CardContent,
+    Grid,
+    Button,
+    TextField,
+    Dialog,
+    Slide,
+    FormControl,
+    Select,
+    MenuItem,
+    InputLabel,
+    Alert, Snackbar
+} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../services/Translation";
-import SettingsTable from "../../components/SettingsTable";
+import RolesTable from "../../components/settings/roles/Table";
+import DialogAddEdit from "../../components/settings/roles/DialogAddEdit";
+import ViewersService from "../../services/api/viewers.service";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -38,33 +55,35 @@ const Roles = () => {
     });
     const classes = useStyles();
 
-    /** HEADERS AND ROWS FOR THE TABLE */
-    const headers = ["role", "description"];
-    const rows = [
-        { "row": ["Administrator", " "] },
-        { "row": ["Radiologist", " "] },
-        { "row": ["Physician", " "] },
-        { "row": ["Patient", " "] },
-    ];
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
 
-     /** ROLE SELECT */
-     const [addRole, setAddRole] = React.useState('');
+    /** ADD/EDIT POP UP */
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [settingsValue, setSettingsValue] = React.useState(null);
+    const [viewers, setViewers] = React.useState([]);
+    const toggleDialog = () => {setShowDialog(!showDialog);}
 
-     const handleChangeAddRole = (event) => {
-         setAddRole(event.target.value);
-     };
- 
-     /** ADD/EDIT POP UP */
-     const [open, setOpen] = React.useState(false);
- 
-     const handleClickOpen = () => {
-         setOpen(true);
-     };
- 
-     const handleClose = () => {
-         setOpen(false);
-     };
- 
+    const refreshViewers = async () => {
+        const response = await ViewersService.getViewers();
+
+        if (response.error) {
+            console.log(response.error);
+            return;
+        }
+
+        setViewers(response.items);
+    }
+    React.useEffect(() => {
+        refreshViewers();
+    }, []);
+
+    /** FORCE REFRESH */
+    const [forceRefresh, setForceRefresh] = React.useState(false);
 
     return (
         <React.Fragment>
@@ -72,66 +91,40 @@ const Roles = () => {
             <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('roles_perm')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }}>
                 <CardContent>
                     <Grid container style={{ marginBottom: '15px' }}>
                         <Grid item xs />
 
-                        <Grid item className={classes.userNameGrid}>
+                        {/*<Grid item className={classes.userNameGrid}>
                             <Button variant="contained" component="label" onClick={handleClickOpen}>+ {t('add')}</Button><br />
-                        </Grid>
+                        </Grid>*/}
                     </Grid>
 
-                    <SettingsTable headers={headers} rows={rows} actions />
+                    <RolesTable
+                        filters={null}
+                        forceRefresh={forceRefresh}
+                        edit={(values) => {setSettingsValue(values); toggleDialog();}}
+                        alertMessage={(message) => setMessage(message)}
+                    />
                 </CardContent>
             </Card>
 
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={open}
-                onClose={handleClose}
-                TransitionComponent={Transition}
-            >
-                <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
-                    <CardContent>
-
-                        <Grid container spacing={2} style={{ marginBottom: '15px' }}>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.field} variant="standard">
-                                    <InputLabel id="demo-simple-select-standard-label">{t("role")}</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-standard-label"
-                                        id="demo-simple-select-standard"
-                                        value={addRole}
-                                        onChange={handleChangeAddRole}
-                                        label="Age"
-                                    >
-                                        <MenuItem value={10}>{t('administrator')}</MenuItem>
-                                        <MenuItem value={20}>{t('physician')}</MenuItem>
-                                        <MenuItem value={20}>{t('radiologist')}</MenuItem>
-                                        <MenuItem value={30}>{t('patient')}</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} style={{marginBottom: '10px'}}>
-                                <TextField className={classes.field} id="filled-basic" label={t("description")} variant="standard" />
-                            </Grid>
-
-                            <Grid item xs />
-
-                            <Grid item >
-                                <Button variant="contained" className={classes.button} component="label" onClick={handleClose}>{t('cancel')}</Button>
-                            </Grid>
-
-                            <Grid item >
-                                <Button variant="contained" component="label">{t('save')}</Button>
-                            </Grid>
-                        </Grid>
-
-                    </CardContent>
-                </Card>
-            </Dialog>
+            <DialogAddEdit
+                viewers={viewers}
+                values={settingsValue}
+                setValues={setSettingsValue}
+                isOpen={showDialog}
+                toggle={toggleDialog}
+                onSave={() => {setForceRefresh(!forceRefresh);}}
+                alertMessage={(message) => setMessage(message)}
+            />
 
         </React.Fragment>
     )

@@ -9,15 +9,12 @@ const Forwarding = () => {
   /** THEME */
   const theme = useTheme();
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
-
   return (
     <React.Fragment>
         <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('forwarding')} </Typography>
         <Divider style={{ marginBottom: theme.spacing(2) }} />
 
         <TableForwardingStatus
-          {...priviledges}
           page="forwarding"
           autoRefresh={false}
         />

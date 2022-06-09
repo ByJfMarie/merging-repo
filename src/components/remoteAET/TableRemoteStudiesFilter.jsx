@@ -11,11 +11,28 @@ import moment from "moment";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import AuthService from "../../services/api/auth.service";
 
 export default function TableRemoteStudiesFilter(props) {
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    const settings = {
+        primary_fields: [
+            "patient_id",
+            "patient_name",
+            "accession_number",
+            "description",
+            "referring_physician"
+        ],
+        secondary_fields: [
+            "modality",
+            "birthdate"
+        ],
+        date_presets: [
+            "0",
+            "1",
+            "3",
+            "7"
+        ]
+    }
 
     /** MODALITY ELEMENTS */
     const names = [
@@ -260,7 +277,7 @@ export default function TableRemoteStudiesFilter(props) {
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                            {priviledges.settings[props.page].search.primary_fields.map((value, key) => {
+                            {settings.primary_fields.map((value, key) => {
 
                                 if (value === "status") {
                                     return (
@@ -305,7 +322,7 @@ export default function TableRemoteStudiesFilter(props) {
                                 exclusive
                                 value={props.filters.date_preset}
                             >
-                                {priviledges.settings[props.page].search.date_presets.map((value, key) => {
+                                {settings.date_presets.map((value, key) => {
 
 
                                     var label;
@@ -381,7 +398,7 @@ export default function TableRemoteStudiesFilter(props) {
                         >
                             <Container style={{ maxWidth: "500px" }}>
 
-                                {priviledges.settings[props.page].search.secondary_fields.length !== 0 ? (<>
+                                {settings.secondary_fields.length !== 0 ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
                                         <Chip size="medium" label={t('moreFilters')} style={{ backgroundColor: theme.palette.chip.color }} />
@@ -389,7 +406,7 @@ export default function TableRemoteStudiesFilter(props) {
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                                        {priviledges.settings[props.page].search.secondary_fields.map((value, key) => {
+                                        {settings.secondary_fields.map((value, key) => {
 
 
                                             if (value === "status") {
@@ -467,21 +484,6 @@ export default function TableRemoteStudiesFilter(props) {
                                             </Grid>
                                         </LocalizationProvider>
 
-                                    </Grid>
-                                    <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
-                                        <Grid item xs={12} sm={8} md={7} className={classes.delete}>
-                                            {priviledges.settings[props.page].search.showDeleted && (<FormGroup>
-                                                <FormControlLabel size="small"
-                                                    control={
-                                                        <Checkbox
-                                                            id="showDeleted"
-                                                            checked={props.filters.showDeleted} />
-                                                    }
-                                                    label={t('show_deleted')}
-                                                    onChange={(e) => {handleSearch(e)}}
-                                                />
-                                            </FormGroup>)}
-                                        </Grid>
                                     </Grid>
                                 </Container>
                             </Container>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import AuthService from "./auth.service";
+import TokenStorage from "../storage/token.storage";
 import swal from "sweetalert";
 
 export const BASE_URL = "http://localhost:9999/v2/";
@@ -135,12 +136,12 @@ const networkError = (message, timer) => {
 
 // Obtain the fresh token each time the function is called
 function getAccessToken(){
-    let user = JSON.parse(localStorage.getItem("user"));
-    return user?.acces_token;
+    let token = TokenStorage.getToken();
+    return token?.acces_token;
 }
 function getRefreshToken() {
-    let user = JSON.parse(localStorage.getItem("user"));
-    return user?.refresh_token;
+    let token = TokenStorage.getToken();
+    return token?.refresh_token;
 }
 
 // Use interceptor to inject the token to requests
@@ -158,10 +159,10 @@ const refreshAuthLogic = failedRequest =>
                 refresh_token: getRefreshToken()
             })
         .then(tokenRefreshResponse => {
-            const user = JSON.parse(localStorage.getItem("user"));
-            user.acces_token = tokenRefreshResponse.data.acces_token;
-            user.refresh_token = tokenRefreshResponse.data.refresh_token;
-            localStorage.setItem("user", JSON.stringify(user));
+            const token = TokenStorage.getToken();
+            token.acces_token = tokenRefreshResponse.data.acces_token;
+            token.refresh_token = tokenRefreshResponse.data.refresh_token;
+            TokenStorage.setToken(token);
 
             failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.acces_token;
             return Promise.resolve();

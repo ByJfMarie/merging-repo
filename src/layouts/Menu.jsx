@@ -30,8 +30,9 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import LocationOn from '@mui/icons-material/LocationOn';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
 
-import AuthService from '../services/api/auth.service';
-import UsersService from "../services/api/users.service";
+import AuthService from "../services/api/auth.service";
+
+import UserStorage from "../services/storage/user.storage";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -71,18 +72,6 @@ function MenuBackup(props) {
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    const [user, setUser] = React.useState([]);
-    const loadUser = async() => {
-        //Load aet list
-        const response = await UsersService.me();
-        if (response.error) {
-            console.log(response.error);
-            return;
-        }
-
-        setUser(response.items);
-    }
-
     /** DROPDOWN MENU ON MOBILE */
     const {window} = props;
     const [mobileOpen, setMobileOpen] = React.useState(false)
@@ -92,23 +81,13 @@ function MenuBackup(props) {
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
-    /** HIDE MENU ITEMM */
-    const [items] = React.useState([]);
-
-    let priviledges = AuthService.getCurrentUser().priviledges;
-    if (priviledges) {
-        Object.keys(priviledges.privileges.pages).map((page) => {
-            return (items.push(page))
-        })
-    }
+    /** User & privileges */
+    const[user] = React.useState(UserStorage.getUser());
+    const[privileges] = React.useState(UserStorage.getPrivileges());
 
     const handleLogoutClick = () => {
         AuthService.logout();
     };
-
-    React.useEffect(() => {
-        loadUser();
-    }, []);
 
     const UserName = function() {
         if (!user) return <>{"Hello"}</>;
@@ -128,42 +107,42 @@ function MenuBackup(props) {
             <Divider classes={{ root: classes.divider }} />
 
             <List>
-                {/*items.indexOf('home') !== -1 && (
+                {/*privileges.pages.indexOf('home') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/" selected={location === '/'}>
                         <HomeIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("home")} />
                     </ListItem>
                 )*/}
 
-                {items.indexOf('studies') !== -1 && (
+                {privileges.pages.indexOf('studies') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/studies" selected={location === '/studies'} >
                         <SearchIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("studies")} />
                     </ListItem>
                 )}
 
-                {items.indexOf('aet') !== -1 && (
+                {privileges.pages.indexOf('aet') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/aet" selected={location === '/aet'}>
                         <LocationOn />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("remote_aet")} />
                     </ListItem>
                 )}
 
-                {items.indexOf('forwarding') !== -1 && (
+                {privileges.pages.indexOf('forwarding') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/forwarding" selected={location === '/forwarding'}>
                         <ForwardToInboxIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("forwarding")} />
                     </ListItem>
                 )}
 
-                {items.indexOf('transfer') !== -1 && (
+                {privileges.pages.indexOf('transfer') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/transfer" selected={location === '/transfer'} >
                         <CompareArrowsIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("transfer")} />
                     </ListItem>
                 )}
 
-                {/*items.indexOf('media_output') !== -1 && (
+                {/*privileges.pages.indexOf('media_output') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/media_output" selected={location === '/media_output'}>
                         <MediationIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("media_output")} />
@@ -175,14 +154,14 @@ function MenuBackup(props) {
             <Divider classes={{ root: classes.divider }} />
 
             <List>
-                {items.indexOf('settings') !== -1 && (
+                {privileges.pages.indexOf('settings') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/site" >
                         <SettingsIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("settings")} />
                     </ListItem>
                 )}
 
-                {items.indexOf('logs') !== -1 && (
+                {privileges.pages.indexOf('logs') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/logs" selected={location === '/logs'} >
                         <DescriptionIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("logs")} />

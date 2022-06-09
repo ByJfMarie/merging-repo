@@ -1,29 +1,51 @@
-import { Switch, Container, FormControlLabel, Link, Select, MenuItem, Grid, Card, CardContent, Typography, Divider, Chip, TextField, Dialog, Slide, DialogContent, DialogActions, Button } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import {
+    Switch,
+    Container,
+    FormControlLabel,
+    Link,
+    Select,
+    MenuItem,
+    Grid,
+    Card,
+    CardContent,
+    Typography,
+    Divider,
+    Chip,
+    TextField,
+    Dialog,
+    Slide,
+    DialogContent,
+    DialogActions,
+    Button,
+    Alert, Snackbar, Box
+} from "@mui/material";
+import {makeStyles} from "@mui/styles";
 import t from "../services/Translation.jsx"
-import { useTheme } from '@emotion/react';
-import React, { useState } from 'react';
+import {useTheme} from '@emotion/react';
+import React, {useState} from 'react';
 import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
 import ChangePassword from "./settings/ChangePassword.jsx";
-import AuthService from "../services/api/auth.service";
+import ResetSave from "../components/settings/ResetSave";
+
+import UsersService from "../services/api/users.service";
+import UserStorage from "../services/storage/user.storage";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function Settings(props) {
-    const priviledges = AuthService.getCurrentUser().priviledges;
+
+    const privileges = UserStorage.getPrivileges();
 
     const breakpoints = {
         default: 1,
-            1400: 1,
-            700: 1
+        1400: 1,
+        700: 1
     }
 
     const theme = useTheme();
-
-    const [dateFormat, setDateFormat] = useState(localStorage.getItem('dateFormat') !== null ? localStorage.getItem('dateFormat') : "dd/MM/yyyy")
 
     const useStyles = makeStyles({
 
@@ -43,40 +65,156 @@ function Settings(props) {
     });
     const classes = useStyles();
 
-    const handleChange = (e) => {
-        props.themeChange(e.target.checked ? "dark" : "light")
-        localStorage.setItem("theme", e.target.checked ? "dark" : "light")
-    }
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
 
-    const handleLanguage = (e) => {
-        localStorage.setItem("language", e.target.value)
-        props.languageChange(e.target.value)
+    /** User Settings */
+    const [settings, setSettings] = React.useState({});
+    const getSettingsValue = (id) => {
+        if (!settings) return '';
+        return settings[id] || '';
     }
-
-    const handleDateFormat = (e) => {
-        setDateFormat(e.target.value)
-        localStorage.setItem("dateFormat", e.target.value)
+    const handleSettingsChange = (id, value) => {
+        if (!settings) return '';
+        setSettings({...settings, [id]: value});
+        if (id === 'theme') props.themeChange(value);
     }
+    const handleSaveSettings = async () => {
+        let response = await UsersService.updateSettings(settings);
 
-    /** CHANGE PASSWORD POP UP */
+        if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
+            return;
+        }
+
+        UserStorage.removeUserSettings();
+        UserStorage.getSettings()
+            .then((set) => {
+                setSettings(set);
+                setMessage({
+                    ...message,
+                    show: true,
+                    severity: "success",
+                    message: "Settings successfully updated!"
+                });
+            });
+    };
+    const handleCancelSettings = () => {
+        setSettings(UserStorage.getSettings());
+        props.themeChange(UserStorage.getSettings().theme);
+    };
+
+    /** User Profile */
+    const [user, setUser] = React.useState({});
+    const getUserValue = (id) => {
+        if (!user) return '';
+        return user[id] || '';
+    }
+    const handleUserChange = (id, value) => {
+        if (!user) return;
+        setUser({...user, [id]: value});
+    }
+    const handleSaveUser = async () => {
+        let response = await UsersService.update(user);
+
+        if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
+            return;
+        }
+
+        UserStorage.removeUserProfile();
+        response = await UsersService.me();
+        if (response.error) return;
+
+        UserStorage.setUser(response.items);
+        setUser(UserStorage.getUser());
+
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Profile successfully updated!"
+        });
+    };
+    const handleCancelUser = () => {
+        setUser(UserStorage.getUser());
+    };
+
+    /** CHANGE PASSWORD */
     const [scroll] = React.useState('paper');
     const [open, setOpen] = React.useState(false);
-
     const handleClickOpen = () => {
         setOpen(true);
     };
+    const [password, setPassword] = React.useState({});
+    const handleSavePassword = async () => {
+        let response = await UsersService.changePassword(password);
 
-    const handleClose = () => {
+        if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
+            return;
+        }
+
         setOpen(false);
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: "Password successfully updated!"
+        });
+    }
+    const handleCancelPassword = () => {
+        setOpen(false);
+        setPassword({});
     };
+
+    React.useEffect(() => {
+        UserStorage.getSettings()
+            .then(settings => {
+                setSettings(settings);
+            })
+
+        setUser(UserStorage.getUser());
+    }, []);
 
     /** DRAG N DROP */
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('profile')} </Typography>
-            <Divider style={{ marginBottom: theme.spacing(2) }} />
+            <Typography variant="h4"
+                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('profile')} </Typography>
+            <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <Container maxWidth={false} style={{ padding: 0 }}>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                      onClose={() => {
+                          setMessage({...message, show: !message.show})
+                      }}>
+                <Alert onClose={() => {
+                    setMessage({...message, show: !message.show})
+                }} severity={message.severity} sx={{width: '100%'}}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
+            <Container maxWidth={false} style={{padding: 0}}>
 
                 <Masonry
                     breakpointCols={breakpoints}
@@ -85,33 +223,79 @@ function Settings(props) {
 
                     <Card className={classes.settingCard}>
                         <CardContent>
+                            <Typography variant="h6" align="left"> {t('user')} </Typography>
+                            <Divider style={{marginBottom: theme.spacing(2)}}/>
+
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        id="name"
+                                        fullWidth
+                                        label={t('name')}
+                                        variant="standard"
+                                        value={getUserValue('first_name')}
+                                        onChange={(e) => handleUserChange('first_name', e.target.value)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        id="email"
+                                        fullWidth
+                                        label={t('email')}
+                                        variant="standard"
+                                        value={getUserValue('mail')}
+                                        onChange={(e) => handleUserChange('mail', e.target.value)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Link onClick={handleClickOpen}>{t('change_password')}</Link>
+                                </Grid>
+                            </Grid>
+                            <ResetSave
+                                handleSave={handleSaveUser}
+                                handleCancel={handleCancelUser}
+                            />
+                        </CardContent>
+                    </Card>
+
+                    <Card className={classes.settingCard}>
+                        <CardContent>
 
                             <Typography variant="h6" align="left"> {t('general')} </Typography>
-                            <Divider style={{ marginBottom: theme.spacing(2) }} />
+                            <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-                            <Grid container spacing={2} style={{ marginBottom: "20px" }}>
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
                                 <Grid item xs={4}>
-                                    <Chip label={t('theme')} style={{ backgroundColor: theme.palette.chip.background }} />
+                                    <Chip label={t('theme')} style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={8} align="left">
                                     <FormControlLabel
-                                        control={<Switch onChange={handleChange}
-                                            defaultChecked={localStorage.getItem('theme') === "dark" ? true : false} />}
-                                        label={t("dark_mode")} />
+                                        control={
+                                            <Switch
+                                                onChange={(e) => {
+                                                    handleSettingsChange('theme', e.target.checked ? "dark" : "light")
+                                                }}
+                                                checked={getSettingsValue('theme') === "dark" ? true : false}
+                                            />
+                                        }
+                                        label={t("dark_mode")}/>
                                 </Grid>
                             </Grid>
 
-                            <Grid container spacing={2} style={{ marginBottom: "20px" }} >
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
                                 <Grid item xs={4}>
-                                    <Chip label={t('language')} style={{ backgroundColor: theme.palette.chip.background }}/>
+                                    <Chip label={t('language')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={8} align="left">
                                     <Select
-                                        value={localStorage.getItem('language') !== null ? localStorage.getItem('language') : "en"}
+                                        value={getSettingsValue('language') || "en"}
                                         label="Language"
-                                        onChange={handleLanguage}
+                                        onChange={(e) => {
+                                            handleSettingsChange('language', e.target.value)
+                                        }}
                                     >
                                         <MenuItem value={"fr"}>Français</MenuItem>
                                         <MenuItem value={"en"}>English</MenuItem>
@@ -119,44 +303,41 @@ function Settings(props) {
                                 </Grid>
                             </Grid>
 
-                            <Grid container spacing={2} >
+                            <Grid container spacing={2}>
                                 <Grid item xs={4}>
-                                    <Chip label={t('format')} style={{ backgroundColor: theme.palette.chip.background }} />
+                                    <Chip label={t('format')} style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={8} align="left">
                                     <Select
-                                        value={dateFormat}
+                                        value={getSettingsValue('date_format')}
                                         label={t('dateFormat')}
-                                        onChange={handleDateFormat}
+                                        onChange={(e) => {
+                                            handleSettingsChange('date_format', e.target.value)
+                                        }}
                                     >
                                         <MenuItem value={"dd/MM/yyyy"}>dd/MM/yyyy</MenuItem>
+                                        <MenuItem value={"dd.MM.yyyy"}>dd.MM.yyyy</MenuItem>
+                                        <MenuItem value={"dd-MM-yyyy"}>dd-MM-yyyy</MenuItem>
                                         <MenuItem value={"MM/dd/yyyy"}>MM/dd/yyyy</MenuItem>
+                                        <MenuItem value={"MM.dd.yyyy"}>MM.dd.yyyy</MenuItem>
+                                        <MenuItem value={"MM-dd-yyyy"}>MM-dd-yyyy</MenuItem>
+                                        <MenuItem value={"yyyy/MM/dd"}>yyyy/MM/dd</MenuItem>
+                                        <MenuItem value={"yyyy.MM.dd"}>yyyy.MM.dd</MenuItem>
+                                        <MenuItem value={"yyyy-MM-dd"}>yyyy-MM-dd</MenuItem>
                                     </Select>
                                 </Grid>
                             </Grid>
 
-                            <Grid container spacing={2} style={{ marginTop: "0px", paddingTop: "0px !important" }} >
-                                <Grid item xs={12} md={6}>
-                                    <TextField className={classes.textfield} id="name" fullWidth label={t('name')} variant="standard" />
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <TextField className={classes.textfield} id="email" fullWidth label={t('email')} variant="standard" />
-                                </Grid>
-                            </Grid>
-                            <Link onClick={handleClickOpen} >{t('change_password')}</Link>
+                            <Box sx={{ mt: 5 }} />
 
-                        </CardContent>
-                    </Card>
-
-                    <Card className={classes.settingCard}>
-                        <CardContent>
                             <Typography variant="h6" align="left"> {t('studies')} </Typography>
-                            <Divider style={{ marginBottom: theme.spacing(2) }} />
+                            <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-                            <Grid container spacing={2} style={{ marginBottom: "50px" }}>
+                            <Grid container spacing={2} style={{marginBottom: "50px"}}>
                                 <Grid item xs={3}>
-                                    <Chip label={t('filters')} style={{ backgroundColor: theme.palette.chip.background }}/>
+                                    <Chip label={t('filters')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={9}>
@@ -164,7 +345,7 @@ function Settings(props) {
                                         flexDirection: 'column',
                                         color: '#333'
                                     }}>
-                                        <MultiSelect {...priviledges} page="studies" />
+                                        <MultiSelect page="studies"/>
 
                                     </Grid>
                                 </Grid>
@@ -172,7 +353,7 @@ function Settings(props) {
 
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>
-                                    <Chip label={t('dates')} style={{ backgroundColor: theme.palette.chip.background }}/>
+                                    <Chip label={t('dates')} style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={9}>
@@ -180,125 +361,129 @@ function Settings(props) {
                                         flexDirection: 'row'
                                     }}>
                                         <FormControlLabel
-                                            control={<Switch onChange={() => console.log("all")} />}
+                                            control={<Switch onChange={() => console.log("all")}/>}
                                             label={t("all")}
                                         />
 
                                         <FormControlLabel
-                                            control={<Switch onChange={() => console.log("today")} />}
-                                            label={t("today")} />
+                                            control={<Switch onChange={() => console.log("today")}/>}
+                                            label={t("today")}/>
 
                                         <FormControlLabel
-                                            control={<Switch onChange={() => console.log("yesterday")} />}
-                                            label={t("yesterday")} />
+                                            control={<Switch onChange={() => console.log("yesterday")}/>}
+                                            label={t("yesterday")}/>
 
                                         <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_month")} />}
-                                            label={t("last_month")} />
+                                            control={<Switch onChange={() => console.log("last_month")}/>}
+                                            label={t("last_month")}/>
 
                                         <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_year")} />}
-                                            label={t("last_year")} />
+                                            control={<Switch onChange={() => console.log("last_year")}/>}
+                                            label={t("last_year")}/>
 
                                         <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_3days")} />}
-                                            label={t("last_3days")} />
+                                            control={<Switch onChange={() => console.log("last_3days")}/>}
+                                            label={t("last_3days")}/>
                                     </Grid>
                                 </Grid>
                             </Grid>
+
+                            {privileges.pages.includes('aet') && (
+                                <>
+                                    <Box sx={{ mt: 5 }} />
+
+                                    <Typography variant="h6" align="left"> {t('remote_aet')} </Typography>
+                                    <Divider style={{marginBottom: theme.spacing(2)}}/>
+
+                                    <Grid container spacing={2} style={{marginBottom: "50px"}}>
+                                        <Grid item xs={3}>
+                                            <Chip label={t('filters')}
+                                                  style={{backgroundColor: theme.palette.chip.background}}/>
+                                        </Grid>
+
+                                        <Grid item xs={9}>
+
+                                            <Grid container style={{
+                                                flexDirection: 'column',
+                                                color: '#333'
+                                            }}>
+                                                <MultiSelect page="aet"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={3}>
+                                            <Chip label={t('dates')}
+                                                  style={{backgroundColor: theme.palette.chip.background}}/>
+                                        </Grid>
+
+                                        <Grid item xs={9}>
+                                            <Grid container style={{
+                                                flexDirection: 'row'
+                                            }}>
+                                                <FormControlLabel
+                                                    control={<Switch onChange={() => console.log("all")}/>}
+                                                    label={t("all")}/>
+
+                                                <FormControlLabel
+                                                    control={<Switch onChange={() => console.log("today")}/>}
+                                                    label={t("today")}/>
+
+                                                <FormControlLabel
+                                                    control={<Switch onChange={() => console.log("yesterday")}/>}
+                                                    label={t("yesterday")}/>
+
+                                                <FormControlLabel
+                                                    control={<Switch onChange={() => console.log("last_month")}/>}
+                                                    label={t("last_month")}/>
+
+                                                <FormControlLabel
+                                                    control={<Switch onChange={() => console.log("last_year")}/>}
+                                                    label={t("last_year")}/>
+
+                                                <FormControlLabel
+                                                    control={<Switch onChange={() => console.log("last_3days")}/>}
+                                                    label={t("last_3days")}/>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </>
+                            )}
+                            <ResetSave
+                                handleSave={handleSaveSettings}
+                                handleCancel={handleCancelSettings}
+                        />
                         </CardContent>
                     </Card>
-
-                    {Object.keys(priviledges.privileges.pages).includes('aet') && (<Card className={classes.settingCard}>
-                        <CardContent>
-
-                            <Typography variant="h6" align="left"> {t('remote_aet')} </Typography>
-                            <Divider style={{ marginBottom: theme.spacing(2) }} />
-
-                            <Grid container spacing={2} style={{ marginBottom: "50px" }}>
-                                <Grid item xs={3}>
-                                    <Chip label={t('filters')} style={{ backgroundColor: theme.palette.chip.background }}/>
-                                </Grid>
-
-                                <Grid item xs={9}>
-
-                                    <Grid container style={{
-                                        flexDirection: 'column',
-                                        color: '#333'
-                                    }}>
-                                        <MultiSelect page="aet" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing={2}>
-                                <Grid item xs={3}>
-                                    <Chip label={t('dates')} style={{ backgroundColor: theme.palette.chip.background }}/>
-                                </Grid>
-
-                                <Grid item xs={9}>
-                                    <Grid container style={{
-                                        flexDirection: 'row'
-                                    }}>
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("all")} />}
-                                            label={t("all")} />
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("today")} />}
-                                            label={t("today")} />
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("yesterday")} />}
-                                            label={t("yesterday")} />
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_month")} />}
-                                            label={t("last_month")} />
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_year")} />}
-                                            label={t("last_year")} />
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_3days")} />}
-                                            label={t("last_3days")} />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>)}
                 </Masonry>
-            </Container >
+            </Container>
 
             <Dialog
                 fullWidth
                 maxWidth="lg"
                 open={open}
-                onClose={handleClose}
+                onClose={handleCancelPassword}
                 scroll={scroll}
                 TransitionComponent={Transition}
             >
-                <DialogContent dividers={scroll === 'paper'} style={{ backgroundColor: theme.palette.dialog.color }}>
-                    <ChangePassword />
+                <DialogContent dividers={scroll === 'paper'} style={{backgroundColor: theme.palette.dialog.color}}>
+                    <ChangePassword
+                        password={password}
+                        setPassword={setPassword}
+                    />
                 </DialogContent>
-                <DialogActions style={{ backgroundColor: theme.palette.dialog.color }}>
-                    <Grid container style={{ marginTop: "10px" }}>
-
-                        <Grid item xs />
-
-                        <Grid item >
-                            <Button className={classes.button} variant="contained" component="label" onClick={handleClose}>{t('cancel')}</Button>
-                        </Grid>
-
-                        <Grid item >
-                            <Button variant="contained" component="label">{t('save')}</Button>
-                        </Grid>
-                    </Grid>
+                <DialogActions style={{backgroundColor: theme.palette.dialog.color}}>
+                    <ResetSave
+                        labelReset={t('cancel')}
+                        handleSave={handleSavePassword}
+                        handleCancel={handleCancelPassword}
+                    />
                 </DialogActions>
             </Dialog>
-        </React.Fragment >
+        </React.Fragment>
 
     )
 }
+
 export default Settings

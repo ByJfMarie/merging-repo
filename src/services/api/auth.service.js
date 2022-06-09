@@ -1,5 +1,6 @@
 import api from "./apiManager";
-import TokenService from "./token.service";
+import TokenStorage from "../storage/token.storage";
+import UserStorage from "../storage/user.storage";
 
 class AuthService {
 
@@ -13,7 +14,7 @@ class AuthService {
             .post("auth", { username: username, password: password })
             .then((response) => {
                 if (response.status === 200) {
-                    TokenService.setUser(response.data);
+                    TokenStorage.setToken(response.data);
                 } else {
                     state.error = "Unknown error";
                 }
@@ -28,12 +29,9 @@ class AuthService {
 
     logout() {
         api.post( "token/logout", {}).then(response => {});
-        TokenService.removeUser();
+        TokenStorage.clean();
+        UserStorage.clean();
         window.location.href = "/login";
-    }
-
-    getCurrentUser() {
-        return TokenService.getUser();
     }
 }
 

@@ -101,10 +101,6 @@ export default function Emailing() {
         severity: "info",
         message: ""
     });
-    function Message() {
-        if (!message || !message.show) return <></>;
-        return <Alert severity={message.severity}>{message.message}</Alert>;
-    }
 
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});

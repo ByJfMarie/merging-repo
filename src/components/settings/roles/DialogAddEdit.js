@@ -6,16 +6,32 @@ import {
     Dialog,
     FormControl,
     Grid, Input,
-    InputLabel,
-    MenuItem,
-    Select, Slide,
+    InputLabel, MenuItem, Select,
+    Slide,
     TextField
 } from "@mui/material";
 import t from "../../../services/Translation";
 import React from "react";
-import TransferService from "../../../services/api/transfer.service";
+import SettingsService from "../../../services/api/settings.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+
+const useStyles = makeStyles((theme) => ({
+    field: {
+        width: '100%'
+    },
+    card: {
+        "&.MuiCard-root": {
+            padding: '0px !important'
+        }
+    },
+    button: {
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.chip.color + "!important",
+        marginRight: '10px !important'
+    },
+
+}));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -24,26 +40,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const DialogAddEdit = (props) => {
 
     const theme = useTheme();
-
-    const useStyles = makeStyles({
-        field: {
-            width: '100%'
-        },
-        card: {
-            "&.MuiCard-root": {
-                padding: '0px !important'
-            }
-        },
-        button: {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.chip.color + "!important",
-            marginRight: '10px !important'
-        },
-
-    });
-    const classes = useStyles();
-
-    const [addMode, setAddMode] = React.useState(true);
+    const classes = useStyles(theme);
 
     const getValue = (id) => {
         if (!props.values) return '';
@@ -56,10 +53,8 @@ const DialogAddEdit = (props) => {
         props.toggle();
         props.setValues({});
     }
-    const handleSave = async () => {
-        let response = null;
-        if (!addMode) response = await TransferService.editRule(props.values.id, props.values);
-        else response = await TransferService.addRule(props.values);
+    const handleSave = async() => {
+        let response = await SettingsService.editPrivileges(props.values);
 
         if (response.error) {
             props.alertMessage({
@@ -72,25 +67,17 @@ const DialogAddEdit = (props) => {
 
         props.toggle();
         props.setValues({});
-        setAddMode(true);
         props.onSave();
 
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "User has been successfully "+(addMode?"added":"edited")+"!"
+            message: "Privilege has been successfully edited!"
         });
     }
 
     React.useEffect(() => {
-        if (!props.isOpen) return;
-
-        if (!props.values || !props.values.id) {
-            setAddMode(true);
-            return;
-        }
-        setAddMode(false);
-    }, [props.isOpen]);
+    }, []);
 
 
     return (
@@ -101,55 +88,64 @@ const DialogAddEdit = (props) => {
             onClose={props.toggle}
             TransitionComponent={Transition}
         >
-            <Card style={{
-                backgroundColor: theme.palette.card.color,
-                width: "100% !important",
-                padding: '25px 0px',
-                margin: '0px 0px'
-            }}>
+            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
                 <CardContent>
 
-                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
+                    <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={12}>
                             <TextField
                                 className={classes.field}
-                                id="ae_title"
-                                label={t("aet")}
+                                id="role"
+                                label={t("role")}
                                 variant="standard"
-                                value={getValue('ae_title')}
-                                onChange={(e) => handleChange("ae_title", e.target.value)}
+                                value={getValue("role") || ''}
                                 InputProps={{
-                                    readOnly: !addMode,
+                                    readOnly: true
                                 }}
                             />
                         </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field}
+                                id="filled-basic"
+                                label={t("description")}
+                                variant="standard"
+                                value={getValue("description") || ''}
+                                onChange={(e) => {handleChange('description', e.target.value);}}
+                            />
+                        </Grid>
+
                         <Grid item xs={12}>
                             <FormControl className={classes.root} size="small" fullWidth={true}>
-                                <InputLabel variant="standard"
-                                            id="destinations">{/*t("destinations")*/"Destinations"}</InputLabel>
+                                <InputLabel
+                                    variant="standard"
+                                    id="viewers"
+                                >{/*t("destinations")*/"Viewers"}
+                                </InputLabel>
                                 <Select
-                                    labelId="destinations"
-                                    id="destinations"
+                                    labelId="viewers"
+                                    id="viewers"
                                     multiple
-                                    value={getValue('destinations') || []}
-                                    onChange={(e) => handleChange("destinations", e.target.value)}
+                                    value={getValue('viewers') || []}
+                                    onChange={(e) => handleChange("viewers", e.target.value)}
                                     input={<Input id="select-multiple-chip" label="Chip"/>}
                                     renderValue={(selected) => (
                                         <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
                                             {selected.map((value) => (
-                                                <Chip key={value} label={props.remoteSites[value]}/>
+                                                <Chip key={value} label={props.viewers[value]}/>
                                             ))}
                                         </Box>
                                     )}
                                     //MenuProps={MenuProps}
                                 >
                                     {
-                                        Object.keys(props.remoteSites).map((key) =>
+                                        Object.keys(props.viewers).map((key) =>
                                             <MenuItem
                                                 key={key}
                                                 value={key}
                                             >
-                                                {props.remoteSites[key]}
+                                                {props.viewers[key]}
                                             </MenuItem>
                                         )
                                     }
@@ -157,15 +153,15 @@ const DialogAddEdit = (props) => {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs/>
+                        <Grid item xs />
 
-                        <Grid item>
-                            <Button className={classes.button} variant="contained" component="label"
-                                    onClick={handleCancel}>{t('cancel')}</Button>
-                        </Grid>
-
-                        <Grid item>
-                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('save')}</Button>
+                        <Grid container spacing={2} direction={"row-reverse"}>
+                            <Grid item >
+                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('save')}</Button>
+                            </Grid>
+                            <Grid item >
+                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('cancel')}</Button>
+                            </Grid>
                         </Grid>
                     </Grid>
 

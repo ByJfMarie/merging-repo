@@ -68,11 +68,11 @@ export default function AET() {
             <TableRemoteStudies
                 currentAET={currentAET}
                 actiontrigger={handleActionTrigger}
-                page="aet"
+                page="remote_aets"
             />
 
             <TableRetrievingStatus
-                page="aet"
+                page="retrieving"
                 forceRefresh={forceRefreshStatus}
                 autoRefresh={false}
             />

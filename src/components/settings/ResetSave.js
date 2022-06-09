@@ -11,7 +11,7 @@ export default function ResetSave(props) {
             </Grid>
             <Grid item xs="auto">
                 <Button variant="outlined" component="label"
-                        onClick={props.handleCancel}>{t('reset')}</Button>
+                        onClick={props.handleCancel}>{props.labelReset || t('reset')}</Button>
             </Grid>
             <Grid item xs>
             </Grid>

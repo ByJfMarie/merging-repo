@@ -90,6 +90,14 @@ class SettingsService {
 
         return apiUPLOAD('settings/loginSheet.upload', formData);
     }
+
+    getRolesPrivileges() {
+        return apiGET('settings/privileges.list');
+    }
+
+    editPrivileges(privileges) {
+        return apiPOST('settings/privileges.set', privileges);
+    }
 }
 
 export default new SettingsService();

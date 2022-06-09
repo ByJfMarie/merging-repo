@@ -7,6 +7,8 @@ import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
 import { useState } from 'react';
 import PrivateRoute from "./routes/PrivateRoute";
 
+import UserStorage from "./services/storage/user.storage";
+
 /** PAGE */
 import Home from './pages/Home';
 import Menu from './layouts/Menu';
@@ -37,7 +39,11 @@ import Loading from "./layouts/Loading";
 
 function App() {
 
-  const [theme, setTheme] = useState(localStorage.getItem('theme') === "dark" ? darktheme : lighttheme);
+  const [settings, setSettings] = useState(null);
+  const [theme, setTheme] = useState(lighttheme);
+
+
+
   //eslint-disable-next-line
   const [language, setLanguage] = useState(localStorage.getItem('language') !== null ? localStorage.getItem('language') : "en")
 
@@ -49,7 +55,18 @@ function App() {
     setLanguage(props)
   }
 
+  React.useEffect(() => {
+    UserStorage.getSettings()
+        .then(set => {
+          let user_theme = lighttheme;
+          if (set) user_theme = set.theme === "dark"? darktheme : lighttheme;
+          setTheme(user_theme);
+          setSettings(set);
+        })
+  }, []);
+
   return (
+      settings &&
     <Router>
       <ThemeProvider theme={responsiveFontSizes(theme)}>
         <CssBaseline />

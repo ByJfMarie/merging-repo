@@ -10,7 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
 import {Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
-import AuthService from "../../services/api/auth.service";
 import StudiesService from "../../services/api/studies.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
@@ -89,8 +88,6 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
         },
     });
     const classes = useStyles();
-
-    const priviledges = AuthService.getCurrentUser().priviledges;
 
     const [studyUID, setStudyUID] = React.useState(null);
     const [rows, setRows] = React.useState(null);

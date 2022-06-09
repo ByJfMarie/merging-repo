@@ -8,6 +8,10 @@ class ViewersService {
             study_uid: study_uid
         });
     }
+
+    getViewers() {
+        return apiGET('/viewers/list');
+    }
 }
 
 export default new ViewersService();

@@ -5,11 +5,12 @@ import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import RetrieveButton from "./RetrieveButton";
-import AuthService from "../../services/api/auth.service";
+
+import UserStorage from "../../services/storage/user.storage";
 
 const TableRemoteStudiesActions = (props) => {
 
-    const priviledges = AuthService.getCurrentUser().priviledges;
+    const privileges = UserStorage.getPrivileges();
 
     /** STYLE AND CLASSES */
     const theme = useTheme();
@@ -58,7 +59,7 @@ const TableRemoteStudiesActions = (props) => {
         <React.Fragment>
             <Grid container spacing={2}>
                 <Grid item sm={4} xs={12} className={classes.left} style={{ display: "flex" }}>
-                    {priviledges.privileges.pages[props.page].searchTable.actionsTable.includes('download') && (
+                    {privileges.tables[props.page].actions.includes('download') && (
                         <>
                             <Button variant="outlined" size="medium" className={classes.buttonRetrieve} onClick={handleClick}>
                                 {t('download')}
@@ -82,7 +83,7 @@ const TableRemoteStudiesActions = (props) => {
                 </Grid>
                 <Grid item sm={8} xs={12} className={classes.right} style={{ display: "flex" }} >
                     {  // eslint-disable-next-line 
-                        priviledges.privileges.pages[props.page].searchTable.actionsTable.map((value, key) => {
+                        privileges.tables[props.page].actions.map((value, key) => {
                             if (value === "retrieve") {
                                 return (
                                     <RetrieveButton
