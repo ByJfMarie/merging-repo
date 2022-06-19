@@ -39,7 +39,7 @@ function TableLocalStudies(props) {
         referring_physician: "",
         modality: [],
         showDeleted: false,
-        date_preset: '*',
+        date_preset: 'all',
         from: "",
         to: "",
     };

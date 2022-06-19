@@ -345,7 +345,12 @@ function Settings(props) {
                                         flexDirection: 'column',
                                         color: '#333'
                                     }}>
-                                        <MultiSelect page="studies"/>
+                                        <MultiSelect
+                                            page="studies"
+                                            fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
+                                            selection={settings.filters_studies_primary}
+                                            setSelection={(value) => handleSettingsChange("filters_studies_primary", value)}
+                                        />
 
                                     </Grid>
                                 </Grid>
@@ -358,32 +363,15 @@ function Settings(props) {
 
                                 <Grid item xs={9}>
                                     <Grid container style={{
-                                        flexDirection: 'row'
+                                        flexDirection: 'column',
+                                        color: '#333'
                                     }}>
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("all")}/>}
-                                            label={t("all")}
+                                        <MultiSelect
+                                            page="studies"
+                                            fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
+                                            selection={settings.filters_studies_date_presets}
+                                            setSelection={(value) => handleSettingsChange("filters_studies_date_presets", value)}
                                         />
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("today")}/>}
-                                            label={t("today")}/>
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("yesterday")}/>}
-                                            label={t("yesterday")}/>
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_month")}/>}
-                                            label={t("last_month")}/>
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_year")}/>}
-                                            label={t("last_year")}/>
-
-                                        <FormControlLabel
-                                            control={<Switch onChange={() => console.log("last_3days")}/>}
-                                            label={t("last_3days")}/>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -407,7 +395,12 @@ function Settings(props) {
                                                 flexDirection: 'column',
                                                 color: '#333'
                                             }}>
-                                                <MultiSelect page="aet"/>
+                                                <MultiSelect
+                                                    page="aet"
+                                                    fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
+                                                    selection={settings.filters_aets_primary}
+                                                    setSelection={(value) => handleSettingsChange("filters_aets_primary", value)}
+                                                />
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -420,31 +413,15 @@ function Settings(props) {
 
                                         <Grid item xs={9}>
                                             <Grid container style={{
-                                                flexDirection: 'row'
+                                                flexDirection: 'column',
+                                                color: '#333'
                                             }}>
-                                                <FormControlLabel
-                                                    control={<Switch onChange={() => console.log("all")}/>}
-                                                    label={t("all")}/>
-
-                                                <FormControlLabel
-                                                    control={<Switch onChange={() => console.log("today")}/>}
-                                                    label={t("today")}/>
-
-                                                <FormControlLabel
-                                                    control={<Switch onChange={() => console.log("yesterday")}/>}
-                                                    label={t("yesterday")}/>
-
-                                                <FormControlLabel
-                                                    control={<Switch onChange={() => console.log("last_month")}/>}
-                                                    label={t("last_month")}/>
-
-                                                <FormControlLabel
-                                                    control={<Switch onChange={() => console.log("last_year")}/>}
-                                                    label={t("last_year")}/>
-
-                                                <FormControlLabel
-                                                    control={<Switch onChange={() => console.log("last_3days")}/>}
-                                                    label={t("last_3days")}/>
+                                                <MultiSelect
+                                                    page="studies"
+                                                    fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
+                                                    selection={settings.filters_aets_date_presets}
+                                                    setSelection={(value) => handleSettingsChange("filters_aets_date_presets", value)}
+                                                />
                                             </Grid>
                                         </Grid>
                                     </Grid>

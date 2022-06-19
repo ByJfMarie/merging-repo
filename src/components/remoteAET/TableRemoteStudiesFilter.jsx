@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Grid, Chip, MenuItem, Input, FormGroup, FormControlLabel, Checkbox, Container, Divider, Box, Select, InputLabel, FormControl, Dialog, DialogContent, DialogContentText, Button, DialogActions, DialogTitle, Card, CardContent, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
@@ -11,28 +11,19 @@ import moment from "moment";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import UserStorage from "../../services/storage/user.storage";
 
 export default function TableRemoteStudiesFilter(props) {
 
-    const settings = {
-        primary_fields: [
-            "patient_id",
-            "patient_name",
-            "accession_number",
-            "description",
-            "referring_physician"
-        ],
-        secondary_fields: [
-            "modality",
-            "birthdate"
-        ],
-        date_presets: [
-            "0",
-            "1",
-            "3",
-            "7"
-        ]
-    }
+    const fields = [
+        "patient_id",
+        "patient_name",
+        "accession_number",
+        "description",
+        "referring_physician",
+        "modality",
+        "birthdate",
+    ];
 
     /** MODALITY ELEMENTS */
     const names = [
@@ -45,6 +36,16 @@ export default function TableRemoteStudiesFilter(props) {
         'RF',
         'DX'
     ];
+
+    const [settings, setSettings] = React.useState(null);
+    useEffect(() => {
+        UserStorage.getSettings()
+            .then(settings => {
+                setSettings(settings);
+            });
+
+        handleChangeDate(props.filters.date_preset);
+    }, []);
 
     /** POP UP MORE FILTERS */
     const [anchorElMore, setAnchorElMore] = React.useState(null);
@@ -145,24 +146,38 @@ export default function TableRemoteStudiesFilter(props) {
         let items = {...props.filters, date_preset: param};
 
         switch (param) {
-            case 0:
+            case 'today':
                 items = {...items, from: calcDate(), to: calcDate()};
                 break;
-            case 3:
+            case 'yesterday':
+                items = {...items, from: calcDate(1), to: calcDate()};
+                break;
+            case 'last_3days':
                 items = {...items, from: calcDate(3), to: calcDate()};
                 break;
-            case '*':
+            case 'last_week':
+                items = {...items, from: calcDate(7), to: calcDate()};
+                break;
+            case 'last_month':
+                items = {...items, from: calcDate(30), to: calcDate()};
+                break;
+            case 'last_year':
+                items = {...items, from: calcDate(365), to: calcDate()};
+                break;
+            case 'all':
                 items = {...items, from: "", to: ""};
                 break;
             default:
                 items = {...items, from: calcDate(param), to: calcDate()};
         }
+
         props.setFilters(items);
     }
 
     /** RESET BUTTON */
     const clearValues = () => {
         props.setFilters(props.initialValues);
+        handleChangeDate(props.filters.date_preset);
     }
 
     /** SEND VALUE */
@@ -277,42 +292,44 @@ export default function TableRemoteStudiesFilter(props) {
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                            {settings.primary_fields.map((value, key) => {
+                            {
+                                settings &&
+                                settings.filters_aets_primary.map((value, key) => {
 
-                                if (value === "status") {
-                                    return (
-                                        <Grid key={value} item xs={6} sm>
-                                            {statusComponent}
-                                        </Grid>
-                                    )
-                                }
+                                    if (value === "status") {
+                                        return (
+                                            <Grid key={value} item xs={6} sm>
+                                                {statusComponent}
+                                            </Grid>
+                                        )
+                                    }
 
-                                if (value === "modality") {
+                                    if (value === "modality") {
+                                        return (<Grid key={value} item xs={6} sm>
+                                            {modalityComponent}
+                                        </Grid>)
+                                    }
+
+                                    if (value === "birthdate") {
+                                        return (<Grid key={value} item xs={6} sm>
+                                            {birthdateComponent}
+                                        </Grid>)
+                                    }
+
                                     return (<Grid key={value} item xs={6} sm>
-                                        {modalityComponent}
+                                        <TextField
+                                            key={key}
+                                            className={classes.root}
+                                            id={value}
+                                            label={t(value)}
+                                            variant="standard"
+                                            fullWidth
+                                            value={props.filters[value]}
+                                            onChange={(e) => handleSearch(value, e.target.value)}
+                                        />
                                     </Grid>)
-                                }
-
-                                if (value === "birthdate") {
-                                    return (<Grid key={value} item xs={6} sm>
-                                        {birthdateComponent}
-                                    </Grid>)
-                                }
-
-                                return (<Grid key={value} item xs={6} sm>
-                                    <TextField
-                                        key={key}
-                                        className={classes.root}
-                                        id={value}
-                                        label={t(value)}
-                                        variant="standard"
-                                        fullWidth
-                                        value={props.filters[value]}
-                                        onChange={(e) => handleSearch(value, e.target.value)}
-                                    />
-                                </Grid>)
-
-                            })}
+                                })
+                            }
                         </Grid>
 
                         <Container maxWidth="sm" style={{ display: "flex", justifyContent: 'center' }}>
@@ -322,49 +339,23 @@ export default function TableRemoteStudiesFilter(props) {
                                 exclusive
                                 value={props.filters.date_preset}
                             >
-                                {settings.date_presets.map((value, key) => {
+                                {
+                                    settings &&
+                                    settings.filters_aets_date_presets.map((key, index) => {
 
-
-                                    var label;
-                                    switch (value) {
-                                        case '*':
-                                            label = t('all');
-                                            break;
-                                        case '0':
-                                            label = t('today');
-                                            break;
-                                        case '1':
-                                            label = t('yesterday');
-                                            break;
-                                        case '3':
-                                            label = t('last_3days');
-                                            break;
-                                        case '7':
-                                            label = t('last_week');
-                                            break;
-                                        case '30':
-                                            label = t('last_month');
-                                            break;
-                                        case '365':
-                                            label = t('last_year');
-                                            break;
-                                        default:
-                                            label = t(value);
-
-                                    }
-
-                                    return (
-                                        <ToggleButton
-                                            key={key}
-                                            style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
-                                            onClick={() => handleChangeDate(value)}
-                                            value={value}
-                                            className={key > 2 ? classes.presetPhone : ""}
-                                        >
-                                            {label}
-                                        </ToggleButton>
-                                    )
-                                })}
+                                        return (
+                                            <ToggleButton
+                                                key={key}
+                                                style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
+                                                onClick={() => handleChangeDate(key)}
+                                                value={key}
+                                                className={key > 2 ? classes.presetPhone : ""}
+                                            >
+                                                {t(key)}
+                                            </ToggleButton>
+                                        )
+                                    })
+                                }
 
                             </ToggleButtonGroup>
 
@@ -398,7 +389,9 @@ export default function TableRemoteStudiesFilter(props) {
                         >
                             <Container style={{ maxWidth: "500px" }}>
 
-                                {settings.secondary_fields.length !== 0 ? (<>
+                                {
+                                    settings &&
+                                    settings.filters_studies_primary.length < fields.length ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
                                         <Chip size="medium" label={t('moreFilters')} style={{ backgroundColor: theme.palette.chip.color }} />
@@ -406,44 +399,45 @@ export default function TableRemoteStudiesFilter(props) {
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                                        {settings.secondary_fields.map((value, key) => {
+                                        {
+                                            fields.map((value) => {
+                                                if (settings.filters_studies_primary.includes(value)) return;
 
+                                                if (value === "status") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {statusComponent}
+                                                        </Grid>
+                                                    )
+                                                }
 
-                                            if (value === "status") {
-                                                return (
-                                                    <Grid key={value} item xs={6} md={6}>
-                                                        {statusComponent}
-                                                    </Grid>
-                                                )
-                                            }
+                                                if (value === "modality") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {modalityComponent}
+                                                        </Grid>)
+                                                }
 
-                                            if (value === "modality") {
-                                                return (
-                                                    <Grid key={value} item xs={6} md={6}>
-                                                        {modalityComponent}
-                                                    </Grid>)
-                                            }
+                                                if (value === "birthdate") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {birthdateComponent}
+                                                        </Grid>)
+                                                }
 
-                                            if (value === "birthdate") {
-                                                return (
-                                                    <Grid key={value} item xs={6} md={6}>
-                                                        {birthdateComponent}
-                                                    </Grid>)
-                                            }
+                                                return (<Grid key={value} item xs={6} md={6} >
+                                                    <TextField
+                                                        className={classes.root}
+                                                        id={value}
+                                                        label={t(value)}
+                                                        variant="standard"
+                                                        fullWidth
+                                                        value={props.filters[value]}
+                                                        onChange={(e) => { handleSearch(value, e.target.value) }}
+                                                    />
+                                                </Grid>)
 
-                                            return (<Grid key={value} item xs={6} md={6} >
-                                                <TextField
-                                                    className={classes.root}
-                                                    id={value}
-                                                    label={t(value)}
-                                                    variant="standard"
-                                                    fullWidth
-                                                    value={props.filters[value]}
-                                                    onChange={(e) => { handleSearch(value, e.target.value) }}
-                                                />
-                                            </Grid>)
-
-                                        })}
+                                            })}
 
                                     </Grid>
                                 </>) : ""}

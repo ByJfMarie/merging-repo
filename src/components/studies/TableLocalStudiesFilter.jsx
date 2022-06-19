@@ -11,6 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
+import UserStorage from "../../services/storage/user.storage";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,25 +64,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TableLocalStudiesFilter(props) {
 
-    const settings = {
-        primary_fields: [
-            "patient_id",
-            "patient_name",
-            "accession_number",
-            "description"
-        ],
-        secondary_fields: [
-            "referring_physician",
-            "modality",
-            "birthdate"
-        ],
-        date_presets: [
-            "0",
-            "3",
-            "*"
-        ],
-        showDeleted: true
-    }
+    const fields = [
+        "patient_id",
+        "patient_name",
+        "accession_number",
+        "description",
+        "referring_physician",
+        "modality",
+        "birthdate",
+    ];
 
     /** MODALITY ELEMENTS */
     const names = [
@@ -94,6 +85,9 @@ export default function TableLocalStudiesFilter(props) {
         'RF',
         'DX'
     ];
+
+    const [settings, setSettings] = React.useState(null);
+    const [showDeleted, setShowDeleted] = React.useState(true);
 
     /** POP UP MORE FILTERS */
     const [anchorElMore, setAnchorElMore] = React.useState(null);
@@ -123,6 +117,11 @@ export default function TableLocalStudiesFilter(props) {
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
+        UserStorage.getSettings()
+            .then(settings => {
+                setSettings(settings);
+            });
+
         props.searchFunction(values);
     }, [open]);
 
@@ -145,13 +144,25 @@ export default function TableLocalStudiesFilter(props) {
         items = {...items, date_preset: param};
 
         switch (param) {
-            case 0:
+            case 'today':
                 items = {...items, from: calcDate(), to: calcDate()};
                 break;
-            case 3:
+            case 'yesterday':
+                items = {...items, from: calcDate(1), to: calcDate()};
+                break;
+            case 'last_3days':
                 items = {...items, from: calcDate(3), to: calcDate()};
                 break;
-            case '*':
+            case 'last_week':
+                items = {...items, from: calcDate(7), to: calcDate()};
+                break;
+            case 'last_month':
+                items = {...items, from: calcDate(30), to: calcDate()};
+                break;
+            case 'last_year':
+                items = {...items, from: calcDate(365), to: calcDate()};
+                break;
+            case 'all':
                 items = {...items, from: "", to: ""};
                 break;
             default:
@@ -282,42 +293,50 @@ export default function TableLocalStudiesFilter(props) {
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                            {settings.primary_fields.map((value, key) => {
+                            {
+                                settings &&
+                                settings.filters_studies_primary.map((value, key) => {
 
-                                if (value === "status") {
+                                    if (value === "status") {
+                                        return (
+                                            <Grid key={value} item xs={6} sm>
+                                                {statusComponent}
+                                            </Grid>
+                                        )
+                                    }
+
+                                    if (value === "modality") {
+                                        return (
+                                            <Grid key={value} item xs={6} sm>
+                                                {modalityComponent}
+                                            </Grid>
+                                        )
+                                    }
+
+                                    if (value === "birthdate") {
+                                        return (
+                                            <Grid key={value} item xs={6} sm>
+                                                {birthdateComponent}
+                                            </Grid>
+                                        )
+                                    }
+
                                     return (
                                         <Grid key={value} item xs={6} sm>
-                                            {statusComponent}
+                                            <TextField
+                                                key={value}
+                                                className={classes.root}
+                                                id={value}
+                                                label={t(value)}
+                                                variant="standard"
+                                                fullWidth
+                                                value={values[value] || ""}
+                                                onChange={(e) => handleSearch(value, e.target.value)}
+                                            />
                                         </Grid>
                                     )
-                                }
-
-                                if (value === "modality") {
-                                    return (<Grid key={value} item xs={6} sm>
-                                        {modalityComponent}
-                                    </Grid>)
-                                }
-
-                                if (value === "birthdate") {
-                                    return (<Grid key={value} item xs={6} sm>
-                                        {birthdateComponent}
-                                    </Grid>)
-                                }
-
-                                return (<Grid key={value} item xs={6} sm>
-                                    <TextField
-                                        key={value}
-                                        className={classes.root}
-                                        id={value}
-                                        label={t(value)}
-                                        variant="standard"
-                                        fullWidth
-                                        value={values[value] || ""}
-                                        onChange={(e) => handleSearch(value, e.target.value)}
-                                    />
-                                </Grid>)
-
-                            })}
+                                })
+                            }
                         </Grid>
 
                         <Container maxWidth="sm" style={{ display: "flex", justifyContent: 'center' }}>
@@ -327,49 +346,24 @@ export default function TableLocalStudiesFilter(props) {
                                 exclusive
                                 value={values.date_preset}
                             >
-                                {settings.date_presets.map((value, key) => {
+                                {
+                                    settings &&
+                                    settings.filters_studies_date_presets.map((key, index) => {
 
+                                        return (
+                                            <ToggleButton
+                                                key={key}
+                                                style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
+                                                onClick={() => handleChangeDate(key)}
+                                                value={key}
+                                                className={key > 2 ? classes.presetPhone : ""}
+                                            >
+                                                {t(key)}
+                                            </ToggleButton>
+                                        )
+                                    })
 
-                                    var label;
-                                    switch (value) {
-                                        case '*':
-                                            label = t('all');
-                                            break;
-                                        case '0':
-                                            label = t('today');
-                                            break;
-                                        case '1':
-                                            label = t('yesterday');
-                                            break;
-                                        case '3':
-                                            label = t('last_3days');
-                                            break;
-                                        case '7':
-                                            label = t('last_week');
-                                            break;
-                                        case '30':
-                                            label = t('last_month');
-                                            break;
-                                        case '365':
-                                            label = t('last_year');
-                                            break;
-                                        default:
-                                            label = t(value);
-
-                                    }
-
-                                    return (
-                                        <ToggleButton
-                                            key={key}
-                                            style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
-                                            onClick={() => handleChangeDate(value)}
-                                            value={value}
-                                            className={key > 2 ? classes.presetPhone : ""}
-                                        >
-                                            {label}
-                                        </ToggleButton>
-                                    )
-                                })}
+                                }
 
                             </ToggleButtonGroup>
 
@@ -403,7 +397,9 @@ export default function TableLocalStudiesFilter(props) {
                         >
                             <Container style={{ maxWidth: "500px" }}>
 
-                                {settings.secondary_fields.length !== 0 ? (<>
+                                {
+                                    settings &&
+                                    settings.filters_studies_primary.length < fields.length ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
                                         <Chip size="medium" label={t('moreFilters')} style={{ backgroundColor: theme.palette.chip.color }} />
@@ -411,44 +407,45 @@ export default function TableLocalStudiesFilter(props) {
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
-                                        {settings.secondary_fields.map((value, key) => {
+                                        {
+                                            fields.map((value) => {
+                                                if (settings.filters_studies_primary.includes(value)) return;
 
+                                                if (value === "status") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {statusComponent}
+                                                        </Grid>
+                                                    )
+                                                }
 
-                                            if (value === "status") {
-                                                return (
-                                                    <Grid key={value} item xs={6} md={6}>
-                                                        {statusComponent}
-                                                    </Grid>
-                                                )
-                                            }
+                                                if (value === "modality") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {modalityComponent}
+                                                        </Grid>)
+                                                }
 
-                                            if (value === "modality") {
-                                                return (
-                                                    <Grid key={value} item xs={6} md={6}>
-                                                        {modalityComponent}
-                                                    </Grid>)
-                                            }
+                                                if (value === "birthdate") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {birthdateComponent}
+                                                        </Grid>)
+                                                }
 
-                                            if (value === "birthdate") {
-                                                return (
-                                                    <Grid key={value} item xs={6} md={6}>
-                                                        {birthdateComponent}
-                                                    </Grid>)
-                                            }
-
-                                            return (<Grid key={value} item xs={6} md={6} >
-                                                <TextField
-                                                    className={classes.root}
-                                                    id={value}
-                                                    label={t(value)}
-                                                    variant="standard"
-                                                    fullWidth
-                                                    value={values[value]}
-                                                    onChange={(e) => { handleSearch(value, e.target.value) }}
-                                                />
-                                            </Grid>)
-
-                                        })}
+                                                return (<Grid key={value} item xs={6} md={6} >
+                                                    <TextField
+                                                        className={classes.root}
+                                                        id={value}
+                                                        label={t(value)}
+                                                        variant="standard"
+                                                        fullWidth
+                                                        value={values[value]}
+                                                        onChange={(e) => { handleSearch(value, e.target.value) }}
+                                                    />
+                                                </Grid>)
+                                            })
+                                        }
 
                                     </Grid>
                                 </>) : ""}
@@ -492,12 +489,12 @@ export default function TableLocalStudiesFilter(props) {
                                     </Grid>
                                     <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
                                         <Grid item xs={12} sm={8} md={7} className={classes.delete}>
-                                            {settings.showDeleted && (<FormGroup>
+                                            {showDeleted && (<FormGroup>
                                                 <FormControlLabel size="small"
                                                     control={
                                                         <Checkbox
                                                             id="showDeleted"
-                                                            checked={values.showDeleted} />
+                                                            checked={showDeleted} />
                                                     }
                                                     label={t('show_deleted')}
                                                     onChange={(e) => {handleSearch("showDeleted", !values.showDeleted)}}

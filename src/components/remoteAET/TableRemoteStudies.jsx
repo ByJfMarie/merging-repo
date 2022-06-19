@@ -31,7 +31,7 @@ function TableRemoteStudies(props) {
         referring_physician: "",
         modality: [],
         showDeleted: false,
-        date_preset: '*',
+        date_preset: 'today',
         from: "",
         to: "",
     };

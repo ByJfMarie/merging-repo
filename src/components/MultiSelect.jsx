@@ -3,8 +3,6 @@ import Select, { components, StylesConfig } from "react-select";
 import { SortableContainer, SortableElement, sortableHandle } from "react-sortable-hoc";
 import t from "../services/Translation.jsx";
 import { useTheme } from '@emotion/react';
-import AuthService from "../services/api/auth.service";
-import UserStorage from "../services/storage/user.storage";
 
 function arrayMove(array, from, to) {
     array = array.slice();
@@ -58,56 +56,50 @@ export default function MultiSelectSort(props) {
         })
     };
 
-    React.useEffect(() => {
-    }, [props])
-
-    /** PRESELECTED */
-    const [selected, setSelected] = React.useState([]);
-    const [option, setOption] = React.useState([]);
-
     const onChange = (selectedOptions) => {
-        // privileges.settings[props.page].search.secondary_fields = selectedOptions; 
-        // localStorage.setItem("privileges", JSON.stringify(privileges));
         setSelected(selectedOptions);
 
-        var dif1 = option.diff(selectedOptions);
-        /** CHANGE SECONDARY */
-        //settings.tables[props.page].secondary_fields = dif1.map((i) => i.value);
-
-        /** CHANGE PRIMARY */
-        //settings.tables[props.page].primary_fields = selectedOptions.map((i) => i.value);
+        let values = [];
+        selectedOptions.map((obj) => {
+            values.push(obj.value);
+        });
+        props.setSelection(values);
     }
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
         const newValue = arrayMove(selected, oldIndex, newIndex);
         setSelected(newValue);
 
-        //settings.tables[props.page].primary_fields = newValue.map((i) => i.value);
-
-        console.log(
-            "Values sorted:",
-            newValue.map((i) => i.value)
-        );
+        let values = [];
+        newValue.map((obj) => {
+            values.push(obj.value);
+        });
+        props.setSelection(values);
     };
 
+    const [options, setOptions] = React.useState([]);
+    const [selected, setSelected] = React.useState([]);
     useEffect(() => {
-        /*settings.tables[props.page].primary_fields.map((field, index) => {
-            
-            if(selected.includes(option[index])){
-                return(setOption(oldOption => [...oldOption, { value: field, label: t(field) }]))
-            }else{
-                return(
-                    option.push({ value: field, label: t(field) }),
-                    // selected.push(option[index])
-                    setSelected(oldOption => [...oldOption, option[index]])
-                )
-            }
-        })
-        settings.tables[props.page].secondary_fields.map((field) => (
-            // option.push({ value: field, label: t(field) })
-            setOption(oldOption => [...oldOption, { value: field, label: t(field) }])
-        ))*/
-    }, []);
+        if (!props.fields) return;
+        let opts = [];
+        props.fields.map((field, index) => {
+            opts.push({
+                value: field,
+                label: t(field)
+            });
+        });
+        setOptions(opts);
+
+        if (!props.selection) return;
+        let fields = [];
+        props.selection.map((field, index) => {
+            fields.push({
+                value: field,
+                label: t(field)
+            });
+        });
+        setSelected(fields);
+    }, [props]);
 
     return (
         <SortableSelect
@@ -122,7 +114,7 @@ export default function MultiSelectSort(props) {
             // react-select props:
             isMulti
             classNamePrefix="MultiSelect"
-            options={option} 
+            options={options}
             value={selected}
             onChange={onChange}
             components={{
