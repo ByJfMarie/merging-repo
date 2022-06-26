@@ -13,6 +13,7 @@ class AuthService {
         return api
             .post("auth", { username: username, password: password })
             .then((response) => {
+                console.log(response);
                 if (response.status === 200) {
                     TokenStorage.setToken(response.data);
                 } else {

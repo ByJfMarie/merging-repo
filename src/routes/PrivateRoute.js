@@ -5,8 +5,9 @@ import { makeStyles } from "@mui/styles";
 import { Container } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import Footer from '../layouts/Footer';
-import UsersService from "../services/api/users.service";
+import AuthService from "../services/api/auth.service";
 import UserStorage from "../services/storage/user.storage";
+import UserContext from "../components/UserContext";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -39,42 +40,26 @@ export default function PrivateRoute(props) {
 
     const [user, setUser] = React.useState();
     const loadUser = () => {
-        let current_user = UserStorage.getUser();
-        if (current_user) {
-            setUser(current_user);
-            return;
-        }
-
-        UsersService
-            .me()
-            .then((rsp) => {
-                UserStorage.setUser(rsp.items);
-                setUser(rsp.items);
-                return;
+        UserStorage.getUser()
+            .then(rsp => {
+                setUser(rsp);
             });
     }
 
     const [privileges, setPrivileges] = React.useState();
     const loadPrivileges = () => {
-        let privileges = UserStorage.getPrivileges();
-        if (privileges) {
-            setPrivileges(privileges);
-            return;
-        }
-
-        UsersService
-            .privileges()
-            .then((rsp) => {
-                UserStorage.setPrivileges(rsp.items);
-                setPrivileges(rsp.items);
-                return;
+        UserStorage.getPrivileges()
+            .then(rsp => {
+                setPrivileges(rsp);
             });
     }
 
     const [settings, setSettings] = React.useState();
-    const loadSettings = async() => {
-        let set = await UserStorage.getSettings();
-        setSettings(set);
+    const loadSettings = () => {
+        UserStorage.getSettings()
+            .then(rsp => {
+                setSettings(rsp);
+            });
     }
 
     React.useEffect(() => {
@@ -94,11 +79,15 @@ export default function PrivateRoute(props) {
                 return (Component)
             } else {
                 return (<>
-                    <Menu {...props} />
-                    <Container maxWidth="false" className={classes.mainContainer}>
-                       {Component}
-                    </Container>
-                    <Footer />
+                    <UserContext.Provider value={{user, privileges}}>
+                        <Menu {...props}/>
+                        <Container
+                            maxWidth="false"
+                            className={classes.mainContainer}>
+                           {Component}
+                        </Container>
+                        <Footer />
+                    </UserContext.Provider>
                 </>)
             }
         }} />)

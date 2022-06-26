@@ -168,13 +168,20 @@ const refreshAuthLogic = failedRequest =>
             return Promise.resolve();
         })
         .catch(() => {
+
+            //Don't display error when not logged in
+            const token = TokenStorage.getToken();
+            if (!token.acces_token) {
+                AuthService.logout();
+                return;
+            }
+
             let error = "Your session has expired!";
             //if (error.response && error.response.statusText) error = _error.response.statusText;
             swal("Error", error, "error", {
                 buttons: false,
                 timer: 2000,
             }).then(() => {
-                console.log("here");
                 AuthService.logout();
             });
         });

@@ -13,6 +13,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
 import UserStorage from "../../services/storage/user.storage";
+import UserContext from "../UserContext";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 const statusComponent = (params) => {
@@ -74,7 +75,7 @@ const statusComponent = (params) => {
 
 const TableTransferStatus = (props) => {
 
-    const[privileges] = React.useState(UserStorage.getPrivileges());
+    const { privileges } = React.useContext(UserContext);
 
     /** THEME AND CSS */
     const theme = useTheme();

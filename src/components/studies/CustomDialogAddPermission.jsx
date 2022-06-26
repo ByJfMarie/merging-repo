@@ -179,7 +179,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                                 return (
                                     <>
                                         <ListItem
-                                            key={row.id}
+                                            key={row.key}
                                             backgroundcolor={theme.palette.mode === 'dark' ? '#1A2027' : '#fff'}
                                             /*secondaryAction={
                                                 <IconButton edge="end" aria-label="comments">
@@ -195,10 +195,10 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                                                         checked={row.checked}
                                                         tabIndex={-1}
                                                         disableRipple
-                                                        inputProps={{ 'aria-labelledby': row.id }}
+                                                        inputProps={{ 'aria-labelledby': row.key }}
                                                     />
                                                 </ListItemIcon>
-                                                <ListItemText id={row.key} primary={row.display_name} />
+                                                <ListItemText primary={row.display_name} />
                                             </ListItemButton>
                                         </ListItem>
                                         <Divider variant="inset" component="li" />

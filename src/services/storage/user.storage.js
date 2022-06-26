@@ -7,20 +7,26 @@ import UsersService from "../api/users.service";
 
 class UserStorage {
 
-    getUser() {
-        return JSON.parse(localStorage.getItem("user.me"));
+    async getUser() {
+        let user = JSON.parse(localStorage.getItem("user.me"));
+        if (user) return user;
+
+        const response = await UsersService.me();
+        if (response && !response.error) {
+            localStorage.setItem("user.me", JSON.stringify(response.items));
+            return JSON.parse(localStorage.getItem("user.me"));
+        }
     }
 
-    setUser(data) {
-        localStorage.setItem("user.me", JSON.stringify(data));
-    }
+    async getPrivileges() {
+        let privileges = JSON.parse(localStorage.getItem("user.privileges"));
+        if (privileges) return privileges;
 
-    getPrivileges() {
-        return JSON.parse(localStorage.getItem("user.privileges"));
-    }
-
-    setPrivileges(data) {
-        localStorage.setItem("user.privileges", JSON.stringify(data));
+        const response = await UsersService.privileges();
+        if (response && !response.error) {
+            localStorage.setItem("user.privileges", JSON.stringify(response.items));
+            return JSON.parse(localStorage.getItem("user.privileges"));
+        }
     }
 
     async getSettings() {
@@ -28,14 +34,12 @@ class UserStorage {
         if (settings) return settings;
 
         const response = await UsersService.settings();
-        if (response && response.items) {
+        if (response && !response.error) {
             localStorage.setItem("user.settings", JSON.stringify(response.items));
             return JSON.parse(localStorage.getItem("user.settings"));
         }
-    }
 
-    setSettings(data) {
-        localStorage.setItem("user.settings", JSON.stringify(data));
+        return [];
     }
 
     removeUserProfile() {

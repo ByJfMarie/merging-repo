@@ -5,12 +5,12 @@ import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import RetrieveButton from "./RetrieveButton";
-
-import UserStorage from "../../services/storage/user.storage";
+import UserContext from "../UserContext";
 
 const TableRemoteStudiesActions = (props) => {
 
-    const privileges = UserStorage.getPrivileges();
+    /** User & privileges */
+    const { privileges } = React.useContext(UserContext);
 
     /** STYLE AND CLASSES */
     const theme = useTheme();

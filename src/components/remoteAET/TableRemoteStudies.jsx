@@ -10,14 +10,15 @@ import TableRemoteStudiesFilter from "./TableRemoteStudiesFilter";
 import TableRemoteStudiesActions from "./TableRemoteStudiesActions";
 import {useState} from "react";
 import QRService from "../../services/api/queryRetrieve.service";
-import UserStorage from "../../services/storage/user.storage";
+import UserContext from "../UserContext";
 
 function TableRemoteStudies(props) {
 
     /** THEME AND CSS */
     const theme = useTheme();
 
-    const[privileges] = React.useState(UserStorage.getPrivileges());
+    /** User & privileges */
+    const { privileges } = React.useContext(UserContext);
 
     const filtersInitValue = {
         patient_id: "",

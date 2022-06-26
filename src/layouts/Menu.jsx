@@ -1,5 +1,4 @@
 import React from 'react';
-//import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
@@ -15,9 +14,7 @@ import { Typography, Link } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
 import t from "../services/Translation";
-import NotificationsDropdown from '../components/NotificationsDropdown';
 /** ICONS */
-import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
@@ -26,13 +23,9 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-// import Badge from '@mui/material/Badge';
 import LocationOn from '@mui/icons-material/LocationOn';
-// import NotificationsIcon from '@mui/icons-material/Notifications';
-
 import AuthService from "../services/api/auth.service";
-
-import UserStorage from "../services/storage/user.storage";
+import UserContext from "../components/UserContext";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -82,8 +75,7 @@ function MenuBackup(props) {
     const container = window !== undefined ? () => window().document.body : undefined;
 
     /** User & privileges */
-    const[user] = React.useState(UserStorage.getUser());
-    const[privileges] = React.useState(UserStorage.getPrivileges());
+    const { user, privileges } = React.useContext(UserContext);
 
     const handleLogoutClick = () => {
         AuthService.logout();

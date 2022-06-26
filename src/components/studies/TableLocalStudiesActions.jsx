@@ -3,12 +3,12 @@ import { Grid } from "@mui/material";
 import DownloadButton from "./DownloadButton";
 import ForwardButton from "./ForwardButton";
 import TransferButton from "./TransferButton";
-
-import UserStorage from "../../services/storage/user.storage";
+import UserContext from "../UserContext";
 
 const TableLocalStudiesActions = (props) => {
 
-    const privileges = UserStorage.getPrivileges();
+    /** User & privileges */
+    const { privileges } = React.useContext(UserContext);
 
     return (
         <React.Fragment>

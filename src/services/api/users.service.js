@@ -1,4 +1,4 @@
-import {apiGET, apiPOST} from "./apiManager";
+import miAPI, {apiGET, apiPOST} from "./apiManager";
 import {sha512} from "js-sha512";
 
 class UsersService {
@@ -22,11 +22,63 @@ class UsersService {
     }
 
     privileges() {
-        return apiGET('/users/profile/privileges.get');
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return miAPI
+            .get('/users/profile/privileges.get')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = "Unknown error";
+                if (error.response) {
+                    state.error = error.response.data.error || error.message;
+                    return state;
+                }
+                else if (error.message) {
+                    state.error = error.message;
+                }
+            })
+            .then(() => {
+                return state;
+            });
     }
 
     settings() {
-        return apiGET('/users/profile/settings.get');
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return miAPI
+            .get('/users/profile/settings.get')
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = "Unknown error";
+                if (error.response) {
+                    state.error = error.response.data.error || error.message;
+                    return state;
+                }
+                else if (error.message) {
+                    state.error = error.message;
+                }
+            })
+            .then(() => {
+                return state;
+            });
     }
 
     updateSettings(data) {

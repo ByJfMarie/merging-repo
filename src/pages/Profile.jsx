@@ -30,6 +30,7 @@ import ResetSave from "../components/settings/ResetSave";
 
 import UsersService from "../services/api/users.service";
 import UserStorage from "../services/storage/user.storage";
+import UserContext from "../components/UserContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -37,7 +38,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function Settings(props) {
 
-    const privileges = UserStorage.getPrivileges();
+    const { privileges } = React.useContext(UserContext);
 
     const breakpoints = {
         default: 1,
@@ -137,18 +138,17 @@ function Settings(props) {
         }
 
         UserStorage.removeUserProfile();
-        response = await UsersService.me();
-        if (response.error) return;
+        UserStorage.getUser()
+            .then(rps => {
+                setUser(rps);
 
-        UserStorage.setUser(response.items);
-        setUser(UserStorage.getUser());
-
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: "Profile successfully updated!"
-        });
+                setMessage({
+                    ...message,
+                    show: true,
+                    severity: "success",
+                    message: "Profile successfully updated!"
+                });
+            });
     };
     const handleCancelUser = () => {
         setUser(UserStorage.getUser());

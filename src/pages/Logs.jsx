@@ -1,13 +1,5 @@
 import {
     Button, Divider,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
     Typography,
     MenuItem,Menu,Grid
 } from "@mui/material"
@@ -16,6 +8,7 @@ import * as React from "react";
 import {makeStyles} from "@mui/styles";
 import t from "../services/Translation";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import TableLogs from "../components/logs/TableLogs";
 
 /** RETURN TODAY'S DATE IN STRING (PARAM = REMOVE X DAY) */
 function formatDate(remove = 0) {
@@ -100,39 +93,10 @@ const Logs = () => {
             <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('logs')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-            <TableContainer component={Paper} style={{ marginTop: theme.spacing(4), marginBottom: theme.spacing(1) }}>
-
-                <Table sx={{ minWidth: 650 }} aria-label="simple table" className={classes.root}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="left"><TextField type="date" label="" defaultValue={Date} /></TableCell>
-                            <TableCell style={{fontWeight: 'bold'}} align="left">Server Transfer</TableCell>
-                            <TableCell align="left">{typeButton}</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow
-                            hover
-                            classes={{ hover: classes.hover }}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell style={{fontWeight: 'bold'}} align="left">Date</TableCell>
-                            <TableCell style={{fontWeight: 'bold'}} align="left">Description</TableCell>
-                            <TableCell style={{fontWeight: 'bold'}} align="left">Size</TableCell>
-                        </TableRow>
-                        <TableRow
-                            hover
-                            classes={{ hover: classes.hover }}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell align="left">Nov 17, 2021 8:59:24</TableCell>
-                            <TableCell align="left">No records for this date.</TableCell>
-                            <TableCell align="left"></TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-
-            </TableContainer>
+            <TableLogs
+                page="logs"
+                autoRefresh={false}
+            />
 
     
         </React.Fragment>

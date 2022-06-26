@@ -21,11 +21,12 @@ import AuthService from "../../services/api/auth.service";
 import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
 import TableLocalStudiesActions from "../studies/TableLocalStudiesActions";
 import DownloadStudies from "./DownloadStudies";
-import UserStorage from "../../services/storage/user.storage";
+import UserContext from "../UserContext";
 
 function TableLocalStudies(props) {
 
-    const[privileges] = React.useState(UserStorage.getPrivileges());
+    /** User & privileges */
+    const { privileges } = React.useContext(UserContext);
 
     const filtersInitValue = {
         patient_id: "",
@@ -159,8 +160,8 @@ function TableLocalStudies(props) {
     };
 
     //Viewer
-    const handleViewStudy = async (study) => {
-        const response = await ViewersService.getURL(study.key);
+    const handleViewStudy = async (study, viewer_id) => {
+        const response = await ViewersService.getURL(study.key, viewer_id);
 
         if (response.error) {
             messageAlert('error', "Impossible to open viewer: "+response.error);
@@ -391,44 +392,63 @@ function TableLocalStudies(props) {
                 field: 'actions',
                 type: 'actions',
                 width: 80,
-                getActions: (params) =>
-                    privileges.tables[props.page].actions_rows.map((action) => {
-                        if (action ==='view') {
-                            return <GridActionsCellItem
-                                icon={<VisibilityIcon/>}
-                                label="View Study"
-                                onClick={() => handleViewStudy(params.row)}
-                            />
-                        }
-                        else if (action ==='info') {
-                            return <GridActionsCellItem
-                                icon={<InfoIcon/>}
-                                label="Study Info"
-                                onClick={() => handleDialogStudyOpen(params.row)}
-                                showInMenu
-                            />
-                        }
-                        else if (action === 'login_sheet') {
-                            return <GridActionsCellItem
-                                icon={<ContactPageIcon/>}
-                                label="Login Sheet"
-                                onClick={() => handleActionLoginSheet(params.row.key)}
-                                showInMenu
-                            />
-                        }
-                        else if (action === 'permissions') {
-                            return <GridActionsCellItem
-                                icon={<LockIcon/>}
-                                label="Set Permissions"
-                                onClick={() => handleDialogPermissionsOpen(params.row.key)}
-                                showInMenu
-                            />
-                        }
+                getActions: (params) => {
 
-                        return <></>;
-                    })
-            }
-        );
+                    let actions = [];
+
+                    if (privileges.tables[props.page].actions_rows.includes('view')) {
+                        privileges.viewers.map((key, index) => {
+                            if (index === 0) {
+                                actions.push(<GridActionsCellItem
+                                    icon={<VisibilityIcon/>}
+                                    label="View Study"
+                                    onClick={() => handleViewStudy(params.row, key)}
+                                />);
+                            }
+
+                            let viewer_name = "";
+                            if (key === 'pry-plugin-meddream') viewer_name = "Meddream";
+                            else if(key === 'pry') viewer_name = "Perennity";
+
+                            actions.push(<GridActionsCellItem
+                                icon={<VisibilityIcon/>}
+                                label={"View Study ("+viewer_name+")"}
+                                onClick={() => handleViewStudy(params.row, key)}
+                                showInMenu
+                            />);
+                        })
+                    }
+
+                    if (privileges.tables[props.page].actions_rows.includes('info')) {
+                        actions.push(<GridActionsCellItem
+                            icon={<InfoIcon/>}
+                            label="Study Info"
+                            onClick={() => handleDialogStudyOpen(params.row)}
+                            showInMenu
+                        />);
+                    }
+
+                    if (privileges.tables[props.page].actions_rows.includes('login_sheet')) {
+                        actions.push(<GridActionsCellItem
+                            icon={<ContactPageIcon/>}
+                            label="Login Sheet"
+                            onClick={() => handleActionLoginSheet(params.row.key)}
+                            showInMenu
+                        />);
+                    }
+
+                    if (privileges.tables[props.page].actions_rows.includes('permissions')) {
+                        actions.push(<GridActionsCellItem
+                            icon={<LockIcon/>}
+                            label="Set Permissions"
+                            onClick={() => handleDialogPermissionsOpen(params.row.key)}
+                            showInMenu
+                        />);
+                    }
+
+                    return actions;
+                }
+            });
     }
 
     return (
