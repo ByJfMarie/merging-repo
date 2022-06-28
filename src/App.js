@@ -56,12 +56,15 @@ function App() {
   }
 
   React.useEffect(() => {
-    UserStorage.getSettings()
+    UserStorage.getSettings(false)
         .then(set => {
           let user_theme = lighttheme;
-          if (set) user_theme = set.theme === "dark"? darktheme : lighttheme;
+          if (set) {
+            user_theme = set.theme === "dark"? darktheme : lighttheme;
+            setSettings(set);
+          }
           setTheme(user_theme);
-          setSettings(set);
+          setSettings([]);
         })
   }, []);
 

@@ -171,7 +171,7 @@ const refreshAuthLogic = failedRequest =>
 
             //Don't display error when not logged in
             const token = TokenStorage.getToken();
-            if (!token.acces_token) {
+            if (!token || !token.acces_token) {
                 AuthService.logout();
                 return;
             }

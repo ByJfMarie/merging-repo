@@ -29,9 +29,10 @@ class UserStorage {
         }
     }
 
-    async getSettings() {
+    async getSettings(refreshIsNull=true) {
         let settings = JSON.parse(localStorage.getItem("user.settings"));
         if (settings) return settings;
+        if (!refreshIsNull) return null;
 
         const response = await UsersService.settings();
         if (response && !response.error) {
