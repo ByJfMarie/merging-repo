@@ -38,7 +38,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function Settings(props) {
 
-    const { privileges } = React.useContext(UserContext);
+    /** User & privileges */
+    const { user, privileges, settings } = React.useContext(UserContext);
+    const [currentUser, setCurrentUser] = React.useState(null);
+    const [currentSettings, setCurrentSettings] = React.useState(null);
 
     const breakpoints = {
         default: 1,
@@ -74,18 +77,17 @@ function Settings(props) {
     });
 
     /** User Settings */
-    const [settings, setSettings] = React.useState({});
     const getSettingsValue = (id) => {
-        if (!settings) return '';
-        return settings[id] || '';
+        if (!currentSettings) return '';
+        return currentSettings[id] || '';
     }
     const handleSettingsChange = (id, value) => {
-        if (!settings) return '';
-        setSettings({...settings, [id]: value});
+        if (!currentSettings) return '';
+        setCurrentSettings({...currentSettings, [id]: value});
         if (id === 'theme') props.themeChange(value);
     }
     const handleSaveSettings = async () => {
-        let response = await UsersService.updateSettings(settings);
+        let response = await UsersService.updateSettings(currentSettings);
 
         if (response.error) {
             setMessage({
@@ -99,8 +101,8 @@ function Settings(props) {
 
         UserStorage.removeUserSettings();
         UserStorage.getSettings()
-            .then((set) => {
-                setSettings(set);
+            .then((rsp) => {
+                setCurrentSettings(rsp);
                 setMessage({
                     ...message,
                     show: true,
@@ -110,22 +112,21 @@ function Settings(props) {
             });
     };
     const handleCancelSettings = () => {
-        setSettings(UserStorage.getSettings());
+        setCurrentSettings(settings);
         props.themeChange(UserStorage.getSettings().theme);
     };
 
     /** User Profile */
-    const [user, setUser] = React.useState({});
     const getUserValue = (id) => {
-        if (!user) return '';
-        return user[id] || '';
+        if (!currentUser) return '';
+        return currentUser[id] || '';
     }
     const handleUserChange = (id, value) => {
-        if (!user) return;
-        setUser({...user, [id]: value});
+        if (!currentUser) return;
+        setCurrentUser({...currentUser, [id]:value});
     }
     const handleSaveUser = async () => {
-        let response = await UsersService.update(user);
+        let response = await UsersService.update(currentUser);
 
         if (response.error) {
             setMessage({
@@ -139,8 +140,8 @@ function Settings(props) {
 
         UserStorage.removeUserProfile();
         UserStorage.getUser()
-            .then(rps => {
-                setUser(rps);
+            .then(rsp => {
+                setCurrentUser(rsp);
 
                 setMessage({
                     ...message,
@@ -151,7 +152,7 @@ function Settings(props) {
             });
     };
     const handleCancelUser = () => {
-        setUser(UserStorage.getUser());
+        setCurrentUser(user);
     };
 
     /** CHANGE PASSWORD */
@@ -188,13 +189,12 @@ function Settings(props) {
     };
 
     React.useEffect(() => {
-        UserStorage.getSettings()
-            .then(settings => {
-                setSettings(settings);
-            })
+        setCurrentUser(user);
+    }, [user]);
 
-        setUser(UserStorage.getUser());
-    }, []);
+    React.useEffect(() => {
+        setCurrentSettings(settings);
+    }, [settings]);
 
     /** DRAG N DROP */
     return (
@@ -227,6 +227,18 @@ function Settings(props) {
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                             <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        id="login"
+                                        fullWidth
+                                        label={t('login')}
+                                        variant="standard"
+                                        value={getUserValue('login')}
+                                        inputProps={
+                                            { readOnly: true, }
+                                        }
+                                    />
+                                </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         id="name"
@@ -316,6 +328,9 @@ function Settings(props) {
                                             handleSettingsChange('date_format', e.target.value)
                                         }}
                                     >
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
                                         <MenuItem value={"dd/MM/yyyy"}>dd/MM/yyyy</MenuItem>
                                         <MenuItem value={"dd.MM.yyyy"}>dd.MM.yyyy</MenuItem>
                                         <MenuItem value={"dd-MM-yyyy"}>dd-MM-yyyy</MenuItem>
@@ -348,7 +363,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                            selection={settings.filters_studies_primary}
+                                            selection={settings?settings.filters_studies_primary:[]}
                                             setSelection={(value) => handleSettingsChange("filters_studies_primary", value)}
                                         />
 
@@ -369,7 +384,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                            selection={settings.filters_studies_date_presets}
+                                            selection={settings?settings.filters_studies_date_presets:[]}
                                             setSelection={(value) => handleSettingsChange("filters_studies_date_presets", value)}
                                         />
                                     </Grid>
@@ -398,7 +413,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="aet"
                                                     fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                                    selection={settings.filters_aets_primary}
+                                                    selection={settings?settings.filters_aets_primary:[]}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_primary", value)}
                                                 />
                                             </Grid>
@@ -419,7 +434,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="studies"
                                                     fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                                    selection={settings.filters_aets_date_presets}
+                                                    selection={settings?settings.filters_aets_date_presets:[]}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_date_presets", value)}
                                                 />
                                             </Grid>
