@@ -1,4 +1,4 @@
-import {apiGET, apiUPLOAD} from "./apiManager";
+import {apiGET, apiPOST, apiUPLOAD} from "./apiManager";
 
 class SystemService {
 
@@ -15,6 +15,10 @@ class SystemService {
         formData.append("file", file);
 
         return apiUPLOAD('system/license.set', formData);
+    }
+
+    restartPerennity() {
+        return apiPOST('system/perennity.restart');
     }
 }
 

@@ -1,10 +1,17 @@
 import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import {DataGrid} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import t from "../../services/Translation";
 import LogsService from "../../services/api/logs.service";
 import UserContext from "../UserContext";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DownloadIcon from '@mui/icons-material/Download';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import {Box, Card, CardContent, Divider, Grid, TextField} from "@mui/material";
+import moment from "moment";
 
 const TableLogs = (props) => {
 
@@ -26,8 +33,8 @@ const TableLogs = (props) => {
     const [pageSize, setPageSize] = React.useState(20);
     const [rows, setRows] = React.useState([]);
 
-    const refreshLogs = async() => {
-        const response = await LogsService.search({});
+    const refreshLogs = async(filters) => {
+        const response = await LogsService.search(filters);
 
         if (response.error) {
             console.log(response.error);
@@ -46,11 +53,51 @@ const TableLogs = (props) => {
     React.useEffect(() => {
         if (props.autoRefresh) {
             const interval = setInterval(() => {
-                refreshLogs();
+                refreshLogs(filters);
             }, 5000);
             return () => clearInterval(interval);
-        } else refreshLogs();
+        } else refreshLogs(filters);
     }, []);
+
+    //View Log
+    const handleActionView = async (key) => {
+        const rsp = await LogsService.download(key);
+        if (rsp && rsp.data && rsp.data.size) {
+            //Create a Blob from the PDF Stream
+            const file = new Blob(
+                [rsp.data],
+                {type: 'text/plain'});
+
+            //Build a URL from the file
+            const fileURL = URL.createObjectURL(file);
+
+            //Open the URL on new Window
+            window.open(fileURL);
+        }
+    };
+
+    //Download Log
+    const handleActionDownload = async (key) => {
+        const rsp = await LogsService.download(key);
+        if (rsp && rsp.data && rsp.data.size) {
+            //Create a Blob from the PDF Stream
+            const file = new Blob(
+                [rsp.data],
+                {type: 'text/plain'});
+
+            //Build a URL from the file
+            const fileURL = URL.createObjectURL(file);
+
+            //Download - Click on url
+            const link = document.createElement('a');
+            link.href = fileURL;
+            link.setAttribute('download', key);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(fileURL);
+        }
+    };
 
     const column = [
         {
@@ -72,19 +119,78 @@ const TableLogs = (props) => {
             minWidth: 200
         },
         {
-            field: 'size',
+            field: 'actions',
             type: 'actions',
             width: 80,
             getActions: (params) => {
 
                 let actions = [];
+
+                actions.push(<GridActionsCellItem
+                    icon={<VisibilityIcon/>}
+                    label={"View"}
+                    onClick={() => handleActionView(params.row.key)}
+                />);
+
+                actions.push(<GridActionsCellItem
+                    icon={<DownloadIcon/>}
+                    label={"Download"}
+                    onClick={() => handleActionDownload(params.row.key)}
+                />);
+
                 return actions;
             }
         }
     ];
 
+    const [filters, setFilters] = React.useState({
+        date: new Date(),
+        name: ""
+    });
+    const handleFiltersChange = (id, value) => {
+        if (id==='date') {
+            if (value && !moment(value).isValid()) return;
+        }
+
+        let tmp = {...filters, [id]:value};
+        setFilters(tmp);
+        refreshLogs(tmp);
+    }
+
     return (
         <React.Fragment>
+            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+                <CardContent>
+                    <Box sx={{p:2 ,flexGrow: 1 }}>
+                        <Grid container spacing={1}>
+                            <Grid item xs={3}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DesktopDatePicker
+                                        label="Date desktop"
+                                        inputFormat="MM/dd/yyyy"
+                                        value={filters.date}
+                                        onChange={(date, keyboardInputValue) => {
+                                            if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
+                                            handleFiltersChange("date", date);}
+                                        }
+                                        renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" {...params} />}
+                                        clearable={true}
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <TextField
+                                    label={"Name"}
+                                    variant="standard"
+                                    value={filters.name}
+                                    onChange={(e) => {handleFiltersChange("name", e.target.value);}}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </CardContent>
+            </Card>
+
             <div style={{width: '100%'}}>
                 <DataGrid
                     className={classes.hover}

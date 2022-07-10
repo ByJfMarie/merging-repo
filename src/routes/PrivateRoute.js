@@ -8,6 +8,7 @@ import Footer from '../layouts/Footer';
 import AuthService from "../services/api/auth.service";
 import UserStorage from "../services/storage/user.storage";
 import UserContext from "../components/UserContext";
+import Announcement from "../layouts/Announcement";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -87,6 +88,7 @@ export default function PrivateRoute(props) {
                            {Component}
                         </Container>
                         <Footer />
+                        <Announcement />
                     </UserContext.Provider>
                 </>)
             }

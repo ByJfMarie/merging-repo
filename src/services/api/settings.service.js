@@ -2,6 +2,10 @@ import {apiGET, apiPOST, apiUPLOAD} from "./apiManager";
 
 class SettingsService {
 
+    restartNeeded() {
+        return apiGET('settings/restart.needed');
+    }
+
     getDesign() {
         return apiGET('settings/design.get');
     }

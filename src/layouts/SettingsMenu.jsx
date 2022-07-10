@@ -91,11 +91,8 @@ function SettingsMenu(props) {
     const drawer = (
         <div>
             <Toolbar>
-                <Link href="/" underline="none" style={{ display: "flex", alignItems: 'center' }}>
-                    <img src="/images/perennity.png" alt="Logo" height="50" width="50" />
-                    <Typography variant="h6" noWrap component="div" color={'#2db5e9'}>
-                        PERENNITY
-                    </Typography>
+                <Link href="/studies" underline="none" style={{ display: "flex", alignItems: 'center' }}>
+                    <img src="/images/logo.svg" alt="Logo" width="100%"/>
                 </Link>
             </Toolbar>
 
