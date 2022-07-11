@@ -1,5 +1,30 @@
 import React, { useEffect } from 'react';
-import { Grid, Chip, MenuItem, Input, FormGroup, FormControlLabel, Checkbox, Container, Divider, Box, Select, InputLabel, FormControl, Dialog, DialogContent, DialogContentText, Button, DialogActions, DialogTitle, Card, CardContent, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import {
+    Grid,
+    Chip,
+    MenuItem,
+    Input,
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
+    Container,
+    Divider,
+    Box,
+    Select,
+    InputLabel,
+    FormControl,
+    Dialog,
+    DialogContent,
+    DialogContentText,
+    Button,
+    DialogActions,
+    DialogTitle,
+    Card,
+    CardContent,
+    ToggleButtonGroup,
+    ToggleButton,
+    Badge
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
 import { TextField } from "@mui/material";
@@ -12,6 +37,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
 import UserStorage from "../../services/storage/user.storage";
+import styled from "styled-components";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,6 +88,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const BadgeMore = styled(Badge)`
+          .MuiBadge-badge {
+                right: -10px;
+                top: -3px;
+          }
+    `;
+
 export default function TableLocalStudiesFilter(props) {
 
     const fields = [
@@ -87,7 +120,6 @@ export default function TableLocalStudiesFilter(props) {
     ];
 
     const [settings, setSettings] = React.useState(null);
-    const [showDeleted, setShowDeleted] = React.useState(true);
 
     /** POP UP MORE FILTERS */
     const [anchorElMore, setAnchorElMore] = React.useState(null);
@@ -210,49 +242,57 @@ export default function TableLocalStudiesFilter(props) {
             </Select>
         </FormControl>)
 
-    const modalityComponent = (
-        <FormControl className={classes.root} size="small" fullWidth={true} >
-            <InputLabel variant="standard" id="modality">{t("modality")}</InputLabel>
-            <Select
-                labelId="modality"
-                id="modality"
-                multiple
-                value={values.modality}
-                onChange={handleChangeModality}
-                input={<Input id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                            <Chip key={value} label={value} />
-                        ))}
-                    </Box>
-                )}
-                MenuProps={MenuProps}
-            >
-                {names.map((name) => (
-                    <MenuItem
-                        key={name}
-                        value={name}
-                    >
-                        {name}
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
+    const modalityComponent = (primary) => (
+            <FormControl className={classes.root} size="small" fullWidth={true}>
+                <InputLabel variant="standard" id="modality">{t("modality")}</InputLabel>
+                <Select
+                    labelId="modality"
+                    id="modality"
+                    multiple
+                    value={values.modality}
+                    onChange={(e) => {
+                        handleChangeModality(e);
+                        if (!primary) handleSecondaryFilters("modality", e.target.value);
+                    }}
+                    input={<Input id="select-multiple-chip" label="Chip"/>}
+                    renderValue={(selected) => (
+                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                            {selected.map((value) => (
+                                <Chip key={value} label={value}/>
+                            ))}
+                        </Box>
+                    )}
+                    MenuProps={MenuProps}
+                >
+                    {names.map((name) => (
+                        <MenuItem
+                            key={name}
+                            value={name}
+                        >
+                            {name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
     )
 
-    const birthdateComponent = (<TextField
-        className={classes.root}
-        type="date"
-        id="birthdate"
-        label={t('birthdate')}
-        variant="standard"
-        size="normal"
-        fullWidth
-        value={values.birthdate}
-        InputLabelProps={{ shrink: true }}
-        onChange={(e) => { handleSearch("birthdate", e.target.value) }}
-    />)
+    const birthdateComponent = (primary) => (
+        <TextField
+            className={classes.root}
+            type="date"
+            id="birthdate"
+            label={t('birthdate')}
+            variant="standard"
+            size="normal"
+            fullWidth
+            value={values.birthdate}
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) => {
+                handleSearch("birthdate", e.target.value);
+                if (!primary) handleSecondaryFilters("birthdate", e.target.value);
+            }}
+        />
+    )
 
     /** RETURN DATE (PARAM = REMOVE x DAYs) */
     const calcDate = (remove = 0) => {
@@ -262,6 +302,32 @@ export default function TableLocalStudiesFilter(props) {
         return d;
     }
 
+    //Badge for filter
+    const [activeSecondaryFilters, setActiveSecondaryFilters] = React.useState([]);
+    const handleSecondaryFilters = (id, value) => {
+        let tmp = activeSecondaryFilters;
+
+        console.log((value instanceof Date)?"date":"not date");
+
+        if (id==='from' || id==='to') {
+            if (value && moment(value).isValid()) {
+                if (!tmp.includes(id)) tmp.push(id);
+            }
+            else tmp.splice(tmp.indexOf(id), 1);
+        }
+        else if (id==="showDeleted") {
+            if (value) {
+                if (!tmp.includes(id)) tmp.push(id);
+            } else tmp.splice(tmp.indexOf(id), 1);
+        }
+        else {
+            if (value && value.length > 0) {
+                if (!tmp.includes(id)) tmp.push(id);
+            } else tmp.splice(tmp.indexOf(id), 1);
+        }
+
+        setActiveSecondaryFilters(tmp);
+    }
 
     // var moreFilters = ""
     return (
@@ -308,7 +374,7 @@ export default function TableLocalStudiesFilter(props) {
                                     if (value === "modality") {
                                         return (
                                             <Grid key={value} item xs={6} sm>
-                                                {modalityComponent}
+                                                {modalityComponent(true)}
                                             </Grid>
                                         )
                                     }
@@ -316,7 +382,7 @@ export default function TableLocalStudiesFilter(props) {
                                     if (value === "birthdate") {
                                         return (
                                             <Grid key={value} item xs={6} sm>
-                                                {birthdateComponent}
+                                                {birthdateComponent(true)}
                                             </Grid>
                                         )
                                     }
@@ -370,7 +436,8 @@ export default function TableLocalStudiesFilter(props) {
                         </Container>
 
                         <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
-                            <MoreVertIcon style={{ transform: "scale(0.8)" }} /> {t('more')}
+                            <MoreVertIcon style={{ transform: "scale(0.8)" }} />
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('more')+"   "} </BadgeMore>
                         </Button>
 
                         <Button
@@ -422,14 +489,14 @@ export default function TableLocalStudiesFilter(props) {
                                                 if (value === "modality") {
                                                     return (
                                                         <Grid key={value} item xs={6} md={6}>
-                                                            {modalityComponent}
+                                                            {modalityComponent(false)}
                                                         </Grid>)
                                                 }
 
                                                 if (value === "birthdate") {
                                                     return (
                                                         <Grid key={value} item xs={6} md={6}>
-                                                            {birthdateComponent}
+                                                            {birthdateComponent(false)}
                                                         </Grid>)
                                                 }
 
@@ -441,7 +508,10 @@ export default function TableLocalStudiesFilter(props) {
                                                         variant="standard"
                                                         fullWidth
                                                         value={values[value]}
-                                                        onChange={(e) => { handleSearch(value, e.target.value) }}
+                                                        onChange={(e) => {
+                                                            handleSearch(value, e.target.value);
+                                                            handleSecondaryFilters(value, e.target.value);
+                                                        }}
                                                     />
                                                 </Grid>)
                                             })
@@ -467,8 +537,9 @@ export default function TableLocalStudiesFilter(props) {
                                                         value={values.from || null}
                                                         onChange={(date, keyboardInputValue) => {
                                                             if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
-                                                            handleSearch("from", date);}
-                                                        }
+                                                            handleSearch("from", date);
+                                                            handleSecondaryFilters("from", date);
+                                                        }}
                                                         renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
                                                         dateAdapter={AdapterDateFns}
                                                     />
@@ -479,7 +550,11 @@ export default function TableLocalStudiesFilter(props) {
                                                         label={t('to')}
                                                         //inputFormat="yyyy.MM.dd"
                                                         value={values.to || null}
-                                                        onChange={(date) => {handleSearch("to", date);}}
+                                                        onChange={(date, keyboardInputValue) => {
+                                                            if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
+                                                            handleSearch("to", date);
+                                                            handleSecondaryFilters("to", date);
+                                                        }}
                                                         renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
                                                         dateAdapter={AdapterDateFns}
                                                     />
@@ -489,17 +564,20 @@ export default function TableLocalStudiesFilter(props) {
                                     </Grid>
                                     <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
                                         <Grid item xs={12} sm={8} md={7} className={classes.delete}>
-                                            {showDeleted && (<FormGroup>
+                                            <FormGroup>
                                                 <FormControlLabel size="small"
                                                     control={
                                                         <Checkbox
                                                             id="showDeleted"
-                                                            checked={showDeleted} />
+                                                            checked={values.showDeleted || false} />
                                                     }
                                                     label={t('show_deleted')}
-                                                    onChange={(e) => {handleSearch("showDeleted", !values.showDeleted)}}
+                                                    onChange={(e) => {
+                                                        handleSearch("showDeleted", !values.showDeleted);
+                                                        handleSecondaryFilters("showDeleted", e.target.checked);
+                                                    }}
                                                 />
-                                            </FormGroup>)}
+                                            </FormGroup>
                                         </Grid>
                                     </Grid>
                                 </Container>

@@ -1,4 +1,4 @@
-import {Alert, Box, IconButton, Paper, Snackbar, TableContainer,} from "@mui/material";
+import {Alert, Badge, Box, IconButton, Paper, Snackbar, TableContainer} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import t from "../../services/Translation";
 import * as React from 'react';
@@ -17,11 +17,11 @@ import StudiesService from "../../services/api/studies.service";
 import ForwardingService from "../../services/api/forwarding.service";
 import ViewersService from "../../services/api/viewers.service";
 import CustomDialogAddPermission from "./CustomDialogAddPermission";
-import AuthService from "../../services/api/auth.service";
 import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
 import TableLocalStudiesActions from "../studies/TableLocalStudiesActions";
 import DownloadStudies from "./DownloadStudies";
 import UserContext from "../UserContext";
+import styled from "styled-components";
 
 function TableLocalStudies(props) {
 
@@ -294,7 +294,7 @@ function TableLocalStudies(props) {
             maxWidth: 250,
             encodeHtml: false,
             renderCell: (params) => {
-                return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal", maxHeight: "100%"}}>
                     <Thumbnail
                         study_uid={params.row.st_uid}
                         size={50}
