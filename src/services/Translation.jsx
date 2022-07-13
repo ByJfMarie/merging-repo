@@ -119,7 +119,7 @@ function t(props) {
         "birthdate": "Date de naissance",
         "status": "Statut",
         "aet": "AET",
-        'date': "Date",
+        'studyDate': "Date d'examen",
         "from": "De",
         "to": "À",
         "show_deleted": "Afficher les éléments supprimés",
@@ -215,7 +215,7 @@ function t(props) {
         "ip" : "IP",
 
         /** FOOTER */
-        "contactUs": "Contactez-nous",
+        "contactUs": "Contact-nous",
         "terms&Conditions": "Termes & Conditions",
 
         /** PRESET DATE */
@@ -430,7 +430,7 @@ function t(props) {
         "report": "Report",
         "permissions": "Permissions",
         "remote_aet": "Remote AET",
-        "date": "Date",
+        "studyDate": "Study Date",
         "from": "From",
         "to": "To",
         "birthdate": "Date of birth",
@@ -482,7 +482,7 @@ function t(props) {
         "ip" : "IP",
 
         /** FOOTER */
-        "contactUs": "Contactez-nous",
+        "contactUs": "Contact Us",
         "terms&Conditions": "Terms & Conditions",
 
         /** PRESET DATE */
@@ -544,9 +544,9 @@ function t(props) {
 
     switch (language) {
         case 'fr':
-            return fr[props];
+            return fr[props] || props;
         case 'en':
-            return en[props];
+            return en[props] || props;
         default:
             return props;
     }

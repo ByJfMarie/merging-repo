@@ -336,7 +336,7 @@ function TableLocalStudies(props) {
             encodeHtml: false,
             renderCell: (params) => {
                 return (
-                    <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                    <div style={{display: "flex", alignItems: "center", lineHeight: "normal"}}>
                         {
                             (params.row.nb_shares>0)
                                 ? <IconButton><ShortcutIcon fontSize="small"/></IconButton>

@@ -81,35 +81,65 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
                 {
                     values &&
 
-                    <List
-                        sx={{
-                            width: '100%',
-                        }}
-                    >
-                        <ListItem><ListItemText primary="Patient Name" secondary={values.p_name}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Patient ID" secondary={values.p_id}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Patient Birthdate" secondary={values.p_birthdate}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Referring Physician" secondary={values.st_ref_physician}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Accession Number" secondary={values.st_accession_number}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Study Description" secondary={values.st_description}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Modalities" secondary={values.st_modalities}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Study Date" secondary={values.st_date}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Study ID" secondary={values.st_id}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Study UID" secondary={values.st_uid}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Reference" secondary={values.st_reference}/></ListItem>
-                        <Divider component="li" />
-                        <ListItem><ListItemText primary="Storage Key" secondary={values.st_storage_key}/></ListItem>
-                    </List>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Patient Name</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_name}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Patient ID</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_id}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Patient Birthdate</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_birthdate}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Referring Physician</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_ref_physician}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Accession Number</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_accession_number}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study Description</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_description}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Modalities</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_modalities}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study Date</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_date}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study ID</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_id}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study UID</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_uid}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Reference</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_reference}</Grid>
+
+                            <Grid item xs={12}><Divider/></Grid>
+
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Storage Key</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_storage_key}</Grid>
+                        </Grid>
                 }
             </DialogContent>
             <DialogActions>

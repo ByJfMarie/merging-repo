@@ -82,7 +82,7 @@ export default function PrivateRoute(props) {
                 return (<>
                     <UserContext.Provider value={{user, privileges, settings}}>
                         <Menu {...props}/>
-                        <Container
+                        <Container style={{marginBottom: '50px'}}
                             maxWidth="false"
                             className={classes.mainContainer}>
                            {Component}

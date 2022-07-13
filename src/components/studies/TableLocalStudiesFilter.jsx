@@ -523,7 +523,7 @@ export default function TableLocalStudiesFilter(props) {
                                 <Container maxWidth="false" style={{ padding: '0 0 25px 0 ' }}>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('date')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('studyDate')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
                                     <Grid container justifyContent="center" style={{ display: "flex", justifyContent: "center", direction: "column", alignItems: "center" }} spacing={2}>

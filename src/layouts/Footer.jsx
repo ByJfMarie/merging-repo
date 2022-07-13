@@ -1,7 +1,10 @@
-import {Typography, Link} from "@mui/material";
+import React, {Fragment} from 'react'
+import {Typography, Link, Grid, Dialog, DialogTitle, IconButton, DialogContent} from "@mui/material";
 import {useTheme} from '@emotion/react';
 import t from "../services/Translation";
 import {makeStyles} from "@mui/styles";
+import CloseIcon from '@mui/icons-material/Close';
+import SystemService from "../services/api/system.service";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -11,13 +14,10 @@ const useStyles = makeStyles((theme) => ({
         left: "0",
         bottom: '0',
         color: '#b0b0b0',
-        marginTop: '20px',
+        //marginTop: '20px',
         textAlign: "center",
         width: "100%"
     },
-    link: {
-        margin: theme.spacing(1)
-    }
 }));
 
 export default function Footer() {
@@ -27,34 +27,117 @@ export default function Footer() {
 
     const year = new Date().getFullYear()
 
+    /** Dialog **/
+    const [open, setOpen] = React.useState(false);
+    const [title, setTitle] = React.useState(null);
+    const [content, setContent] = React.useState(null);
+    const handleClickOpen = async (name) => {
+        setTitle(t(name));
+
+        let response = null;
+        if (name==="contactUs") response = await SystemService.getContactUs();
+        else if (name==="faq") response =  await SystemService.getFaq();
+        else if (name==="privacyPolicy") response =  await SystemService.getPrivacyPolicy();
+        else if (name==="terms&Conditions") response =  await SystemService.getTerms();
+
+        if (response && response.items) setContent(response.items.value || '');
+        else setContent('');
+
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <div className={classes.mainContainer}>
-            <Typography style={{color: "#b0b0b0"}}>
-                {year} © Perennity
-            </Typography>
 
+            <Grid container>
+                <Grid item xs={12}>
+                    <Typography style={{color: "#b0b0b0"}}>
+                        {year} © Perennity
+                    </Typography>
+                </Grid>
+            </Grid>
 
-            <Link className={classes.link} underline="none">
-                {t('contactUs')}
-            </Link>
+            <Grid container>
+                <Grid item xs> </Grid>
+                <Grid container item xs="auto">
+                    <Grid container spacing={2}>
+                        <Grid item xs="auto">
+                            <Link
+                                component="button"
+                                variant="body2"
+                                underline="none"
+                                onClick={(e) => {handleClickOpen('contactUs')}}
+                            >
+                                {t('contactUs')}
+                            </Link>
+                        </Grid>
+                        <Grid item xs="auto">-</Grid>
+                        <Grid item xs="auto">
+                            <Link
+                                component="button"
+                                variant="body2"
+                                underline="none"
+                                onClick={(e) => {handleClickOpen('faq')}}
+                            >
+                                FAQ
+                            </Link>
+                        </Grid>
+                        <Grid item xs="auto">-</Grid>
+                        <Grid item xs="auto">
+                            <Link
+                                component="button"
+                                variant="body2"
+                                underline="none"
+                                onClick={(e) => {handleClickOpen('privacyPolicy')}}
+                            >
+                                {t('privacyPolicy')}
+                            </Link>
+                        </Grid>
+                        <Grid item xs="auto">-</Grid>
+                        <Grid item xs="auto">
+                            <Link
+                                component="button"
+                                variant="body2"
+                                underline="none"
+                                onClick={(e) => {handleClickOpen('terms&Conditions')}}
+                            >
+                                {t("terms&Conditions")}
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item xs> </Grid>
+            </Grid>
 
-            -
-
-            <Link className={classes.link} underline="none">
-                FAQ
-            </Link>
-
-            -
-
-            <Link className={classes.link} underline="none">
-                {t('privacyPolicy')}
-            </Link>
-
-            -
-
-            <Link className={classes.link} underline="none">
-                {t("terms&Conditions")}
-            </Link>
+            <Dialog
+                fullWidth={true}
+                maxWidth="xl"
+                open={open}
+                onClose={handleClose}
+                //TransitionComponent={Transition}
+            >
+                <DialogTitle>
+                    {title || ''}
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleClose}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent dividers>
+                    <div dangerouslySetInnerHTML={{__html: content}}></div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

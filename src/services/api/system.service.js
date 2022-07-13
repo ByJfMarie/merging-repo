@@ -6,6 +6,22 @@ class SystemService {
         return apiGET('system/version');
     }
 
+    getContactUs() {
+        return apiGET('system/contactus');
+    }
+
+    getFaq() {
+        return apiGET('system/faq');
+    }
+
+    getPrivacyPolicy() {
+        return apiGET('system/privacypolicy');
+    }
+
+    getTerms() {
+        return apiGET('system/terms');
+    }
+
     getLicense() {
         return apiGET('system/license.get');
     }
