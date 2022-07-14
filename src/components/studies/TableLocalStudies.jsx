@@ -6,8 +6,6 @@ import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import {useState} from "react";
 import Thumbnail from "./Thumbnail";
 import ReportCell from "./ReportCell";
-import ShortcutIcon from "@mui/icons-material/Shortcut";
-import UpdateIcon from "@mui/icons-material/Update";
 import InfoIcon from '@mui/icons-material/Info';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import LockIcon from '@mui/icons-material/Lock';
@@ -21,7 +19,8 @@ import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
 import TableLocalStudiesActions from "../studies/TableLocalStudiesActions";
 import DownloadStudies from "./DownloadStudies";
 import UserContext from "../UserContext";
-import styled from "styled-components";
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import PersonIcon from '@mui/icons-material/Person';
 
 function TableLocalStudies(props) {
 
@@ -339,12 +338,12 @@ function TableLocalStudies(props) {
                     <div style={{display: "flex", alignItems: "center", lineHeight: "normal"}}>
                         {
                             (params.row.nb_shares>0)
-                                ? <IconButton><ShortcutIcon fontSize="small"/></IconButton>
-                                : <IconButton><UpdateIcon fontSize="small"/></IconButton>
+                                ? <IconButton><PersonIcon fontSize="small"/></IconButton>
+                                : <IconButton><PersonOffIcon fontSize="small"/></IconButton>
                         }
 
                         {
-                            (params.row.nb_shares>0)?(params.row.nb_shares+" share(s)"):"To be processed"
+                            (params.row.nb_shares>0)?("Assigned to "+params.row.nb_shares+" physician(s)"):"No physicians assigned"
                         }
                     </div>
                 )

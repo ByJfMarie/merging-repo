@@ -300,15 +300,19 @@ export default function Emailing() {
                                             />
                                         </Grid>
                                         <Grid item xs={11}>
-                                            <TextField
-                                                style={{ maxWidth: '600px' }}
-                                                fullWidth={true}
-                                                id="filled-basic"
-                                                label={t("security")}
-                                                variant="standard"
+                                            <Select
+                                                labelId="security-label"
+                                                id="security"
                                                 value={getSettingsValue('NOT.smtp_security')}
+                                                label={t("security")}
                                                 onChange={(e) => {handleSettingsChange('NOT.smtp_security', e.target.value)}}
-                                            />
+                                                fullWidth={true}
+                                                style={{ maxWidth: '600px' }}
+                                            >
+                                                <MenuItem value={"tls"}>TLS</MenuItem>
+                                                <MenuItem value={"ssl"}>SSL</MenuItem>
+                                                <MenuItem value={"none"}>None</MenuItem>
+                                            </Select>
                                         </Grid>
                                     </Grid>
                                 </Container>

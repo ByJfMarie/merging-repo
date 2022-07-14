@@ -1,5 +1,30 @@
 import React, {useEffect} from 'react';
-import { Grid, Chip, MenuItem, Input, FormGroup, FormControlLabel, Checkbox, Container, Divider, Box, Select, InputLabel, FormControl, Dialog, DialogContent, DialogContentText, Button, DialogActions, DialogTitle, Card, CardContent, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import {
+    Grid,
+    Chip,
+    MenuItem,
+    Input,
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
+    Container,
+    Divider,
+    Box,
+    Select,
+    InputLabel,
+    FormControl,
+    Dialog,
+    DialogContent,
+    DialogContentText,
+    Button,
+    DialogActions,
+    DialogTitle,
+    Card,
+    CardContent,
+    ToggleButtonGroup,
+    ToggleButton,
+    Badge
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
 import { TextField } from "@mui/material";
@@ -12,8 +37,70 @@ import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import UserStorage from "../../services/storage/user.storage";
+import UserContext from "../UserContext";
+import styled from "styled-components";
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        // "& .MuiFilledInput-underline:after": {
+        //     borderBottomColor: theme.palette.input.borderBottom
+        // },
+        // "& .MuiInputBase-root.Mui-focused": {
+        //     boxShadow: '0px 0px 5px 2px rgba(45, 180, 235,0.60)'
+        // },
+    },
+
+    popover: {
+        "& .MuiPopover-paper": {
+            backgroundColor: theme.palette.card.color
+        }
+    },
+
+    clear: {
+        display: "flex",
+
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: "center",
+        },
+        [theme.breakpoints.up('sm')]: {
+            justifyContent: "flex-end"
+        },
+    },
+
+    delete: {
+        display: "flex",
+
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: "center",
+        }
+    },
+
+    button: {
+        color: theme.palette.text.primary,
+        float: 'right',
+        backgroundColor: theme.palette.chip.color + "!important",
+        margin: '10px !important'
+    },
+
+    presetPhone: {
+        [theme.breakpoints.down('sm')]: {
+            display: "none !important",
+        }
+    }
+}));
+
+const BadgeMore = styled(Badge)`
+          .MuiBadge-badge {
+                right: -10px;
+                top: -3px;
+          }
+    `;
 
 export default function TableRemoteStudiesFilter(props) {
+
+    /** User & privileges */
+    const { settings } = React.useContext(UserContext);
 
     const fields = [
         "patient_id",
@@ -26,26 +113,7 @@ export default function TableRemoteStudiesFilter(props) {
     ];
 
     /** MODALITY ELEMENTS */
-    const names = [
-        'CR',
-        'MR',
-        'PT',
-        'CT',
-        'MG',
-        'US',
-        'RF',
-        'DX'
-    ];
-
-    const [settings, setSettings] = React.useState(null);
-    useEffect(() => {
-        UserStorage.getSettings()
-            .then(settings => {
-                setSettings(settings);
-            });
-
-        handleChangeDate(props.filters.date_preset);
-    }, []);
+    const names = ['CR', 'CT', 'DX', 'ECG', 'ES', 'MG', 'MR', 'NM', 'PT', 'PX', 'RF', 'US', 'XA'];
 
     /** POP UP MORE FILTERS */
     const [anchorElMore, setAnchorElMore] = React.useState(null);
@@ -72,62 +140,14 @@ export default function TableRemoteStudiesFilter(props) {
     };
 
     const theme = useTheme();
-    const useStyles = makeStyles({
-        root: {
-            // "& .MuiFilledInput-underline:after": {
-            //     borderBottomColor: theme.palette.input.borderBottom
-            // },
-            // "& .MuiInputBase-root.Mui-focused": {
-            //     boxShadow: '0px 0px 5px 2px rgba(45, 180, 235,0.60)'
-            // },
-        },
+    const classes = useStyles(theme);
 
-        popover: {
-            "& .MuiPopover-paper": {
-                backgroundColor: theme.palette.card.color
-            }
-        },
-
-        clear: {
-            display: "flex",
-
-            [theme.breakpoints.down('sm')]: {
-                justifyContent: "center",
-            },
-            [theme.breakpoints.up('sm')]: {
-                justifyContent: "flex-end"
-            },
-        },
-
-        delete: {
-            display: "flex",
-
-            [theme.breakpoints.down('sm')]: {
-                justifyContent: "center",
-            }
-        },
-
-        button: {
-            color: theme.palette.text.primary,
-            float: 'right',
-            backgroundColor: theme.palette.chip.color + "!important",
-            margin: '10px !important'
-        },
-
-        presetPhone: {
-            [theme.breakpoints.down('sm')]: {
-                display: "none !important",
-            }
-        }
-    });
-    const classes = useStyles();
-
+    const [values, setValues] = React.useState(props.initialValues);
     const [open, setOpen] = React.useState(false);
 
-    // eslint-disable-next-line
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+    useEffect(() => {
+        handleChangeDate(values.date_preset);
+    }, []);
 
     const handleClose = () => {
         setOpen(false);
@@ -136,14 +156,16 @@ export default function TableRemoteStudiesFilter(props) {
     /** MODALITY FIELD */
     const handleChangeModality = (event) => {
         const value = event.target.value;
-        const filter = {...props.filters, modality: (typeof value === 'string') ? value.split(',') : value};
-        props.setFilters(filter);
+        const filter = {...values, modality: (typeof value === 'string') ? value.split(',') : value};
+        setValues(filter);
+        props.searchFunction(filter);
     };
 
     /** PRESET BUTTON FUNCTION */
     const handleChangeDate = (param) => {
 
-        let items = {...props.filters, date_preset: param};
+        let items = values;
+        items = {...items, date_preset: param};
 
         switch (param) {
             case 'today':
@@ -171,53 +193,43 @@ export default function TableRemoteStudiesFilter(props) {
                 items = {...items, from: calcDate(param), to: calcDate()};
         }
 
-        props.setFilters(items);
+        setValues(items);
+        props.searchFunction(items);
     }
 
     /** RESET BUTTON */
     const clearValues = () => {
-        props.setFilters(props.initialValues);
-        handleChangeDate(props.filters.date_preset);
+        setValues(props.initialValues);
+        setActiveSecondaryFilters([]);
+        props.searchFunction(props.initialValues);
     }
 
     /** SEND VALUE */
     const handleSearch = (id, value) => {
-        let filter = props.filters;
+        let filter = values;
 
         if (id==='from' || id==='to') {
             filter = {...filter, date_preset: ""};
             if (value && !moment(value).isValid()) return;
         }
         filter = {...filter, [id]: value};
-        props.setFilters(filter);
+
+        setValues(filter);
+        props.searchFunction(filter);
     }
 
-    const statusComponent = (
-        <FormControl className={classes.root} variant="standard" size="medium" >
-            <InputLabel id="status" shrink>{t("status")}</InputLabel>
-            <Select
-                labelId="status"
-                id="status"
-                value={props.filters.status}
-                onChange={(e) => { props.setFilters({ ...props.filters, status: e.target.value }) }}
-            >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value={10}>In Progress</MenuItem>
-                <MenuItem value={20}>Download Locally</MenuItem>
-                <MenuItem value={30}>Download Remotely</MenuItem>
-                <MenuItem value={30}>Error</MenuItem>
-            </Select>
-        </FormControl>)
-
-    const modalityComponent = (
+    const modalityComponent = (primary) => (
         <FormControl className={classes.root} size="small" fullWidth={true} >
             <InputLabel variant="standard" id="modality">{t("modality")}</InputLabel>
             <Select
                 labelId="modality"
                 id="modality"
                 multiple
-                value={props.filters.modality}
-                onChange={handleChangeModality}
+                value={values.modality}
+                onChange={(e) => {
+                    handleChangeModality(e);
+                    if (!primary) handleSecondaryFilters("modality", e.target.value);
+                }}
                 input={<Input id="select-multiple-chip" label="Chip" />}
                 renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -240,18 +252,25 @@ export default function TableRemoteStudiesFilter(props) {
         </FormControl>
     )
 
-    const birthdateComponent = (<TextField
-        className={classes.root}
-        type="date"
-        id="birthdate"
-        label={t('birthdate')}
-        variant="standard"
-        size="normal"
-        fullWidth
-        value={props.filters.birthdate}
-        InputLabelProps={{ shrink: true }}
-        onChange={(e) => { handleSearch("birthdate", e.target.value) }}
-    />)
+    const birthdateComponent = (primary) => (
+        settings &&
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DesktopDatePicker
+                id="birthdate"
+                label={t('birthdate')}
+                inputFormat={settings.date_format}
+                value={values.birthdate || null}
+                onChange={(date, keyboardInputValue) => {
+                    if (keyboardInputValue && keyboardInputValue.length > 0 && keyboardInputValue.length < 10) return;
+                    handleSearch("birthdate", date);
+                    if (!primary) handleSecondaryFilters("birthdate", date);
+                }}
+                renderInput={(params) => <TextField InputLabelProps={{shrink: true}} variant="standard"
+                                                    size="small" {...params} />}
+                dateAdapter={AdapterDateFns}
+            />
+        </LocalizationProvider>
+    )
 
     /** RETURN DATE (PARAM = REMOVE x DAYs) */
     const calcDate = (remove = 0) => {
@@ -259,6 +278,32 @@ export default function TableRemoteStudiesFilter(props) {
         let d = new Date();
         d.setDate(today.getDate() - remove);
         return d;
+    }
+
+    //Badge for filter
+    const [activeSecondaryFilters, setActiveSecondaryFilters] = React.useState([]);
+    const handleSecondaryFilters = (id, value) => {
+        let tmp = activeSecondaryFilters;
+
+        if (id==='from' || id==='to' || id==='birthdate') {
+            if (value && moment(value).isValid()) {
+                if (!tmp.includes(id)) tmp.push(id);
+            }
+            else tmp.splice(tmp.indexOf(id), 1);
+        }
+        else if (id==="showDeleted") {
+            if (value) {
+                if (!tmp.includes(id)) tmp.push(id);
+            } else tmp.splice(tmp.indexOf(id), 1);
+        }
+        else {
+            if (value && value.length > 0) {
+                if (!tmp.includes(id)) tmp.push(id);
+            } else tmp.splice(tmp.indexOf(id), 1);
+        }
+
+        console.log(tmp);
+        setActiveSecondaryFilters(tmp);
     }
 
 
@@ -296,23 +341,15 @@ export default function TableRemoteStudiesFilter(props) {
                                 settings &&
                                 settings.filters_aets_primary.map((value, key) => {
 
-                                    if (value === "status") {
-                                        return (
-                                            <Grid key={value} item xs={6} sm>
-                                                {statusComponent}
-                                            </Grid>
-                                        )
-                                    }
-
                                     if (value === "modality") {
                                         return (<Grid key={value} item xs={6} sm>
-                                            {modalityComponent}
+                                            {modalityComponent(true)}
                                         </Grid>)
                                     }
 
                                     if (value === "birthdate") {
                                         return (<Grid key={value} item xs={6} sm>
-                                            {birthdateComponent}
+                                            {birthdateComponent(true)}
                                         </Grid>)
                                     }
 
@@ -324,8 +361,10 @@ export default function TableRemoteStudiesFilter(props) {
                                             label={t(value)}
                                             variant="standard"
                                             fullWidth
-                                            value={props.filters[value]}
-                                            onChange={(e) => handleSearch(value, e.target.value)}
+                                            value={values[value] || ""}
+                                            onChange={(e) => {
+                                                handleSearch(value, e.target.value);
+                                            }}
                                         />
                                     </Grid>)
                                 })
@@ -337,7 +376,7 @@ export default function TableRemoteStudiesFilter(props) {
                             <ToggleButtonGroup
                                 color="primary"
                                 exclusive
-                                value={props.filters.date_preset}
+                                value={values.date_preset}
                             >
                                 {
                                     settings &&
@@ -362,7 +401,8 @@ export default function TableRemoteStudiesFilter(props) {
                         </Container>
 
                         <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
-                            <MoreVertIcon style={{ transform: "scale(0.8)" }} /> {t('more')}
+                            <MoreVertIcon style={{ transform: "scale(0.8)" }} />
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('more')+"   "} </BadgeMore>
                         </Button>
 
                         <Button
@@ -401,27 +441,20 @@ export default function TableRemoteStudiesFilter(props) {
 
                                         {
                                             fields.map((value) => {
-                                                if (settings.filters_studies_primary.includes(value)) return;
-
-                                                if (value === "status") {
-                                                    return (
-                                                        <Grid key={value} item xs={6} md={6}>
-                                                            {statusComponent}
-                                                        </Grid>
-                                                    )
-                                                }
+                                                console.log()
+                                                if (settings.filters_aets_primary.includes(value)) return;
 
                                                 if (value === "modality") {
                                                     return (
                                                         <Grid key={value} item xs={6} md={6}>
-                                                            {modalityComponent}
+                                                            {modalityComponent(false)}
                                                         </Grid>)
                                                 }
 
                                                 if (value === "birthdate") {
                                                     return (
                                                         <Grid key={value} item xs={6} md={6}>
-                                                            {birthdateComponent}
+                                                            {birthdateComponent(false)}
                                                         </Grid>)
                                                 }
 
@@ -432,8 +465,11 @@ export default function TableRemoteStudiesFilter(props) {
                                                         label={t(value)}
                                                         variant="standard"
                                                         fullWidth
-                                                        value={props.filters[value]}
-                                                        onChange={(e) => { handleSearch(value, e.target.value) }}
+                                                        value={values[value] || ""}
+                                                        onChange={(e) => {
+                                                            handleSearch(value, e.target.value);
+                                                            handleSecondaryFilters(value, e.target.value);
+                                                        }}
                                                     />
                                                 </Grid>)
 
@@ -448,37 +484,54 @@ export default function TableRemoteStudiesFilter(props) {
                                         <Chip size="medium" label={t('date')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
-                                    <Grid container justifyContent="center" style={{ display: "flex", justifyContent: "center", direction: "column", alignItems: "center" }} spacing={2}>
+                                    {
+                                        settings &&
+                                        <Grid container justifyContent="center" style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            direction: "column",
+                                            alignItems: "center"
+                                        }} spacing={2}>
 
-                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                            <Grid item xs={6} md={6}>
-                                                <DesktopDatePicker
-                                                    id="from"
-                                                    label={t('from')}
-                                                    //inputFormat="yyyy.MM.dd"
-                                                    value={props.filters.from || null}
-                                                    onChange={(date, keyboardInputValue) => {
-                                                        if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
-                                                        handleSearch("from", date);}
-                                                    }
-                                                    renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
-                                                    dateAdapter={AdapterDateFns}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={6} md={6}>
-                                                <DesktopDatePicker
-                                                    id="to"
-                                                    label={t('to')}
-                                                    //inputFormat="yyyy.MM.dd"
-                                                    value={props.filters.to || null}
-                                                    onChange={(date) => {handleSearch("to", date);}}
-                                                    renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
-                                                    dateAdapter={AdapterDateFns}
-                                                />
-                                            </Grid>
-                                        </LocalizationProvider>
-
-                                    </Grid>
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <Grid item xs={6} md={6}>
+                                                    <DesktopDatePicker
+                                                        id="from"
+                                                        label={t('from')}
+                                                        inputFormat={settings.date_format}
+                                                        value={values.from || null}
+                                                        onChange={(date, keyboardInputValue) => {
+                                                            if (keyboardInputValue && keyboardInputValue.length > 0 && keyboardInputValue.length < 10) return;
+                                                            handleSearch("from", date);
+                                                            handleSecondaryFilters("from", date);
+                                                        }
+                                                        }
+                                                        renderInput={(params) => <TextField
+                                                            InputLabelProps={{shrink: true}} variant="standard"
+                                                            size="small" {...params} />}
+                                                        dateAdapter={AdapterDateFns}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={6} md={6}>
+                                                    <DesktopDatePicker
+                                                        id="to"
+                                                        label={t('to')}
+                                                        inputFormat={settings.date_format}
+                                                        value={values.to || null}
+                                                        onChange={(date, keyboardInputValue) => {
+                                                            if (keyboardInputValue && keyboardInputValue.length > 0 && keyboardInputValue.length < 10) return;
+                                                            handleSearch("to", date);
+                                                            handleSecondaryFilters("to", date);
+                                                        }}
+                                                        renderInput={(params) => <TextField
+                                                            InputLabelProps={{shrink: true}} variant="standard"
+                                                            size="small" {...params} />}
+                                                        dateAdapter={AdapterDateFns}
+                                                    />
+                                                </Grid>
+                                            </LocalizationProvider>
+                                        </Grid>
+                                    }
                                 </Container>
                             </Container>
                         </Popover>

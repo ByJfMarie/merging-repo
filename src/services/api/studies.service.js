@@ -7,6 +7,7 @@ class StudiesService {
         //Format dates
         if (filters.from instanceof Date) filters.from = moment(filters.from).format("YYYY-MM-DD");
         if (filters.to instanceof Date) filters.to = moment(filters.to).format("YYYY-MM-DD");
+        if (filters.birthdate instanceof Date) filters.birthdate = moment(filters.birthdate).format("YYYY-MM-DD");
 
         return apiPOST('studies/search', filters);
     }

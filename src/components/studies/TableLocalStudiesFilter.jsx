@@ -36,8 +36,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
-import UserStorage from "../../services/storage/user.storage";
 import styled from "styled-components";
+import UserContext from "../UserContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -97,6 +97,9 @@ const BadgeMore = styled(Badge)`
 
 export default function TableLocalStudiesFilter(props) {
 
+    /** User & privileges */
+    const { settings } = React.useContext(UserContext);
+
     const fields = [
         "patient_id",
         "patient_name",
@@ -108,18 +111,7 @@ export default function TableLocalStudiesFilter(props) {
     ];
 
     /** MODALITY ELEMENTS */
-    const names = [
-        'CR',
-        'MR',
-        'PT',
-        'CT',
-        'MG',
-        'US',
-        'RF',
-        'DX'
-    ];
-
-    const [settings, setSettings] = React.useState(null);
+    const names = ['CR', 'CT', 'DX', 'ECG', 'ES', 'MG', 'MR', 'NM', 'PT', 'PX', 'RF', 'US', 'XA'];
 
     /** POP UP MORE FILTERS */
     const [anchorElMore, setAnchorElMore] = React.useState(null);
@@ -149,11 +141,6 @@ export default function TableLocalStudiesFilter(props) {
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
-        UserStorage.getSettings()
-            .then(settings => {
-                setSettings(settings);
-            });
-
         props.searchFunction(values);
     }, [open]);
 
@@ -208,6 +195,7 @@ export default function TableLocalStudiesFilter(props) {
     /** RESET BUTTON */
     const clearValues = () => {
         setValues(props.initialValues);
+        setActiveSecondaryFilters([]);
         props.searchFunction(props.initialValues);
     }
 
@@ -224,23 +212,6 @@ export default function TableLocalStudiesFilter(props) {
         setValues(filter);
         props.searchFunction(filter);
     }
-
-    const statusComponent = (
-        <FormControl className={classes.root} variant="standard" size="medium" >
-            <InputLabel id="status" shrink>{t("status")}</InputLabel>
-            <Select
-                labelId="status"
-                id="status"
-                value={values.status}
-                onChange={(e) => { setValues({ ...values, status: e.target.value }) }}
-            >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value={10}>In Progress</MenuItem>
-                <MenuItem value={20}>Download Locally</MenuItem>
-                <MenuItem value={30}>Download Remotely</MenuItem>
-                <MenuItem value={30}>Error</MenuItem>
-            </Select>
-        </FormControl>)
 
     const modalityComponent = (primary) => (
             <FormControl className={classes.root} size="small" fullWidth={true}>
@@ -277,21 +248,21 @@ export default function TableLocalStudiesFilter(props) {
     )
 
     const birthdateComponent = (primary) => (
-        <TextField
-            className={classes.root}
-            type="date"
-            id="birthdate"
-            label={t('birthdate')}
-            variant="standard"
-            size="normal"
-            fullWidth
-            value={values.birthdate}
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => {
-                handleSearch("birthdate", e.target.value);
-                if (!primary) handleSecondaryFilters("birthdate", e.target.value);
-            }}
-        />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DesktopDatePicker
+                id="birthdate"
+                label={t('birthdate')}
+                inputFormat={settings.date_format}
+                value={values.birthdate || null}
+                onChange={(date, keyboardInputValue) => {
+                    if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
+                    handleSearch("birthdate", date);
+                    if (!primary) handleSecondaryFilters("birthdate", date);
+                }}
+                renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
+                dateAdapter={AdapterDateFns}
+            />
+        </LocalizationProvider>
     )
 
     /** RETURN DATE (PARAM = REMOVE x DAYs) */
@@ -307,9 +278,7 @@ export default function TableLocalStudiesFilter(props) {
     const handleSecondaryFilters = (id, value) => {
         let tmp = activeSecondaryFilters;
 
-        console.log((value instanceof Date)?"date":"not date");
-
-        if (id==='from' || id==='to') {
+        if (id==='from' || id==='to' || id==='birthdate') {
             if (value && moment(value).isValid()) {
                 if (!tmp.includes(id)) tmp.push(id);
             }
@@ -362,14 +331,6 @@ export default function TableLocalStudiesFilter(props) {
                             {
                                 settings &&
                                 settings.filters_studies_primary.map((value, key) => {
-
-                                    if (value === "status") {
-                                        return (
-                                            <Grid key={value} item xs={6} sm>
-                                                {statusComponent}
-                                            </Grid>
-                                        )
-                                    }
 
                                     if (value === "modality") {
                                         return (
@@ -478,14 +439,6 @@ export default function TableLocalStudiesFilter(props) {
                                             fields.map((value) => {
                                                 if (settings.filters_studies_primary.includes(value)) return;
 
-                                                if (value === "status") {
-                                                    return (
-                                                        <Grid key={value} item xs={6} md={6}>
-                                                            {statusComponent}
-                                                        </Grid>
-                                                    )
-                                                }
-
                                                 if (value === "modality") {
                                                     return (
                                                         <Grid key={value} item xs={6} md={6}>
@@ -526,14 +479,17 @@ export default function TableLocalStudiesFilter(props) {
                                         <Chip size="medium" label={t('studyDate')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
-                                    <Grid container justifyContent="center" style={{ display: "flex", justifyContent: "center", direction: "column", alignItems: "center" }} spacing={2}>
+
+                                    {
+                                        settings &&
+                                        <Grid container justifyContent="center" style={{ display: "flex", justifyContent: "center", direction: "column", alignItems: "center" }} spacing={2}>
 
                                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="from"
                                                         label={t('from')}
-                                                        //inputFormat="yyyy.MM.dd"
+                                                        inputFormat={settings.date_format}
                                                         value={values.from || null}
                                                         onChange={(date, keyboardInputValue) => {
                                                             if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
@@ -548,7 +504,7 @@ export default function TableLocalStudiesFilter(props) {
                                                     <DesktopDatePicker
                                                         id="to"
                                                         label={t('to')}
-                                                        //inputFormat="yyyy.MM.dd"
+                                                        inputFormat={settings.date_format}
                                                         value={values.to || null}
                                                         onChange={(date, keyboardInputValue) => {
                                                             if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
@@ -561,7 +517,8 @@ export default function TableLocalStudiesFilter(props) {
                                                 </Grid>
                                             </LocalizationProvider>
 
-                                    </Grid>
+                                        </Grid>
+                                    }
                                     <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
                                         <Grid item xs={12} sm={8} md={7} className={classes.delete}>
                                             <FormGroup>

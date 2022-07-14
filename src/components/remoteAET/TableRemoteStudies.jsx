@@ -106,18 +106,20 @@ function TableRemoteStudies(props) {
         return true;
     }
 
-    const queryStudies = async (aet, filt) => {
+    const queryStudies = async (filt) => {
+        setFilters(filt);
+
         /** RESET RESULT */
         const rows = [];
 
-        if (aet === '') {
+        if (props.currentAET === '') {
             setRows(rows);
             return;
         }
 
-        if (!checkFilters(aet, filt)) return;
+        if (!checkFilters(props.currentAET, filt)) return;
 
-        const response = await QRService.query(aet, filt);
+        const response = await QRService.query(props.currentAET, filt);
         if (response.error) {
             console.log(response.error);
             return;
@@ -139,13 +141,13 @@ function TableRemoteStudies(props) {
         props.actiontrigger();
     }
 
-    React.useEffect(() => {
-        if (props.currentAET) queryStudies(props.currentAET, filters).then();
-    }, [props.currentAET, filters]);
-
     //Selection
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowsData, setSelectedRowsData] = useState([]);
+
+    React.useEffect(() => {
+        if (props.currentAET) queryStudies(filters).then();
+    }, [props.currentAET]);
 
     //Create Columns
     const columns = [
@@ -332,8 +334,7 @@ function TableRemoteStudies(props) {
 
             <TableRemoteStudiesFilter
                 initialValues={filtersInitValue}
-                filters={filters}
-                setFilters={(filters) => setFilters(filters)}
+                searchFunction={queryStudies}
                 page="aet"
             />
 
