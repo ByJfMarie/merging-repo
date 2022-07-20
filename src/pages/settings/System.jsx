@@ -78,7 +78,9 @@ export default function System() {
                     <Tab label={t('reporting')} {...a11yProps(5)} />
                     <Tab label={t('database')} {...a11yProps(6)} />
                     <Tab label={t('plugins')} {...a11yProps(7)} />
-                    <Tab label={t('status')} {...a11yProps(8)} />
+                    {
+                        //<Tab label={t('status')} {...a11yProps(8)} />
+                    }
                 </Tabs>
             </Box>
 
@@ -128,9 +130,9 @@ export default function System() {
             </TabPanel>
 
             {/* STATUS */}
-            <TabPanel value={value} index={8} dir="ltr">
+            {/*<TabPanel value={value} index={8} dir="ltr">
                 <Status />
-            </TabPanel>
+            </TabPanel>*/}
 
         </React.Fragment>
     );

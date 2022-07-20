@@ -114,7 +114,6 @@ function t(props) {
         "study": "Étude",
         "patient": "Patient",
         "report": "Rapport",
-        "permissions": "Autorisations",
         "remote_aet": "Remote AET",
         "birthdate": "Date de naissance",
         "status": "Statut",
@@ -213,6 +212,7 @@ function t(props) {
         "called_aet" : "AET Appelé",
         "capabilities" : "Capabilities",
         "ip" : "IP",
+        "assignations": "Assigné à",
 
         /** FOOTER */
         "contactUs": "Contact-nous",
@@ -428,7 +428,6 @@ function t(props) {
         "study": "Study",
         "patient": "Patient",
         "report": "Report",
-        "permissions": "Permissions",
         "remote_aet": "Remote AET",
         "studyDate": "Study Date",
         "from": "From",
@@ -480,6 +479,7 @@ function t(props) {
         "called_aet" : "Called AET",
         "capabilities" : "Capabilities",
         "ip" : "IP",
+        "assignations": "Assigned To",
 
         /** FOOTER */
         "contactUs": "Contact Us",

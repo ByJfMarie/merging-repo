@@ -276,21 +276,23 @@ function TableLocalStudies(props) {
         {
             field: "patient_full",
             headerName: t("patient"),
-            flex: 3,
+            flex: 2,
+            minWidth: 150,
             maxWidth: 250,
             //resizable: true,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div
-                    style={{lineHeight: "normal"}}>{params.row.p_name || ''} ({params.row.p_id || ''})<br/>{params.row.p_birthdate || ''}
+                    style={{lineHeight: "normal"}}>{params.row.p_name || ''}<br/>{params.row.p_id || ''}<br/>{params.row.p_birthdate || ''}
                 </div>
             }
         },
         {
             field: "study_full",
             headerName: t('study'),
-            flex: 4,
-            maxWidth: 250,
+            flex: 3,
+            minWidth: 350,
+            maxWidth: 450,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal", maxHeight: "100%"}}>
@@ -307,15 +309,17 @@ function TableLocalStudies(props) {
             }
         },
         {
-            flex: 2,
+            flex: 1,
+            minWidth: 180,
             field: 'st_ref_physician',
             headerName: t('referring_physician')
         },
         {
             field: "report",
             headerName: t('report'),
-            flex: 2,
-            maxWidth: 150,
+            flex: 1,
+            minWidth: 150,
+            maxWidth: 200,
             encodeHtml: false,
             renderCell: (params) => {
                 return (
@@ -329,9 +333,10 @@ function TableLocalStudies(props) {
         },
         {
             field: "permissions",
-            headerName: t('permissions'),
+            headerName: t('assignations'),
             flex: 2,
-            maxWidth: 100,
+            minWidth: 150,
+            maxWidth: 200,
             encodeHtml: false,
             renderCell: (params) => {
                 return (
@@ -343,7 +348,7 @@ function TableLocalStudies(props) {
                         }
 
                         {
-                            (params.row.nb_shares>0)?("Assigned to "+params.row.nb_shares+" physician(s)"):"No physicians assigned"
+                            (params.row.nb_shares>0)?(params.row.nb_shares+" physician(s)"):"No physicians"
                         }
                     </div>
                 )
@@ -390,7 +395,7 @@ function TableLocalStudies(props) {
             {
                 field: 'actions',
                 type: 'actions',
-                width: 80,
+                minWidth: 80,
                 getActions: (params) => {
 
                     let actions = [];
@@ -464,25 +469,27 @@ function TableLocalStudies(props) {
                 page="studies"
             />
 
-            <TableContainer component={Paper} style={{ marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                    //loading={!rows.length}
-                    //error={error}
-                    rowHeight={60}
-                    autoHeight={true}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[10,20,50]}
-                    getRowId={(row) => row.key}
-                    checkboxSelection
-                    selectionModel={selectedRows}
-                    onSelectionModelChange={(ids) => {
-                        setSelectedRows(ids);
-                    }}
-                />
-            </TableContainer>
+            <div component={Paper} style={{ display: 'flex', marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                        columns={columns}
+                        rows={rows}
+                        //loading={!rows.length}
+                        //error={error}
+                        rowHeight={60}
+                        autoHeight={true}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        rowsPerPageOptions={[10,20,50]}
+                        getRowId={(row) => row.key}
+                        checkboxSelection
+                        selectionModel={selectedRows}
+                        onSelectionModelChange={(ids) => {
+                            setSelectedRows(ids);
+                        }}
+                    />
+                </div>
+            </div>
 
             <TableLocalStudiesActions
                 page="studies"
