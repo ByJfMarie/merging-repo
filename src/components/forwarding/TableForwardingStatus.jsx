@@ -243,6 +243,7 @@ const TableForwardingStatus = (props) => {
                             backgroundColor: theme.palette.table.hoverSelected,
                         },
                     }}
+                    disableColumnMenu={true}
                 />
             </div>
         </React.Fragment>

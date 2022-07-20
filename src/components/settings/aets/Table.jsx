@@ -215,6 +215,7 @@ const TableAets = (props) => {
                             backgroundColor: theme.palette.table.hoverSelected,
                         },
                     }}
+                    disableColumnMenu={true}
                 />
             </div>
         </React.Fragment>

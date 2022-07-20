@@ -55,6 +55,7 @@ function TableRemoteStudies(props) {
     const [filters, setFilters] = useState(filtersInitValue);
     const [pageSize, setPageSize] = React.useState(10);
     const [rows, setRows] = React.useState([]);
+    const [isLoading, setLoading] = React.useState(false);
     const checkFilters = (aet, filters) => {
         if (!filters) return false;
 
@@ -119,13 +120,10 @@ function TableRemoteStudies(props) {
 
         if (!checkFilters(props.currentAET, filt)) return;
 
+        setLoading(true);
         const response = await QRService.query(props.currentAET, filt);
-        if (response.error) {
-            console.log(response.error);
-            return;
-        }
-
-        setRows(response.items)
+        if (response.items) setRows(response.items);
+        setLoading(false);
     }
 
     const retrieveStudies = async (move_aet) => {
@@ -154,6 +152,7 @@ function TableRemoteStudies(props) {
         {
             field: "patient_full",
             headerName: t("patient"),
+            valueGetter: (params) => params.row.p_name,
             flex: 3,
             maxWidth: 250,
             //resizable: true,
@@ -167,6 +166,7 @@ function TableRemoteStudies(props) {
         {
             field: "study_full",
             headerName: t('study'),
+            valueGetter: (params) => params.row.st_date,
             flex: 4,
             maxWidth: 250,
             encodeHtml: false,
@@ -360,6 +360,8 @@ function TableRemoteStudies(props) {
                         setSelectedRows(ids);
                         setSelectedRowsData(selectedRowData);
                     }}
+                    loading={isLoading}
+                    disableColumnMenu={true}
                 />
             </TableContainer>
 

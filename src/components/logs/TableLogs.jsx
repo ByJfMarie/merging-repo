@@ -116,7 +116,10 @@ const TableLogs = (props) => {
             field: 'size',
             headerName: t("size"),
             flex: 3,
-            minWidth: 200
+            minWidth: 200,
+            renderCell: (params) => {
+                return params.row.formatted_size;
+            }
         },
         {
             field: 'actions',
@@ -216,6 +219,7 @@ const TableLogs = (props) => {
                             backgroundColor: theme.palette.table.hoverSelected,
                         },
                     }}
+                    disableColumnMenu={true}
                 />
             </div>
         </React.Fragment>

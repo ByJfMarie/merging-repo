@@ -69,6 +69,7 @@ function TableLocalStudies(props) {
     const [filters, setFilters] = useState(filtersInitValue);
     const [pageSize, setPageSize] = React.useState(20);
     const [rows, setRows] = React.useState([]);
+    const [isLoading, setLoading] = React.useState(false);
     const checkFilters = (filters) => {
         if (!filters) return false;
 
@@ -104,15 +105,10 @@ function TableLocalStudies(props) {
         setFilters(values);
         if (!checkFilters(values)) return;
 
+        setLoading(true);
         const response = await StudiesService.searchStudies(values);
-
-        if (response.error) {
-            console.log(response.error);
-            //window.location.href = "/login";
-            return;
-        }
-
-        setRows(response.items)
+        if (response.items) setRows(response.items);
+        setLoading(false);
     }
 
 
@@ -271,124 +267,127 @@ function TableLocalStudies(props) {
         console.log("Media "+selectedRows);
     };
 
-    //Create Columns
-    const columns = [
-        {
-            field: "patient_full",
-            headerName: t("patient"),
-            flex: 2,
-            minWidth: 150,
-            maxWidth: 250,
-            //resizable: true,
-            encodeHtml: false,
-            renderCell: (params) => {
-                return <div
-                    style={{lineHeight: "normal"}}>{params.row.p_name || ''}<br/>{params.row.p_id || ''}<br/>{params.row.p_birthdate || ''}
-                </div>
-            }
-        },
-        {
-            field: "study_full",
-            headerName: t('study'),
-            flex: 3,
-            minWidth: 350,
-            maxWidth: 450,
-            encodeHtml: false,
-            renderCell: (params) => {
-                return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal", maxHeight: "100%"}}>
-                    <Thumbnail
-                        study_uid={params.row.st_uid}
-                        size={50}
-                    />
-                    <Box style={{paddingLeft: '15px'}}>
-                        {params.row.st_date+" - "+params.row.st_accession_number+" - "+params.row.st_modalities}<br/>
-                        {params.row.st_description}<br/>
-                        {params.row.nb_series+" serie(s) - "+params.row.nb_images+" image(s)"}
-                    </Box>
-                </div>
-            }
-        },
-        {
-            flex: 1,
-            minWidth: 180,
-            field: 'st_ref_physician',
-            headerName: t('referring_physician')
-        },
-        {
-            field: "report",
-            headerName: t('report'),
-            flex: 1,
-            minWidth: 150,
-            maxWidth: 200,
-            encodeHtml: false,
-            renderCell: (params) => {
-                return (
-                    <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                        <ReportCell
-                            study_uid={params.row.st_uid}
-                        />
-                    </div>
-                )
-            }
-        },
-        {
-            field: "permissions",
-            headerName: t('assignations'),
-            flex: 2,
-            minWidth: 150,
-            maxWidth: 200,
-            encodeHtml: false,
-            renderCell: (params) => {
-                return (
-                    <div style={{display: "flex", alignItems: "center", lineHeight: "normal"}}>
-                        {
-                            (params.row.nb_shares>0)
-                                ? <IconButton><PersonIcon fontSize="small"/></IconButton>
-                                : <IconButton><PersonOffIcon fontSize="small"/></IconButton>
-                        }
+    //Columns Comparator
 
-                        {
-                            (params.row.nb_shares>0)?(params.row.nb_shares+" physician(s)"):"No physicians"
-                        }
-                    </div>
-                )
-            }
-        },
-        /*{
-            flex: 2,
-            field: 'st_accession_number',
-            headerName: t('accession_number'),
-            hide: true
-        },
-        {
-            flex: 2,
-            field: 'st_modalities',
-            headerName: t('modality'),
-        },
-        {
-            flex: 2,
-            field: 'st_date',
-            headerName: t('date')
-        },
-        {
-            flex: 2,
-            field: 'st_description',
-            headerName: t('description'),
-        },
-        {
-            flex: 2,
-            field: 'st_ref_physician',
-            headerName: t('referring_physician')
-        },
-        {
-            flex: 1,
-            field: 'noi',
-            headerName: t('noi'),
-            renderCell: (params) => {
-                return <div style={{ lineHeight: "normal" }}>{params.row.nb_series || ''} serie(s)<br/>{params.row.nb_images || ''} image(s)</div>;
-            }
-        }*/
-    ];
+
+    //Create Columns
+    const columns = [];
+    if (privileges.tables[props.page].columns && privileges.tables[props.page].columns.length !== 0) {
+        if (privileges.tables[props.page].columns.includes("patient_full")) {
+            columns.push(
+                {
+                    field: "patient_full",
+                    headerName: t("patient"),
+                    valueGetter: (params) => params.row.p_name,
+                    flex: 2,
+                    minWidth: 150,
+                    maxWidth: 250,
+                    //resizable: true,
+                    encodeHtml: false,
+                    renderCell: (params) => {
+                        return <div
+                            style={{lineHeight: "normal"}}>{params.row.p_name || ''}<br/>{params.row.p_id || ''}<br/>{params.row.p_birthdate_formatted || ''}
+                        </div>
+                    },
+                }
+            );
+        }
+
+        if (privileges.tables[props.page].columns.includes("study_full")) {
+            columns.push(
+                {
+                    field: "study_full",
+                    headerName: t('study'),
+                    valueGetter: (params) => params.row.st_date && new Date(params.row.st_date),
+                    flex: 3,
+                    minWidth: 350,
+                    maxWidth: 450,
+                    encodeHtml: false,
+                    renderCell: (params) => {
+                        return <div style={{
+                            display: "flex",
+                            alignItems: "center !important",
+                            lineHeight: "normal",
+                            maxHeight: "100%"
+                        }}>
+                            <Thumbnail
+                                study_uid={params.row.st_uid}
+                                size={50}
+                            />
+                            <Box style={{paddingLeft: '15px'}}>
+                                {params.row.st_date_formatted + " - " + params.row.st_accession_number + " - " + params.row.st_modalities}<br/>
+                                {params.row.st_description}<br/>
+                                {params.row.nb_series + " serie(s) - " + params.row.nb_images + " image(s)"}
+                            </Box>
+                        </div>
+                    }
+                }
+            )
+        }
+
+        if (privileges.tables[props.page].columns.includes("st_ref_physician")) {
+            columns.push(
+                {
+                    flex: 1,
+                    minWidth: 180,
+                    field: 'st_ref_physician',
+                    headerName: t('referring_physician')
+                }
+            );
+        }
+
+        if (privileges.tables[props.page].columns.includes("report")) {
+            columns.push(
+                {
+                    field: "report",
+                    headerName: t('report'),
+                    flex: 1,
+                    minWidth: 150,
+                    maxWidth: 200,
+                    encodeHtml: false,
+                    renderCell: (params) => {
+                        return (
+                            <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                                <ReportCell
+                                    study_uid={params.row.st_uid}
+                                />
+                            </div>
+                        )
+                    },
+                    sortable: false
+                }
+            );
+        }
+
+        if (privileges.tables[props.page].columns.includes("permissions")) {
+            columns.push(
+                {
+                    field: "permissions",
+                    headerName: t('assignations'),
+                    flex: 2,
+                    minWidth: 150,
+                    maxWidth: 200,
+                    encodeHtml: false,
+                    renderCell: (params) => {
+                        return (
+                            <div style={{display: "flex", alignItems: "center", lineHeight: "normal"}}>
+                                {
+                                    (params.row.nb_shares>0)
+                                        ? <IconButton><PersonIcon fontSize="small"/></IconButton>
+                                        : <IconButton><PersonOffIcon fontSize="small"/></IconButton>
+                                }
+
+                                {
+                                    (params.row.nb_shares>0)?(params.row.nb_shares+" physician(s)"):"No physicians"
+                                }
+                            </div>
+                        )
+                    },
+                    sortable: false
+                }
+            );
+        }
+    }
 
     if (privileges.tables[props.page].actions_rows.length !== 0) {
         columns.push(
@@ -474,7 +473,7 @@ function TableLocalStudies(props) {
                     <DataGrid
                         columns={columns}
                         rows={rows}
-                        //loading={!rows.length}
+                        loading={isLoading}
                         //error={error}
                         rowHeight={60}
                         autoHeight={true}
@@ -487,6 +486,7 @@ function TableLocalStudies(props) {
                         onSelectionModelChange={(ids) => {
                             setSelectedRows(ids);
                         }}
+                        disableColumnMenu={true}
                     />
                 </div>
             </div>

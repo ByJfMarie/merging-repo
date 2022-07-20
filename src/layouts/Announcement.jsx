@@ -6,6 +6,7 @@ import * as React from "react";
 import SettingsService from "../services/api/settings.service";
 import SystemService from "../services/api/system.service";
 import CloseIcon from '@mui/icons-material/Close';
+import UserContext from "../components/UserContext";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -29,6 +30,9 @@ export default function Announcement() {
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    /** User & privileges */
+    const { privileges } = React.useContext(UserContext);
+
     /** MESSAGES */
     const [message, setMessage] = React.useState({
         show: false,
@@ -38,6 +42,8 @@ export default function Announcement() {
     });
 
     const refresh = async() => {
+        if (!privileges || !privileges.pages.includes("settings")) return;
+
         const response = await SettingsService.restartNeeded();
         if (response.error) return;
         if (!response.items) return;
