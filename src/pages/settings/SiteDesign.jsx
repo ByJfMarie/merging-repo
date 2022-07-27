@@ -12,7 +12,7 @@ import {
     Stack,
     Button,
     Tooltip,
-    Container, Grid, Alert, Snackbar,
+    Container, Grid, Alert, Snackbar, Select, MenuItem, FormControl, InputLabel, FormControlLabel, Checkbox, FormGroup,
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -125,7 +125,7 @@ export default function SiteDesign() {
     }, []);
 
     const getSettingsValue = (id) => {
-        if (!settingsValue[id]) return '';
+        if (!settingsValue || !settingsValue[id]) return '';
         return settingsValue[id]['value'] || '';
     }
     const handleSettingsChange = (id, value) => {
@@ -224,8 +224,9 @@ export default function SiteDesign() {
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable"
                       scrollButtons allowScrollButtonsMobile>
                     <Tab label={t('general')} {...a11yProps(0)} />
-                    <Tab label={t('custom_files')} {...a11yProps(1)} />
-                    <Tab label={t('custom_texts')} {...a11yProps(2)} />
+                    <Tab label={t('login')} {...a11yProps(1)} />
+                    <Tab label={t('custom_files')} {...a11yProps(2)} />
+                    <Tab label={t('custom_texts')} {...a11yProps(3)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0} dir="ltr">
@@ -343,17 +344,6 @@ export default function SiteDesign() {
                                     onChange={(e) => {handleSettingsChange('WEB.general_external_web_link', e.target.value)}}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    className={classes.field}
-                                    id="filled-basic"
-                                    label={t("patient_login_method")}
-                                    variant="standard"
-                                    InputLabelProps={{shrink: true}}
-                                    value={getSettingsValue('WEB.general_login_type')}
-                                    onChange={(e) => {handleSettingsChange('WEB.general_login_type', e.target.value)}}
-                                />
-                            </Grid>
                         </Grid>
                         <ResetSave
                             handleSave={handleSave}
@@ -364,6 +354,57 @@ export default function SiteDesign() {
             </TabPanel>
 
             <TabPanel value={value} index={1} dir="ltr">
+
+                <Card className={classes.card}>
+                    <Typography variant="h6" align="left"> {t('security')} </Typography>
+                    <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('WEB.login_captcha')==="true"}
+                                    onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked+"")}
+                                />
+                            }
+                            label={t("Enable CAPTCHA")}/>
+                    </FormGroup>
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
+                </Card>
+
+                <Card className={classes.card}>
+                    <Typography variant="h6" align="left"> {t('Patient')} </Typography>
+                    <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('WEB.login_by_reference')==="true"}
+                                    onChange={(e) => handleSettingsChange('WEB.login_by_reference', e.target.checked+"")}
+                                />
+                            }
+                            label={t("Enable Reference Login")}/>
+                    </FormGroup>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('WEB.login_by_reference_birthday')==="true"}
+                                    onChange={(e) => handleSettingsChange('WEB.login_by_reference_birthday', e.target.checked+"")}
+                                />
+                            }
+                            label={t("Use Birthday with Reference")}/>
+                    </FormGroup>
+                    <ResetSave
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
+                </Card>
+            </TabPanel>
+
+            <TabPanel value={value} index={2} dir="ltr">
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                     <CardContent>
                         <div className={classes.div}>
@@ -408,7 +449,7 @@ export default function SiteDesign() {
                 </Card>
             </TabPanel>
 
-            <TabPanel value={value} index={2} dir="ltr">
+            <TabPanel value={value} index={3} dir="ltr">
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('disclaimer')} </Typography>

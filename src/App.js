@@ -17,6 +17,7 @@ import Studies from './pages/Studies';
 import Profile from './pages/Profile';
 import Logs from "./pages/Logs";
 import Login from './pages/Login';
+import Login2 from './pages/Login2';
 import Forwarding from './pages/Forwarding';
 import Media from './pages/Media_Output';
 import TestZone from './pages/TestZone';
@@ -82,6 +83,8 @@ function App() {
               <PrivateRoute exact path="/" component={<Home />} menu={Menu} />
 
               <Route exact path="/login" component={Login} />
+
+              <Route exact path="/login2" component={Login2} />
 
               <PrivateRoute path="/studies" component={<Studies />} menu={Menu} />
 

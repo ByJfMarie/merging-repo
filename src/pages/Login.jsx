@@ -9,6 +9,7 @@ import sha512 from 'js-sha512';
 const PryAPI = new PryApi();*/
 
 import AuthService from "../services/api/auth.service";
+import Footer from "../layouts/Footer";
 
 export default function Signin() {
 
@@ -124,6 +125,7 @@ export default function Signin() {
 
                 </Paper>
             </Container>
+            <Footer />
         </Grid>
     )
 
