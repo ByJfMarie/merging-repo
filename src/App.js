@@ -16,8 +16,9 @@ import SettingsMenu from './layouts/SettingsMenu';
 import Studies from './pages/Studies';
 import Profile from './pages/Profile';
 import Logs from "./pages/Logs";
-import Login from './pages/Login';
-import Login2 from './pages/Login2';
+import Login from './layouts/authentication/sign-in';
+import LoginAccess from './layouts/authentication/login-access';
+import Forgot from './layouts/authentication/forgot';
 import Forwarding from './pages/Forwarding';
 import Media from './pages/Media_Output';
 import TestZone from './pages/TestZone';
@@ -84,7 +85,9 @@ function App() {
 
               <Route exact path="/login" component={Login} />
 
-              <Route exact path="/login2" component={Login2} />
+              <Route exact path="/login-access" component={LoginAccess} />
+
+              <Route exact path="/forgot" component={Forgot} />
 
               <PrivateRoute path="/studies" component={<Studies />} menu={Menu} />
 

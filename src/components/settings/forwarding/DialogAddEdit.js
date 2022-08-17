@@ -14,7 +14,7 @@ import React from "react";
 import ForwardingService from "../../../services/api/forwarding.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import QueryAETSelect from "../../remoteAET/QueryAETSelect";
+import Index from "../../../layouts/remoteAET/QueryAETSelect";
 
 const useStyles = makeStyles((theme) => ({
     field: {
@@ -117,7 +117,7 @@ const DialogAddEdit = (props) => {
                         <Grid item xs={6} style={{marginBottom: '10px'}}>
                             <FormControl className={classes.root} variant="standard" fullWidth>
                                 <InputLabel id="aet" >Forward To</InputLabel>
-                                <QueryAETSelect
+                                <Index
                                     forward={true}
                                     currentAet={getValue('value')}
                                     setCurrentAET={(e) => {handleChange("value", e)}}

@@ -5,7 +5,7 @@ import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import RetrieveButton from "./RetrieveButton";
-import UserContext from "../UserContext";
+import UserContext from "../../components/UserContext";
 
 const TableRemoteStudiesActions = (props) => {
 

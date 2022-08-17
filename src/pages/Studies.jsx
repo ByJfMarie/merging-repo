@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Divider, Typography} from "@mui/material";
 import {useTheme} from '@emotion/react';
 import t from "../services/Translation";
-import TableLocalStudies from "../components/studies/TableLocalStudies";
+import Index from "../layouts/studies";
 
 export default function Studies() {
 
@@ -15,7 +15,7 @@ export default function Studies() {
                         style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('studies')} </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <TableLocalStudies
+            <Index
                 page="studies"
             />
 

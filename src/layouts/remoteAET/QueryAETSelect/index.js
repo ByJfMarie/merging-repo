@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {MenuItem, Select} from "@mui/material";
-import AETService from "../../services/api/aet.service";
+import AETService from "../../../services/api/aet.service";
 
-const QueryAETSelect = (props) => {
+const Index = (props) => {
 
     const [aets, setAets] = React.useState([]);
     const loadAETs = async() => {
@@ -41,4 +41,4 @@ const QueryAETSelect = (props) => {
     )
 }
 
-export default QueryAETSelect;
+export default Index;

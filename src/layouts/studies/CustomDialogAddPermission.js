@@ -13,7 +13,7 @@ import {Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, ListIte
 import StudiesService from "../../services/api/studies.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import SearchBar from "../SearchBar";
+import SearchBar from "../../components/SearchBar";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {

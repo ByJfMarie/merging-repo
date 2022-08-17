@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {useEffect, useState} from "react";
-import StudiesService from "../../services/api/studies.service";
+import StudiesService from "../../../../services/api/studies.service";
 
-const Thumbnail = (props) => {
+const Index = (props) => {
 
     const [thumbnail, setThumbnail] = useState({});
 
@@ -41,4 +41,4 @@ const Thumbnail = (props) => {
     )
 }
 
-export default Thumbnail;
+export default Index;

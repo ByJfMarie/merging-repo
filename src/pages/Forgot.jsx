@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Container, Grid, Paper, TextField, Button, Typography, Divider} from '@mui/material';
+import {Container, Grid, Paper, TextField, Button, Typography, Divider, Link} from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import swal from 'sweetalert';
@@ -10,7 +10,7 @@ import Background from "../components/login/Background";
 
 import ClientCaptcha from 'react-client-captcha'
 
-export default function Signin() {
+export default function Forgot() {
 
     // function changeRole(props) {
     //     switch (props) {
@@ -137,18 +137,6 @@ export default function Signin() {
                                             autoComplete="username"
                                             onChange={e => setUserName(e.target.value)}
                                         />
-                                        <TextField
-                                            style={{ marginBottom: '15px' }}
-                                            variant="standard"
-                                            required
-                                            fullWidth
-                                            id="password"
-                                            name="password"
-                                            label="Password"
-                                            type="password"
-                                            autoComplete="current-password"
-                                            onChange={e => setPassword(e.target.value)}
-                                        />
 
                                         <p>Protection code: </p>
 
@@ -170,7 +158,16 @@ export default function Signin() {
                                             onChange={e => setUserCaptcha(e.target.value)}
                                         />
 
-                                        <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth>Sign in</Button>
+                                        <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth>Forgot Password</Button>
+
+                                        <Grid
+                                            container
+                                            item
+                                            xs
+                                            justifyContent="center"
+                                            alignItems="center">
+                                            <Link href="/login">Back to Login</Link>
+                                        </Grid>
                                     </form>
                                 </Paper>
                             </Grid>

@@ -4,8 +4,8 @@ import t from "../../services/Translation";
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import {useState} from "react";
-import Thumbnail from "./Thumbnail";
-import ReportCell from "./ReportCell";
+import ThumbnailCell from "./components/ThumbnailTableCell";
+import ReportCell from "./components/ReportTableCell";
 import InfoIcon from '@mui/icons-material/Info';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import LockIcon from '@mui/icons-material/Lock';
@@ -16,13 +16,13 @@ import ForwardingService from "../../services/api/forwarding.service";
 import ViewersService from "../../services/api/viewers.service";
 import CustomDialogAddPermission from "./CustomDialogAddPermission";
 import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
-import TableLocalStudiesActions from "../studies/TableLocalStudiesActions";
+import TableLocalStudiesActions from "./TableLocalStudiesActions";
 import DownloadStudies from "./DownloadStudies";
-import UserContext from "../UserContext";
+import UserContext from "../../components/UserContext";
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
 
-function TableLocalStudies(props) {
+function StudiesLayout(props) {
 
     /** User & privileges */
     const { privileges } = React.useContext(UserContext);
@@ -310,7 +310,7 @@ function TableLocalStudies(props) {
                             lineHeight: "normal",
                             maxHeight: "100%"
                         }}>
-                            <Thumbnail
+                            <ThumbnailCell
                                 study_uid={params.row.st_uid}
                                 size={50}
                             />
@@ -522,4 +522,4 @@ function TableLocalStudies(props) {
     )
 }
 
-export default TableLocalStudies;
+export default StudiesLayout;

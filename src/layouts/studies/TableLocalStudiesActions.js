@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Grid } from "@mui/material";
-import DownloadButton from "./DownloadButton";
-import ForwardButton from "./ForwardButton";
-import TransferButton from "./TransferButton";
-import UserContext from "../UserContext";
+import DownloadButton from "./components/DownloadButton";
+import ForwardButton from "./components/ForwardButton";
+import TransferButton from "./components/TransferButton";
+import UserContext from "../../components/UserContext";
 
 const TableLocalStudiesActions = (props) => {
 

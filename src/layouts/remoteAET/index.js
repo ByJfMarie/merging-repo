@@ -10,9 +10,9 @@ import TableRemoteStudiesFilter from "./TableRemoteStudiesFilter";
 import TableRemoteStudiesActions from "./TableRemoteStudiesActions";
 import {useState} from "react";
 import QRService from "../../services/api/queryRetrieve.service";
-import UserContext from "../UserContext";
+import UserContext from "../../components/UserContext";
 
-function TableRemoteStudies(props) {
+function Index(props) {
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -373,4 +373,4 @@ function TableRemoteStudies(props) {
     )
 }
 
-export default TableRemoteStudies;
+export default Index;

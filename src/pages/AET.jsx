@@ -3,9 +3,9 @@ import {Divider, Typography, Container, Grid, FormControl, InputLabel} from "@mu
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../services/Translation";
-import TableRemoteStudies from '../components/remoteAET/TableRemoteStudies';
+import RemoteAETLayout from '../layouts/remoteAET';
 import TableRetrievingStatus from '../components/retrieveStatus/TableRetrievingStatus';
-import QueryAETSelect from "../components/remoteAET/QueryAETSelect";
+import QueryAETSelect from "../layouts/remoteAET/QueryAETSelect";
 
 export default function AET() {
     /** THEME */
@@ -65,7 +65,7 @@ export default function AET() {
 
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <TableRemoteStudies
+            <RemoteAETLayout
                 currentAET={currentAET}
                 actiontrigger={handleActionTrigger}
                 page="remote_aets"

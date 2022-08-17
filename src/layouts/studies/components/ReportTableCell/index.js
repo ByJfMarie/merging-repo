@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {IconButton} from "@mui/material";
 import {useEffect, useState} from "react";
-import StudiesService from "../../services/api/studies.service";
+import StudiesService from "../../../../services/api/studies.service";
 import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
 
-const ReportCell = (props) => {
+const Index = (props) => {
 
     const [reports, setReports] = useState({})
 
@@ -47,4 +47,4 @@ const ReportCell = (props) => {
     )
 }
 
-export default ReportCell;
+export default Index;
