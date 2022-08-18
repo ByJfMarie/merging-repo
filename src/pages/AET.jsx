@@ -4,7 +4,7 @@ import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../services/Translation";
 import RemoteAETLayout from '../layouts/remoteAET';
-import TableRetrievingStatus from '../components/retrieveStatus/TableRetrievingStatus';
+import RetrievingLayout from '../layouts/retrieveStatus';
 import QueryAETSelect from "../layouts/remoteAET/QueryAETSelect";
 
 export default function AET() {
@@ -71,7 +71,7 @@ export default function AET() {
                 page="remote_aets"
             />
 
-            <TableRetrievingStatus
+            <RetrievingLayout
                 page="retrieving"
                 forceRefresh={forceRefreshStatus}
                 autoRefresh={false}

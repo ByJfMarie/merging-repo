@@ -29,7 +29,7 @@ import t from "../../services/Translation";
 import Editor from "../../components/Editor.jsx"
 import "react-phone-input-2/lib/high-res.css";
 import SettingsService from "../../services/api/settings.service";
-import ResetSave from "../../components/settings/ResetSave";
+import Index from "../../layouts/settings/actions";
 import MailingService from "../../services/api/mailing.service";
 
 /** TABS FUNCTION */
@@ -347,7 +347,7 @@ export default function Emailing() {
                                     </Grid>
                                 </Grid>
                             </Stack>
-                            <ResetSave
+                            <Index
                                 handleSave={handleSave}
                                 handleCancel={handleCancel}
                             />
@@ -411,7 +411,7 @@ export default function Emailing() {
                             defaultValue={template.body || ''}
                             onChange={(value) => {handleSettingsChange(template.name+'_body', value)}}
                         />
-                        <ResetSave
+                        <Index
                             handleSave={handleSave}
                             handleCancel={handleCancel}
                         />

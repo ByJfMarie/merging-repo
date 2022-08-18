@@ -7,6 +7,7 @@ import ClientCaptcha from "react-client-captcha";
 import swal from "sweetalert";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
+import LoginStorage from "../../../services/storage/login.storage";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -48,6 +49,16 @@ function Forgot() {
     /*const handleRecaptcha = (token, ekey) => {
         console.log("Captcha token: "+token+" ("+ekey+")");
     }*/
+
+    const [useCaptcha, setUseCaptcha] = useState(true);
+    React.useEffect(() => {
+        LoginStorage.getConfig()
+            .then(rsp => {
+                if (!rsp) return;
+                if (!rsp['WEB.login_captcha']) return;
+                setUseCaptcha(rsp['WEB.login_captcha'].value);
+            });
+    }, []);
 
     return (
         <IllustrationLayout>
@@ -107,26 +118,33 @@ function Forgot() {
                                 onChange={e => setUserName(e.target.value)}
                             />
 
-                            <p>Protection code: </p>
+                            {
+                                (useCaptcha===true || useCaptcha==="true") &&
 
-                            <ClientCaptcha
-                                backgroundColor={"#EDEDED"}
-                                captchaCode={setCaptcha}
-                                charsCount={6}
-                                width={300}
-                                height={40}
-                            />
+                                <>
+                                    <p>Protection code: </p>
 
-                            <TextField
-                                style={{ marginBottom: '15px' }}
-                                variant="standard"
-                                required
-                                fullWidth
-                                id="captcha"
-                                name="captcha"
-                                label=""
-                                onChange={e => setUserCaptcha(e.target.value)}
-                            />
+                                    <ClientCaptcha
+                                        backgroundColor={"#EDEDED"}
+                                        captchaCode={setCaptcha}
+                                        charsCount={6}
+                                        width={300}
+                                        height={40}
+                                        retry={false}
+                                    />
+
+                                    <TextField
+                                        style={{ marginBottom: '15px' }}
+                                        variant="standard"
+                                        required
+                                        fullWidth
+                                        id="captcha"
+                                        name="captcha"
+                                        label=""
+                                        onChange={e => setUserCaptcha(e.target.value)}
+                                    />
+                                </>
+                            }
 
                             <Box sx={{ m: 4 }} />
 

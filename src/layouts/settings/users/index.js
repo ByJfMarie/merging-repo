@@ -2,13 +2,15 @@ import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
-import SettingsService from "../../../services/api/settings.service";
+import UsersService from "../../../services/api/users.service";
+import {IconButton} from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
-const Table = (props) => {
+const Index = (props) => {
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -26,8 +28,8 @@ const Table = (props) => {
     const [pageSize, setPageSize] = React.useState(10);
     const [rows, setRows] = React.useState([]);
 
-    const refresh = async() => {
-        const response = await SettingsService.getRolesPrivileges();
+    const refreshUsers = async(filters) => {
+        const response = await UsersService.getUsers(filters);
 
         if (response.error) {
             console.log(response.error);
@@ -39,29 +41,87 @@ const Table = (props) => {
     }
 
     React.useEffect(() => {
-        refresh();
-    }, [props.forceRefresh]);
+        refreshUsers(props.filters);
+    }, [props.forceRefresh, props.filters]);
 
     const handleEdit = async (row) => {
-        props.edit(row);
+        props.editUser(row);
+    }
+
+    const handleDelete = async (id) => {
+        const response = await UsersService.deleteUser(id);
+
+        if (response.error) {
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: response.error
+            });
+            return;
+        }
+
+        refreshUsers(props.filters);
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: "User has been successfully deleted!"
+        });
     }
 
     const column = [
         {
-            field: "role",
-            headerName: "Role",
-            flex: 3,
+            field: "login",
+            headerName: "Login",
+            flex: 1,
             minWidth: 110,
             description: "Login",
-            headerAlign: "left"
+            headerAlign: "left",
         },
         {
-            field: "description",
-            headerName: "Description",
-            flex: 2,
+            field: "name",
+            headerName: "Name",
+            flex: 1,
             minWidth: 110,
             description: "Name",
-            headerAlign: "left"
+            headerAlign: "left",
+            renderCell: (params) => {
+                return <div style={{ lineHeight: "normal" }}>{params.row.title || ''} {params.row.first_name || ''} {params.row.last_name || ''}</div>;
+            }
+        },
+        {
+            field: "mail",
+            headerName: "Email",
+            flex: 1,
+            minWidth: 110,
+            description: "Email",
+            headerAlign: "left",
+        },
+        {
+            field: "role",
+            headerName: "Role",
+            flex: 1,
+            minWidth: 110,
+            description: "Role",
+            headerAlign: "left",
+        },
+        {
+            field: "status",
+            headerName: "Active",
+            flex: 1,
+            minWidth: 110,
+            description: "Status",
+            headerAlign: "left",
+            renderCell: (params) => {
+                return (
+                    <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
+                        {
+                            (params.row.status)
+                                ? (<IconButton><CheckIcon color="success" fontSize="small"/></IconButton>)
+                                : ""
+                        }
+                    </div>
+                )
+            }
         },
         {
             field: 'actions',
@@ -69,11 +129,18 @@ const Table = (props) => {
             width: 80,
             getActions: (params) => {
                 let actions = [];
-
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
                     label="Edit"
                     onClick={() => handleEdit(params.row)}
+                    showInMenu
+                />);
+
+                actions.push(<GridActionsCellItem
+                    icon={<DeleteIcon/>}
+                    label="Delete"
+                    color="error"
+                    onClick={() => handleDelete(params.row.id)}
                     showInMenu
                 />);
 
@@ -90,7 +157,6 @@ const Table = (props) => {
                     style={{marginTop: '25px'}}
                     autoWidth={true}
                     autoHeight={true}
-                    rowHeight={80}
                     rows={rows}
                     columns={column}
                     pageSize={pageSize}
@@ -117,4 +183,4 @@ const Table = (props) => {
         </React.Fragment>
     )
 }
-export default Table;
+export default Index

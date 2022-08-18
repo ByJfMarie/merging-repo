@@ -1,10 +1,10 @@
 // prop-types is a library for typechecking of props
 //import PropTypes from "prop-types";
 
-// @mui material components
+// @mui material settingsActoins
 import Grid from "@mui/material/Grid";
 
-// Argon Dashboard 2 MUI components
+// Argon Dashboard 2 MUI settingsActoins
 import React from "react";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";

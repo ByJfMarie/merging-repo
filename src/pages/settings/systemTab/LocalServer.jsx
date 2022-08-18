@@ -6,7 +6,6 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Container,
     Grid, Alert, Snackbar
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
@@ -14,7 +13,7 @@ import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
 import * as React from "react";
 import SettingsService from "../../../services/api/settings.service";
-import ResetSave from "../../../components/settings/ResetSave";
+import Index from "../../../layouts/settings/actions";
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -338,7 +337,7 @@ export default function LocalServer() {
                             label={t("MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1")}
                         />
                     </FormGroup>
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />

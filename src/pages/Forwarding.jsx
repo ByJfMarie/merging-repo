@@ -2,8 +2,7 @@ import React from 'react';
 import { Divider, Typography } from "@mui/material";
 import { useTheme } from '@emotion/react';
 import t from "../services/Translation"; 
-import TableForwardingStatus from '../components/forwarding/TableForwardingStatus'
-import AuthService from "../services/api/auth.service";
+import ForwardingLayout from '../layouts/forwarding';
 
 const Forwarding = () => {
   /** THEME */
@@ -14,7 +13,7 @@ const Forwarding = () => {
         <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('forwarding')} </Typography>
         <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-        <TableForwardingStatus
+        <ForwardingLayout
           page="forwarding"
           autoRefresh={false}
         />

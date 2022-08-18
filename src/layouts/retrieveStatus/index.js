@@ -1,21 +1,24 @@
 import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
-import Chip, {ChipProps} from "@mui/material/Chip";
+import Chip from "@mui/material/Chip";
 import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
+import {useState} from "react";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
-const TableMediaStatus = (props) => {
+const RetrievingLayout = (props) => {
+
+    //const[privileges] = React.useState(UserStorage.getPrivileges());
 
     const statusComponent = (params) => {
 
@@ -58,7 +61,7 @@ const TableMediaStatus = (props) => {
                 }
 
                 {
-                    params.value === 3 && (
+                    params.value === 100 && (
                         <Tooltip title={params.row.error}>
                             <Chip
                                 variant="filled"
@@ -88,9 +91,9 @@ const TableMediaStatus = (props) => {
     });
     const classes = useStyles();
 
-    const [rows, setRows] = React.useState([]);
-
-    const refreshOrders = async() => {
+    //Status
+    const [rowsStatus, setRowsStatus] = useState([]);
+    const refreshOrders = async () => {
         const response = await QRService.getOrders({});
 
         if (response.error) {
@@ -98,24 +101,25 @@ const TableMediaStatus = (props) => {
             return;
         }
 
-        if (response.items==null) return;
-
-        let tmp = [];
-        response.items.map((row, i) => {
-            tmp.push(row);
-        })
-        setRows(tmp);
+        if (response.items == null) return;
+        setRowsStatus(response.items);
     }
+    React.useEffect(() => {
+        refreshOrders();
+    }, []);
 
     React.useEffect(() => {
-        let autoRefresh = false;
-        if (autoRefresh) {
+        if (props.autoRefresh) {
             const interval = setInterval(() => {
                 refreshOrders();
             }, 5000);
             return () => clearInterval(interval);
         }
-    }, []);
+    }, [props]);
+
+    React.useEffect(()=> {
+        refreshOrders();
+    }, [props.forceRefresh])
 
     const handleRetry = async(id) => {
         const response = await QRService.retryOrders(id);
@@ -125,7 +129,7 @@ const TableMediaStatus = (props) => {
             return;
         }
 
-        props.refresh();
+        refreshOrders();
     }
 
     const handleCancel = async (id) => {
@@ -136,7 +140,7 @@ const TableMediaStatus = (props) => {
             return;
         }
 
-        props.refresh();
+        refreshOrders();
     }
 
     const column = [
@@ -150,53 +154,38 @@ const TableMediaStatus = (props) => {
             renderCell: (params) => {
                 return statusComponent(params);
             }
+        },
+        {
+            "field": 'p_name',
+            "headerName": t("patient"),
+            "flex": 2,
+            "minWidth": 200
+        },
+        {
+            "field": 'st_description',
+            "headerName": t("description"),
+            "flex": 3,
+            "minWidth": 200
+        },
+        {
+            "field": 'aet',
+            "headerName": t("aet"),
+            "flex": 2,
+            "minWidth": 200,
+            renderCell: (params) => {
+                return <div style={{ lineHeight: "normal" }}>{params.row.called_aet || ''} to {params.row.move_aet || ''} </div>;
+            }
+        },
+        {
+            "field": 'noi',
+            "headerName": t("noi"),
+            "flex": 1,
+            "minWidth": 200,
+            renderCell: (params) => {
+                return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
+            }
         }
     ];
-
-    props.settings[props.page].statusTable.columns.map((row) => {
-        if (row === 'patient') {
-            column.push(
-                {
-                    "field": 'p_name',
-                    "headerName": t(row),
-                    "flex": 2,
-                    "minWidth": 200
-                })
-        }
-        else if (row === 'description') {
-            column.push(
-                {
-                    "field": 'st_description',
-                    "headerName": t(row),
-                    "flex": 3,
-                    "minWidth": 200
-                })
-        }
-        else if (row === 'aet') {
-            column.push(
-                {
-                    "field": 'aet',
-                    "headerName": t(row),
-                    "flex": 2,
-                    "minWidth": 200,
-                    renderCell: (params) => {
-                        return <div style={{ lineHeight: "normal" }}>{params.row.called_aet || ''} to {params.row.move_aet || ''} </div>;
-                    }
-                })
-        }
-        else if (row === "noi") {
-            column.push(
-                {
-                    "field": 'noi',
-                    "headerName": t(row),
-                    "flex": 1,
-                    "minWidth": 200,
-                    renderCell: (params) => {
-                        return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
-                    }
-                })
-        }
-    });
 
     column.push(
         {
@@ -206,7 +195,7 @@ const TableMediaStatus = (props) => {
             getActions: (params) => {
 
                 let actions = [];
-                if (params.row.status === 3) {
+                if (params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
                         label="Retry"
@@ -214,7 +203,7 @@ const TableMediaStatus = (props) => {
                         showInMenu
                     />);
                 }
-                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
+                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
                         label="Cancel"
@@ -228,6 +217,7 @@ const TableMediaStatus = (props) => {
     );
 
     return (
+        rowsStatus &&
         <React.Fragment>
             <div style={{width: '100%'}}>
                 <DataGrid
@@ -235,10 +225,10 @@ const TableMediaStatus = (props) => {
                     style={{marginTop: '25px'}}
                     autoWidth={true}
                     autoHeight={true}
-                    rows={rows}
+                    rows={rowsStatus}
                     columns={column}
                     pageSize={10}
-                    rowsPrPageOptions={[10]}
+                    rowsPerPageOptions={[10]}
                     sx={{
                         '& .MuiDataGrid-row:hover': {
                             transition: '0.3s ',
@@ -253,9 +243,10 @@ const TableMediaStatus = (props) => {
                             backgroundColor: theme.palette.table.hoverSelected,
                         },
                     }}
+                    disableColumnMenu={true}
                 />
             </div>
         </React.Fragment>
     )
 }
-export default TableMediaStatus;
+export default RetrievingLayout;

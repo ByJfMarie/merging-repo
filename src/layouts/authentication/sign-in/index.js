@@ -180,6 +180,7 @@ function Signin() {
                                         charsCount={6}
                                         width={300}
                                         height={40}
+                                        retry={false}
                                     />
 
                                     <TextField
@@ -220,8 +221,8 @@ function Signin() {
                                     justifyContent="left"
                                     alignItems="center"
                                 >
-                                    <Typography variant="body2">I want to access my studies with my <Link
-                                        href="/login-access">Access Code</Link>.</Typography>
+                                    <Typography variant="h6">Sign in with an <Link
+                                        href="/login-access">Access Code</Link></Typography>
                                 </Grid>
                             }
 
@@ -233,7 +234,7 @@ function Signin() {
                                     justifyContent="left"
                                     alignItems="center"
                                 >
-                                    <Typography variant="body2">Not registered? <Link href="#">Sign Up Now</Link>.</Typography>
+                                    <Typography variant="h6">Not registered? <Link href="#">Sign Up Now</Link></Typography>
                                 </Grid>*/
                             }
                         </form>

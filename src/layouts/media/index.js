@@ -1,81 +1,79 @@
 import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
-import Chip, {ChipProps} from "@mui/material/Chip";
+import Chip from "@mui/material/Chip";
 import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
-import UserStorage from "../../services/storage/user.storage";
-import UserContext from "../UserContext";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
-const statusComponent = (params) => {
 
-    return (
-        <>
-            {
-                params.value === 0 && (
-                    <Chip
-                        variant="filled"
-                        size="small"
-                        icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                        label="Waiting"
-                        //color: "default"
-                    />
-                )
-            }
+const MediaLayout = (props) => {
 
-            {
-                params.value === 1 && (
-                    <Chip
-                        variant="filled"
-                        size="small"
-                        icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                        label= "Retrieving"
-                        color= "info"
-                    />
-                )
-            }
+    const statusComponent = (params) => {
 
-            {
-                params.value === 2 && (
-                    <Chip
-                        variant="filled"
-                        size="small"
-                        icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                        label= "Completed"
-                        color= "success"
-                    />
-                )
-            }
-
-            {
-                params.value === 3 && (
-                    <Tooltip title={params.row.error}>
+        return (
+            <>
+                {
+                    params.value === 0 && (
                         <Chip
                             variant="filled"
                             size="small"
-                            icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                            label= "Error"
-                            color= "error"
+                            icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
+                            label="Waiting"
+                            //color: "default"
                         />
-                    </Tooltip>
-                )
-            }
-        </>
-    );
-}
+                    )
+                }
 
-const TableTransferStatus = (props) => {
+                {
+                    params.value === 1 && (
+                        <Chip
+                            variant="filled"
+                            size="small"
+                            icon= {<DownloadIcon style={{fill: '#fff'}}/>}
+                            label= "Retrieving"
+                            color= "info"
+                        />
+                    )
+                }
 
-    const { privileges } = React.useContext(UserContext);
+                {
+                    params.value === 2 && (
+                        <Chip
+                            variant="filled"
+                            size="small"
+                            icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
+                            label= "Completed"
+                            color= "success"
+                        />
+                    )
+                }
+
+                {
+                    params.value === 3 && (
+                        <Tooltip title={params.row.error}>
+                            <Chip
+                                variant="filled"
+                                size="small"
+                                icon= {<ErrorIcon style={{fill: '#fff'}}/>}
+                                label= "Error"
+                                color= "error"
+                            />
+                        </Tooltip>
+                    )
+                }
+            </>
+        );
+    }
+
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -90,7 +88,6 @@ const TableTransferStatus = (props) => {
     });
     const classes = useStyles();
 
-    const [pageSize, setPageSize] = React.useState(20);
     const [rows, setRows] = React.useState([]);
 
     const refreshOrders = async() => {
@@ -144,20 +141,8 @@ const TableTransferStatus = (props) => {
 
     const column = [
         {
-            field: 'p_name',
-            headerName: t("patient"),
-            flex: 2,
-            minWidth: 200
-        },
-        {
-            field: 'st_description',
-            headerName: t("study"),
-            flex: 3,
-            minWidth: 200
-        },
-        {
             field: "status",
-            headerName: t("status"),
+            headerName: "Status",
             flex: 1,
             minWidth: 110,
             description: "Status",
@@ -165,7 +150,55 @@ const TableTransferStatus = (props) => {
             renderCell: (params) => {
                 return statusComponent(params);
             }
-        },
+        }
+    ];
+
+    props.settings[props.page].statusTable.columns.map((row) => {
+        if (row === 'patient') {
+            column.push(
+                {
+                    "field": 'p_name',
+                    "headerName": t(row),
+                    "flex": 2,
+                    "minWidth": 200
+                })
+        }
+        else if (row === 'description') {
+            column.push(
+                {
+                    "field": 'st_description',
+                    "headerName": t(row),
+                    "flex": 3,
+                    "minWidth": 200
+                })
+        }
+        else if (row === 'aet') {
+            column.push(
+                {
+                    "field": 'aet',
+                    "headerName": t(row),
+                    "flex": 2,
+                    "minWidth": 200,
+                    renderCell: (params) => {
+                        return <div style={{ lineHeight: "normal" }}>{params.row.called_aet || ''} to {params.row.move_aet || ''} </div>;
+                    }
+                })
+        }
+        else if (row === "noi") {
+            column.push(
+                {
+                    "field": 'noi',
+                    "headerName": t(row),
+                    "flex": 1,
+                    "minWidth": 200,
+                    renderCell: (params) => {
+                        return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
+                    }
+                })
+        }
+    });
+
+    column.push(
         {
             field: 'actions',
             type: 'actions',
@@ -192,7 +225,7 @@ const TableTransferStatus = (props) => {
                 return actions;
             }
         }
-    ];
+    );
 
     return (
         <React.Fragment>
@@ -204,9 +237,8 @@ const TableTransferStatus = (props) => {
                     autoHeight={true}
                     rows={rows}
                     columns={column}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[10,20,50]}
+                    pageSize={10}
+                    rowsPrPageOptions={[10]}
                     sx={{
                         '& .MuiDataGrid-row:hover': {
                             transition: '0.3s ',
@@ -221,10 +253,9 @@ const TableTransferStatus = (props) => {
                             backgroundColor: theme.palette.table.hoverSelected,
                         },
                     }}
-                    disableColumnMenu={true}
                 />
             </div>
         </React.Fragment>
     )
 }
-export default TableTransferStatus;
+export default MediaLayout;

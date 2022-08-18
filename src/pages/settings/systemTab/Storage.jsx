@@ -6,16 +6,15 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Container,
     Typography,
-    Button, Alert, Snackbar
+    Alert, Snackbar
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
 import * as React from "react";
 import SettingsService from "../../../services/api/settings.service";
-import ResetSave from "../../../components/settings/ResetSave";
+import Index from "../../../layouts/settings/actions";
 
 export default function Storage() {
     const theme = useTheme();
@@ -63,10 +62,10 @@ export default function Storage() {
         severity: "info",
         message: ""
     });
-    function Message() {
+    /*function Message() {
         if (!message || !message.show) return <></>;
         return <Alert severity={message.severity}>{message.message}</Alert>;
-    }
+    }*/
 
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
@@ -229,7 +228,7 @@ export default function Storage() {
                                 </Grid>
                             </Grid>
                         </Grid>
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />

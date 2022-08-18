@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider, Typography } from "@mui/material";
 import { useTheme } from '@emotion/react';
 import t from "../services/Translation";
-import CustomStatusTable from '../components/media/TableMediaStatus';
+import CustomStatusTable from '../layouts/media';
 import AuthService from "../services/api/auth.service";
 
 const Media = () => {

@@ -2,7 +2,7 @@ import {Card, CardContent, Grid, Button, Alert, Snackbar} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import t from "../../../services/Translation";
 import React from "react";
-import TablePlugins from "../../../components/settings/plugins/Table";
+import TablePlugins from "../../../layouts/settings/plugins";
 
 export default function Plugins() {
     const theme = useTheme();

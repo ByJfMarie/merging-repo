@@ -7,7 +7,6 @@ import {
     TextField,
     Grid,
     Button,
-    Slide,
     FormControl,
     Select,
     MenuItem,
@@ -16,11 +15,11 @@ import {
 } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
-import TableUsers from "../../components/settings/users/TableUsers";
+import Index from "../../layouts/settings/users";
 import t from "../../services/Translation";
 
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import DialogAddEdit from "../../components/settings/users/DialogAddEdit";
+import DialogAddEdit from "../../layouts/settings/users/DialogAddEdit";
 
 const Users = (props) => {
 
@@ -134,7 +133,7 @@ const Users = (props) => {
                         </Grid>
                     </Grid>
 
-                    <TableUsers
+                    <Index
                         filters={filters}
                         forceRefresh={forceRefresh}
                         editUser={(values) => {setUserValues(values); toggleDialog();}}

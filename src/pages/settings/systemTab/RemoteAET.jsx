@@ -3,8 +3,8 @@ import {Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid, 
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
-import DialogAddEdit from "../../../components/settings/aets/DialogAddEdit";
-import TableAets from "../../../components/settings/aets/Table";
+import DialogAddEdit from "../../../layouts/settings/aets/DialogAddEdit";
+import TableAets from "../../../layouts/settings/aets";
 import AETSettings from "../../../services/api/settings.service";
 import SettingsService from "../../../services/api/settings.service";
 

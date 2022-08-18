@@ -14,7 +14,7 @@ import React from "react";
 import ForwardingService from "../../../services/api/forwarding.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import Index from "../../../layouts/remoteAET/QueryAETSelect";
+import Index from "../../remoteAET/QueryAETSelect";
 
 const useStyles = makeStyles((theme) => ({
     field: {

@@ -1,24 +1,23 @@
 import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import {DataGrid, GridActionsCellItem, GridRenderCellParams} from "@mui/x-data-grid";
+import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
-import Chip, {ChipProps} from "@mui/material/Chip";
+import Chip from "@mui/material/Chip";
 import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import ForwardingService from "../../services/api/forwarding.service";
-import UserStorage from "../../services/storage/user.storage";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
-const TableForwardingStatus = (props) => {
+const ForwardingLayout = (props) => {
 
-    const[privileges] = React.useState(UserStorage.getPrivileges());
+    //const[privileges] = React.useState(UserStorage.getPrivileges());
 
     const statusComponent = (params) => {
 
@@ -249,4 +248,4 @@ const TableForwardingStatus = (props) => {
         </React.Fragment>
     )
 }
-export default TableForwardingStatus
+export default ForwardingLayout;

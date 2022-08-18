@@ -3,11 +3,11 @@ import {Card, CardContent, Button, TextField, Grid, Alert, Snackbar} from '@mui/
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../../../services/Translation";
-import TableTransferRules from '../../../components/settings/transfer/Table';
+import TableTransferRules from '../../../layouts/settings/transfer';
 import SettingsService from "../../../services/api/settings.service";
 import TransferService from "../../../services/api/transfer.service";
-import DialogAddEdit from "../../../components/settings/transfer/DialogAddEdit";
-import ResetSave from "../../../components/settings/ResetSave";
+import DialogAddEdit from "../../../layouts/settings/transfer/DialogAddEdit";
+import Index from "../../../layouts/settings/actions";
 
 export default function Transfer() {
     const theme = useTheme();
@@ -231,7 +231,7 @@ export default function Transfer() {
                             />
                         </Grid>
                     </Grid>
-                    <ResetSave
+                    <Index
                         handleTest={handleTest}
                         handleSave={handleSave}
                         handleCancel={handleCancel}

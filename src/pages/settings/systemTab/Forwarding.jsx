@@ -3,8 +3,8 @@ import {Card, Button, CardContent, Grid, Alert, Snackbar} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
-import TableForwarding from "../../../components/settings/forwarding/Table";
-import DialogAddEdit from "../../../components/settings/forwarding/DialogAddEdit";
+import TableForwarding from "../../../layouts/settings/forwarding";
+import DialogAddEdit from "../../../layouts/settings/forwarding/DialogAddEdit";
 
 export default function Storage() {
     const theme = useTheme();

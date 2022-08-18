@@ -4,18 +4,17 @@ import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import t from "../../services/Translation";
 import LogsService from "../../services/api/logs.service";
-import UserContext from "../UserContext";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import {Box, Card, CardContent, Divider, Grid, TextField} from "@mui/material";
+import {Box, Card, CardContent, Grid, TextField} from "@mui/material";
 import moment from "moment";
 
-const TableLogs = (props) => {
+const LogsLayout = (props) => {
 
-    const { privileges } = React.useContext(UserContext);
+    //const { privileges } = React.useContext(UserContext);
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -225,4 +224,4 @@ const TableLogs = (props) => {
         </React.Fragment>
     )
 }
-export default TableLogs;
+export default LogsLayout;

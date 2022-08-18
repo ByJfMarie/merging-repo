@@ -1,11 +1,11 @@
 
-import {Card, CardContent, TextField, Grid, Button, Alert, Snackbar} from '@mui/material';
+import {Card, CardContent, TextField, Grid, Alert, Snackbar} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import t from "../../../services/Translation";
 import React from "react";
 import SettingsService from "../../../services/api/settings.service";
-import ResetSave from "../../../components/settings/ResetSave";
+import Index from "../../../layouts/settings/actions";
 
 export default function Database() {
     /** STYLE & THEME */
@@ -37,10 +37,10 @@ export default function Database() {
         severity: "info",
         message: ""
     });
-    function Message() {
+    /*function Message() {
         if (!message || !message.show) return <></>;
         return <Alert severity={message.severity}>{message.message}</Alert>;
-    }
+    }*/
 
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
@@ -163,7 +163,7 @@ export default function Database() {
                         />
                     </Grid>
                 </Grid>
-                <ResetSave
+                <Index
                     handleSave={handleSave}
                     handleCancel={handleCancel}
                 />

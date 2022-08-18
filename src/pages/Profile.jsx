@@ -16,17 +16,16 @@ import {
     Slide,
     DialogContent,
     DialogActions,
-    Button,
     Alert, Snackbar, Box
 } from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import t from "../services/Translation.jsx"
 import {useTheme} from '@emotion/react';
-import React, {useState} from 'react';
+import React from 'react';
 import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
 import ChangePassword from "./settings/ChangePassword.jsx";
-import ResetSave from "../components/settings/ResetSave";
+import Index from "../layouts/settings/actions";
 
 import UsersService from "../services/api/users.service";
 import UserStorage from "../services/storage/user.storage";
@@ -263,7 +262,7 @@ function Settings(props) {
                                     <Link onClick={handleClickOpen}>{t('change_password')}</Link>
                                 </Grid>
                             </Grid>
-                            <ResetSave
+                            <Index
                                 handleSave={handleSaveUser}
                                 handleCancel={handleCancelUser}
                             />
@@ -442,7 +441,7 @@ function Settings(props) {
                                     </Grid>
                                 </>
                             )}
-                            <ResetSave
+                            <Index
                                 handleSave={handleSaveSettings}
                                 handleCancel={handleCancelSettings}
                         />
@@ -466,7 +465,7 @@ function Settings(props) {
                     />
                 </DialogContent>
                 <DialogActions style={{backgroundColor: theme.palette.dialog.color}}>
-                    <ResetSave
+                    <Index
                         labelReset={t('cancel')}
                         handleSave={handleSavePassword}
                         handleCancel={handleCancelPassword}

@@ -6,19 +6,17 @@ import {
     Checkbox,
     Grid,
     Select,
-    InputLabel,
     FormControl,
     Card,
     CardContent,
     Link,
     Typography,
     TextField,
-    Button, Alert, Snackbar
+    Alert, Snackbar
 } from "@mui/material";
 import {useTheme} from '@emotion/react';
 import SettingsService from "../../../services/api/settings.service";
-import t from "../../../services/Translation";
-import ResetSave from "../../../components/settings/ResetSave";
+import Index from "../../../layouts/settings/actions";
 // import t from "../../../services/Translation";
 
 export default function Reporting(props) {
@@ -30,10 +28,10 @@ export default function Reporting(props) {
         severity: "info",
         message: ""
     });
-    function Message() {
+    /*function Message() {
         if (!message || !message.show) return <></>;
         return <Alert severity={message.severity}>{message.message}</Alert>;
-    }
+    }*/
 
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
@@ -218,7 +216,7 @@ export default function Reporting(props) {
                             </Grid>
                         </Grid>
                     </FormGroup>
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />

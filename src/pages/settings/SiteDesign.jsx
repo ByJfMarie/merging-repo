@@ -21,7 +21,7 @@ import Editor from "../../components/Editor.jsx";
 import "react-phone-input-2/lib/high-res.css";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
-import ResetSave from "../../components/settings/ResetSave";
+import Index from "../../layouts/settings/actions";
 import LoginStorage from "../../services/storage/login.storage";
 
 /** TABS FUNCTION */
@@ -346,7 +346,7 @@ export default function SiteDesign() {
                                 />
                             </Grid>
                         </Grid>
-                        <ResetSave
+                        <Index
                             handleSave={handleSave}
                             handleCancel={handleCancel}
                         />
@@ -369,7 +369,7 @@ export default function SiteDesign() {
                             }
                             label={t("Enable CAPTCHA")}/>
                     </FormGroup>
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
@@ -388,7 +388,7 @@ export default function SiteDesign() {
                             }
                             label={t("Enable Reference Login")}/>
                     </FormGroup>
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
@@ -450,7 +450,7 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.disclaimer')}
                         onChange={(value) => {handleSettingsChange('WEB.disclaimer', value)}}
                     />
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
@@ -464,7 +464,7 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.privacy_policy')}
                         onChange={(value) => {handleSettingsChange('WEB.privacy_policy', value)}}
                     />
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
@@ -478,7 +478,7 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.copyright')}
                         onChange={(value) => {handleSettingsChange('WEB.copyright', value)}}
                     />
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
@@ -492,7 +492,7 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.faq')}
                         onChange={(value) => {handleSettingsChange('WEB.faq', value)}}
                     />
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
@@ -507,7 +507,7 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.terms')}
                         onChange={(value) => {handleSettingsChange('WEB.terms', value)}}
                     />
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
@@ -521,7 +521,7 @@ export default function SiteDesign() {
                         defaultValue={getSettingsValue('WEB.contactus')}
                         onChange={(value) => {handleSettingsChange('WEB.contactus', value)}}
                     />
-                    <ResetSave
+                    <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />

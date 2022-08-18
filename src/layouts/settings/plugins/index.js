@@ -97,7 +97,7 @@ const TablePlugins = (props) => {
     }
 
     /** HEADERS AND ROWS FOR THE TABLE */
-    const headers = ['name', 'version', 'type', 'vide'];
+    //const headers = ['name', 'version', 'type', 'vide'];
     const column = [
         {
             field: "name",

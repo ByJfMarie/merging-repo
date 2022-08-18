@@ -12,73 +12,68 @@ import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
-import {useState} from "react";
-
-import UserStorage from "../../services/storage/user.storage";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
+const statusComponent = (params) => {
 
-const TableRetrievingStatus = (props) => {
+    return (
+        <>
+            {
+                params.value === 0 && (
+                    <Chip
+                        variant="filled"
+                        size="small"
+                        icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
+                        label="Waiting"
+                        //color: "default"
+                    />
+                )
+            }
 
-    const[privileges] = React.useState(UserStorage.getPrivileges());
+            {
+                params.value === 1 && (
+                    <Chip
+                        variant="filled"
+                        size="small"
+                        icon= {<DownloadIcon style={{fill: '#fff'}}/>}
+                        label= "Retrieving"
+                        color= "info"
+                    />
+                )
+            }
 
-    const statusComponent = (params) => {
+            {
+                params.value === 2 && (
+                    <Chip
+                        variant="filled"
+                        size="small"
+                        icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
+                        label= "Completed"
+                        color= "success"
+                    />
+                )
+            }
 
-        return (
-            <>
-                {
-                    params.value === 0 && (
+            {
+                params.value === 3 && (
+                    <Tooltip title={params.row.error}>
                         <Chip
                             variant="filled"
                             size="small"
-                            icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                            label="Waiting"
-                            //color: "default"
+                            icon= {<ErrorIcon style={{fill: '#fff'}}/>}
+                            label= "Error"
+                            color= "error"
                         />
-                    )
-                }
+                    </Tooltip>
+                )
+            }
+        </>
+    );
+}
 
-                {
-                    params.value === 1 && (
-                        <Chip
-                            variant="filled"
-                            size="small"
-                            icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                            label= "Retrieving"
-                            color= "info"
-                        />
-                    )
-                }
+const TransferStatusLayout = (props) => {
 
-                {
-                    params.value === 2 && (
-                        <Chip
-                            variant="filled"
-                            size="small"
-                            icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                            label= "Completed"
-                            color= "success"
-                        />
-                    )
-                }
-
-                {
-                    params.value === 100 && (
-                        <Tooltip title={params.row.error}>
-                            <Chip
-                                variant="filled"
-                                size="small"
-                                icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                                label= "Error"
-                                color= "error"
-                            />
-                        </Tooltip>
-                    )
-                }
-            </>
-        );
-    }
-
+    //const { privileges } = React.useContext(UserContext);
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -93,9 +88,10 @@ const TableRetrievingStatus = (props) => {
     });
     const classes = useStyles();
 
-    //Status
-    const [rowsStatus, setRowsStatus] = useState([]);
-    const refreshOrders = async () => {
+    const [pageSize, setPageSize] = React.useState(20);
+    const [rows, setRows] = React.useState([]);
+
+    const refreshOrders = async() => {
         const response = await QRService.getOrders({});
 
         if (response.error) {
@@ -103,25 +99,24 @@ const TableRetrievingStatus = (props) => {
             return;
         }
 
-        if (response.items == null) return;
-        setRowsStatus(response.items);
+        if (response.items==null) return;
+
+        let tmp = [];
+        response.items.map((row, i) => {
+            tmp.push(row);
+        })
+        setRows(tmp);
     }
-    React.useEffect(() => {
-        refreshOrders();
-    }, []);
 
     React.useEffect(() => {
-        if (props.autoRefresh) {
+        let autoRefresh = false;
+        if (autoRefresh) {
             const interval = setInterval(() => {
                 refreshOrders();
             }, 5000);
             return () => clearInterval(interval);
         }
-    }, [props]);
-
-    React.useEffect(()=> {
-        refreshOrders();
-    }, [props.forceRefresh])
+    }, []);
 
     const handleRetry = async(id) => {
         const response = await QRService.retryOrders(id);
@@ -131,7 +126,7 @@ const TableRetrievingStatus = (props) => {
             return;
         }
 
-        refreshOrders();
+        props.refresh();
     }
 
     const handleCancel = async (id) => {
@@ -142,13 +137,25 @@ const TableRetrievingStatus = (props) => {
             return;
         }
 
-        refreshOrders();
+        props.refresh();
     }
 
     const column = [
         {
+            field: 'p_name',
+            headerName: t("patient"),
+            flex: 2,
+            minWidth: 200
+        },
+        {
+            field: 'st_description',
+            headerName: t("study"),
+            flex: 3,
+            minWidth: 200
+        },
+        {
             field: "status",
-            headerName: "Status",
+            headerName: t("status"),
             flex: 1,
             minWidth: 110,
             description: "Status",
@@ -158,46 +165,13 @@ const TableRetrievingStatus = (props) => {
             }
         },
         {
-            "field": 'p_name',
-            "headerName": t("patient"),
-            "flex": 2,
-            "minWidth": 200
-        },
-        {
-            "field": 'st_description',
-            "headerName": t("description"),
-            "flex": 3,
-            "minWidth": 200
-        },
-        {
-            "field": 'aet',
-            "headerName": t("aet"),
-            "flex": 2,
-            "minWidth": 200,
-            renderCell: (params) => {
-                return <div style={{ lineHeight: "normal" }}>{params.row.called_aet || ''} to {params.row.move_aet || ''} </div>;
-            }
-        },
-        {
-            "field": 'noi',
-            "headerName": t("noi"),
-            "flex": 1,
-            "minWidth": 200,
-            renderCell: (params) => {
-                return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
-            }
-        }
-    ];
-
-    column.push(
-        {
             field: 'actions',
             type: 'actions',
             width: 80,
             getActions: (params) => {
 
                 let actions = [];
-                if (params.row.status === 100) {
+                if (params.row.status === 3) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
                         label="Retry"
@@ -205,7 +179,7 @@ const TableRetrievingStatus = (props) => {
                         showInMenu
                     />);
                 }
-                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 100) {
+                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
                         label="Cancel"
@@ -216,10 +190,9 @@ const TableRetrievingStatus = (props) => {
                 return actions;
             }
         }
-    );
+    ];
 
     return (
-        rowsStatus &&
         <React.Fragment>
             <div style={{width: '100%'}}>
                 <DataGrid
@@ -227,10 +200,11 @@ const TableRetrievingStatus = (props) => {
                     style={{marginTop: '25px'}}
                     autoWidth={true}
                     autoHeight={true}
-                    rows={rowsStatus}
+                    rows={rows}
                     columns={column}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    rowsPerPageOptions={[10,20,50]}
                     sx={{
                         '& .MuiDataGrid-row:hover': {
                             transition: '0.3s ',
@@ -251,4 +225,4 @@ const TableRetrievingStatus = (props) => {
         </React.Fragment>
     )
 }
-export default TableRetrievingStatus
+export default TransferStatusLayout;

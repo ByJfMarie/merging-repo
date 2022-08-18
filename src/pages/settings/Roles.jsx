@@ -5,55 +5,22 @@ import {
     Card,
     CardContent,
     Grid,
-    Button,
-    TextField,
-    Dialog,
-    Slide,
-    FormControl,
-    Select,
-    MenuItem,
-    InputLabel,
     Alert, Snackbar
 } from '@mui/material';
 import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
 import t from "../../services/Translation";
-import RolesTable from "../../components/settings/roles/Table";
-import DialogAddEdit from "../../components/settings/roles/DialogAddEdit";
+import RolesTable from "../../layouts/settings/roles";
+import DialogAddEdit from "../../layouts/settings/roles/DialogAddEdit";
 import ViewersService from "../../services/api/viewers.service";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+/*const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
-});
+});*/
 
 const Roles = () => {
     /** THEME */
     const theme = useTheme();
-    const useStyles = makeStyles({
-        field: {
-            width: '100%'
-        },
-        tableCell: {
-            padding: "0px 16px !important",
-            height: "50px !important",
-            borderColor: theme.palette.textfield.border + " !important",
-        },
-        hover: {
-            "&:hover": {
-                transition: '0.3s',
-                backgroundColor: theme.palette.table.hover + "! important"
-            },
-            height: "50px ! important",
-            backgroundColor: theme.palette.textfield.background + "! important"
-        },
-        button: {
-            color: theme.palette.text.primary,
-            float: 'right',
-            backgroundColor: theme.palette.chip.color + "!important",
-            marginRight: '10px !important'
-        },
-    });
-    const classes = useStyles();
+    //const classes = useStyles();
 
     /** MESSAGES */
     const [message, setMessage] = React.useState({

@@ -1,8 +1,8 @@
 import {Button, Grid} from "@mui/material";
-import t from "../../services/Translation";
+import t from "../../../services/Translation";
 import * as React from "react";
 
-export default function ResetSave(props) {
+export default function SettingsActionsLayout(props) {
 
     return (
         <Grid container spacing={2} direction={"row-reverse"} style={{ marginTop: '15px' }}>
