@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import {Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
+import {Box, Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import ClientCaptcha from "react-client-captcha";
@@ -117,7 +117,7 @@ function Forgot() {
                         lg={8}
                     >
                         <Grid align='center'>
-                            <img src="/images/logo.svg" alt="Logo" style={{ width: "200px", display: "block", marginLeft: "auto", marginRight: "auto" }} />
+                            <img src="/images/logo.svg" alt="Logo" style={{ width: "90%"}} />
                             {/*<h2>Sign In</h2>*/}
                         </Grid>
 
@@ -154,6 +154,8 @@ function Forgot() {
                                 onChange={e => setUserCaptcha(e.target.value)}
                             />
 
+                            <Box sx={{ m: 4 }} />
+
                             <Button
                                 type='submit'
                                 color='primary'
@@ -166,12 +168,15 @@ function Forgot() {
                                 Forgot Password
                             </Button>
 
+                            <Box sx={{ m: 2 }} />
+
                             <Grid
                                 container
                                 item
                                 xs
-                                justifyContent="center"
-                                alignItems="center">
+                                justifyContent="right"
+                                alignItems="center"
+                            >
                                 <Link href="/login">Back to Login</Link>
                             </Grid>
                         </form>

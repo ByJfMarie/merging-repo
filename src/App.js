@@ -67,7 +67,7 @@ function App() {
           }
           setTheme(user_theme);
           setSettings([]);
-        })
+        });
   }, []);
 
   return (

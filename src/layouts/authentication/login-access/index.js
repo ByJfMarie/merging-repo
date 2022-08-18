@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import {Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
+import {Box, Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import ClientCaptcha from "react-client-captcha";
@@ -9,6 +9,7 @@ import AuthService from "../../../services/api/auth.service";
 import sha512 from "js-sha512";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
+import LoginStorage from "../../../services/storage/login.storage";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -33,31 +34,32 @@ function LoginAccess() {
 
     const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-    const [username, setUserName] = useState("");
-    const [password, setPassword] = useState("");
+    const [reference, setReference] = useState("");
+    const [birthdate, setBirthdate] = useState("");
     const [captcha, setCaptcha] = useState();
     const [userCaptcha, setUserCaptcha] = useState();
-    const password_sha = sha512(password);
 
     const handleSubmit = async e => {
         e.preventDefault();
 
-        if (!username) {
-            swal("Failed", "Username is required!", "error");
+        if (!reference) {
+            swal("Failed", "Reference is required!", "error");
             return;
         }
 
-        if (!password) {
-            swal("Failed", "Password is required!", "error");
+        if (!birthdate) {
+            swal("Failed", "Birthdate is required!", "error");
             return;
         }
 
-        if (userCaptcha !== captcha) {
-            swal("Failed", "Protection Code is incorrect!", "error");
-            return;
+        if (useCaptcha===true || useCaptcha==="true") {
+            if (userCaptcha !== captcha) {
+                swal("Failed", "Protection Code is incorrect!", "error");
+                return;
+            }
         }
 
-        const response = await AuthService.login(username, password_sha);
+        const response = await AuthService.loginReference(reference, birthdate);
         if (response.error) {
             swal("Failed", response.error, "error");
             return;
@@ -75,6 +77,16 @@ function LoginAccess() {
     const handleRecaptcha = (token, ekey) => {
         console.log("Captcha token: "+token+" ("+ekey+")");
     }
+
+    const [useCaptcha, setUseCaptcha] = useState(true);
+    React.useEffect(() => {
+        LoginStorage.getConfig()
+            .then(rsp => {
+                if (!rsp) return;
+                if (!rsp['WEB.login_captcha']) return;
+                setUseCaptcha(rsp['WEB.login_captcha'].value);
+            });
+    }, []);
 
     return (
         <IllustrationLayout>
@@ -94,7 +106,6 @@ function LoginAccess() {
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
                     <Grid item xs={12}><Typography variant="h4">Access your studies</Typography></Grid>
                     <Grid item xs={12}><Typography variant="body2">Welcome to the Perennity Radiology Portal.<br/>This portal access is only available for authorized users.</Typography></Grid>
-                    <Grid item xs={12}><Typography variant="body2">I want to access my studies with my <Link href="/login">Login & Password</Link>.</Typography></Grid>
                 </BackgroundLayout>
             </Grid>
 
@@ -118,7 +129,7 @@ function LoginAccess() {
                         lg={8}
                     >
                         <Grid align='center'>
-                            <img src="/images/logo.svg" alt="Logo" style={{ width: "200px", display: "block", marginLeft: "auto", marginRight: "auto" }} />
+                            <img src="/images/logo.svg" alt="Logo" style={{ width: "90%"}} />
                             {/*<h2>Sign In</h2>*/}
                         </Grid>
 
@@ -131,7 +142,7 @@ function LoginAccess() {
                                 id="access_code"
                                 name="access_code"
                                 label="Access Code"
-                                onChange={e => setUserName(e.target.value)}
+                                onChange={e => setReference(e.target.value)}
                             />
                             <TextField
                                 style={{ marginBottom: '15px' }}
@@ -141,28 +152,36 @@ function LoginAccess() {
                                 id="birthdate"
                                 name="birthdate"
                                 label="Birthdate"
-                                onChange={e => setPassword(e.target.value)}
+                                onChange={e => setBirthdate(e.target.value)}
                             />
 
-                            <p>Protection code: </p>
+                            {
+                                (useCaptcha===true || useCaptcha==="true") &&
 
-                            <ClientCaptcha
-                                backgroundColor={"#EDEDED"}
-                                captchaCode={setCaptcha}
-                                charsCount={6}
-                                width={300}
-                            />
+                                <>
+                                    <p>Protection code: </p>
 
-                            <TextField
-                                style={{ marginBottom: '15px' }}
-                                variant="standard"
-                                required
-                                fullWidth
-                                id="captcha"
-                                name="captcha"
-                                label=""
-                                onChange={e => setUserCaptcha(e.target.value)}
-                            />
+                                    <ClientCaptcha
+                                        backgroundColor={"#EDEDED"}
+                                        captchaCode={setCaptcha}
+                                        charsCount={6}
+                                        width={300}
+                                    />
+
+                                    <TextField
+                                        style={{ marginBottom: '15px' }}
+                                        variant="standard"
+                                        required
+                                        fullWidth
+                                        id="captcha"
+                                        name="captcha"
+                                        label=""
+                                        onChange={e => setUserCaptcha(e.target.value)}
+                                    />
+                                </>
+                            }
+
+                            <Box sx={{ m: 4 }} />
 
                             <Button
                                 type='submit'
@@ -176,13 +195,16 @@ function LoginAccess() {
                                 Sign in
                             </Button>
 
+                            <Box sx={{ m: 2 }} />
+
                             <Grid
                                 container
                                 item
                                 xs
-                                justifyContent="center"
-                                alignItems="center">
-                                <Link href="/forgot">Forgot password?</Link>
+                                justifyContent="left"
+                                alignItems="center"
+                            >
+                                <Typography variant="body2">I want to access my studies with my <Link href="/login">Login & Password</Link>.</Typography>
                             </Grid>
                         </form>
                     </Grid>

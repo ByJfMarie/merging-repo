@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import {Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
+import {Box, Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import ClientCaptcha from "react-client-captcha";
@@ -9,6 +9,7 @@ import AuthService from "../../../services/api/auth.service";
 import sha512 from "js-sha512";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
+import LoginStorage from "../../../services/storage/login.storage";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -52,9 +53,11 @@ function Signin() {
             return;
         }
 
-        if (userCaptcha !== captcha) {
-            swal("Failed", "Protection Code is incorrect!", "error");
-            return;
+        if (useCaptcha===true || useCaptcha==="true") {
+            if (userCaptcha !== captcha) {
+                swal("Failed", "Protection Code is incorrect!", "error");
+                return;
+            }
         }
 
         const response = await AuthService.login(username, password_sha);
@@ -76,6 +79,17 @@ function Signin() {
         console.log("Captcha token: "+token+" ("+ekey+")");
     }
 
+    const [useCaptcha, setUseCaptcha] = useState(true);
+    const [useReference, setUseReference] = useState(false);
+    React.useEffect(() => {
+        LoginStorage.getConfig()
+            .then(rsp => {
+                if (!rsp) return;
+                if (rsp['WEB.login_captcha']) setUseCaptcha(rsp['WEB.login_captcha'].value);
+                if (rsp['WEB.login_by_reference']) setUseReference(rsp['WEB.login_by_reference'].value);
+            });
+    }, []);
+
     return (
         <IllustrationLayout>
             <Grid
@@ -94,7 +108,6 @@ function Signin() {
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
                     <Grid item xs={12}><Typography variant="h4">Access your studies</Typography></Grid>
                     <Grid item xs={12}><Typography variant="body2">Welcome to the Perennity Radiology Portal.<br/>This portal access is only available for authorized users.</Typography></Grid>
-                    <Grid item xs={12}><Typography variant="body2">I want to access my studies with my <Link href="/login-access">Access Code</Link>.</Typography></Grid>
                 </BackgroundLayout>
             </Grid>
 
@@ -118,7 +131,7 @@ function Signin() {
                         lg={8}
                     >
                         <Grid align='center'>
-                            <img src="/images/logo.svg" alt="Logo" style={{ width: "200px", display: "block", marginLeft: "auto", marginRight: "auto" }} />
+                            <img src="/images/logo.svg" alt="Logo" style={{ width: "90%"}} />
                             {/*<h2>Sign In</h2>*/}
                         </Grid>
 
@@ -147,25 +160,42 @@ function Signin() {
                                 onChange={e => setPassword(e.target.value)}
                             />
 
-                            <p>Protection code: </p>
+                            <Grid
+                                container
+                                item
+                                xs
+                                justifyContent="right"
+                                alignItems="center">
+                                <Link href="/forgot">Forgot password?</Link>
+                            </Grid>
 
-                            <ClientCaptcha
-                                backgroundColor={"#EDEDED"}
-                                captchaCode={setCaptcha}
-                                charsCount={6}
-                                width={300}
-                            />
+                            {
+                                (useCaptcha===true || useCaptcha==="true") &&
 
-                            <TextField
-                                style={{ marginBottom: '15px' }}
-                                variant="standard"
-                                required
-                                fullWidth
-                                id="captcha"
-                                name="captcha"
-                                label=""
-                                onChange={e => setUserCaptcha(e.target.value)}
-                            />
+                                <>
+                                    <p>Protection code: </p>
+
+                                    <ClientCaptcha
+                                        backgroundColor={"#EDEDED"}
+                                        captchaCode={setCaptcha}
+                                        charsCount={6}
+                                        width={300}
+                                    />
+
+                                    <TextField
+                                        style={{ marginBottom: '15px' }}
+                                        variant="standard"
+                                        required
+                                        fullWidth
+                                        id="captcha"
+                                        name="captcha"
+                                        label=""
+                                        onChange={e => setUserCaptcha(e.target.value)}
+                                    />
+                                </>
+                            }
+
+                            <Box sx={{ m: 4 }} />
 
                             <Button
                                 type='submit'
@@ -179,28 +209,33 @@ function Signin() {
                                 Sign in
                             </Button>
 
-                            <Grid
-                                container
-                                item
-                                xs
-                                justifyContent="center"
-                                alignItems="center">
-                                <Link href="/forgot">Forgot password?</Link>
-                            </Grid>
+                            <Box sx={{ m: 2 }} />
 
-                            <Grid
-                                container
-                                item
-                                xs
-                                justifyContent="center"
-                                alignItems="center"
-                                sx={{
-                                    marginTop: '20px',
-                                    display: {xs: 'block', md: 'none'}
-                                }}
-                            >
-                                <Typography variant="body2">I want to access my studies with my <Link href="/login-access">Access Code</Link>.</Typography>
-                            </Grid>
+                            {
+                                (useReference===true || useReference==="true") &&
+                                <Grid
+                                    container
+                                    item
+                                    xs
+                                    justifyContent="left"
+                                    alignItems="center"
+                                >
+                                    <Typography variant="body2">I want to access my studies with my <Link
+                                        href="/login-access">Access Code</Link>.</Typography>
+                                </Grid>
+                            }
+
+                            {
+                                /*<Grid
+                                    container
+                                    item
+                                    xs
+                                    justifyContent="left"
+                                    alignItems="center"
+                                >
+                                    <Typography variant="body2">Not registered? <Link href="#">Sign Up Now</Link>.</Typography>
+                                </Grid>*/
+                            }
                         </form>
                     </Grid>
                 </Grid>

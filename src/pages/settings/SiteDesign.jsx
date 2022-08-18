@@ -23,6 +23,7 @@ import "react-phone-input-2/lib/high-res.css";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
 import ResetSave from "../../components/settings/ResetSave";
+import LoginStorage from "../../services/storage/login.storage";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -148,6 +149,7 @@ export default function SiteDesign() {
             return;
         }
 
+        LoginStorage.removeConfig();
         refreshSettings();
         setMessage({
             ...message,
@@ -386,16 +388,6 @@ export default function SiteDesign() {
                                 />
                             }
                             label={t("Enable Reference Login")}/>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={getSettingsValue('WEB.login_by_reference_birthday')==="true"}
-                                    onChange={(e) => handleSettingsChange('WEB.login_by_reference_birthday', e.target.checked+"")}
-                                />
-                            }
-                            label={t("Use Birthday with Reference")}/>
                     </FormGroup>
                     <ResetSave
                         handleSave={handleSave}
