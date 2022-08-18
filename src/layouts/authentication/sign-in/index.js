@@ -18,7 +18,7 @@ function Signin() {
     /** THEME AND CSS */
     const theme = useTheme();
 
-    const useStyles = makeStyles((theme) => ({
+    const useStyles = makeStyles(() => ({
         background: {
             height: "90vh",
             backgroundImage: `url(${bgImage})`,
@@ -30,9 +30,8 @@ function Signin() {
 
     const classes = useStyles(theme);
 
-    const [rememberMe, setRememberMe] = useState(false);
-
-    const handleSetRememberMe = () => setRememberMe(!rememberMe);
+    //const [rememberMe, setRememberMe] = useState(false);
+    //const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -70,14 +69,14 @@ function Signin() {
             buttons: false,
             timer: 2000,
         })
-            .then((value) => {
+            .then(() => {
                 window.location.href = "/studies"; // REDIRECTION APRES SUCCESS ? PROFILE OU STUDIES ?
             });
     }
 
-    const handleRecaptcha = (token, ekey) => {
+    /*const handleRecaptcha = (token, ekey) => {
         console.log("Captcha token: "+token+" ("+ekey+")");
-    }
+    }*/
 
     const [useCaptcha, setUseCaptcha] = useState(true);
     const [useReference, setUseReference] = useState(false);
@@ -180,6 +179,7 @@ function Signin() {
                                         captchaCode={setCaptcha}
                                         charsCount={6}
                                         width={300}
+                                        height={40}
                                     />
 
                                     <TextField

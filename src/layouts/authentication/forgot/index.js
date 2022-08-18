@@ -5,8 +5,6 @@ import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import ClientCaptcha from "react-client-captcha";
 import swal from "sweetalert";
-import AuthService from "../../../services/api/auth.service";
-import sha512 from "js-sha512";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
 
@@ -17,7 +15,7 @@ function Forgot() {
     /** THEME AND CSS */
     const theme = useTheme();
 
-    const useStyles = makeStyles((theme) => ({
+    const useStyles = makeStyles(() => ({
         background: {
             height: "90vh",
             backgroundImage: `url(${bgImage})`,
@@ -29,15 +27,9 @@ function Forgot() {
 
     const classes = useStyles(theme);
 
-    const [rememberMe, setRememberMe] = useState(false);
-
-    const handleSetRememberMe = () => setRememberMe(!rememberMe);
-
     const [username, setUserName] = useState("");
-    const [password, setPassword] = useState("");
     const [captcha, setCaptcha] = useState();
     const [userCaptcha, setUserCaptcha] = useState();
-    const password_sha = sha512(password);
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -47,34 +39,15 @@ function Forgot() {
             return;
         }
 
-        if (!password) {
-            swal("Failed", "Password is required!", "error");
-            return;
-        }
-
         if (userCaptcha !== captcha) {
             swal("Failed", "Protection Code is incorrect!", "error");
             return;
         }
-
-        const response = await AuthService.login(username, password_sha);
-        if (response.error) {
-            swal("Failed", response.error, "error");
-            return;
-        }
-
-        swal("Success", "Login successful", "success", {
-            buttons: false,
-            timer: 2000,
-        })
-            .then((value) => {
-                window.location.href = "/studies"; // REDIRECTION APRES SUCCESS ? PROFILE OU STUDIES ?
-            });
     }
 
-    const handleRecaptcha = (token, ekey) => {
+    /*const handleRecaptcha = (token, ekey) => {
         console.log("Captcha token: "+token+" ("+ekey+")");
-    }
+    }*/
 
     return (
         <IllustrationLayout>
@@ -141,6 +114,7 @@ function Forgot() {
                                 captchaCode={setCaptcha}
                                 charsCount={6}
                                 width={300}
+                                height={40}
                             />
 
                             <TextField

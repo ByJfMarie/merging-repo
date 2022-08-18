@@ -9,10 +9,9 @@ import {
     Card,
     CardContent,
     TextField,
-    Stack,
     Button,
     Tooltip,
-    Container, Grid, Alert, Snackbar, Select, MenuItem, FormControl, InputLabel, FormControlLabel, Checkbox, FormGroup,
+    Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup,
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -97,10 +96,10 @@ export default function SiteDesign() {
         severity: "info",
         message: ""
     });
-    function Message() {
+    /*function Message() {
         if (!message || !message.show) return <></>;
         return <Alert severity={message.severity}>{message.message}</Alert>;
-    }
+    }*/
 
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
@@ -122,8 +121,8 @@ export default function SiteDesign() {
     }
 
     React.useEffect(() => {
-        refreshSettings();
-    }, []);
+        refreshSettings().then();
+    }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
     const getSettingsValue = (id) => {
         if (!settingsValue || !settingsValue[id]) return '';

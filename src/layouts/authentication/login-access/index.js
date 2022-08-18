@@ -6,7 +6,6 @@ import {makeStyles} from "@mui/styles";
 import ClientCaptcha from "react-client-captcha";
 import swal from "sweetalert";
 import AuthService from "../../../services/api/auth.service";
-import sha512 from "js-sha512";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
 import LoginStorage from "../../../services/storage/login.storage";
@@ -18,7 +17,7 @@ function LoginAccess() {
     /** THEME AND CSS */
     const theme = useTheme();
 
-    const useStyles = makeStyles((theme) => ({
+    const useStyles = makeStyles(() => ({
         background: {
             height: "90vh",
             backgroundImage: `url(${bgImage})`,
@@ -29,10 +28,6 @@ function LoginAccess() {
     }));
 
     const classes = useStyles(theme);
-
-    const [rememberMe, setRememberMe] = useState(false);
-
-    const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
     const [reference, setReference] = useState("");
     const [birthdate, setBirthdate] = useState("");
@@ -69,14 +64,14 @@ function LoginAccess() {
             buttons: false,
             timer: 2000,
         })
-            .then((value) => {
+            .then(() => {
                 window.location.href = "/studies"; // REDIRECTION APRES SUCCESS ? PROFILE OU STUDIES ?
             });
     }
 
-    const handleRecaptcha = (token, ekey) => {
+    /*const handleRecaptcha = (token, ekey) => {
         console.log("Captcha token: "+token+" ("+ekey+")");
-    }
+    }*/
 
     const [useCaptcha, setUseCaptcha] = useState(true);
     React.useEffect(() => {
@@ -166,6 +161,7 @@ function LoginAccess() {
                                         captchaCode={setCaptcha}
                                         charsCount={6}
                                         width={300}
+                                        height={40}
                                     />
 
                                     <TextField
