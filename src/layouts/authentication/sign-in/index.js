@@ -130,7 +130,7 @@ function Signin() {
                         lg={8}
                     >
                         <Grid align='center'>
-                            <img src="/images/logo.svg" alt="Logo" style={{ width: "90%"}} />
+                            <img src="/images/logo.svg" alt="Logo" style={{ width: "100%"}} />
                             {/*<h2>Sign In</h2>*/}
                         </Grid>
 

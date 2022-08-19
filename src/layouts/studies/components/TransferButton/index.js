@@ -18,9 +18,9 @@ const Index = (props) => {
             return;
         }
 
-        const items = response.items.map(site => ({
-            name: site.key,
-            label: site.value
+        const items = Object.keys(response.items).map((key, i) => ({
+            name: key,
+            label: response.items[key]
         }));
         setOptions(items);
     }

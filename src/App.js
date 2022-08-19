@@ -81,7 +81,7 @@ function App() {
             {/* <RoleContext.Provider value={{ privileges }}> */}
             <Switch>
 
-              <PrivateRoute exact path="/" component={<Home />} menu={Menu} />
+              <PrivateRoute exact path="/" component={<Studies />} menu={Menu} />
 
               <Route exact path="/login" component={Login} />
 
