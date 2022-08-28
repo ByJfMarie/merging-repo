@@ -9,7 +9,7 @@ const Index = (props) => {
     const [options, setOptions] = React.useState([]);
     const loadAETs = async() => {
         //Load aet list
-        const response = await AETService.search(true, false, false);
+        const response = await AETService.search(false, true, false);
         if (response.error) {
             console.log(response.error);
             return;

@@ -176,6 +176,11 @@ function StudiesLayout(props) {
     const [downloadProgress, setDownloadProgress] = useState(0)
     const [downloadMessage, setDownloadMessage] = useState("")
     const downloadStudies = async(type) => {
+        if (!selectedRows || selectedRows.length<=0) {
+            messageAlert('error', "You have to select at least one study!");
+            return;
+        }
+
         //Init Download dialog
         setDownloadProgress(0);
         setDownloadMessage("Creating ZIP File");
@@ -248,6 +253,12 @@ function StudiesLayout(props) {
     //Forward
     const forwardStudies = async(aet) => {
         if (!aet) return;
+
+        if (!selectedRows || selectedRows.length<=0) {
+            messageAlert('error', "You have to select at least one study!");
+            return;
+        }
+
         const response = await ForwardingService.forward(aet, selectedRows);
         if (response.error) {
             console.log(response.error);

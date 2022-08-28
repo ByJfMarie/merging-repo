@@ -20,7 +20,7 @@ class QueryRetrieveService {
     }
 
     cancelOrders(id) {
-        return apiPOST('/qr/orders.cancel/',id);
+        return apiPOST('/qr/orders.cancel/'+id);
     }
 
     retryOrders(id) {

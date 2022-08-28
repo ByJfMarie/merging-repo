@@ -42,7 +42,16 @@ class AETService {
     }
 
     addAET(fields) {
-        return apiPOST('/aet/add', fields);
+        const default_fields = {
+            title: '',
+            ip: '',
+            port: -1,
+            description: '',
+            store: false,
+            forward: false,
+            qr: false
+        };
+        return apiPOST('/aet/add',  {...default_fields, ...fields});
     }
 
     editAET(id, fields) {

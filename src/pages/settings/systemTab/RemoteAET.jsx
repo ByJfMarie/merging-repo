@@ -84,7 +84,7 @@ export default function RemoteAET() {
 
     /** ADD/EDIT POP UP */
     const [showDialog, setShowDialog] = React.useState(false);
-    const [settingsValue, setSettingsValue] = React.useState(null);
+    const [settingsValue, setSettingsValue] = React.useState([]);
     const toggleDialog = () => {
         setShowDialog(!showDialog);
     }
