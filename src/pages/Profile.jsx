@@ -362,7 +362,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                            selection={settings?settings.filters_studies_primary:[]}
+                                            selection={currentSettings?currentSettings.filters_studies_primary:[]}
                                             setSelection={(value) => handleSettingsChange("filters_studies_primary", value)}
                                         />
 
@@ -383,7 +383,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                            selection={settings?settings.filters_studies_date_presets:[]}
+                                            selection={currentSettings?currentSettings.filters_studies_date_presets:[]}
                                             setSelection={(value) => handleSettingsChange("filters_studies_date_presets", value)}
                                         />
                                     </Grid>
@@ -412,7 +412,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="aet"
                                                     fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                                    selection={settings?settings.filters_aets_primary:[]}
+                                                    selection={currentSettings?currentSettings.filters_aets_primary:[]}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_primary", value)}
                                                 />
                                             </Grid>
@@ -433,7 +433,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="studies"
                                                     fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                                    selection={settings?settings.filters_aets_date_presets:[]}
+                                                    selection={currentSettings?currentSettings.filters_aets_date_presets:[]}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_date_presets", value)}
                                                 />
                                             </Grid>

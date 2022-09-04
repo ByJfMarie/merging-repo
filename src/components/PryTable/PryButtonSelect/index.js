@@ -29,7 +29,7 @@ function PryButtonSelect({label, options, handleAction, children}) {
     return (
         <>
             {
-                options.length > 1 &&
+                options.length > 0 &&
 
                 <>
                     <Button
@@ -62,7 +62,7 @@ function PryButtonSelect({label, options, handleAction, children}) {
             }
 
             {
-                options.length===1 &&
+                /*options.length===1 &&
 
                 <Button
                     key={options[0].name}
@@ -74,7 +74,7 @@ function PryButtonSelect({label, options, handleAction, children}) {
                     onClick={() => handleAction(options[0].name)}
                 >
                     {options[0].label}
-                </Button>
+                </Button>*/
             }
         </>
     );

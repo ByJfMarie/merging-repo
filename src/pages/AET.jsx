@@ -74,7 +74,7 @@ export default function AET() {
             <RetrievingLayout
                 page="retrieving"
                 forceRefresh={forceRefreshStatus}
-                autoRefresh={false}
+                autoRefresh={true}
             />
 
         </React.Fragment>

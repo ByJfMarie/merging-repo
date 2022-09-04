@@ -15,7 +15,6 @@ import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import t from "../../services/Translation";
 import SystemService from "../../services/api/system.service";
-import SettingsService from "../../services/api/settings.service";
 
 const License = () => {
     /** THEME */
@@ -36,6 +35,10 @@ const License = () => {
     });
 
     const [license, setLicense] = React.useState({});
+    const getLicenseValue = (id) => {
+        if (!license) return '';
+        return license[id] || '';
+    }
     const refresh = async () => {
         const response = await SystemService.getLicense();
 
@@ -68,8 +71,10 @@ const License = () => {
             ...message,
             show: true,
             severity: "success",
-            message: "Logo File successfully uploaded!"
+            message: "License successfully uploaded!"
         });
+
+        refresh();
     }
 
     const DisplayFeature = (params) => {
@@ -119,7 +124,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={license.serial || ''}
+                                value={getLicenseValue('serial')}
                             />
                         </Grid>
 
@@ -132,7 +137,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={license.hardware_id || ''}
+                                value={getLicenseValue('hardware_id')}
                             />
                         </Grid>
 
@@ -145,7 +150,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={getDate(license.exp_date)}
+                                value={getDate(getLicenseValue('hardware_id'))}
                             />
                         </Grid>
 
@@ -158,7 +163,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={getDate(license.amp)}
+                                value={getDate(getLicenseValue('amp'))}
                             />
                         </Grid>
 
@@ -171,7 +176,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={license.dicom_nodes || '0'}
+                                value={getLicenseValue('dicom_nodes') || '0'}
                             />
                         </Grid>
 
@@ -184,7 +189,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={license.portal_users || '0'}
+                                value={getLicenseValue('portal_users') || '0'}
                             />
                         </Grid>
 
@@ -197,7 +202,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={license.retention_days || '0'}
+                                value={getLicenseValue('retention_days') || '0'}
                             />
                         </Grid>
 
@@ -210,49 +215,49 @@ const License = () => {
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Secondary Storage"}
-                                checked={license.secondary_storage || false}
+                                checked={getLicenseValue('secondary_storage')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Report Retrieval"}
-                                checked={license.report_retrieval || false}
+                                checked={getLicenseValue('report_retrieval')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Transfer"}
-                                checked={license.transfer || false}
+                                checked={getLicenseValue('transfer')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Delete After Transfer"}
-                                checked={license.delete_after_transfer || false}
+                                checked={getLicenseValue('delete_after_transfer')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Forwarding"}
-                                checked={license.forwarding || false}
+                                checked={getLicenseValue('forwarding')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Diagnostic Report Creator"}
-                                checked={license.diagnostic_report_creator || false}
+                                checked={getLicenseValue('diagnostic_report_creator')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"HL7"}
-                                checked={license.hl7 || false}
+                                checked={getLicenseValue('hl7')}
                             />
                         </Grid>
 
@@ -265,42 +270,42 @@ const License = () => {
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Media Burner"}
-                                checked={license.media_burner || false}
+                                checked={getLicenseValue('media_burner')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Delete After Burning"}
-                                checked={license.delete_after_burning || false}
+                                checked={getLicenseValue('delete_after_burning')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Anonymization"}
-                                checked={license.anonymization || false}
+                                checked={getLicenseValue('anonymization')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Encryption"}
-                                checked={license.encryption || false}
+                                checked={getLicenseValue('encryption')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Efilm"}
-                                checked={license.efilm || false}
+                                checked={getLicenseValue('efilm')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
                                 name={"Iqview"}
-                                checked={license.iqview || false}
+                                checked={getLicenseValue('iqview')}
                             />
                         </Grid>
 

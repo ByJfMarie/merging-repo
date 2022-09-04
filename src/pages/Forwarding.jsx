@@ -15,7 +15,7 @@ const Forwarding = () => {
 
         <ForwardingLayout
           page="forwarding"
-          autoRefresh={false}
+          autoRefresh={true}
         />
 
     </React.Fragment>
