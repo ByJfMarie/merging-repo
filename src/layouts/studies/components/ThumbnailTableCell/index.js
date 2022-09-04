@@ -24,6 +24,9 @@ const Index = (props) => {
                 setThumbnail(url);
             }
         }
+        else {
+            setThumbnail("./images/no_thumb.jpg");
+        }
     }
 
 

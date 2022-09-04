@@ -49,7 +49,7 @@ function LoginAccess() {
 
         if (useCaptcha===true || useCaptcha==="true") {
             if (userCaptcha !== captcha) {
-                swal("Failed", "Protection Code is incorrect!", "error");
+                swal("Failed", "Captcha is incorrect!", "error");
                 return;
             }
         }
@@ -154,7 +154,7 @@ function LoginAccess() {
                                 (useCaptcha===true || useCaptcha==="true") &&
 
                                 <>
-                                    <p>Protection code: </p>
+                                    <p>Captcha: </p>
 
                                     <ClientCaptcha
                                         backgroundColor={"#EDEDED"}
