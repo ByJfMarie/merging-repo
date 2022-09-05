@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import {Box, Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import ClientCaptcha from "react-client-captcha";
 import swal from "sweetalert";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
 import LoginStorage from "../../../services/storage/login.storage";
+import Reaptcha from "reaptcha";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -29,8 +29,6 @@ function Forgot() {
     const classes = useStyles(theme);
 
     const [username, setUserName] = useState("");
-    const [captcha, setCaptcha] = useState();
-    const [userCaptcha, setUserCaptcha] = useState();
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -40,7 +38,7 @@ function Forgot() {
             return;
         }
 
-        if (userCaptcha !== captcha) {
+        if (useCaptcha===true && !captchaValue) {
             swal("Failed", "Captcha is incorrect!", "error");
             return;
         }
@@ -50,13 +48,21 @@ function Forgot() {
         console.log("Captcha token: "+token+" ("+ekey+")");
     }*/
 
-    const [useCaptcha, setUseCaptcha] = useState(true);
+    const [verified, setVerified] = useState(false);
+    const [captchaValue, setCaptchaValue] = useState(null);
+    function onVerify(value) {
+        setVerified(true);
+        setCaptchaValue(value);
+    }
+
+    const [useCaptcha, setUseCaptcha] = useState(false);
+    const [captchaSiteKey, setCaptchaSiteKey] = useState(false);
     React.useEffect(() => {
         LoginStorage.getConfig()
             .then(rsp => {
                 if (!rsp) return;
-                if (!rsp['WEB.login_captcha']) return;
-                setUseCaptcha(rsp['WEB.login_captcha'].value);
+                setUseCaptcha(rsp.enable_captcha);
+                setCaptchaSiteKey(rsp.captcha_site_key);
             });
     }, []);
 
@@ -122,27 +128,19 @@ function Forgot() {
                                 (useCaptcha===true || useCaptcha==="true") &&
 
                                 <>
-                                    <p>Captcha: </p>
+                                    <Box sx={{ m: 4 }} />
 
-                                    <ClientCaptcha
-                                        backgroundColor={"#EDEDED"}
-                                        captchaCode={setCaptcha}
-                                        charsCount={6}
-                                        width={300}
-                                        height={40}
-                                        retry={false}
-                                    />
-
-                                    <TextField
-                                        style={{ marginBottom: '15px' }}
-                                        variant="standard"
-                                        required
-                                        fullWidth
-                                        id="captcha"
-                                        name="captcha"
-                                        label=""
-                                        onChange={e => setUserCaptcha(e.target.value)}
-                                    />
+                                    <Grid
+                                        container
+                                        item
+                                        xs
+                                        justifyContent="center"
+                                        alignItems="center">
+                                        <Reaptcha
+                                            sitekey={captchaSiteKey}
+                                            onVerify={onVerify}
+                                        />
+                                    </Grid>
                                 </>
                             }
 
@@ -156,6 +154,7 @@ function Forgot() {
                                     margin: '8px 0'
                                 }}
                                 fullWidth
+                                disabled={useCaptcha && !verified}
                             >
                                 Forgot Password
                             </Button>

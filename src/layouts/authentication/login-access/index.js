@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import {Box, Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import ClientCaptcha from "react-client-captcha";
 import swal from "sweetalert";
 import AuthService from "../../../services/api/auth.service";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
 import LoginStorage from "../../../services/storage/login.storage";
+import Reaptcha from "reaptcha";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -31,8 +31,6 @@ function LoginAccess() {
 
     const [reference, setReference] = useState("");
     const [birthdate, setBirthdate] = useState("");
-    const [captcha, setCaptcha] = useState();
-    const [userCaptcha, setUserCaptcha] = useState();
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -47,14 +45,12 @@ function LoginAccess() {
             return;
         }
 
-        if (useCaptcha===true || useCaptcha==="true") {
-            if (userCaptcha !== captcha) {
-                swal("Failed", "Captcha is incorrect!", "error");
-                return;
-            }
+        if (useCaptcha===true && !captchaValue) {
+            swal("Failed", "Captcha is incorrect!", "error");
+            return;
         }
 
-        const response = await AuthService.loginReference(reference, birthdate);
+        const response = await AuthService.loginReference(reference, birthdate, captchaValue);
         if (response.error) {
             swal("Failed", response.error, "error");
             return;
@@ -69,17 +65,21 @@ function LoginAccess() {
             });
     }
 
-    /*const handleRecaptcha = (token, ekey) => {
-        console.log("Captcha token: "+token+" ("+ekey+")");
-    }*/
+    const [verified, setVerified] = useState(false);
+    const [captchaValue, setCaptchaValue] = useState(null);
+    function onVerify(value) {
+        setVerified(true);
+        setCaptchaValue(value);
+    }
 
-    const [useCaptcha, setUseCaptcha] = useState(true);
+    const [useCaptcha, setUseCaptcha] = useState(false);
+    const [captchaSiteKey, setCaptchaSiteKey] = useState(false);
     React.useEffect(() => {
         LoginStorage.getConfig()
             .then(rsp => {
                 if (!rsp) return;
-                if (!rsp['WEB.login_captcha']) return;
-                setUseCaptcha(rsp['WEB.login_captcha'].value);
+                setUseCaptcha(rsp.enable_captcha);
+                setCaptchaSiteKey(rsp.captcha_site_key);
             });
     }, []);
 
@@ -154,27 +154,19 @@ function LoginAccess() {
                                 (useCaptcha===true || useCaptcha==="true") &&
 
                                 <>
-                                    <p>Captcha: </p>
+                                    <Box sx={{ m: 4 }} />
 
-                                    <ClientCaptcha
-                                        backgroundColor={"#EDEDED"}
-                                        captchaCode={setCaptcha}
-                                        charsCount={6}
-                                        width={300}
-                                        height={40}
-                                        retry={false}
-                                    />
-
-                                    <TextField
-                                        style={{ marginBottom: '15px' }}
-                                        variant="standard"
-                                        required
-                                        fullWidth
-                                        id="captcha"
-                                        name="captcha"
-                                        label=""
-                                        onChange={e => setUserCaptcha(e.target.value)}
-                                    />
+                                    <Grid
+                                        container
+                                        item
+                                        xs
+                                        justifyContent="center"
+                                        alignItems="center">
+                                        <Reaptcha
+                                            sitekey={captchaSiteKey}
+                                            onVerify={onVerify}
+                                        />
+                                    </Grid>
                                 </>
                             }
 
@@ -188,6 +180,7 @@ function LoginAccess() {
                                     margin: '8px 0'
                                 }}
                                 fullWidth
+                                disabled={useCaptcha && !verified}
                             >
                                 Sign in
                             </Button>

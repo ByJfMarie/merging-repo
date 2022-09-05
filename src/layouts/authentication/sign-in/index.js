@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import {Box, Button, Divider, Grid, Link, TextField, Typography} from "@mui/material";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import ClientCaptcha from "react-client-captcha";
 import swal from "sweetalert";
 import AuthService from "../../../services/api/auth.service";
 import sha512 from "js-sha512";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
 import LoginStorage from "../../../services/storage/login.storage";
+import Reaptcha from 'reaptcha';
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -35,8 +35,6 @@ function Signin() {
 
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [captcha, setCaptcha] = useState();
-    const [userCaptcha, setUserCaptcha] = useState();
     const password_sha = sha512(password);
 
     const handleSubmit = async e => {
@@ -52,14 +50,12 @@ function Signin() {
             return;
         }
 
-        if (useCaptcha===true || useCaptcha==="true") {
-            if (userCaptcha !== captcha) {
-                swal("Failed", "Captcha is incorrect!", "error");
-                return;
-            }
+        if (useCaptcha===true && !captchaValue) {
+            swal("Failed", "Captcha is incorrect!", "error");
+            return;
         }
 
-        const response = await AuthService.login(username, password_sha);
+        const response = await AuthService.login(username, password_sha, captchaValue);
         if (response.error) {
             swal("Failed", response.error, "error");
             return;
@@ -78,16 +74,25 @@ function Signin() {
         console.log("Captcha token: "+token+" ("+ekey+")");
     }*/
 
-    const [useCaptcha, setUseCaptcha] = useState(true);
+    const [useCaptcha, setUseCaptcha] = useState(false);
+    const [captchaSiteKey, setCaptchaSiteKey] = useState(false);
     const [useReference, setUseReference] = useState(false);
     React.useEffect(() => {
         LoginStorage.getConfig()
             .then(rsp => {
                 if (!rsp) return;
-                if (rsp['WEB.login_captcha']) setUseCaptcha(rsp['WEB.login_captcha'].value);
-                if (rsp['WEB.login_by_reference']) setUseReference(rsp['WEB.login_by_reference'].value);
+                setUseCaptcha(rsp.enable_captcha);
+                setCaptchaSiteKey(rsp.captcha_site_key);
+                setUseReference(rsp.enable_ref_login);
             });
-    }, []);
+    }, [])
+
+    const [verified, setVerified] = useState(false);
+    const [captchaValue, setCaptchaValue] = useState(null);
+    function onVerify(value) {
+        setVerified(true);
+        setCaptchaValue(value);
+    }
 
     return (
         <IllustrationLayout>
@@ -172,27 +177,19 @@ function Signin() {
                                 (useCaptcha===true || useCaptcha==="true") &&
 
                                 <>
-                                    <p>Captcha: </p>
+                                    <Box sx={{ m: 4 }} />
 
-                                    <ClientCaptcha
-                                        backgroundColor={"#EDEDED"}
-                                        captchaCode={setCaptcha}
-                                        charsCount={6}
-                                        width={300}
-                                        height={40}
-                                        retry={false}
-                                    />
-
-                                    <TextField
-                                        style={{ marginBottom: '15px' }}
-                                        variant="standard"
-                                        required
-                                        fullWidth
-                                        id="captcha"
-                                        name="captcha"
-                                        label=""
-                                        onChange={e => setUserCaptcha(e.target.value)}
-                                    />
+                                    <Grid
+                                        container
+                                        item
+                                        xs
+                                        justifyContent="center"
+                                        alignItems="center">
+                                        <Reaptcha
+                                            sitekey={captchaSiteKey}
+                                            onVerify={onVerify}
+                                        />
+                                    </Grid>
                                 </>
                             }
 
@@ -206,6 +203,7 @@ function Signin() {
                                     margin: '8px 0'
                                 }}
                                 fullWidth
+                                disabled={useCaptcha && !verified}
                             >
                                 Sign in
                             </Button>

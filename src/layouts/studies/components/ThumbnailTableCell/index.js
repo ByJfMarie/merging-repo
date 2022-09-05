@@ -25,7 +25,7 @@ const Index = (props) => {
             }
         }
         else {
-            setThumbnail("./images/no_thumb.jpg");
+            setThumbnail("./images/no_thumb.png");
         }
     }
 

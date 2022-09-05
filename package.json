@@ -21,7 +21,6 @@
     "js-sha512": "^0.8.0",
     "moment": "^2.29.3",
     "react": "^17.0.2",
-    "react-client-captcha": "^1.0.3",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
     "react-helmet-async": "^1.1.2",
@@ -33,6 +32,7 @@
     "react-select": "^5.2.1",
     "react-sortable-hoc": "^2.0.0",
     "react-swipeable-views": "^0.14.0",
+    "reaptcha": "^1.12.1",
     "styled-components": "^5.3.3",
     "sweetalert": "^2.1.2",
     "web-vitals": "^1.0.1"

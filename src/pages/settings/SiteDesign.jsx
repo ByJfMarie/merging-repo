@@ -367,8 +367,33 @@ export default function SiteDesign() {
                                     onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked+"")}
                                 />
                             }
-                            label={t("Enable CAPTCHA")}/>
+                            label={t("Enable Google reCAPTCHA")}
+                        />
                     </FormGroup>
+
+                    <Box sx={{ m: 4 }} />
+
+                    <TextField
+                        className={classes.field}
+                        id="filled-basic"
+                        label={t("site_key")}
+                        variant="standard"
+                        InputLabelProps={{shrink: true}}
+                        value={getSettingsValue('WEB.login_captcha_site_key')}
+                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_site_key', e.target.value)}}
+                    />
+
+                    <Box sx={{ m: 2 }} />
+
+                    <TextField
+                        className={classes.field}
+                        id="filled-basic"
+                        label={t("secret_key")}
+                        variant="standard"
+                        InputLabelProps={{shrink: true}}
+                        value={getSettingsValue('WEB.login_captcha_secret_key')}
+                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_secret_key', e.target.value)}}
+                    />
                     <Index
                         handleSave={handleSave}
                         handleCancel={handleCancel}

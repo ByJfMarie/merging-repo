@@ -4,8 +4,8 @@ import AuthService from "./auth.service";
 import TokenStorage from "../storage/token.storage";
 import swal from "sweetalert";
 
-//export const BASE_URL = "http://localhost:9991/v2/";
-export const BASE_URL = "/v2/";
+export const BASE_URL = "http://localhost:9991/v2/";
+//export const BASE_URL = "/v2/";
 export const URL_REFRESH_TOKEN = "token/refresh";
 
 const miAPI = axios.create({

@@ -51,7 +51,7 @@ function IllustrationLayout({bgImage, children}) {
                     sm={8}
                     md={10}
                     elevation={1}
-                    square
+                    //square
                     bgcolor='white'
                 >
                     <Grid

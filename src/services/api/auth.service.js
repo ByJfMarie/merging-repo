@@ -34,14 +34,14 @@ class AuthService {
             });
     }
 
-    login (username, password) {
+    login (username, password, captcha) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post("auth", { username: username, password: password })
+            .post("auth", { username: username, password: password, captcha: captcha })
             .then((response) => {
                 if (response.status === 200) {
                     TokenStorage.setToken(response.data);
@@ -57,14 +57,14 @@ class AuthService {
             });
     }
 
-    loginReference(ref, birthdate) {
+    loginReference(ref, birthdate, captcha) {
         let state = {
             items: [],
             error: ''
         }
 
         return api
-            .post("auth/ref", { reference: ref, birthdate: birthdate })
+            .post("auth/ref", { reference: ref, birthdate: birthdate, captcha: captcha })
             .then((response) => {
                 if (response.status === 200) {
                     TokenStorage.setToken(response.data);

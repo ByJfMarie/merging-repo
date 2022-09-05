@@ -7642,11 +7642,6 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
-react-client-captcha@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-client-captcha/-/react-client-captcha-1.0.3.tgz#7c31e084fe2b1506f5b6c2c944c3346aaebc9bf6"
-  integrity sha512-uPnU6W/lYg3oEAwK+wo0MYUWWr24gv6QiILGprrDlk6Y/NjJiMOGItBtrDloysGLl0Mz+d1mbc99IWCsVQYWkg==
-
 react-dev-utils@^12.0.0:
   version "12.0.0"
   resolved "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-12.0.0.tgz"
@@ -7955,6 +7950,11 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
+
+reaptcha@^1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/reaptcha/-/reaptcha-1.12.1.tgz#1993d2f2ed52669188f16e3210afbf89b7221211"
+  integrity sha512-zoppfGKHmo8x4PBmSrIQYQOGgVp1e8wMhr6KbwAdbQ76rSky1DcDCXLWRtBg7HGXn2hw+o+0hknafMB0rnrzZQ==
 
 recursive-readdir@^2.2.2:
   version "2.2.2"
