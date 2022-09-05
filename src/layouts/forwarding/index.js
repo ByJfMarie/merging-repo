@@ -111,13 +111,17 @@ const ForwardingLayout = (props) => {
     }
 
     React.useEffect(() => {
+        refreshOrders();
+    }, []);
+
+    React.useEffect(() => {
         if (props.autoRefresh) {
             const interval = setInterval(() => {
                 refreshOrders();
             }, 5000);
             return () => clearInterval(interval);
-        } else refreshOrders();
-    }, []);
+        }
+    }, [props]);
 
     const handleRetry = async(id) => {
         const response = await ForwardingService.retryOrders(id);
