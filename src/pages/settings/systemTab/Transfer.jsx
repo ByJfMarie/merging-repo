@@ -2,14 +2,19 @@ import React from 'react';
 import {Card, CardContent, Button, TextField, Grid, Alert, Snackbar} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import t from "../../../services/Translation";
 import TableTransferRules from '../../../layouts/settings/transfer';
 import SettingsService from "../../../services/api/settings.service";
 import TransferService from "../../../services/api/transfer.service";
 import DialogAddEdit from "../../../layouts/settings/transfer/DialogAddEdit";
 import Index from "../../../layouts/settings/actions";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
+
 export default function Transfer() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
     const useStyles = makeStyles({
         field: {
@@ -161,7 +166,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.alias"
-                                label={t("alias")}
+                                label={t("fields.alias")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.alias')}
                                 onChange={(e) => {
@@ -173,7 +178,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.sftp_container"
-                                label={t("working_folder_group")}
+                                label={t("fields.working_folder_group")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_container')}
                                 onChange={(e) => {
@@ -185,7 +190,7 @@ export default function Transfer() {
                             <TextField
                                 className={classes.field}
                                 id="DCMT.sftp_host"
-                                label={t("host")}
+                                label={t("fields.host")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_host')}
                                 onChange={(e) => {
@@ -197,7 +202,7 @@ export default function Transfer() {
                             <TextField
                                 className={classes.field}
                                 id="DCMT.sftp_port"
-                                label={t("port")}
+                                label={t("fields.port")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_port')}
                                 onChange={(e) => {
@@ -209,7 +214,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.sftp_user"
-                                label={t("user")}
+                                label={t("fields.user")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_user')}
                                 onChange={(e) => {
@@ -221,7 +226,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.sftp_password"
-                                label={t("password")}
+                                label={t("fields.password")}
                                 type="password"
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_password')}
@@ -244,7 +249,7 @@ export default function Transfer() {
                         <Grid item xs/>
                         <Grid item>
                             <Button variant="contained" component="label" style={{marginTop: '15px'}}
-                                    onClick={toggleDialog}>+ {t('add')}</Button>
+                                    onClick={toggleDialog}>+ {t('buttons.add')}</Button>
                         </Grid>
                     </Grid>
 

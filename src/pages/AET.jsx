@@ -2,12 +2,18 @@ import React from 'react';
 import {Divider, Typography, Container, Grid, FormControl, InputLabel} from "@mui/material";
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import t from "../services/Translation";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
+
 import RemoteAETLayout from '../layouts/remoteAET';
 import RetrievingLayout from '../layouts/retrieveStatus';
 import QueryAETSelect from "../layouts/remoteAET/QueryAETSelect";
 
 export default function AET() {
+    const { t } = useTranslation('common');
+
     /** THEME */
     const theme = useTheme();
 
@@ -41,10 +47,10 @@ export default function AET() {
                     color: theme.palette.primary.main,
                     width: "300px",
                     marginTop: "auto"
-                }}> {t('remote_aet')} </Typography>
+                }}> {t('titles.remote_aet')} </Typography>
 
                 <FormControl className={classes.root} variant="filled" style={{width: "300px"}}>
-                    <InputLabel id="aet">AET</InputLabel>
+                    <InputLabel id="aet">{t("filters.aet")}</InputLabel>
                     <QueryAETSelect
                         queryRetrieve={true}
                         currentAet={currentAET}

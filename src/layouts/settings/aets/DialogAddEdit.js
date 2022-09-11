@@ -8,11 +8,14 @@ import {
     Slide, Switch,
     TextField
 } from "@mui/material";
-import t from "../../../services/Translation";
 import React from "react";
 import AETService from "../../../services/api/aet.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const useStyles = makeStyles((theme) => ({
     field: {
@@ -36,6 +39,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -106,7 +110,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("aet")}
+                                label={t("fields.aet")}
                                 variant="standard"
                                 value={getValue('title')}
                                 onChange={(e) => {handleChange('title', e.target.value);}}
@@ -116,7 +120,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("ip")}
+                                label={t("fields.host")}
                                 variant="standard"
                                 value={getValue('ip')}
                                 onChange={(e) => {handleChange('ip', e.target.value);}}
@@ -126,7 +130,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("port")}
+                                label={t("fields.port")}
                                 variant="standard"
                                 value={getValue('port')}
                                 onChange={(e) => {handleChange('port', e.target.value);}}
@@ -136,7 +140,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("description")}
+                                label={t("fields.description")}
                                 variant="standard"
                                 value={getValue('description')}
                                 onChange={(e) => {handleChange('description', e.target.value);}}
@@ -144,27 +148,27 @@ const DialogAddEdit = (props) => {
                         </Grid>
 
                         <Grid item xs={12} style={{ marginBottom: '10px' }}>
-                            <FormLabel component="legend">{t("capabilities")}</FormLabel>
+                            <FormLabel component="legend">{t("fields.capabilities")}</FormLabel>
                             <Grid container direction="row-reverse">
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
+                                        control={<Switch color="primary" checked={getValue('qr') || false} onChange={(e) => {handleChange('qr', !props.values.qr);}}/>}
+                                        label={t("fields.query")}
+                                    />
+                                </Grid>
+                                <Grid item xs={11} style={{ marginBottom: '10px' }}>
+                                    <FormControlLabel
+                                        value="start"
                                         control={<Switch color="primary" checked={getValue('store') || false} onChange={(e) => {handleChange('store', !props.values.store);}}/>}
-                                        label={"Store"}
+                                        label={t("fields.store")}
                                     />
                                 </Grid>
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
                                         control={<Switch color="primary" checked={getValue('forward') || false} onChange={(e) => {handleChange('forward', !props.values.forward);}}/>}
-                                        label={"Forward"}
-                                    />
-                                </Grid>
-                                <Grid item xs={11} style={{ marginBottom: '10px' }}>
-                                    <FormControlLabel
-                                        value="start"
-                                        control={<Switch color="primary" checked={getValue('qr') || false} onChange={(e) => {handleChange('qr', !props.values.qr);}}/>}
-                                        label={"Query / Retrieve"}
+                                        label={t("fields.forward")}
                                     />
                                 </Grid>
                             </Grid>
@@ -173,11 +177,11 @@ const DialogAddEdit = (props) => {
                         <Grid item xs />
 
                         <Grid item >
-                            <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('cancel')}</Button>
+                            <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
                         </Grid>
 
                         <Grid item >
-                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('save')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
                         </Grid>
                     </Grid>
 

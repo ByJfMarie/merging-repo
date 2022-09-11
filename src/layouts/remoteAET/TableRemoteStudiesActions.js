@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { Button, Menu, MenuItem, Grid } from "@mui/material";
-import t from "../../services/Translation";
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import RetrieveButton from "./RetrieveButton";
 import UserContext from "../../components/UserContext";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 const TableRemoteStudiesActions = (props) => {
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { privileges } = React.useContext(UserContext);
@@ -62,7 +66,7 @@ const TableRemoteStudiesActions = (props) => {
                     {privileges.tables[props.page].actions.includes('download') && (
                         <>
                             <Button variant="outlined" size="medium" className={classes.buttonRetrieve} onClick={handleClick}>
-                                {t('download')}
+                                {t('buttons.download')}
                                 <ArrowDropDownIcon />
                             </Button>
                             <Menu
@@ -87,7 +91,7 @@ const TableRemoteStudiesActions = (props) => {
                             if (value === "retrieve") {
                                 return (
                                     <RetrieveButton
-                                        key={value}
+                                        key={"buttons."+value}
                                         retrieveFunction={props.retrieveFunction}
                                     />
                                 )
@@ -95,7 +99,7 @@ const TableRemoteStudiesActions = (props) => {
                             else if (value !== "download") {
                                 return (
                                     <Button key={value} className={classes.buttonMain} variant="outlined" size="medium" color="primary" style={{ marginLeft: "10px" }}>
-                                        {t(value)}
+                                        {t("buttons."+value)}
                                     </Button>)
                             }
                         })}

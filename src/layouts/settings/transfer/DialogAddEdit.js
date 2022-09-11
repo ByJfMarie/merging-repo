@@ -11,17 +11,21 @@ import {
     Select, Slide,
     TextField
 } from "@mui/material";
-import t from "../../../services/Translation";
 import React from "react";
 import TransferService from "../../../services/api/transfer.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const DialogAddEdit = (props) => {
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
 
@@ -114,7 +118,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="ae_title"
-                                label={t("aet")}
+                                label={t("fields.aet_condition")}
                                 variant="standard"
                                 value={getValue('ae_title')}
                                 onChange={(e) => handleChange("ae_title", e.target.value)}
@@ -126,7 +130,7 @@ const DialogAddEdit = (props) => {
                         <Grid item xs={12}>
                             <FormControl className={classes.root} size="small" fullWidth={true}>
                                 <InputLabel variant="standard"
-                                            id="destinations">{/*t("destinations")*/"Destinations"}</InputLabel>
+                                            id="destinations">{t("fields.destinations")}</InputLabel>
                                 <Select
                                     labelId="destinations"
                                     id="destinations"
@@ -161,11 +165,11 @@ const DialogAddEdit = (props) => {
 
                         <Grid item>
                             <Button className={classes.button} variant="contained" component="label"
-                                    onClick={handleCancel}>{t('cancel')}</Button>
+                                    onClick={handleCancel}>{t('buttons.cancel')}</Button>
                         </Grid>
 
                         <Grid item>
-                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('save')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
                         </Grid>
                     </Grid>
 

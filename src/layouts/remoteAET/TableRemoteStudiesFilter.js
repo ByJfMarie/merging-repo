@@ -4,9 +4,6 @@ import {
     Chip,
     MenuItem,
     Input,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
     Container,
     Divider,
     Box,
@@ -28,7 +25,6 @@ import {
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
 import { TextField } from "@mui/material";
-import t from "../../services/Translation";
 import BlockIcon from '@mui/icons-material/Block';
 import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -36,9 +32,12 @@ import moment from "moment";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import UserStorage from "../../services/storage/user.storage";
 import UserContext from "../../components/UserContext";
 import styled from "styled-components";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -98,6 +97,7 @@ const BadgeMore = styled(Badge)`
     `;
 
 export default function TableRemoteStudiesFilter(props) {
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { settings } = React.useContext(UserContext);
@@ -220,7 +220,7 @@ export default function TableRemoteStudiesFilter(props) {
 
     const modalityComponent = (primary) => (
         <FormControl className={classes.root} size="small" fullWidth={true} >
-            <InputLabel variant="standard" id="modality">{t("modality")}</InputLabel>
+            <InputLabel variant="standard" id="modality">{t("filters.modality")}</InputLabel>
             <Select
                 labelId="modality"
                 id="modality"
@@ -257,7 +257,7 @@ export default function TableRemoteStudiesFilter(props) {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
                 id="birthdate"
-                label={t('birthdate')}
+                label={t('filters.birthdate')}
                 inputFormat={settings.date_format}
                 value={values.birthdate || null}
                 onChange={(date, keyboardInputValue) => {
@@ -318,11 +318,11 @@ export default function TableRemoteStudiesFilter(props) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {t('termTooShort')}
+                    {t('filters.termTooShort')}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        {t('termMessage')}
+                        {t('filters.termMessage')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -358,7 +358,7 @@ export default function TableRemoteStudiesFilter(props) {
                                             key={key}
                                             className={classes.root}
                                             id={value}
-                                            label={t(value)}
+                                            label={t("filters."+value)}
                                             variant="standard"
                                             fullWidth
                                             value={values[value] || ""}
@@ -390,7 +390,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                 value={key}
                                                 className={key > 2 ? classes.presetPhone : ""}
                                             >
-                                                {t(key)}
+                                                {t("date_presets."+key)}
                                             </ToggleButton>
                                         )
                                     })
@@ -402,7 +402,7 @@ export default function TableRemoteStudiesFilter(props) {
 
                         <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
                             <MoreVertIcon style={{ transform: "scale(0.8)" }} />
-                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('more')+"   "} </BadgeMore>
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
                         </Button>
 
                         <Button
@@ -413,7 +413,7 @@ export default function TableRemoteStudiesFilter(props) {
                             style={{ fontSize: '12px', width: '80px', heigh: '50px' }}
                         >
                             <BlockIcon style={{ transform: "scale(0.8)" }} />
-                            {t('reset')}
+                            {t('buttons.reset')}
                         </Button>
 
                         <Popover
@@ -434,7 +434,7 @@ export default function TableRemoteStudiesFilter(props) {
                                     settings.filters_studies_primary.length < fields.length ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('moreFilters')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('filters.more')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -462,7 +462,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                     <TextField
                                                         className={classes.root}
                                                         id={value}
-                                                        label={t(value)}
+                                                        label={t("filters."+value)}
                                                         variant="standard"
                                                         fullWidth
                                                         value={values[value] || ""}
@@ -481,7 +481,7 @@ export default function TableRemoteStudiesFilter(props) {
                                 <Container maxWidth="false" style={{ padding: '0 0 25px 0 ' }}>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('date')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('filters.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
                                     {
@@ -497,7 +497,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="from"
-                                                        label={t('from')}
+                                                        label={t('filters.from')}
                                                         inputFormat={settings.date_format}
                                                         value={values.from || null}
                                                         onChange={(date, keyboardInputValue) => {
@@ -515,7 +515,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="to"
-                                                        label={t('to')}
+                                                        label={t('filters.to')}
                                                         inputFormat={settings.date_format}
                                                         value={values.to || null}
                                                         onChange={(date, keyboardInputValue) => {

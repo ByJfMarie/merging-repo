@@ -1,6 +1,5 @@
-import {Alert, Badge, Box, IconButton, Paper, Snackbar, TableContainer} from "@mui/material";
+import {Alert, Box, IconButton, Paper, Snackbar} from "@mui/material";
 import { useTheme } from '@emotion/react';
-import t from "../../services/Translation";
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import {useState} from "react";
@@ -22,7 +21,12 @@ import UserContext from "../../components/UserContext";
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 function StudiesLayout(props) {
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { privileges } = React.useContext(UserContext);
@@ -288,7 +292,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "patient_full",
-                    headerName: t("patient"),
+                    headerName: t("tables_header.patient"),
                     valueGetter: (params) => params.row.p_name,
                     flex: 2,
                     minWidth: 150,
@@ -308,7 +312,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "study_full",
-                    headerName: t('study'),
+                    headerName: t('tables_header.study'),
                     valueGetter: (params) => params.row.st_date && new Date(params.row.st_date),
                     flex: 3,
                     minWidth: 350,
@@ -342,7 +346,7 @@ function StudiesLayout(props) {
                     flex: 1,
                     minWidth: 180,
                     field: 'st_ref_physician',
-                    headerName: t('referring_physician')
+                    headerName: t('tables_header.referring_physician')
                 }
             );
         }
@@ -351,7 +355,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "report",
-                    headerName: t('report'),
+                    headerName: t('tables_header.report'),
                     flex: 1,
                     minWidth: 150,
                     maxWidth: 200,
@@ -374,7 +378,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "permissions",
-                    headerName: t('assignations'),
+                    headerName: t('tables_header.assignations'),
                     flex: 2,
                     minWidth: 150,
                     maxWidth: 200,

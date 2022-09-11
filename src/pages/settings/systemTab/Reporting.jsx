@@ -17,9 +17,14 @@ import {
 import {useTheme} from '@emotion/react';
 import SettingsService from "../../../services/api/settings.service";
 import Index from "../../../layouts/settings/actions";
-// import t from "../../../services/Translation";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 export default function Reporting(props) {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
 
     /** MESSAGES */
@@ -121,7 +126,7 @@ export default function Reporting(props) {
                                     onChange={(e) => handleSettingsChange('RRS.enabled', e.target.checked + "")}
                                 />
                             }
-                            label="Enable"
+                            label={t("fields.enable")}
                         />
                         <Grid container spacing={2}>
 
@@ -133,15 +138,15 @@ export default function Reporting(props) {
                                             onChange={(e) => handleSettingsChange('RRS.print_report', e.target.checked + "")}
                                         />
                                     }
-                                    label="Print Report"
+                                    label={t("fields.print_report")}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8} lg={10} style={{display: "flex"}}>
                                 <FormControl fullWidth variant="standard">
                                     <Select
                                         labelId="print_selection"
-                                        id="print_selection"
-                                        label="Print Selection"
+                                        id="printer_selection"
+                                        label={t("fields.print_selection")}
                                         value={getSettingsValue("RRS.printer_name")}
                                         onChange={(e) => handleSettingsChange('RRS.printer_name', e.target.value)}
                                     >
@@ -163,18 +168,18 @@ export default function Reporting(props) {
                                             onChange={(e) => handleSettingsChange('RRS.useHtmlTemplate', e.target.checked + "")}
                                         />
                                     }
-                                    label="Template"
+                                    label={t("fields.template")}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8} lg={10} style={{display: "flex", alignItems: 'center'}}>
                                 <Typography variant="h8" style={{textAlign: 'left'}}>
-                                    <Link>Configure</Link>
+                                    <Link>{t("buttons.configure")}</Link>
                                 </Typography>
                             </Grid>
 
                             <Grid item xs={12} sm={4} lg={2} style={{display: "flex", alignItems: 'center'}}>
                                 <Typography variant="h8" style={{textAlign: 'left'}}>
-                                    Request Type
+                                    {t("fields.request_type")}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} sm={8} lg={10} style={{display: "flex"}}>
@@ -188,18 +193,18 @@ export default function Reporting(props) {
                                         value={getSettingsValue("RRS.requestType")}
                                         onChange={(e) => handleSettingsChange('RRS.requestType', e.target.value)}
                                     >
-                                        <MenuItem value={0}>Http request</MenuItem>
-                                        <MenuItem value={1}>UNC Request (txt, pdf, SR)</MenuItem>
-                                        <MenuItem value={2}>Mitra Broker</MenuItem>
-                                        <MenuItem value={3}>Database General Electrics request</MenuItem>
-                                        <MenuItem value={4}>Fuji Synapse Http Request</MenuItem>
-                                        <MenuItem value={5}>Dicom receive</MenuItem>
+                                        <MenuItem value={0}>{t("fields.request_type_value.http")}</MenuItem>
+                                        <MenuItem value={1}>{t("fields.request_type_value.unc")}</MenuItem>
+                                        <MenuItem value={2}>{t("fields.request_type_value.mitra")}</MenuItem>
+                                        <MenuItem value={3}>{t("fields.request_type_value.ge")}</MenuItem>
+                                        <MenuItem value={4}>{t("fields.request_type_value.fuji")}</MenuItem>
+                                        <MenuItem value={5}>{t("fields.request_type_value.dicom")}</MenuItem>
                                     </Select>
 
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography variant="h8" style={{textAlign: 'left'}}>
-                                    Request
+                                    {t("fields.request")}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>

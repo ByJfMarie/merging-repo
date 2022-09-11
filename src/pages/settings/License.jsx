@@ -2,21 +2,25 @@ import React from 'react';
 import {
     Typography,
     Divider,
-    Link,
     Card,
     CardContent,
     TextField,
     FormControlLabel,
     Checkbox,
     Grid,
-    Button, Alert, Snackbar, Box
+    Button, Alert, Snackbar
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import t from "../../services/Translation";
 import SystemService from "../../services/api/system.service";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 const License = () => {
+    const { t } = useTranslation('settings');
+
     /** THEME */
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -98,7 +102,7 @@ const License = () => {
         <React.Fragment>
 
             <Typography variant="h4"
-                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('license')} </Typography>
+                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('titles.license')} </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
@@ -119,7 +123,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("serial")}
+                                label={t("fields.serial")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -132,7 +136,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("computer_id")}
+                                label={t("fields.computer_id")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -145,7 +149,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("exp_date")}
+                                label={t("fields.exp_date")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -158,7 +162,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("amp_valid_until")}
+                                label={t("fields.amp_valid_until")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -171,7 +175,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={"Dicom Nodes"}
+                                label={t("fields.dicom_nodes")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -184,7 +188,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={"Portal Users"}
+                                label={t("fields.portal_users")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -197,7 +201,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={"Retention Days"}
+                                label={t("fields.retention_days")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -214,49 +218,49 @@ const License = () => {
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Secondary Storage"}
+                                name={t("fields.secondary_storage")}
                                 checked={getLicenseValue('secondary_storage')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Report Retrieval"}
+                                name={t("fields.report_retrieval")}
                                 checked={getLicenseValue('report_retrieval')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Transfer"}
+                                name={t("fields.transfer")}
                                 checked={getLicenseValue('transfer')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Delete After Transfer"}
+                                name={t("fields.delete_after_transfer")}
                                 checked={getLicenseValue('delete_after_transfer')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Forwarding"}
+                                name={t("fields.forwarding")}
                                 checked={getLicenseValue('forwarding')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Diagnostic Report Creator"}
+                                name={t("fields.diagnostic_report")}
                                 checked={getLicenseValue('diagnostic_report_creator')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"HL7"}
+                                name={t("fields.hl7")}
                                 checked={getLicenseValue('hl7')}
                             />
                         </Grid>
@@ -269,42 +273,42 @@ const License = () => {
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Media Burner"}
+                                name={t("fields.media_burner")}
                                 checked={getLicenseValue('media_burner')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Delete After Burning"}
+                                name={t("fields.delete_after_burning")}
                                 checked={getLicenseValue('delete_after_burning')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Anonymization"}
+                                name={t("fields.anonymization")}
                                 checked={getLicenseValue('anonymization')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Encryption"}
+                                name={t("fields.encryption")}
                                 checked={getLicenseValue('encryption')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Efilm"}
+                                name={t("fields.efilm")}
                                 checked={getLicenseValue('efilm')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={"Iqview"}
+                                name={t("fields.iqview")}
                                 checked={getLicenseValue('iqview')}
                             />
                         </Grid>
@@ -321,7 +325,7 @@ const License = () => {
                                 variant="contained"
                                 component="label"
                             >
-                                Upload License File
+                                {t("buttons.upload_license")}
                                 <input type="file" hidden onChange={handleUploadLicense} accept=".txt"/>
                             </Button>
                         </Grid>

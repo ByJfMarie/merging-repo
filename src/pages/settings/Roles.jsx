@@ -8,16 +8,21 @@ import {
     Alert, Snackbar
 } from '@mui/material';
 import { useTheme } from '@emotion/react';
-import t from "../../services/Translation";
 import RolesTable from "../../layouts/settings/roles";
 import DialogAddEdit from "../../layouts/settings/roles/DialogAddEdit";
 import ViewersService from "../../services/api/viewers.service";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
 
 /*const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });*/
 
 const Roles = () => {
+    const { t } = useTranslation('settings');
+
     /** THEME */
     const theme = useTheme();
     //const classes = useStyles();
@@ -55,7 +60,7 @@ const Roles = () => {
     return (
         <React.Fragment>
 
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('roles_perm')} </Typography>
+            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.roles_perm')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>

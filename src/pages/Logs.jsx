@@ -4,10 +4,15 @@ import {
 } from "@mui/material"
 import { useTheme } from '@emotion/react';
 import * as React from "react";
-import t from "../services/Translation";
 import TableLogs from "../layouts/logs";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
+
 const Logs = () => {
+    const { t } = useTranslation('common');
+
     /** THEME AND CSS */
     //const Date = formatDate();
     const theme = useTheme();
@@ -39,7 +44,7 @@ const Logs = () => {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('logs')} </Typography>
+            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.logs')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <TableLogs

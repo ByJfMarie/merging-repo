@@ -1,6 +1,5 @@
-import {Typography, Link, Alert, Snackbar, Button, IconButton, AlertTitle} from "@mui/material";
+import {Alert, Snackbar, Button, IconButton, AlertTitle} from "@mui/material";
 import {useTheme} from '@emotion/react';
-import t from "../services/Translation";
 import {makeStyles} from "@mui/styles";
 import * as React from "react";
 import SettingsService from "../services/api/settings.service";
@@ -27,8 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Announcement() {
     /** THEME */
-    const theme = useTheme();
-    const classes = useStyles(theme);
+    useTheme();
 
     /** User & privileges */
     const { privileges } = React.useContext(UserContext);
@@ -64,7 +62,7 @@ export default function Announcement() {
     }, []);
 
     const handleRestart = async() => {
-        const response = await SystemService.restartPerennity();
+        await SystemService.restartPerennity();
 
         setMessage({...message, show: false});
     }

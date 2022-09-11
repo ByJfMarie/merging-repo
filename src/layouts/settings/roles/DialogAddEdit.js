@@ -10,11 +10,14 @@ import {
     Slide,
     TextField
 } from "@mui/material";
-import t from "../../../services/Translation";
 import React from "react";
 import SettingsService from "../../../services/api/settings.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const useStyles = makeStyles((theme) => ({
     field: {
@@ -38,6 +41,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -96,7 +100,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="role"
-                                label={t("role")}
+                                label={t("fields.role")}
                                 variant="standard"
                                 value={getValue("role") || ''}
                                 InputProps={{
@@ -109,7 +113,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("description")}
+                                label={t("fields.description")}
                                 variant="standard"
                                 value={getValue("description") || ''}
                                 onChange={(e) => {handleChange('description', e.target.value);}}
@@ -121,7 +125,7 @@ const DialogAddEdit = (props) => {
                                 <InputLabel
                                     variant="standard"
                                     id="viewers"
-                                >{/*t("destinations")*/"Viewers"}
+                                >{t("fields.viewers")}
                                 </InputLabel>
                                 <Select
                                     labelId="viewers"
@@ -157,10 +161,10 @@ const DialogAddEdit = (props) => {
 
                         <Grid container spacing={2} direction={"row-reverse"}>
                             <Grid item >
-                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('save')}</Button>
+                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
                             </Grid>
                             <Grid item >
-                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('cancel')}</Button>
+                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
                             </Grid>
                         </Grid>
                     </Grid>

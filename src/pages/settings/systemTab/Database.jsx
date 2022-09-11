@@ -1,13 +1,17 @@
-
 import {Card, CardContent, TextField, Grid, Alert, Snackbar} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
-import t from "../../../services/Translation";
 import React from "react";
 import SettingsService from "../../../services/api/settings.service";
 import Index from "../../../layouts/settings/actions";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
+
 export default function Database() {
+    const { t } = useTranslation('settings');
+
     /** STYLE & THEME */
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -105,7 +109,7 @@ export default function Database() {
                         <TextField
                             className={classes.field}
                             id="DB.host"
-                            label={t("host")}
+                            label={t("fields.host")}
                             variant="standard"
                             value={getSettingsValue('DB.host')}
                             onChange={(e) => {
@@ -117,7 +121,7 @@ export default function Database() {
                         <TextField
                             className={classes.field}
                             id="DB.port"
-                            label={t("port")}
+                            label={t("fields.port")}
                             variant="standard"
                             value={getSettingsValue('DB.port')}
                             onChange={(e) => {
@@ -129,7 +133,7 @@ export default function Database() {
                         <TextField
                             style={{ width: '100%' }}
                             id="DB.user"
-                            label={t("user")}
+                            label={t("fields.user")}
                             variant="standard"
                             value={getSettingsValue('DB.user')}
                             onChange={(e) => {
@@ -141,7 +145,7 @@ export default function Database() {
                         <TextField
                             style={{ width: '100%' }}
                             id="DB.password"
-                            label={t("password")}
+                            label={t("fields.password")}
                             type={"password"}
                             variant="standard"
                             value={getSettingsValue('DB.password')}
@@ -154,7 +158,7 @@ export default function Database() {
                         <TextField
                             style={{ width: '100%' }}
                             id="DB.name"
-                            label={t("database_name")}
+                            label={t("fields.database_name")}
                             variant="standard"
                             value={getSettingsValue('DB.name')}
                             onChange={(e) => {

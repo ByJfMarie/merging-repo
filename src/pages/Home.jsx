@@ -1,9 +1,14 @@
 import { Container, Typography } from "@mui/material"
 import React from 'react';
 import { useTheme } from '@emotion/react';
-import t from "../services/Translation"
 import UsersService from "../services/api/users.service";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
+
 const Home = () => {
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
 

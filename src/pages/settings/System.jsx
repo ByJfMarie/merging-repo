@@ -2,9 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Divider, Tab, Tabs, Box } from '@mui/material';
 import { useTheme } from '@emotion/react';
-import t from "../../services/Translation";
 import "react-phone-input-2/lib/high-res.css";
-
 
 /** TABS */
 import LocalServer from './systemTab/LocalServer';
@@ -13,10 +11,13 @@ import Database from './systemTab/Database';
 import Reporting from './systemTab/Reporting';
 import Forwarding from './systemTab/Forwarding';
 import Transfer from './systemTab/Transfer';
-import Status from './systemTab/Status';
 import Plugins from './systemTab/Plugins';
 import RemoteAET from './systemTab/RemoteAET';
 //import MediaBurner from './systemTab/MediaBurner';
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -52,6 +53,8 @@ function a11yProps(index) {
 }
 
 export default function System() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
 
     const [value, setValue] = React.useState(0);
@@ -62,22 +65,22 @@ export default function System() {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('system')} </Typography>
+            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.system')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable" scrollButtons allowScrollButtonsMobile>
-                    <Tab label={t('local_server')} {...a11yProps(0)} />
-                    <Tab label={t('storage')} {...a11yProps(1)} />
-                    <Tab label={t('remote_aets')} {...a11yProps(2)} />
-                    <Tab label={t('forwarding')} {...a11yProps(3)} />
-                    <Tab label={t('transfer')} {...a11yProps(4)} />
+                    <Tab label={t('titles.local_server')} {...a11yProps(0)} />
+                    <Tab label={t('titles.storage')} {...a11yProps(1)} />
+                    <Tab label={t('titles.remote_aets')} {...a11yProps(2)} />
+                    <Tab label={t('titles.forwarding')} {...a11yProps(3)} />
+                    <Tab label={t('titles.transfer')} {...a11yProps(4)} />
                     {
                         //<Tab label={t('media_burner')} {...a11yProps(5)} />
                     }
-                    <Tab label={t('reporting')} {...a11yProps(5)} />
-                    <Tab label={t('database')} {...a11yProps(6)} />
-                    <Tab label={t('plugins')} {...a11yProps(7)} />
+                    <Tab label={t('titles.reporting')} {...a11yProps(5)} />
+                    <Tab label={t('titles.database')} {...a11yProps(6)} />
+                    <Tab label={t('titles.plugins')} {...a11yProps(7)} />
                     {
                         //<Tab label={t('status')} {...a11yProps(8)} />
                     }

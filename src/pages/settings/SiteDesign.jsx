@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import t from "../../services/Translation";
 import PhoneInput from "react-phone-input-2";
 import Editor from "../../components/Editor.jsx";
 import "react-phone-input-2/lib/high-res.css";
@@ -23,6 +22,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import LoginStorage from "../../services/storage/login.storage";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -59,6 +62,8 @@ function a11yProps(index) {
 }
 
 export default function SiteDesign() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
     const useStyles = makeStyles({
         field: {
@@ -212,7 +217,7 @@ export default function SiteDesign() {
     return (
         <React.Fragment>
             <Typography variant="h4"
-                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('site')} </Typography>
+                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('titles.site_design')} </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
@@ -224,10 +229,10 @@ export default function SiteDesign() {
             <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable"
                       scrollButtons allowScrollButtonsMobile>
-                    <Tab label={t('general')} {...a11yProps(0)} />
-                    <Tab label={t('login')} {...a11yProps(1)} />
-                    <Tab label={t('custom_files')} {...a11yProps(2)} />
-                    <Tab label={t('custom_texts')} {...a11yProps(3)} />
+                    <Tab label={t('titles.general')} {...a11yProps(0)} />
+                    <Tab label={t('titles.login')} {...a11yProps(1)} />
+                    <Tab label={t('titles.custom_files')} {...a11yProps(2)} />
+                    <Tab label={t('titles.custom_texts')} {...a11yProps(3)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0} dir="ltr">
@@ -238,7 +243,7 @@ export default function SiteDesign() {
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
-                                        label={t("institution")}
+                                        label={t("fields.institution")}
                                         variant="standard"
                                         InputLabelProps={{shrink: true}}
                                         value={getSettingsValue('WEB.general_institution')}
@@ -261,7 +266,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("departement")}
+                                    label={t("fields.departement")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_department')}
@@ -272,7 +277,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("country")}
+                                    label={t("fields.country")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_country')}
@@ -296,7 +301,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("address")}
+                                    label={t("fields.address")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_address')}
@@ -306,7 +311,7 @@ export default function SiteDesign() {
                             <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
-                                    id="filled-basic" label={t("city")}
+                                    id="filled-basic" label={t("fields.city")}
                                     variant="standard" InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_city')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_city', e.target.value)}}
@@ -316,7 +321,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("website")}
+                                    label={t("fields.website")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_website')}
@@ -327,7 +332,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("doctor_id")}
+                                    label={t("fields.doctor_id")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_doctor_id')}
@@ -338,7 +343,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("external_address")}
+                                    label={t("fields.external_address")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_external_web_link')}
@@ -357,7 +362,7 @@ export default function SiteDesign() {
             <TabPanel value={value} index={1} dir="ltr">
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('security')} </Typography>
+                    <Typography variant="h6" align="left"> {t('titles.security')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <FormGroup>
                         <FormControlLabel
@@ -367,7 +372,7 @@ export default function SiteDesign() {
                                     onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked+"")}
                                 />
                             }
-                            label={t("Enable Google reCAPTCHA")}
+                            label={t("fields.enable_google_recaptcha")}
                         />
                     </FormGroup>
 
@@ -376,7 +381,7 @@ export default function SiteDesign() {
                     <TextField
                         className={classes.field}
                         id="filled-basic"
-                        label={t("site_key")}
+                        label={t("fields.site_key")}
                         variant="standard"
                         InputLabelProps={{shrink: true}}
                         value={getSettingsValue('WEB.login_captcha_site_key')}
@@ -388,7 +393,7 @@ export default function SiteDesign() {
                     <TextField
                         className={classes.field}
                         id="filled-basic"
-                        label={t("secret_key")}
+                        label={t("fields.secret_key")}
                         variant="standard"
                         InputLabelProps={{shrink: true}}
                         value={getSettingsValue('WEB.login_captcha_secret_key')}
@@ -401,7 +406,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('Patient')} </Typography>
+                    <Typography variant="h6" align="left"> {t('titles.patients')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <FormGroup>
                         <FormControlLabel
@@ -411,7 +416,7 @@ export default function SiteDesign() {
                                     onChange={(e) => handleSettingsChange('WEB.login_by_reference', e.target.checked+"")}
                                 />
                             }
-                            label={t("Enable Reference Login")}/>
+                            label={t("fields.enable_ref_login")}/>
                     </FormGroup>
                     <Index
                         handleSave={handleSave}
@@ -424,7 +429,7 @@ export default function SiteDesign() {
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                     <CardContent>
                         <div className={classes.div}>
-                            <Typography className={classes.spaceAfter}>{t('company_logo')}</Typography>
+                            <Typography className={classes.spaceAfter}>{t('fields.company_logo')}</Typography>
                                 <Button
                                     size="small"
                                     variant="contained"
@@ -437,7 +442,7 @@ export default function SiteDesign() {
                         </div>
                         <br/>
                         <div className={classes.div}>
-                            <Typography className={classes.spaceAfter}>{t('help_file')}</Typography>
+                            <Typography className={classes.spaceAfter}>{t('fields.help_file')}</Typography>
                             <Button
                                 size="small"
                                 variant="contained"
@@ -450,7 +455,7 @@ export default function SiteDesign() {
                         </div>
                         <br/>
                         <div className={classes.div}>
-                            <Typography className={classes.spaceAfter}>{t('login_sheet')}</Typography>
+                            <Typography className={classes.spaceAfter}>{t('fields.login_sheet')}</Typography>
                             <Button
                                 size="small"
                                 variant="contained"
@@ -468,7 +473,7 @@ export default function SiteDesign() {
             <TabPanel value={value} index={3} dir="ltr">
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('disclaimer')} </Typography>
+                    <Typography variant="h6" align="left"> {t('fields.disclaimer')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <Editor
                         id="disclaimer"
@@ -482,7 +487,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('privacyPolicy')} </Typography>
+                    <Typography variant="h6" align="left"> {t('fields.privacy_policy')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <Editor
                         id="privacy"
@@ -496,7 +501,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('copyright')} </Typography>
+                    <Typography variant="h6" align="left"> {t('fields.copyright')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <Editor
                         id="copyright"
@@ -510,7 +515,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('FAQ')} </Typography>
+                    <Typography variant="h6" align="left"> {t('fields.faq')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <Editor
                         id="faq"
@@ -525,7 +530,7 @@ export default function SiteDesign() {
 
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('terms&Conditions')} </Typography>
+                    <Typography variant="h6" align="left"> {t('fields.terms_conditions')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <Editor
                         id="terms"
@@ -539,7 +544,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('contactUs')} </Typography>
+                    <Typography variant="h6" align="left"> {t('fields.contact_us')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <Editor
                         id="contactus"

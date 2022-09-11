@@ -14,8 +14,11 @@ import Toolbar from '@mui/material/Toolbar';
 import { Typography, Link } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
-import t from "../services/Translation";
-import NotificationsDropdown from '../components/NotificationsDropdown';
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
+
 /** ICONS */
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
@@ -64,6 +67,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SettingsMenu(props) {
+    const { t } = useTranslation('settings');
+
     /** User & privileges */
     const[user] = React.useState(UserStorage.getUser());
     const[privileges] = React.useState(UserStorage.getPrivileges());
@@ -101,44 +106,44 @@ function SettingsMenu(props) {
             <List>
 
                 <ListItem >
-                    <ListItemText primary={t("settings")} />
+                    <ListItemText primary={t("titles.settings")} />
                 </ListItem>
 
                 <Divider classes={{ root: classes.divider }} />
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/site" selected={location === '/site'} >
                     <SearchIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("site")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.site")} />
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/users" selected={location === '/users'}>
                     <GroupIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("users")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.users")} />
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/roles" selected={location === '/roles'}>
                     <LockIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("roles_perm")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.roles_perm")} />
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/emailing" selected={location === '/emailing'} >
                     <EmailIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("emailing")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.emailing")} />
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/system" selected={location === '/system'} >
                     <SettingsIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("system")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.system")} />
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/license" selected={location === '/license'} >
                     <PermContactCalendarIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("license")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.license")} />
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/about" selected={location === '/about'}>
                     <InfoIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("about")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.about")} />
                 </ListItem>
 
 
@@ -150,7 +155,7 @@ function SettingsMenu(props) {
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/studies" selected={location === '/studies'} >
                     <ArrowBackIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("back")} />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.back")} />
                 </ListItem>
             </List>
 

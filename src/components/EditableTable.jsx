@@ -10,8 +10,12 @@ import TableRow from "@mui/material/TableRow";
 import Input from "@mui/material/Input";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import t from "../services/Translation";
 import { useTheme } from '@emotion/react';
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
+
 // Icons
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DoneIcon from "@mui/icons-material/DoneAllTwoTone";
@@ -61,6 +65,8 @@ const CustomTableCell = ({ row, name, onChange }) => {
 };
 
 export default function EditabeTable(props) {
+    const { t } = useTranslation('common');
+
     const theme = useTheme();
 
     const [rows, setRows] = React.useState(props.rows)

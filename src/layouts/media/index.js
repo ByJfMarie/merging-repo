@@ -7,15 +7,17 @@ import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
 import Chip from "@mui/material/Chip";
-import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
 
-/** STATUS CHIP (ERROR / SUCCESS) */
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
 
 const MediaLayout = (props) => {
+    const { t } = useTranslation('common');
 
     const statusComponent = (params) => {
 

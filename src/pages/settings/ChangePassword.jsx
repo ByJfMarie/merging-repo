@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Typography, Divider, Grid } from '@mui/material';
 import { useTheme } from '@emotion/react';
-import t from "../../services/Translation";
 import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -10,7 +9,13 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 export default function ChangePassword(props) {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
 
     const getValue = (id) => {

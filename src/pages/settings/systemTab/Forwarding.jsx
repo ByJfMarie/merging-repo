@@ -2,11 +2,16 @@ import React from 'react';
 import {Card, Button, CardContent, Grid, Alert, Snackbar} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
-import t from "../../../services/Translation";
 import TableForwarding from "../../../layouts/settings/forwarding";
 import DialogAddEdit from "../../../layouts/settings/forwarding/DialogAddEdit";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
+
 export default function Storage() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
     const useStyles = makeStyles({
         field: {
@@ -63,7 +68,7 @@ export default function Storage() {
                         <Grid item xs />
 
                         <Grid item className={classes.userNameGrid}>
-                            <Button variant="contained" component="label" onClick={toggleDialog}>+ {t('add')}</Button><br />
+                            <Button variant="contained" component="label" onClick={toggleDialog}>+ {t('buttons.add')}</Button><br />
                         </Grid>
                     </Grid>
 

@@ -2,10 +2,15 @@ import React from 'react';
 import { Typography, Divider, Link, Card, CardContent } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
-import t from "../../services/Translation";
 import SystemService from "../../services/api/system.service";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 const About = () => {
+    const { t } = useTranslation('settings');
+
     /** THEME */
     const theme = useTheme();
 
@@ -46,25 +51,25 @@ const classes = useStyles();
 return (
     <React.Fragment>
 
-        <Typography variant="h4" style={{ color: theme.palette.primary.main }} > {t('about')} </Typography>
+        <Typography variant="h4" style={{ color: theme.palette.primary.main }} > {t('titles.about')} </Typography>
         <Divider style={{ marginBottom: theme.spacing(2) }} />
 
         <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
             <CardContent>
                 <Typography variant="h6" >Perennity iMAGE Portal</Typography>
-                <Typography variant="h6" >Version {version.version} build {version.build}</Typography>
+                <Typography variant="h6" >{t("fields.version")} {version.version} {t("fields.build")} {version.build}</Typography>
                 <br/>
                 <div className={classes.div}>
-                    <Typography className={classes.spaceAfter}> Our Website </Typography>
+                    <Typography className={classes.spaceAfter}>{t("texts.our_website")}</Typography>
                     <Typography ><Link href='https://perennity.io'>https://perennity.io</Link></Typography>
                 </div>
 
                 <div className={classes.div}>
-                    <Typography className={classes.spaceAfter}>Technical support</Typography>
+                    <Typography className={classes.spaceAfter}>{t("texts.technical_support")}</Typography>
                     <Typography ><Link href='#'>support@perennity.io</Link></Typography>
                 </div>
                 <div className={classes.div}>
-                    <Typography className={classes.spaceAfter}>Request a license</Typography>
+                    <Typography className={classes.spaceAfter}>{t("texts.license_request")}</Typography>
                     <Typography ><Link href='#'>license@perennity.io</Link></Typography>
                 </div>
             </CardContent>

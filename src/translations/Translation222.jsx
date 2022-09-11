@@ -1,4 +1,3 @@
-
 function t(props) {
 
     var language = (localStorage.getItem('language') !== null) ? localStorage.getItem('language') : 'en'
@@ -323,8 +322,6 @@ function t(props) {
         "privacyPolicy" : "Privacy Policy",
         "copyright" : "Copyright",
         "FAQ" : "FAQ",
-        "local_server" : "Local Server",
-        "remote_aets" : "Remote AETs",
         "media_burner" : "Media Burner",
         "plugins" : "Plugins",
         "latency" : "Latency",
@@ -531,7 +528,7 @@ function t(props) {
         "MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1" : "MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1"
     }
 
-    if(props !== "" && !isNaN(Number(props))){      //If props isn't "" and its conversion into number works (implying it's not a letter) then =>
+    /*if(props !== "" && !isNaN(Number(props))){      //If props isn't "" and its conversion into number works (implying it's not a letter) then =>
         switch (language) {
             case 'fr':
                 return props+ " jours";
@@ -549,7 +546,9 @@ function t(props) {
             return en[props] || props;
         default:
             return props;
-    }
+    }*/
+
+    return props;
 }
 export default t
 

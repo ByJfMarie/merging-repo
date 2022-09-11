@@ -1,13 +1,13 @@
 import * as React from 'react';
-import {Button, Menu, MenuItem} from "@mui/material";
-import t from "../../../../services/Translation";
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import TransferService from "../../../../services/api/transfer.service";
 import PryButtonSelect from "../../../../components/PryTable/PryButtonSelect";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../../translations/i18n";
+
 const Index = (props) => {
+    const { t } = useTranslation('common');
 
     const [options, setOptions] = React.useState([]);
     const loadRemoteSites = async() => {
@@ -35,7 +35,7 @@ const Index = (props) => {
 
     return (
         <PryButtonSelect
-            label={t('transfer')}
+            label={t('buttons.transfer')}
             options={options}
             handleAction={handleTransfer}
         />

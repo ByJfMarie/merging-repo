@@ -8,9 +8,13 @@ import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-/** STATUS CHIP (ERROR / SUCCESS) */
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
+
 
 const Index = (props) => {
+    const { t } = useTranslation('settings');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -71,7 +75,7 @@ const Index = (props) => {
     const column = [
         {
             field: "login",
-            headerName: "Login",
+            headerName: t("tables_header.login"),
             flex: 1,
             minWidth: 110,
             description: "Login",
@@ -79,7 +83,7 @@ const Index = (props) => {
         },
         {
             field: "name",
-            headerName: "Name",
+            headerName: t("tables_header.name"),
             flex: 1,
             minWidth: 110,
             description: "Name",
@@ -90,7 +94,7 @@ const Index = (props) => {
         },
         {
             field: "mail",
-            headerName: "Email",
+            headerName: t("tables_header.mail"),
             flex: 1,
             minWidth: 110,
             description: "Email",
@@ -98,7 +102,7 @@ const Index = (props) => {
         },
         {
             field: "role",
-            headerName: "Role",
+            headerName: t("tables_header.role"),
             flex: 1,
             minWidth: 110,
             description: "Role",
@@ -106,7 +110,7 @@ const Index = (props) => {
         },
         {
             field: "status",
-            headerName: "Active",
+            headerName: t("tables_header.active"),
             flex: 1,
             minWidth: 110,
             description: "Status",
@@ -131,14 +135,14 @@ const Index = (props) => {
                 let actions = [];
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
-                    label="Edit"
+                    label={t("buttons.edit")}
                     onClick={() => handleEdit(params.row)}
                     showInMenu
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<DeleteIcon/>}
-                    label="Delete"
+                    label={t("buttons.delete")}
                     color="error"
                     onClick={() => handleDelete(params.row.id)}
                     showInMenu

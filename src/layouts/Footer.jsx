@@ -1,10 +1,13 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Typography, Link, Grid, Dialog, DialogTitle, IconButton, DialogContent} from "@mui/material";
 import {useTheme} from '@emotion/react';
-import t from "../services/Translation";
 import {makeStyles} from "@mui/styles";
 import CloseIcon from '@mui/icons-material/Close';
 import SystemService from "../services/api/system.service";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -21,6 +24,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Footer() {
+    const { t } = useTranslation('common');
+
     /** THEME */
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -71,7 +76,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('contactUs')}}
                             >
-                                {t('contactUs')}
+                                {t('buttons.contact_us')}
                             </Link>
                         </Grid>
                         <Grid item xs="auto">-</Grid>
@@ -82,7 +87,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('faq')}}
                             >
-                                FAQ
+                                {t('buttons.faq')}
                             </Link>
                         </Grid>
                         <Grid item xs="auto">-</Grid>
@@ -93,7 +98,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('privacyPolicy')}}
                             >
-                                {t('privacyPolicy')}
+                                {t('buttons.privacy_policy')}
                             </Link>
                         </Grid>
                         <Grid item xs="auto">-</Grid>
@@ -104,7 +109,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('terms&Conditions')}}
                             >
-                                {t("terms&Conditions")}
+                                {t("buttons.terms_conditions")}
                             </Link>
                         </Grid>
                     </Grid>

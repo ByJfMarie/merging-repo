@@ -1,11 +1,16 @@
 import React from 'react';
 import { Divider, Typography } from "@mui/material";
 import { useTheme } from '@emotion/react';
-import t from "../services/Translation";
 import CustomStatusTable from '../layouts/media';
 import AuthService from "../services/api/auth.service";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
+
 const Media = () => {
+    const { t } = useTranslation('settings');
+
     /** THEME */
     const theme = useTheme();
 

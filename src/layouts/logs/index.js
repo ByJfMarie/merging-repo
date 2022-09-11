@@ -2,7 +2,6 @@ import * as React from 'react';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
-import t from "../../services/Translation";
 import LogsService from "../../services/api/logs.service";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -12,7 +11,12 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {Box, Card, CardContent, Grid, TextField} from "@mui/material";
 import moment from "moment";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 const LogsLayout = (props) => {
+    const { t } = useTranslation('common');
 
     //const { privileges } = React.useContext(UserContext);
 

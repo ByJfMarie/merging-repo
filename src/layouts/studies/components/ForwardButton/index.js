@@ -1,9 +1,13 @@
 import * as React from 'react';
-import t from "../../../../services/Translation";
 import AETService from "../../../../services/api/aet.service";
 import PryButtonSelect from "../../../../components/PryTable/PryButtonSelect";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../../translations/i18n";
+
 const Index = (props) => {
+    const { t } = useTranslation('common');
 
     const [options, setOptions] = React.useState([]);
     const loadAETs = async() => {
@@ -31,7 +35,7 @@ const Index = (props) => {
 
     return (
         <PryButtonSelect
-            label={t('forward')}
+            label={t('buttons.forward')}
             options={options}
             handleAction={handleForward}
         />

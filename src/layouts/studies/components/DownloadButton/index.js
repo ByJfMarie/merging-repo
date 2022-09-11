@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {Button, Menu, MenuItem} from "@mui/material";
-import t from "../../../../services/Translation";
-import { useTheme } from '@emotion/react';
-import { makeStyles } from "@mui/styles";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PryButtonSelect from "../../../../components/PryTable/PryButtonSelect";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../../translations/i18n";
+
 const Index = (props) => {
+    const { t } = useTranslation('common');
 
     const options = [
         {
@@ -29,7 +29,7 @@ const Index = (props) => {
 
     return (
         <PryButtonSelect
-            label={t('download')}
+            label={t('buttons.download')}
             options={options}
             handleAction={handleDownload}
         />

@@ -5,9 +5,12 @@ import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import SettingsService from "../../../services/api/settings.service";
 import EditIcon from '@mui/icons-material/Edit';
 
-/** STATUS CHIP (ERROR / SUCCESS) */
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const Index = (props) => {
+    const { t } = useTranslation('settings');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -48,7 +51,7 @@ const Index = (props) => {
     const column = [
         {
             field: "role",
-            headerName: "Role",
+            headerName: t("tables_header.role"),
             flex: 3,
             minWidth: 110,
             description: "Login",
@@ -56,7 +59,7 @@ const Index = (props) => {
         },
         {
             field: "description",
-            headerName: "Description",
+            headerName: t("tables_header.description"),
             flex: 2,
             minWidth: 110,
             description: "Name",
@@ -71,7 +74,7 @@ const Index = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
-                    label="Edit"
+                    label={t("buttons.edit")}
                     onClick={() => handleEdit(params.row)}
                     showInMenu
                 />);

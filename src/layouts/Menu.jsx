@@ -13,7 +13,11 @@ import Toolbar from '@mui/material/Toolbar';
 import { Typography, Link } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
-import t from "../services/Translation";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
+
 /** ICONS */
 import SettingsIcon from '@mui/icons-material/Settings';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -61,7 +65,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MenuBackup(props) {
-    /** THEME AND CSS */
+    const { t } = useTranslation('common');
+
+        /** THEME AND CSS */
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -109,28 +115,28 @@ function MenuBackup(props) {
                 {privileges.pages.indexOf('studies') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/studies" selected={location === '/studies'} >
                         <SearchIcon />
-                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("studies")} />
+                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.studies")} />
                     </ListItem>
                 )}
 
                 {privileges.pages.indexOf('aet') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/aet" selected={location === '/aet'}>
                         <LocationOn />
-                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("remote_aet")} />
+                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.remote_aet")} />
                     </ListItem>
                 )}
 
                 {privileges.pages.indexOf('forwarding') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/forwarding" selected={location === '/forwarding'}>
                         <ForwardToInboxIcon />
-                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("forwarding")} />
+                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.forwarding")} />
                     </ListItem>
                 )}
 
                 {privileges.pages.indexOf('transfer') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/transfer" selected={location === '/transfer'} >
                         <CompareArrowsIcon />
-                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("transfer")} />
+                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.transfer")} />
                     </ListItem>
                 )}
 
@@ -149,14 +155,14 @@ function MenuBackup(props) {
                 {privileges.pages.indexOf('settings') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/site" >
                         <SettingsIcon />
-                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("settings")} />
+                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.settings")} />
                     </ListItem>
                 )}
 
                 {privileges.pages.indexOf('logs') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/logs" selected={location === '/logs'} >
                         <DescriptionIcon />
-                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("logs")} />
+                        <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.logs")} />
                     </ListItem>
                 )}
             </List>

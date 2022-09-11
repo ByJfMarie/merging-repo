@@ -16,12 +16,16 @@ import {
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import Index from "../../layouts/settings/users";
-import t from "../../services/Translation";
 
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DialogAddEdit from "../../layouts/settings/users/DialogAddEdit";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 const Users = (props) => {
+    const { t } = useTranslation('settings');
 
     /** THEME */
     const theme = useTheme();
@@ -70,7 +74,7 @@ const Users = (props) => {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('users')} </Typography>
+            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.users')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
@@ -85,17 +89,17 @@ const Users = (props) => {
                     <Card style={{ width: "100% !important", marginBottom: '20px' }} className={classes.card} >
                         <CardContent style={{ display: "flex" }}>
                             <InfoOutlinedIcon sx={{ color: theme.palette.textfield.text, marginRight: '15px' }} />
-                            <Typography style={{ color: theme.palette.textfield.text, textAlign: "left" }}>Informations concernant les paramètres utilisateurs</Typography>
+                            <Typography style={{ color: theme.palette.textfield.text, textAlign: "left" }}>{t("info.users")}</Typography>
                         </CardContent>
                     </Card>
 
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={4}>
-                            <TextField className={classes.field} id="filled-basic" label={t("username/email")} variant="standard" onChange={(e) => {handleFiltersChange("username", e.target.value)}} />
+                            <TextField className={classes.field} id="filled-basic" label={t("filters.username")} variant="standard" onChange={(e) => {handleFiltersChange("username", e.target.value)}} />
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl className={classes.root} variant="standard" fullWidth >
-                                <InputLabel id="role" >{t("role")}</InputLabel>
+                                <InputLabel id="role" >{t("filters.role")}</InputLabel>
                                 <Select
                                     labelId="role"
                                     id="role"
@@ -112,7 +116,7 @@ const Users = (props) => {
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl className={classes.root} variant="standard" fullWidth >
-                                <InputLabel id="status" >{t("status")}</InputLabel>
+                                <InputLabel id="status" >{t("filters.status")}</InputLabel>
                                 <Select
                                     labelId="status"
                                     id="status"
@@ -129,7 +133,7 @@ const Users = (props) => {
                         <Grid item xs />
 
                         <Grid item >
-                            <Button variant="contained" component="label" onClick={() => {setUserValues({}); toggleDialog();}}>+ {t('add')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {setUserValues({}); toggleDialog();}}>+ {t('buttons.add')}</Button>
                         </Grid>
                     </Grid>
 

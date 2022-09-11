@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import Select, { components, StylesConfig } from "react-select";
 import { SortableContainer, SortableElement, sortableHandle } from "react-sortable-hoc";
-import t from "../services/Translation.jsx";
 import { useTheme } from '@emotion/react';
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
 
 function arrayMove(array, from, to) {
     array = array.slice();
@@ -30,6 +33,8 @@ const SortableMultiValueLabel = sortableHandle((props) => (
 const SortableSelect = SortableContainer(Select);
 
 export default function MultiSelectSort(props) {
+    const { t } = useTranslation('common');
+
     const theme = useTheme();
 
     /** STYLE */

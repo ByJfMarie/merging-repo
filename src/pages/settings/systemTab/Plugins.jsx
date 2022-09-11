@@ -1,10 +1,15 @@
 import {Card, CardContent, Grid, Button, Alert, Snackbar} from '@mui/material';
 import {useTheme} from '@emotion/react';
-import t from "../../../services/Translation";
 import React from "react";
 import TablePlugins from "../../../layouts/settings/plugins";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
+
 export default function Plugins() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
 
     /** MESSAGES */
@@ -45,7 +50,7 @@ export default function Plugins() {
                                 component="label"
                                 onClick={() => {setForceRefresh(!forceRefresh);}}
                             >
-                                {t('force_refresh')}
+                                {t('buttons.force_refresh')}
                             </Button>
                         </Grid>
                     </Grid>

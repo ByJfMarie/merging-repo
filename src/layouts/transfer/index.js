@@ -7,11 +7,14 @@ import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
 import Chip from "@mui/material/Chip";
-import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 const statusComponent = (params) => {
@@ -73,6 +76,7 @@ const statusComponent = (params) => {
 
 const TransferStatusLayout = (props) => {
 
+    const { t } = useTranslation('common');
     //const { privileges } = React.useContext(UserContext);
 
     /** THEME AND CSS */
@@ -143,19 +147,19 @@ const TransferStatusLayout = (props) => {
     const column = [
         {
             field: 'p_name',
-            headerName: t("patient"),
+            "headerName": t("tables_header.patient"),
             flex: 2,
             minWidth: 200
         },
         {
             field: 'st_description',
-            headerName: t("study"),
+            "headerName": t("tables_header.description"),
             flex: 3,
             minWidth: 200
         },
         {
             field: "status",
-            headerName: t("status"),
+            headerName: t("tables_header.status"),
             flex: 1,
             minWidth: 110,
             description: "Status",

@@ -1,6 +1,5 @@
 import {Alert, Box, Paper, Snackbar, TableContainer,} from "@mui/material";
 import { useTheme } from '@emotion/react';
-import t from "../../services/Translation";
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import InfoIcon from '@mui/icons-material/Info';
@@ -12,7 +11,12 @@ import {useState} from "react";
 import QRService from "../../services/api/queryRetrieve.service";
 import UserContext from "../../components/UserContext";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 function Index(props) {
+    const { t } = useTranslation('common');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -151,7 +155,7 @@ function Index(props) {
     const columns = [
         {
             field: "patient_full",
-            headerName: t("patient"),
+            headerName: t("tables_header.patient"),
             valueGetter: (params) => params.row.p_name,
             flex: 3,
             maxWidth: 250,
@@ -165,7 +169,7 @@ function Index(props) {
         },
         {
             field: "study_full",
-            headerName: t('study'),
+            headerName: t('tables_header.study'),
             valueGetter: (params) => params.row.st_date,
             flex: 4,
             maxWidth: 250,
@@ -183,7 +187,7 @@ function Index(props) {
         {
             flex: 2,
             field: 'st_ref_physician',
-            headerName: t('referring_physician')
+            headerName: t('tables_header.referring_physician')
         },
     ];
 

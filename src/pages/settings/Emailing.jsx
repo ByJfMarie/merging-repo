@@ -25,12 +25,15 @@ import {
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
-import t from "../../services/Translation";
 import Editor from "../../components/Editor.jsx"
 import "react-phone-input-2/lib/high-res.css";
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import MailingService from "../../services/api/mailing.service";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -68,6 +71,8 @@ function a11yProps(index) {
 }
 
 export default function Emailing() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
     const useStyles = makeStyles({
         card: {
@@ -196,7 +201,7 @@ export default function Emailing() {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }}> {t("emailing")}  </Typography>
+            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }}> {t("titles.emailing")}  </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
@@ -207,8 +212,8 @@ export default function Emailing() {
 
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label={t('general')} {...a11yProps(0)} />
-                    <Tab label={t('templates')} {...a11yProps(1)} />
+                    <Tab label={t('titles.general')} {...a11yProps(0)} />
+                    <Tab label={t('titles.templates')} {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <SwipeableViews
@@ -234,7 +239,7 @@ export default function Emailing() {
                                         <TextField
                                             className={classes.field}
                                             id="filled-basic"
-                                            label={t("host")}
+                                            label={t("fields.host")}
                                             variant="standard"
                                             value={getSettingsValue('NOT.smtp_host')}
                                             onChange={(e) => {handleSettingsChange('NOT.smtp_host', e.target.value)}}
@@ -244,7 +249,7 @@ export default function Emailing() {
                                         <TextField
                                             className={classes.field}
                                             id="filled-basic"
-                                            label={t("port")}
+                                            label={t("fields.port")}
                                             variant="standard"
                                             value={getSettingsValue('NOT.smtp_port')}
                                             onChange={(e) => {handleSettingsChange('NOT.smtp_port', e.target.value)}}
@@ -254,7 +259,7 @@ export default function Emailing() {
                                         <TextField
                                             style={{ width: '100%' }}
                                             id="filled-basic"
-                                            label={t("from")}
+                                            label={t("fields.from")}
                                             variant="standard"
                                             value={getSettingsValue('NOT.smtp_from')}
                                             onChange={(e) => {handleSettingsChange('NOT.smtp_from', e.target.value)}}
@@ -270,7 +275,7 @@ export default function Emailing() {
                                                 onChange={(e) => handleSettingsChange('NOT.smtp_authentication', e.target.checked+"")}
                                             />
                                         }
-                                        label={t("authentification")}
+                                        label={t("fields.authentication")}
                                     />
                                 </FormGroup>
 
@@ -281,7 +286,7 @@ export default function Emailing() {
                                                 style={{ maxWidth: '600px' }}
                                                 fullWidth={true}
                                                 id="filled-basic"
-                                                label={t("user")}
+                                                label={t("fields.user")}
                                                 variant="standard"
                                                 value={getSettingsValue('NOT.smtp_user')}
                                                 onChange={(e) => {handleSettingsChange('NOT.smtp_user', e.target.value)}}
@@ -292,7 +297,7 @@ export default function Emailing() {
                                                 style={{ maxWidth: '600px' }}
                                                 fullWidth={true}
                                                 id="filled-basic"
-                                                label={t("password")}
+                                                label={t("fields.password")}
                                                 variant="standard"
                                                 type="password"
                                                 value={getSettingsValue('NOT.smtp_password')}
@@ -304,14 +309,14 @@ export default function Emailing() {
                                                 labelId="security-label"
                                                 id="security"
                                                 value={getSettingsValue('NOT.smtp_security')}
-                                                label={t("security")}
+                                                label={t("fields.security")}
                                                 onChange={(e) => {handleSettingsChange('NOT.smtp_security', e.target.value)}}
                                                 fullWidth={true}
                                                 style={{ maxWidth: '600px' }}
                                             >
-                                                <MenuItem value={"tls"}>TLS</MenuItem>
-                                                <MenuItem value={"ssl"}>SSL</MenuItem>
-                                                <MenuItem value={"none"}>None</MenuItem>
+                                                <MenuItem value={"tls"}>{t("fields.security_value.tls")}</MenuItem>
+                                                <MenuItem value={"ssl"}>{t("fields.security_value.ssl")}</MenuItem>
+                                                <MenuItem value={"none"}>{t("fields.security_value.none")}</MenuItem>
                                             </Select>
                                         </Grid>
                                     </Grid>
@@ -327,9 +332,9 @@ export default function Emailing() {
                                     <Grid item xs={6}>
                                         <TextField
                                             fullWidth
-                                            label={"Test SMTP"}
+                                            label={t("fields.test_smtp")}
                                             variant="outlined"
-                                            placeholder="Recipient"
+                                            placeholder={t("fields.recipient")}
                                             value={testRecipient || ''}
                                             onChange={(event) => {setTestRecipient(event.target.value)}}
                                         />
@@ -342,7 +347,7 @@ export default function Emailing() {
                                                 onClick={() => handleTest()}
 
                                             >
-                                                Send Test Email
+                                                {t("buttons.test_email")}
                                             </Button>
                                     </Grid>
                                 </Grid>
@@ -361,32 +366,32 @@ export default function Emailing() {
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                             <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
-                                    <InputLabel>{t('template')}</InputLabel>
+                                    <InputLabel>{t('fields.template')}</InputLabel>
                                     <Select
                                         labelId="template"
                                         value={template.name || ''}
                                         onChange={(e) => handleTemplateSelect(e.target.value)}
                                     >
-                                        <ListSubheader>General</ListSubheader>
-                                        <MenuItem value="NOT.share_guest">Share To</MenuItem>
-                                        <MenuItem value="NOT.download_ready">Download Ready</MenuItem>
-                                        <MenuItem value="NOT.mail_change_confirmation">Mail Change</MenuItem>
-                                        <MenuItem value="NOT.reset_password">Reset Password</MenuItem>
-                                        <ListSubheader>Patient</ListSubheader>
-                                        <MenuItem value="NOT.activation">Activation Request</MenuItem>
-                                        <MenuItem value="NOT.activation_confirmation">Activation Confirmation</MenuItem>
-                                        <MenuItem value="NOT.notification">Study Notification</MenuItem>
-                                        <MenuItem value="NOT.registration_error">Registration Error</MenuItem>
-                                        <ListSubheader>Physicians</ListSubheader>
-                                        <MenuItem value="NOT.doctor-activation">Activation Request</MenuItem>
-                                        <MenuItem value="NOT.doctor_activation_request">Activation Request 2</MenuItem>
-                                        <MenuItem value="NOT.doctor_activation_confirmation">Activation Confirmation</MenuItem>
-                                        <MenuItem value="NOT.doctor_notification">Study Notification</MenuItem>
-                                        <MenuItem value="NOT.share_user">Share To</MenuItem>
-                                        <ListSubheader>Radiologist</ListSubheader>
-                                        <MenuItem value="NOT.radio-activation">Activation Request</MenuItem>
-                                        <MenuItem value="NOT.radio_activation_request">Activation Request 2</MenuItem>
-                                        <MenuItem value="NOT.radio_activation_confirmation">Activation Confirmation</MenuItem>
+                                        <ListSubheader>{t("fields.template_value.general")}</ListSubheader>
+                                        <MenuItem value="NOT.share_guest">{t("fields.template_value.share_to")}</MenuItem>
+                                        <MenuItem value="NOT.download_ready">{t("fields.template_value.download_ready")}</MenuItem>
+                                        <MenuItem value="NOT.mail_change_confirmation">{t("fields.template_value.mail_change")}</MenuItem>
+                                        <MenuItem value="NOT.reset_password">{t("fields.template_value.reset_password")}</MenuItem>
+                                        <ListSubheader>{t("fields.template_value.patient")}</ListSubheader>
+                                        <MenuItem value="NOT.activation">{t("fields.template_value.activation_request")}</MenuItem>
+                                        <MenuItem value="NOT.activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
+                                        <MenuItem value="NOT.notification">{t("fields.template_value.study_notification")}</MenuItem>
+                                        <MenuItem value="NOT.registration_error">{t("fields.template_value.registration_error")}</MenuItem>
+                                        <ListSubheader>{t("fields.template_value.physicians")}</ListSubheader>
+                                        <MenuItem value="NOT.doctor-activation">{t("fields.template_value.activation_request")}</MenuItem>
+                                        <MenuItem value="NOT.doctor_activation_request">{t("fields.template_value.activation_request2")}</MenuItem>
+                                        <MenuItem value="NOT.doctor_activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
+                                        <MenuItem value="NOT.doctor_notification">{t("fields.template_value.study_notification")}</MenuItem>
+                                        <MenuItem value="NOT.share_user">{t("fields.template_value.share_to")}</MenuItem>
+                                        <ListSubheader>{t("fields.template_value.radiologist")}</ListSubheader>
+                                        <MenuItem value="NOT.radio-activation">{t("fields.template_value.activation_request")}</MenuItem>
+                                        <MenuItem value="NOT.radio_activation_request">{t("fields.template_value.activation_request2")}</MenuItem>
+                                        <MenuItem value="NOT.radio_activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
 
                                     </Select>
                                 </FormControl>
@@ -396,7 +401,7 @@ export default function Emailing() {
                                 <TextField
                                     id="Subject"
                                     fullWidth
-                                    label={t('subject')}
+                                    label={t('fields.subject')}
                                     variant="standard"
                                     //style={{ marginBottom: "10px", width: "100%" }}
                                     value={template.subject || ''}

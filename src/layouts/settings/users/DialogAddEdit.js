@@ -10,11 +10,14 @@ import {
     Select, Slide,
     TextField
 } from "@mui/material";
-import t from "../../../services/Translation";
 import React from "react";
 import UsersService from "../../../services/api/users.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const useStyles = makeStyles((theme) => ({
     field: {
@@ -38,6 +41,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -109,7 +113,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("username")}
+                                label={t("fields.username")}
                                 variant="standard"
                                 value={getUserValue("login")}
                                 onChange={(e) => {handleSaveUserChange('login', e.target.value);}}
@@ -122,7 +126,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("name")}
+                                label={t("fields.name")}
                                 variant="standard"
                                 value={getUserValue("first_name")}
                                 onChange={(e) => {handleSaveUserChange('first_name', e.target.value);}}
@@ -132,7 +136,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("email")}
+                                label={t("fields.mail")}
                                 variant="standard"
                                 value={getUserValue("mail")}
                                 onChange={(e) => {handleSaveUserChange('mail', e.target.value);}}
@@ -140,7 +144,7 @@ const DialogAddEdit = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl className={classes.field} variant="standard">
-                                <InputLabel id="demo-simple-select-standard-label">{t("role")}</InputLabel>
+                                <InputLabel id="demo-simple-select-standard-label">{t("fields.role")}</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-standard-label"
                                     id="demo-simple-select-standard"
@@ -148,10 +152,10 @@ const DialogAddEdit = (props) => {
                                     onChange={(e) => {handleSaveUserChange('role', e.target.value);}}
                                     label="Age"
                                 >
-                                    <MenuItem value="administrator">Administrator</MenuItem>
-                                    <MenuItem value="physician">Physician</MenuItem>
-                                    <MenuItem value="patient">Patient</MenuItem>
-                                    <MenuItem value="radiologist">Radiologist</MenuItem>
+                                    <MenuItem value="administrator">{t("fields.role_value.administrator")}</MenuItem>
+                                    <MenuItem value="physician">{t("fields.role_value.physician")}</MenuItem>
+                                    <MenuItem value="patient">{t("fields.role_value.patient")}</MenuItem>
+                                    <MenuItem value="radiologist">{t("fields.role_value.radiologist")}</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -159,11 +163,11 @@ const DialogAddEdit = (props) => {
                         <Grid item xs />
 
                         <Grid item >
-                            <Button className={classes.button} variant="contained" component="label" onClick={handleCancel}>{t('cancel')}</Button>
+                            <Button className={classes.button} variant="contained" component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
                         </Grid>
 
                         <Grid item >
-                            <Button variant="contained" component="label" onClick={() => {handleSaveUser()}}>{t('save')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {handleSaveUser()}}>{t('buttons.save')}</Button>
                         </Grid>
                     </Grid>
 

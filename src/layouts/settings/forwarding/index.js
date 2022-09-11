@@ -6,9 +6,12 @@ import ForwardingService from "../../../services/api/forwarding.service";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-/** STATUS CHIP (ERROR / SUCCESS) */
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const TableForwarding = (props) => {
+    const { t } = useTranslation('settings');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -69,7 +72,7 @@ const TableForwarding = (props) => {
     const column = [
         {
             field: "aet_condition",
-            headerName: "AET Condition",
+            headerName: t("tables_header.aet_condition"),
             flex: 3,
             minWidth: 110,
             description: "Login",
@@ -77,7 +80,7 @@ const TableForwarding = (props) => {
         },
         {
             field: "value",
-            headerName: "Forward To",
+            headerName: t("tables_header.forward_to"),
             flex: 2,
             minWidth: 110,
             description: "Name",
@@ -92,14 +95,14 @@ const TableForwarding = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
-                    label="Edit"
+                    label={t("buttons.edit")}
                     onClick={() => handleEdit(params.row)}
                     showInMenu
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<DeleteIcon/>}
-                    label="Delete"
+                    label={t("buttons.delete")}
                     color="error"
                     onClick={() => handleDelete(params.row.id)}
                     showInMenu

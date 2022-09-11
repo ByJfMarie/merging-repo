@@ -19,13 +19,16 @@ import {
     Alert, Snackbar, Box
 } from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import t from "../services/Translation.jsx"
 import {useTheme} from '@emotion/react';
 import React from 'react';
 import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
 import ChangePassword from "./settings/ChangePassword.jsx";
 import Index from "../layouts/settings/actions";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../translations/i18n";
 
 import UsersService from "../services/api/users.service";
 import UserStorage from "../services/storage/user.storage";
@@ -36,6 +39,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function Settings(props) {
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { user, privileges, settings } = React.useContext(UserContext);
@@ -199,7 +203,7 @@ function Settings(props) {
     return (
         <React.Fragment>
             <Typography variant="h4"
-                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('profile')} </Typography>
+                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('titles.profile')} </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
@@ -222,7 +226,7 @@ function Settings(props) {
 
                     <Card className={classes.settingCard}>
                         <CardContent>
-                            <Typography variant="h6" align="left"> {t('user')} </Typography>
+                            <Typography variant="h6" align="left"> {t('titles.user')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                             <Grid container spacing={2}>
@@ -230,7 +234,7 @@ function Settings(props) {
                                     <TextField
                                         id="login"
                                         fullWidth
-                                        label={t('login')}
+                                        label={t('fields.login')}
                                         variant="standard"
                                         value={getUserValue('login')}
                                         inputProps={
@@ -242,7 +246,7 @@ function Settings(props) {
                                     <TextField
                                         id="name"
                                         fullWidth
-                                        label={t('name')}
+                                        label={t('fields.name')}
                                         variant="standard"
                                         value={getUserValue('first_name')}
                                         onChange={(e) => handleUserChange('first_name', e.target.value)}
@@ -252,14 +256,14 @@ function Settings(props) {
                                     <TextField
                                         id="email"
                                         fullWidth
-                                        label={t('email')}
+                                        label={t('fields.mail')}
                                         variant="standard"
                                         value={getUserValue('mail')}
                                         onChange={(e) => handleUserChange('mail', e.target.value)}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Link onClick={handleClickOpen}>{t('change_password')}</Link>
+                                    <Link onClick={handleClickOpen}>{t('buttons.change_password')}</Link>
                                 </Grid>
                             </Grid>
                             <Index
@@ -272,12 +276,12 @@ function Settings(props) {
                     <Card className={classes.settingCard}>
                         <CardContent>
 
-                            <Typography variant="h6" align="left"> {t('general')} </Typography>
+                            <Typography variant="h6" align="left"> {t('titles.general')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                             <Grid container spacing={2} style={{marginBottom: "20px"}}>
                                 <Grid item xs={4}>
-                                    <Chip label={t('theme')} style={{backgroundColor: theme.palette.chip.background}}/>
+                                    <Chip label={t('fields.theme')} style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={8} align="left">
@@ -290,13 +294,13 @@ function Settings(props) {
                                                 checked={getSettingsValue('theme') === "dark" ? true : false}
                                             />
                                         }
-                                        label={t("dark_mode")}/>
+                                        label={t("fields.dark_mode")}/>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={2} style={{marginBottom: "20px"}}>
                                 <Grid item xs={4}>
-                                    <Chip label={t('language')}
+                                    <Chip label={t('fields.language')}
                                           style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
@@ -308,21 +312,21 @@ function Settings(props) {
                                             handleSettingsChange('language', e.target.value)
                                         }}
                                     >
-                                        <MenuItem value={"fr"}>Français</MenuItem>
-                                        <MenuItem value={"en"}>English</MenuItem>
+                                        <MenuItem value={"fr"}>{t("fields.language_value.fr")}</MenuItem>
+                                        <MenuItem value={"en"}>{t("fields.language_value.en")}</MenuItem>
                                     </Select>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={2}>
                                 <Grid item xs={4}>
-                                    <Chip label={t('format')} style={{backgroundColor: theme.palette.chip.background}}/>
+                                    <Chip label={t('fields.format')} style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={8} align="left">
                                     <Select
                                         value={getSettingsValue('date_format')}
-                                        label={t('dateFormat')}
+                                        label={t('fields.dateFormat')}
                                         onChange={(e) => {
                                             handleSettingsChange('date_format', e.target.value)
                                         }}
@@ -345,12 +349,12 @@ function Settings(props) {
 
                             <Box sx={{ mt: 5 }} />
 
-                            <Typography variant="h6" align="left"> {t('studies')} </Typography>
+                            <Typography variant="h6" align="left"> {t('titles.studies')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                             <Grid container spacing={2} style={{marginBottom: "50px"}}>
                                 <Grid item xs={3}>
-                                    <Chip label={t('filters')}
+                                    <Chip label={t('fields.filters')}
                                           style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
@@ -372,7 +376,7 @@ function Settings(props) {
 
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>
-                                    <Chip label={t('dates')} style={{backgroundColor: theme.palette.chip.background}}/>
+                                    <Chip label={t('fields.dates')} style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={9}>
@@ -394,12 +398,12 @@ function Settings(props) {
                                 <>
                                     <Box sx={{ mt: 5 }} />
 
-                                    <Typography variant="h6" align="left"> {t('remote_aet')} </Typography>
+                                    <Typography variant="h6" align="left"> {t('titles.remote_aet')} </Typography>
                                     <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                                     <Grid container spacing={2} style={{marginBottom: "50px"}}>
                                         <Grid item xs={3}>
-                                            <Chip label={t('filters')}
+                                            <Chip label={t('fields.filters')}
                                                   style={{backgroundColor: theme.palette.chip.background}}/>
                                         </Grid>
 
@@ -421,7 +425,7 @@ function Settings(props) {
 
                                     <Grid container spacing={2}>
                                         <Grid item xs={3}>
-                                            <Chip label={t('dates')}
+                                            <Chip label={t('fields.dates')}
                                                   style={{backgroundColor: theme.palette.chip.background}}/>
                                         </Grid>
 
@@ -466,7 +470,7 @@ function Settings(props) {
                 </DialogContent>
                 <DialogActions style={{backgroundColor: theme.palette.dialog.color}}>
                     <Index
-                        labelReset={t('cancel')}
+                        labelReset={t('buttons.cancel')}
                         handleSave={handleSavePassword}
                         handleCancel={handleCancelPassword}
                     />

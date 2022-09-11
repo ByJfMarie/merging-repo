@@ -9,12 +9,15 @@ import {
     Slide,
     TextField
 } from "@mui/material";
-import t from "../../../services/Translation";
 import React from "react";
 import ForwardingService from "../../../services/api/forwarding.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import Index from "../../remoteAET/QueryAETSelect";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const useStyles = makeStyles((theme) => ({
     field: {
@@ -38,6 +41,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -108,7 +112,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("ae_title")}
+                                label={t("fields.aet_condition")}
                                 variant="standard"
                                 value={getValue('aet_condition')}
                                 onChange={(e) => {handleChange('aet_condition', e.target.value);}}
@@ -116,7 +120,7 @@ const DialogAddEdit = (props) => {
                         </Grid>
                         <Grid item xs={6} style={{marginBottom: '10px'}}>
                             <FormControl className={classes.root} variant="standard" fullWidth>
-                                <InputLabel id="aet" >Forward To</InputLabel>
+                                <InputLabel id="aet" >{t("fields.forward_to")}</InputLabel>
                                 <Index
                                     forward={true}
                                     currentAet={getValue('value')}
@@ -127,10 +131,10 @@ const DialogAddEdit = (props) => {
 
                         <Grid container spacing={2} direction={"row-reverse"}>
                             <Grid item >
-                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('save')}</Button>
+                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
                             </Grid>
                             <Grid item >
-                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('cancel')}</Button>
+                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
                             </Grid>
                         </Grid>
                     </Grid>

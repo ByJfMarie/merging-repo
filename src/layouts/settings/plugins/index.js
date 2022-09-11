@@ -7,9 +7,12 @@ import DownloadIcon from '@mui/icons-material/Download';
 import FileDownloadOffIcon from '@mui/icons-material/FileDownloadOff';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-/** STATUS CHIP (ERROR / SUCCESS) */
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
 
 const TablePlugins = (props) => {
+    const { t } = useTranslation('settings');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -101,7 +104,7 @@ const TablePlugins = (props) => {
     const column = [
         {
             field: "name",
-            headerName: "Name",
+            headerName: t("tables_header.name"),
             flex: 3,
             minWidth: 110,
             description: "Login",
@@ -109,7 +112,7 @@ const TablePlugins = (props) => {
         },
         {
             field: "version",
-            headerName: "Version",
+            headerName: t("tables_header.version"),
             flex: 2,
             minWidth: 110,
             description: "Name",
@@ -117,7 +120,7 @@ const TablePlugins = (props) => {
         },
         {
             field: "type",
-            headerName: "Type",
+            headerName: t("tables_header.type"),
             flex: 2,
             minWidth: 110,
             description: "Name",
@@ -132,20 +135,20 @@ const TablePlugins = (props) => {
                 if (params.row.installed) {
                     actions.push(<GridActionsCellItem
                         icon={<FileDownloadOffIcon/>}
-                        label="Uninstall"
+                        label={t("buttons.uninstall")}
                         onClick={() => handleUninstall(params.row.id)}
                         showInMenu
                     />);
                     actions.push(<GridActionsCellItem
                         icon={<DeleteForeverIcon/>}
-                        label="Delete"
+                        label={t("buttons.delete")}
                         onClick={() => handleDelete(params.row.id)}
                         showInMenu
                     />);
                 } else {
                     actions.push(<GridActionsCellItem
                         icon={<DownloadIcon/>}
-                        label="Install"
+                        label={t("buttons.install")}
                         onClick={() => handleInstall(params.row.id)}
                         showInMenu
                     />);

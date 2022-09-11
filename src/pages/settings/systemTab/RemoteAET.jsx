@@ -2,13 +2,18 @@ import React from 'react';
 import {Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid, Alert, Snackbar} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import t from "../../../services/Translation";
 import DialogAddEdit from "../../../layouts/settings/aets/DialogAddEdit";
 import TableAets from "../../../layouts/settings/aets";
 import AETSettings from "../../../services/api/settings.service";
 import SettingsService from "../../../services/api/settings.service";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
+
 export default function RemoteAET() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
     const useStyles = makeStyles({
         field: {
@@ -116,14 +121,14 @@ export default function RemoteAET() {
                                             onChange={(e) => handleSettingsChange('DCMS.allow_all_scp', e.target.checked+"")}
                                         />
                                     }
-                                    label={t("allow_all_remote_server")}/>
+                                    label={t("fields.allow_all_remote_server")}/>
                             </FormGroup>
                         </Grid>
 
                         <Grid item xs/>
 
                         <Grid item className={classes.userNameGrid}>
-                            <Button variant="contained" component="label" onClick={toggleDialog}>+ Add</Button><br/>
+                            <Button variant="contained" component="label" onClick={toggleDialog}>+ {t("buttons.add")}</Button><br/>
                         </Grid>
                     </Grid>
 

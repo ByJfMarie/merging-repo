@@ -7,16 +7,20 @@ import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
 import Chip from "@mui/material/Chip";
-import t from "../../services/Translation";
 import {Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import QRService from "../../services/api/queryRetrieve.service";
 import {useState} from "react";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 /** STATUS CHIP (ERROR / SUCCESS) */
 
 const RetrievingLayout = (props) => {
+    const { t } = useTranslation('common');
 
     //const[privileges] = React.useState(UserStorage.getPrivileges());
 
@@ -146,7 +150,7 @@ const RetrievingLayout = (props) => {
     const column = [
         {
             field: "status",
-            headerName: "Status",
+            headerName: t("tables_header.status"),
             flex: 1,
             minWidth: 110,
             description: "Status",
@@ -157,19 +161,19 @@ const RetrievingLayout = (props) => {
         },
         {
             "field": 'p_name',
-            "headerName": t("patient"),
+            "headerName": t("tables_header.patient"),
             "flex": 2,
             "minWidth": 200
         },
         {
             "field": 'st_description',
-            "headerName": t("description"),
+            "headerName": t("tables_header.description"),
             "flex": 3,
             "minWidth": 200
         },
         {
             "field": 'aet',
-            "headerName": t("aet"),
+            "headerName": t("tables_header.aet"),
             "flex": 2,
             "minWidth": 200,
             renderCell: (params) => {
@@ -178,7 +182,7 @@ const RetrievingLayout = (props) => {
         },
         {
             "field": 'noi',
-            "headerName": t("noi"),
+            "headerName": t("tables_header.noi"),
             "flex": 1,
             "minWidth": 200,
             renderCell: (params) => {

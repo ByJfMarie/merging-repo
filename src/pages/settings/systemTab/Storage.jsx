@@ -11,12 +11,17 @@ import {
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
-import t from "../../../services/Translation";
 import * as React from "react";
 import SettingsService from "../../../services/api/settings.service";
 import Index from "../../../layouts/settings/actions";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../../translations/i18n";
+
 export default function Storage() {
+    const { t } = useTranslation('settings');
+
     const theme = useTheme();
     const useStyles = makeStyles({
         card: {
@@ -136,7 +141,7 @@ export default function Storage() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("storage_path")}
+                                    label={t("fields.storage_path")}
                                     variant="standard"
                                     value={getSettingsValue('DCMS.storage_folder')}
                                     onChange={(e) => {
@@ -148,7 +153,7 @@ export default function Storage() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("secondary_path")}
+                                    label={t("fields.secondary_path")}
                                     variant="standard"
                                     value={getSettingsValue('DCMS.storage_folder_secondary')}
                                     onChange={(e) => {
@@ -167,7 +172,7 @@ export default function Storage() {
                                                         onChange={(e) => handleSettingsChange('SDS.keep_images', e.target.checked + "")}
                                                     />
                                                 }
-                                                label={t("keep_images_for")}
+                                                label={t("fields.keep_images_for")}
                                             />
                                         </FormGroup>
                                     </Grid>
@@ -184,7 +189,7 @@ export default function Storage() {
                                     </Grid>
                                     <Grid item xs="auto">
                                         <Typography
-                                            style={{marginLeft: '10px', marginTop: '8px'}}>{t("days")}</Typography>
+                                            style={{marginLeft: '10px', marginTop: '8px'}}>{t("fields.days")}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -197,7 +202,7 @@ export default function Storage() {
                                                 onChange={(e) => handleSettingsChange('SDS.use_treshold', e.target.checked + "")}
                                             />
                                         }
-                                        label={t("capacity_treshold")}
+                                        label={t("fields.capacity_treshold")}
                                     />
                                 </FormGroup>
                             </Grid>
@@ -206,7 +211,7 @@ export default function Storage() {
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
-                                        label={t("maximum")}
+                                        label={t("fields.maximum")}
                                         variant="standard"
                                         value={getSettingsValue('SDS.clean_auto_treshold')}
                                         onChange={(e) => {
@@ -218,7 +223,7 @@ export default function Storage() {
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
-                                        label={t("drop_to")}
+                                        label={t("fields.drop_to")}
                                         variant="standard"
                                         value={getSettingsValue('SDS.clean_auto_treshold_target')}
                                         onChange={(e) => {

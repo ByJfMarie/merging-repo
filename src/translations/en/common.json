@@ -1,0 +1,90 @@
+{
+  "menu": {
+    "studies": "Local Studies",
+    "remote_aet": "Remote Servers",
+    "forwarding": "Forwarding",
+    "transfer": "Transfer",
+    "settings": "Settings",
+    "logs": "Logs"
+  },
+
+  "titles": {
+    "studies": "Local Studies",
+    "remote_aet": "Remote Servers",
+    "forwarding": "Forwarding",
+    "transfer": "Transfer",
+    "logs": "Logs",
+    "profile": "Profile",
+    "user": "User",
+    "general": "General"
+  },
+
+  "filters": {
+    "patient_id": "Patient ID / MRN",
+    "patient_name": "Patient Name",
+    "accession_number": "Accession #",
+    "referring_physician": "Referring Physician",
+    "modality": "Modality",
+    "study_id": "Study ID",
+    "description": "Study Description",
+    "study_date": "Study Date",
+    "from": "From",
+    "to": "To",
+    "birthdate": "Date of birth",
+    "aet": "AET",
+    "more": "More",
+    "show_deleted": "Show deleted",
+    "termTooShort": "Search term is too short",
+    "termMessage": " Search term is too short, please enter at least 3 characters in order to trigger a search"
+  },
+
+  "date_presets": {
+    "all": "All",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last_month": "Last month",
+    "last_year": "Last year",
+    "last_week": "Last week",
+    "last_3days": "Last 3 days"
+  },
+
+  "tables_header": {
+    "patient": "Patient",
+    "study": "Study",
+    "description": "Study Description",
+    "referring_physician": "Ref. Physician",
+    "report": "Report",
+    "assignations": "Assigned To",
+    "status": "Status",
+    "noi" : "# Images",
+    "aet": "AET"
+  },
+
+  "buttons": {
+    "forward": "Forward",
+    "download":"Download",
+    "transfer": "Transfer",
+    "retrieve": "Retrieve",
+    "reset": "Reset",
+    "change_password": "Change Password",
+    "contact_us": "Contact us",
+    "privacy_policy": "Privacy Policy",
+    "terms_conditions": "Terms & Conditions",
+    "faq": "FAQ"
+  },
+
+  "fields": {
+    "login": "Login",
+    "name": "Name",
+    "mail": "Email",
+    "theme": "Theme",
+    "language": "Language",
+    "language_value": {
+      "fr": "French",
+      "en": "English"
+    },
+    "format": "Format",
+    "filters": "Filters",
+    "dates": "Dates Presets"
+  }
+}
