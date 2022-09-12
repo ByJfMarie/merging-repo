@@ -68,6 +68,12 @@ const License = () => {
         const response = await SystemService.setLicense(event.target.files[0]);
 
         if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.license_uploaded", {error: response.error})
+            });
             return;
         }
 
@@ -75,7 +81,7 @@ const License = () => {
             ...message,
             show: true,
             severity: "success",
-            message: "License successfully uploaded!"
+            message: t("msg_info.license_uploaded")
         });
 
         refresh();

@@ -16,7 +16,9 @@
     "logs": "Logs",
     "profile": "Profile",
     "user": "User",
-    "general": "General"
+    "general": "General",
+    "study_information": "Study Information",
+    "study_permissions": "Study Permissions"
   },
 
   "filters": {
@@ -57,7 +59,8 @@
     "assignations": "Assigned To",
     "status": "Status",
     "noi" : "# Images",
-    "aet": "AET"
+    "aet": "AET",
+    "creation_date": "Creation Date"
   },
 
   "buttons": {
@@ -70,7 +73,18 @@
     "contact_us": "Contact us",
     "privacy_policy": "Privacy Policy",
     "terms_conditions": "Terms & Conditions",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "close": "Close",
+    "retry": "Retry",
+    "cancel": "Cancel"
+  },
+
+  "status": {
+    "waiting": "Waiting",
+    "forwarding": "Forwarding",
+    "completed": "Completed",
+    "error": "Error",
+    "retrieving": "Retrieving"
   },
 
   "fields": {
@@ -85,6 +99,40 @@
     },
     "format": "Format",
     "filters": "Filters",
-    "dates": "Dates Presets"
+    "filter": "Filter",
+    "dates": "Dates Presets",
+    "p_name": "Patient Name",
+    "p_id": "Patient ID",
+    "p_birthdate": "Patient Birthdate",
+    "st_institution": "Institution",
+    "st_ref_physician": "Referring Physician",
+    "st_accession_number": "Accession Number",
+    "st_description": "Study Description",
+    "st_modalities": "Modalities",
+    "st_date": "Study Date",
+    "st_id": "Study ID",
+    "st_uid": "Study UID",
+    "st_reference": "Reference",
+    "st_storage_key": "Storage Key"
+  },
+
+  "msg_info": {
+    "creating_zip": "Creating ZIP File",
+    "downloading": "Downloading file",
+    "download_completed": "Download Completed",
+    "forward_success": "Forwarding order has been successfully created."
+  },
+
+  "msg_error" : {
+    "patientID_too_short": "Patient ID is too short (Min 3 characters allowed...)",
+    "patientName_too_short": "Patient Name is too short (Min 3 characters allowed...)",
+    "studyDesc_too_short": "Study Description is too short (Min 3 characters allowed...)",
+    "accession_too_short": "Accession Number is too short (Min 3 characters allowed...)",
+    "refPhys_too_short": "Referring Physician is too short (Min 3 characters allowed...)",
+    "open_viewer": "Impossible to open viewer: {{error}}",
+    "study_no_selection": "You have to select at least one study!",
+    "forward_error": "Impossible to forward study: {{error}}",
+    "query_no_criteria": "You can't query studies without criteria!",
+    "query_no_aet": "You have to select a query AET!"
   }
 }

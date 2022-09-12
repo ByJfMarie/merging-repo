@@ -34,7 +34,7 @@ const RetrievingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                            label="Waiting"
+                            label={t("status.waiting")}
                             //color: "default"
                         />
                     )
@@ -46,7 +46,7 @@ const RetrievingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                            label= "Retrieving"
+                            label={t("status.retrieving")}
                             color= "info"
                         />
                     )
@@ -58,7 +58,7 @@ const RetrievingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                            label= "Completed"
+                            label={t("status.completed")}
                             color= "success"
                         />
                     )
@@ -71,7 +71,7 @@ const RetrievingLayout = (props) => {
                                 variant="filled"
                                 size="small"
                                 icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                                label= "Error"
+                                label={t("status.error")}
                                 color= "error"
                             />
                         </Tooltip>
@@ -96,6 +96,7 @@ const RetrievingLayout = (props) => {
     const classes = useStyles();
 
     //Status
+    const [pageSize, setPageSize] = React.useState(10);
     const [rowsStatus, setRowsStatus] = useState([]);
     const refreshOrders = async () => {
         const response = await QRService.getOrders({});
@@ -202,7 +203,7 @@ const RetrievingLayout = (props) => {
                 if (params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
-                        label="Retry"
+                        label={t("buttons.retry")}
                         onClick={() => handleRetry(params.row.id)}
                         showInMenu
                     />);
@@ -210,7 +211,7 @@ const RetrievingLayout = (props) => {
                 if (params.row.status === 0 || params.row.status === 1 || params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
-                        label="Cancel"
+                        label={t("buttons.cancel")}
                         onClick={() => handleCancel(params.row.id)}
                         showInMenu
                     />);
@@ -231,8 +232,9 @@ const RetrievingLayout = (props) => {
                     autoHeight={true}
                     rows={rowsStatus}
                     columns={column}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    rowsPerPageOptions={[10,20,50]}
                     sx={{
                         '& .MuiDataGrid-row:hover': {
                             transition: '0.3s ',

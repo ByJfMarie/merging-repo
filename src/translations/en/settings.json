@@ -125,6 +125,7 @@
     "version": "Version",
     "build": "build",
     "aet": "AET",
+    "alias": "Alias",
     "latency": "Latency",
     "transfer_syntax": {
       "1_2_840_10008_1_2": "Implicit VR Endian",
@@ -230,5 +231,45 @@
     "our_website": "Our Website",
     "technical_support": "Technical support",
     "license_request": "Request a license"
+  },
+
+  "msg_info": {
+    "user_deleted": "User has been successfully deleted!",
+    "user_saved": "User has been successfully saved!",
+    "permissions_saved": "Privileges have been successfully saved!",
+    "mail_test": "Mail successful sent!",
+    "aet_echo": "ECHO successful!",
+    "aet_deleted": "AET has been successfully deleted!",
+    "aet_saved": "AET has been successfully saved!",
+    "forwarding_deleted": "Forwarding Rule has been successfully deleted!",
+    "forwarding_saved": "Forwarding Rule has been successfully saved!",
+    "transfer_deleted": "Transfer Rule has been successfully deleted!",
+    "transfer_saved": "Transfer Rule has been successfully saved!",
+    "transfer_test": "SFTP connection successful!",
+    "settings_saved": "Settings successfully saved!",
+    "logo_uploaded": "Logo File successfully uploaded!",
+    "help_uploaded": "Help File successfully uploaded!",
+    "loginSheet_uploaded": "Login Sheet successfully uploaded!",
+    "license_uploaded": "License successfully uploaded!"
+  },
+
+  "msg_error": {
+    "user_deleted": "Impossible to delete user: {{error}}",
+    "user_saved": "Impossible to save user: {{error}}",
+    "permissions_saved": "Impossible to save privileges: {{error}}",
+    "mail_test": "Impossible to send test mail: {{error}}",
+    "aet_echo": "Impossible to make an ECHO: {{error}}",
+    "aet_deleted": "Impossible to delete AET: {{error}}",
+    "aet_saved": "Impossible to save AET: {{error}}",
+    "forwarding_deleted": "Impossible to delete Forwarding Rule: {{error}}",
+    "forwarding_saved": "Impossible to save Forwarding Rule: {{error}}",
+    "transfer_deleted": "Impossible to delete Transfer Rule: {{error}}",
+    "transfer_saved": "Impossible to save Transfer Rule: {{error}}",
+    "transfer_test": "SFTP connection error: {{error}}",
+    "settings_saved": "Impossible to save settings: {{error}}",
+    "logo_uploaded": "Impossible to upload Logo File: {{error}}",
+    "help_uploaded": "Impossible to upload Help File: {{error}}",
+    "loginSheet_uploaded": "Impossible to upload Login Sheet File: {{error}}",
+    "license_uploaded": "Impossible to upload License File!"
   }
 }

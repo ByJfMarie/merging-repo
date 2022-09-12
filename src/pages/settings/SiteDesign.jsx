@@ -148,7 +148,7 @@ export default function SiteDesign() {
                 ...message,
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.settings_saved", {error: response.error})
             });
             return;
         }
@@ -159,7 +159,7 @@ export default function SiteDesign() {
             ...message,
             show: true,
             severity: "success",
-            message: "Settings successfully saved!"
+            message: t("msg_info.settings_saved")
         });
     };
 
@@ -172,6 +172,12 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadLogo(event.target.files[0]);
 
         if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.logo_uploaded", {error: response.error})
+            });
             return;
         }
 
@@ -179,7 +185,7 @@ export default function SiteDesign() {
             ...message,
             show: true,
             severity: "success",
-            message: "Logo File successfully uploaded!"
+            message: t("msg_info.logo_uploaded")
         });
     }
 
@@ -187,6 +193,12 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadHelp(event.target.files[0]);
 
         if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.help_uploaded", {error: response.error})
+            });
             return;
         }
 
@@ -194,7 +206,7 @@ export default function SiteDesign() {
             ...message,
             show: true,
             severity: "success",
-            message: "Help File successfully uploaded!"
+            message: t("msg_info.help_uploaded")
         });
     }
 
@@ -202,6 +214,12 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadLoginSheet(event.target.files[0]);
 
         if (response.error) {
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.loginSheet_uploaded", {error: response.error})
+            });
             return;
         }
 
@@ -209,7 +227,7 @@ export default function SiteDesign() {
             ...message,
             show: true,
             severity: "success",
-            message: "LoginSheet File successfully uploaded!"
+            message: t("msg_info.loginSheet_uploaded")
         });
     }
 

@@ -15,6 +15,10 @@ import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import SearchBar from "../../components/SearchBar";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
         padding: theme.spacing(2),
@@ -62,6 +66,8 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function CustomDialogAddPermission({open, handleOpenDialog, handleCloseDialog, study}) {
+
+    const { t } = useTranslation('common');
 
     const theme = useTheme();
 
@@ -161,7 +167,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
             fullWidth
         >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                Study Permissions
+                {t("titles.study_permissions")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
                 {
@@ -172,7 +178,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                             value={searched}
                             onChange={(searchVal) => requestSearch(searchVal)}
                             onCancelSearch={() => cancelSearch()}
-                            placeholder="filter"
+                            placeholder={t("fields.filter")}
                         />
                         <List sx={{width: '100%', marginTop: '10px', bgcolor: 'background.paper'}} className={classes.root}>
                             {filteredRows.sort((a, b) => a.checked?-1:1).map((row) => {
@@ -212,7 +218,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCloseDialog}>
-                    Close
+                    {t("buttons.close")}
                 </Button>
             </DialogActions>
         </BootstrapDialog>

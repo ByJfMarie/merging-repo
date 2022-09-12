@@ -33,7 +33,7 @@ const ForwardingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                            label="Waiting"
+                            label={t("status.waiting")}
                             //color: "default"
                         />
                     )
@@ -45,7 +45,7 @@ const ForwardingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                            label= "Forwarding"
+                            label={t("status.forwarding")}
                             color= "info"
                         />
                     )
@@ -57,7 +57,7 @@ const ForwardingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                            label= "Completed"
+                            label={t("status.completed")}
                             color= "success"
                         />
                     )
@@ -70,7 +70,7 @@ const ForwardingLayout = (props) => {
                                 variant="filled"
                                 size="small"
                                 icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                                label= "Error"
+                                label={t("status.error")}
                                 color= "error"
                             />
                         </Tooltip>
@@ -162,6 +162,12 @@ const ForwardingLayout = (props) => {
             }
         },
         {
+            "field": 'creation_date_formatted',
+            "headerName": t("tables_header.creation_date"),
+            "flex": 2,
+            "minWidth": 200
+        },
+        {
             "field": 'p_name',
             "headerName": t("tables_header.patient"),
             "flex": 2,
@@ -205,7 +211,7 @@ const ForwardingLayout = (props) => {
                 if (params.row.status === 3) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
-                        label="Retry"
+                        label={t("buttons.retry")}
                         onClick={() => handleRetry(params.row.id)}
                         showInMenu
                     />);
@@ -213,7 +219,7 @@ const ForwardingLayout = (props) => {
                 if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
-                        label="Cancel"
+                        label={t("buttons.cancel")}
                         onClick={() => handleCancel(params.row.series_uid, params.row.called_aet)}
                         showInMenu
                     />);

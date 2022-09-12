@@ -64,7 +64,7 @@ const DialogAddEdit = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.permissions_saved", {error: response.error})
             });
             return;
         }
@@ -76,7 +76,7 @@ const DialogAddEdit = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "Privilege has been successfully edited!"
+            message: t("msg_info.permissions_saved")
         });
     }
 

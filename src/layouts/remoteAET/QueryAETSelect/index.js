@@ -14,6 +14,11 @@ const Index = (props) => {
         }
 
         setAets(response.items);
+
+        //Select first aet
+        if (response.items.length>=1) {
+            props.setCurrentAET(response.items[0].title);
+        }
     }
     React.useEffect(() => {
         loadAETs()

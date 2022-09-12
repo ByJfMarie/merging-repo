@@ -64,27 +64,27 @@ function Index(props) {
         if (!filters) return false;
 
         if (filters.patient_id && filters.patient_id.length<3) {
-            messageAlert('error', 'Patient ID is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.patientID_too_short"))
             return false;
         }
 
         if (filters.patient_name && filters.patient_name.length<3) {
-            messageAlert('error', 'Patient Name is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.patientName_too_short"))
             return false;
         }
 
         if (filters.description && filters.description.length<3) {
-            messageAlert('error', 'Study Description is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.studyDesc_too_short"))
             return false;
         }
 
         if (filters.accession_number && filters.accession_number.length<3) {
-            messageAlert('error', 'Accession Number is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.accession_too_short"))
             return false;
         }
 
         if (filters.referring_physician && filters.referring_physician.length<3) {
-            messageAlert('error', 'Referring Physician is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.refPhys_too_short"))
             return false;
         }
 
@@ -102,7 +102,7 @@ function Index(props) {
             if (filters.to) empty = false;
 
             if(empty) {
-                messageAlert('error', 'You can\'t query studies without criteria!');
+                messageAlert('error', t("msg_error.query_no_criteria"));
                 return false;
             }
         }
@@ -118,6 +118,7 @@ function Index(props) {
         const rows = [];
 
         if (props.currentAET === '') {
+            messageAlert('error', t("msg_error.query_no_aet"));
             setRows(rows);
             return;
         }

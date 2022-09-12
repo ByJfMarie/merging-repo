@@ -59,8 +59,8 @@ const Index = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: response.error
-            });
+                message: t("msg_error.user_deleted", {error: response.error})
+ }           );
             return;
         }
 
@@ -68,7 +68,7 @@ const Index = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "User has been successfully deleted!"
+            message: t("msg_info.user_deleted")
         });
     }
 

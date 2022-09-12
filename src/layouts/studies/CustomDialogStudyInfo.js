@@ -12,6 +12,10 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import {Divider, Grid, List, ListItem, ListItemText} from "@mui/material";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+import "../../translations/i18n";
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
         padding: theme.spacing(2),
@@ -60,6 +64,8 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomDialogStudyInfo({open, handleOpenDialog, handleCloseDialog, study}) {
 
+    const { t } = useTranslation('common');
+
     const [values, setValues] = React.useState(null);
 
     React.useEffect(() => {
@@ -75,81 +81,81 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
             fullWidth
         >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                Study Information
+                {t("titles.study_information")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
                 {
                     values &&
 
                         <Grid container spacing={2}>
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Patient Name</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.p_name")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_name}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Patient ID</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.p_id")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_id}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Patient Birthdate</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.p_birthdate")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_birthdate}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Institution</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_institution")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_institution}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Referring Physician</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_ref_physician")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_ref_physician}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Accession Number</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_accession_number")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_accession_number}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study Description</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_description")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_description}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Modalities</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_modalities")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_modalities}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study Date</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_date")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_date}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study ID</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_id")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_id}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Study UID</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_uid")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_uid}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Reference</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_reference")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_reference}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>Storage Key</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_storage_key")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_storage_key}</Grid>
                         </Grid>
                 }
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCloseDialog}>
-                    Close
+                    {t("buttons.close")}
                 </Button>
             </DialogActions>
         </BootstrapDialog>

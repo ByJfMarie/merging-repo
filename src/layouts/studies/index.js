@@ -78,27 +78,27 @@ function StudiesLayout(props) {
         if (!filters) return false;
 
         if (filters.patient_id && filters.patient_id.length<3) {
-            messageAlert('error', 'Patient ID is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.patientID_too_short"))
             return false;
         }
 
         if (filters.patient_name && filters.patient_name.length<3) {
-            messageAlert('error', 'Patient Name is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.patientName_too_short"))
             return false;
         }
 
         if (filters.description && filters.description.length<3) {
-            messageAlert('error', 'Study Description is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.studyDesc_too_short"))
             return false;
         }
 
         if (filters.accession_number && filters.accession_number.length<3) {
-            messageAlert('error', 'Accession Number is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.accession_too_short"))
             return false;
         }
 
         if (filters.referring_physician && filters.referring_physician.length<3) {
-            messageAlert('error', 'Referring Physician is too short (Min 3 characters allowed...)')
+            messageAlert('error', t("msg_error.refPhys_too_short"))
             return false;
         }
 
@@ -163,7 +163,7 @@ function StudiesLayout(props) {
         const response = await ViewersService.getURL(study.key, viewer_id);
 
         if (response.error) {
-            messageAlert('error', "Impossible to open viewer: "+response.error);
+            messageAlert('error', t("msg_error.open_viewer", {error: response.error}));
             return;
         }
 
@@ -181,13 +181,13 @@ function StudiesLayout(props) {
     const [downloadMessage, setDownloadMessage] = useState("")
     const downloadStudies = async(type) => {
         if (!selectedRows || selectedRows.length<=0) {
-            messageAlert('error', "You have to select at least one study!");
+            messageAlert('error', t("msg_error.study_no_selection"));
             return;
         }
 
         //Init Download dialog
         setDownloadProgress(0);
-        setDownloadMessage("Creating ZIP File");
+        setDownloadMessage(t("msg_info.creating_zip"));
         setDownloadOpen(true);
 
         //Start Download
@@ -219,7 +219,7 @@ function StudiesLayout(props) {
 
         //Download
         setDownloadProgress(0);
-        setDownloadMessage("Downloading file");
+        setDownloadMessage(t("msg_info.downloading"));
         StudiesService
             .download(download_id,
             {
@@ -228,7 +228,7 @@ function StudiesLayout(props) {
                     const percentage = Math.round((progressEvent.loaded / progressEvent.total)*100);
                     setDownloadProgress(percentage);
                     if (percentage === 100) {
-                        setDownloadMessage("Download Completed");
+                        setDownloadMessage(t("msg_info.download_completed"));
 
                         setTimeout(() => {
                             setDownloadOpen(false);
@@ -259,15 +259,17 @@ function StudiesLayout(props) {
         if (!aet) return;
 
         if (!selectedRows || selectedRows.length<=0) {
-            messageAlert('error', "You have to select at least one study!");
+            messageAlert('error', t("msg_error.study_no_selection"));
             return;
         }
 
         const response = await ForwardingService.forward(aet, selectedRows);
         if (response.error) {
-            console.log(response.error);
+            messageAlert('error', t("msg_error.forward_error", {error: response.error}));
             return;
         }
+
+        messageAlert("success", t("msg_info.forward_success"))
 
         setSelectedRows([]);
     };

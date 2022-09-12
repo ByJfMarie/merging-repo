@@ -69,7 +69,7 @@ const DialogAddEdit = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.transfer_saved", {error: response.error})
             });
             return;
         }
@@ -82,7 +82,7 @@ const DialogAddEdit = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "User has been successfully "+(addMode?"added":"edited")+"!"
+            message: t("msg_info.transfer_saved")
         });
     }
 

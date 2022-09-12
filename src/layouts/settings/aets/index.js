@@ -56,7 +56,7 @@ const TableAets = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: "Impossible to make an ECHO: "+response.error
+                message: t("msg_error.aet_echo", {error: response.error})
             });
             return;
         }
@@ -64,7 +64,7 @@ const TableAets = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "ECHO successful!"
+            message: t("msg_info.aet_echo")
         });
     }
 
@@ -79,7 +79,7 @@ const TableAets = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.aet_deleted", {error: response.error})
             });
             return;
         }
@@ -88,7 +88,7 @@ const TableAets = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "User has been successfully deleted!"
+            message: t("msg_info.aet_deleted")
         });
     }
 
@@ -132,23 +132,23 @@ const TableAets = (props) => {
                         <Grid container spacing={0}>
                             <Grid item xs={4}>
                                 {
+                                    (params.row.qr)
+                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("fields.query")}</Typography>)
+                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("fields.query")}</Typography>)
+                                }
+                            </Grid>
+                            <Grid item xs={4}>
+                                {
                                     (params.row.store)
-                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>Store</Typography>)
-                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>Store</Typography>)
+                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("fields.store")}</Typography>)
+                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("fields.store")}</Typography>)
                                 }
                             </Grid>
                             <Grid item xs={4}>
                                 {
                                     (params.row.forward)
-                                        ? (<Typography><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>Forward</Typography>)
-                                        : (<Typography><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>Forward</Typography>)
-                                }
-                            </Grid>
-                            <Grid item xs={4}>
-                                {
-                                    (params.row.qr)
-                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>Q/R</Typography>)
-                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>Q/R</Typography>)
+                                        ? (<Typography><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("fields.forward")}</Typography>)
+                                        : (<Typography><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("fields.forward")}</Typography>)
                                 }
                             </Grid>
                         </Grid>

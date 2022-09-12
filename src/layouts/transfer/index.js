@@ -17,67 +17,68 @@ import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
-const statusComponent = (params) => {
-
-    return (
-        <>
-            {
-                params.value === 0 && (
-                    <Chip
-                        variant="filled"
-                        size="small"
-                        icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                        label="Waiting"
-                        //color: "default"
-                    />
-                )
-            }
-
-            {
-                params.value === 1 && (
-                    <Chip
-                        variant="filled"
-                        size="small"
-                        icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                        label= "Retrieving"
-                        color= "info"
-                    />
-                )
-            }
-
-            {
-                params.value === 2 && (
-                    <Chip
-                        variant="filled"
-                        size="small"
-                        icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                        label= "Completed"
-                        color= "success"
-                    />
-                )
-            }
-
-            {
-                params.value === 3 && (
-                    <Tooltip title={params.row.error}>
-                        <Chip
-                            variant="filled"
-                            size="small"
-                            icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                            label= "Error"
-                            color= "error"
-                        />
-                    </Tooltip>
-                )
-            }
-        </>
-    );
-}
 
 const TransferStatusLayout = (props) => {
 
     const { t } = useTranslation('common');
     //const { privileges } = React.useContext(UserContext);
+
+    const statusComponent = (params) => {
+
+        return (
+            <>
+                {
+                    params.value === 0 && (
+                        <Chip
+                            variant="filled"
+                            size="small"
+                            icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
+                            label={t("status.waiting")}
+                            //color: "default"
+                        />
+                    )
+                }
+
+                {
+                    params.value === 1 && (
+                        <Chip
+                            variant="filled"
+                            size="small"
+                            icon= {<DownloadIcon style={{fill: '#fff'}}/>}
+                            label={t("status.retrieving")}
+                            color= "info"
+                        />
+                    )
+                }
+
+                {
+                    params.value === 2 && (
+                        <Chip
+                            variant="filled"
+                            size="small"
+                            icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
+                            label={t("status.completed")}
+                            color= "success"
+                        />
+                    )
+                }
+
+                {
+                    params.value === 3 && (
+                        <Tooltip title={params.row.error}>
+                            <Chip
+                                variant="filled"
+                                size="small"
+                                icon= {<ErrorIcon style={{fill: '#fff'}}/>}
+                                label={t("status.error")}
+                                color= "error"
+                            />
+                        </Tooltip>
+                    )
+                }
+            </>
+        );
+    }
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -178,7 +179,7 @@ const TransferStatusLayout = (props) => {
                 if (params.row.status === 3) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
-                        label="Retry"
+                        label={t("buttons.retry")}
                         onClick={() => handleRetry(params.row.id)}
                         showInMenu
                     />);
@@ -186,7 +187,7 @@ const TransferStatusLayout = (props) => {
                 if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
-                        label="Cancel"
+                        label={t("buttons.cancel")}
                         onClick={() => handleCancel(params.row.id)}
                         showInMenu
                     />);

@@ -145,7 +145,7 @@ export default function Emailing() {
                 ...message,
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.mail_test", {error: response.error})
             });
             return;
         }
@@ -154,7 +154,7 @@ export default function Emailing() {
             ...message,
             show: true,
             severity: "success",
-            message: "Settings successfully saved!"
+            message: t("msg_info.mail_test")
         });
     }
 
@@ -166,7 +166,7 @@ export default function Emailing() {
                 ...message,
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.settings_saved", {error: response.error})
             });
             return;
         }
@@ -176,7 +176,7 @@ export default function Emailing() {
             ...message,
             show: true,
             severity: "success",
-            message: "Settings successfully saved!"
+            message: t("msg_info.settings_saved")
         });
     };
 

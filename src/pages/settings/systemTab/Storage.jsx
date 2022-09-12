@@ -109,7 +109,7 @@ export default function Storage() {
                 ...message,
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.settings_saved", {error: response.error})
             });
             return;
         }
@@ -119,7 +119,7 @@ export default function Storage() {
             ...message,
             show: true,
             severity: "success",
-            message: "Settings successfully saved!"
+            message: t("msg_info.settings_saved")
         });
     };
 

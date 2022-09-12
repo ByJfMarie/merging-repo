@@ -66,7 +66,7 @@ const DialogAddEdit = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.aet_saved", {error: response.error})
             });
             return;
         }
@@ -79,7 +79,7 @@ const DialogAddEdit = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "User has been successfully "+(addMode?"added":"edited")+"!"
+            message: t("msg_info.aet_saved")
         });
     }
 
@@ -140,7 +140,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.description")}
+                                label={t("fields.alias")}
                                 variant="standard"
                                 value={getValue('description')}
                                 onChange={(e) => {handleChange('description', e.target.value);}}

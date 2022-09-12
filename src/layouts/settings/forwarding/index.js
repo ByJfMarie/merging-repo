@@ -56,7 +56,7 @@ const TableForwarding = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.forwarding_deleted", {error: response.error})
             });
             return;
         }
@@ -65,7 +65,7 @@ const TableForwarding = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "User has been successfully deleted!"
+            message: t("msg_info.forwarding_deleted")
         });
     }
 

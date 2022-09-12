@@ -57,7 +57,7 @@ const TableTransferRules = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.transfer_deleted", {error: response.error})
             });
             return;
         }
@@ -66,7 +66,7 @@ const TableTransferRules = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: "User has been successfully deleted!"
+            message: t("msg_info.transfer_deleted")
         });
     }
 
