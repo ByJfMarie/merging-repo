@@ -103,6 +103,10 @@ class StudiesService {
                 return null;
             });
     }
+
+    delete(study_uid) {
+        return apiPOST('studies/delete/'+study_uid);
+    }
 }
 
 export default new StudiesService();

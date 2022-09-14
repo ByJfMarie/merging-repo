@@ -7,6 +7,7 @@ import {IconButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -47,6 +48,27 @@ const Index = (props) => {
     React.useEffect(() => {
         refreshUsers(props.filters);
     }, [props.forceRefresh, props.filters]);
+
+    const handleUserStatus = async (row) => {
+        row.status = !row.status;
+
+        let response = await UsersService.editUser(row.login, row);
+        if (response.error) {
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: t("msg_error.user_saved", {error: response.error})
+            });
+            return;
+        }
+
+        refreshUsers(props.filters);
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: t("msg_info.user_saved")
+        });
+    }
 
     const handleEdit = async (row) => {
         props.editUser(row);
@@ -133,6 +155,23 @@ const Index = (props) => {
             width: 80,
             getActions: (params) => {
                 let actions = [];
+
+                if (params.row.status) {
+                    actions.push(<GridActionsCellItem
+                        icon={<CloseIcon color="error"/>}
+                        label={t("buttons.deactivate")}
+                        onClick={() => handleUserStatus(params.row)}
+                        showInMenu
+                    />);
+                } else {
+                    actions.push(<GridActionsCellItem
+                        icon={<CheckIcon color="success"/>}
+                        label={t("buttons.activate")}
+                        onClick={() => handleUserStatus(params.row)}
+                        showInMenu
+                    />);
+                }
+
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
                     label={t("buttons.edit")}

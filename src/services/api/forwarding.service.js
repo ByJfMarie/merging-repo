@@ -11,12 +11,12 @@ class ForwardingService {
     }
 
 
-    cancelOrders(series_uid, called_aet) {
-        return apiPOST('/forwarding/orders.cancel/'+series_uid+'/'+called_aet);
+    cancelOrders(study_uid, called_aet) {
+        return apiPOST('/forwarding/orders.cancel/'+study_uid+'/'+called_aet);
     }
 
-    retryOrders(id) {
-        return apiPOST('/forwarding/orders.retry/'+id);
+    retryOrders(study_uid, called_aet) {
+        return apiPOST('/forwarding/orders.retry/'+study_uid+'/'+called_aet);
     }
 
     getRules() {

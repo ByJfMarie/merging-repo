@@ -92,6 +92,7 @@
     "name": "Name",
     "mail": "Email",
     "theme": "Theme",
+    "dark_mode": "Dark Mode",
     "language": "Language",
     "language_value": {
       "fr": "French",
@@ -120,7 +121,8 @@
     "creating_zip": "Creating ZIP File",
     "downloading": "Downloading file",
     "download_completed": "Download Completed",
-    "forward_success": "Forwarding order has been successfully created."
+    "forward_success": "Forwarding order has been successfully created.",
+    "delete_study": "Study {{description}} for patient {{patient}} has been marked for delete."
   },
 
   "msg_error" : {
@@ -133,6 +135,7 @@
     "study_no_selection": "You have to select at least one study!",
     "forward_error": "Impossible to forward study: {{error}}",
     "query_no_criteria": "You can't query studies without criteria!",
-    "query_no_aet": "You have to select a query AET!"
+    "query_no_aet": "You have to select a query AET!",
+    "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete."
   }
 }

@@ -1,5 +1,6 @@
 import miAPI, {apiGET, apiPOST} from "./apiManager";
 import {sha512} from "js-sha512";
+import moment from "moment";
 
 class UsersService {
 
@@ -90,10 +91,14 @@ class UsersService {
     }
 
     addUser(fields) {
+        if (fields.birthdate instanceof Date) fields.birthdate = moment(fields.birthdate).format("YYYY-MM-DD");
+
         return apiPOST('/users/add', fields);
     }
 
     editUser(id, fields) {
+        if (fields.birthdate instanceof Date) fields.birthdate = moment(fields.birthdate).format("YYYY-MM-DD");
+
         return apiPOST('/users/edit/' + id, fields);
     }
 

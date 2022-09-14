@@ -23,6 +23,7 @@ import DialogAddEdit from "../../layouts/settings/users/DialogAddEdit";
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import UserContext from "../../components/UserContext";
 
 const Users = (props) => {
     const { t } = useTranslation('settings');

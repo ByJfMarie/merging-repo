@@ -62,6 +62,7 @@
     "username": "Username",
     "name": "Name",
     "mail": "Email",
+    "birthdate": "Date of birth",
     "role": "Role",
     "role_value": {
       "administrator": "Administrator",
@@ -69,6 +70,10 @@
       "patient": "Patient",
       "radiologist": "Radiologist"
     },
+    "title": "Title",
+    "zip": "Zip / Postal code",
+    "dicom_tag": "DICOM Tag",
+    "dicom_tag_value": "DICOM Tag Value",
     "description": "Description",
     "viewers": "Viewers",
     "host": "Host",
@@ -196,7 +201,9 @@
     "configure": "Configure",
     "force_refresh": "Force Refresh",
     "uninstall": "Uninstall",
-    "install": "Install"
+    "install": "Install",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
   },
 
   "filters": {
@@ -238,7 +245,7 @@
     "user_saved": "User has been successfully saved!",
     "permissions_saved": "Privileges have been successfully saved!",
     "mail_test": "Mail successful sent!",
-    "aet_echo": "ECHO successful!",
+    "aet_echo": "ECHO to {{aet}} successful!",
     "aet_deleted": "AET has been successfully deleted!",
     "aet_saved": "AET has been successfully saved!",
     "forwarding_deleted": "Forwarding Rule has been successfully deleted!",
@@ -258,7 +265,7 @@
     "user_saved": "Impossible to save user: {{error}}",
     "permissions_saved": "Impossible to save privileges: {{error}}",
     "mail_test": "Impossible to send test mail: {{error}}",
-    "aet_echo": "Impossible to make an ECHO: {{error}}",
+    "aet_echo": "Impossible to make an ECHO to {{aet}}: {{error}}",
     "aet_deleted": "Impossible to delete AET: {{error}}",
     "aet_saved": "Impossible to save AET: {{error}}",
     "forwarding_deleted": "Impossible to delete Forwarding Rule: {{error}}",

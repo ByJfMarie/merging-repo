@@ -32,6 +32,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
 import UserStorage from "../services/storage/user.storage";
+import UserContext from "../components/UserContext";
+import AuthService from "../services/api/auth.service";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -70,8 +72,7 @@ function SettingsMenu(props) {
     const { t } = useTranslation('settings');
 
     /** User & privileges */
-    const[user] = React.useState(UserStorage.getUser());
-    const[privileges] = React.useState(UserStorage.getPrivileges());
+    const { user, privileges } = React.useContext(UserContext);
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -85,6 +86,10 @@ function SettingsMenu(props) {
     };
 
     const container = window !== undefined ? () => window().document.body : undefined;
+
+    const handleLogoutClick = () => {
+        AuthService.logout();
+    };
 
     const UserName = function() {
         if (!user) return <>{"Hello"}</>;
@@ -220,11 +225,9 @@ function SettingsMenu(props) {
                         }
 
                         <Grid item style={{ paddingRight: '12px' }}>
-                            <Link href="/login">
-                                <IconButton style={{ color: theme.palette.menu.text }}>
-                                    <ExitToAppIcon style={{ transform: 'scale(1.2)' }} />
-                                </IconButton>
-                            </Link>
+                            <IconButton style={{ color: theme.palette.menu.text }} onClick={handleLogoutClick}>
+                                <ExitToAppIcon style={{ transform: 'scale(1.2)' }} />
+                            </IconButton>
                         </Grid>
                     </Grid>
                 </Toolbar>

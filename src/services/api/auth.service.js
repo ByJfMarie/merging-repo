@@ -1,6 +1,16 @@
+import axios from 'axios';
 import api from "./apiManager";
 import TokenStorage from "../storage/token.storage";
 import UserStorage from "../storage/user.storage";
+
+const login_axios = axios.create({
+    baseURL: process.env.REACT_APP_BASE_URL,
+    timeout: 10000,
+    withCredentials: true,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
 
 class AuthService {
 
@@ -10,7 +20,7 @@ class AuthService {
             error: ''
         }
 
-        return api
+        return login_axios
             .get("auth/config")
             .then((response) => {
                 if (response.status === 200) {
@@ -40,11 +50,20 @@ class AuthService {
             error: ''
         }
 
-        return api
+        return login_axios
             .post("auth", { username: username, password: password, captcha: captcha })
             .then((response) => {
+                //Clean Storage
+                TokenStorage.clean();
+                UserStorage.clean();
+
                 if (response.status === 200) {
                     TokenStorage.setToken(response.data);
+
+                    //Load User Settings
+                    UserStorage.getUser().then();
+                    UserStorage.getPrivileges().then();
+                    UserStorage.getSettings().then();
                 } else {
                     state.error = "Unknown error";
                 }
@@ -63,8 +82,8 @@ class AuthService {
             error: ''
         }
 
-        return api
-            .post("auth/ref", { reference: ref, birthdate: birthdate, captcha: captcha })
+        return login_axios
+            .post("/auth/ref", { reference: ref, birthdate: birthdate, captcha: captcha })
             .then((response) => {
                 if (response.status === 200) {
                     TokenStorage.setToken(response.data);

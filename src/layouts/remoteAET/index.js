@@ -36,7 +36,7 @@ function Index(props) {
         referring_physician: "",
         modality: [],
         showDeleted: false,
-        date_preset: 'today',
+        date_preset: 'all',
         from: "",
         to: "",
     };

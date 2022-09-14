@@ -56,7 +56,7 @@ const TableAets = (props) => {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: t("msg_error.aet_echo", {error: response.error})
+                message: t("msg_error.aet_echo", {aet: row.id, error: response.error})
             });
             return;
         }
@@ -64,7 +64,7 @@ const TableAets = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: t("msg_info.aet_echo")
+            message: t("msg_info.aet_echo", {aet: row.id})
         });
     }
 

@@ -20,10 +20,12 @@ import DownloadStudies from "./DownloadStudies";
 import UserContext from "../../components/UserContext";
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import AlertDialog from "../../components/AlertDialog";
 
 function StudiesLayout(props) {
     const { t } = useTranslation('common');
@@ -169,6 +171,28 @@ function StudiesLayout(props) {
 
         //Open link in new tab
         window.open(response.items);
+    }
+
+    //Delete
+    const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+    const [dialogDeleteStudy, setDialogDeleteStudy] = useState(null);
+    const handleCloseDeleteDialog = () => {
+        setDialogDeleteOpen(false);
+    }
+    const handleDelete = (study) => {
+        setDialogDeleteStudy(study);
+        setDialogDeleteOpen(true);
+    }
+    const handleConfirmDeleteDialog = async (study) => {
+        setDialogDeleteOpen(false);
+        const response = await StudiesService.delete(study.st_uid);
+
+        if (response.error) {
+            messageAlert('error', t("msg_error.delete_study", {patient: study.p_name, description: study.st_description}));
+            return;
+        }
+
+        messageAlert('info', t("msg_info.delete_study", {patient: study.p_name, description: study.st_description}));
     }
 
     //Selection
@@ -466,6 +490,15 @@ function StudiesLayout(props) {
                         />);
                     }
 
+                    if (privileges.tables[props.page].actions_rows.includes('delete')) {
+                        actions.push(<GridActionsCellItem
+                            icon={<DeleteForeverIcon/>}
+                            label="Delete"
+                            onClick={() => handleDelete(params.row)}
+                            showInMenu
+                        />);
+                    }
+
                     return actions;
                 }
             });
@@ -534,6 +567,17 @@ function StudiesLayout(props) {
                 isOpen={downloadOpen}
                 progress={downloadProgress}
                 message={downloadMessage}
+            />
+
+            <AlertDialog
+                open={dialogDeleteOpen}
+                title={"Are you sure?"}
+                text={"Do you really want to delete this study? This process cannot be undone."}
+                study={dialogDeleteStudy}
+                buttonCancel="Cancel"
+                buttonConfirm="Delete"
+                functionCancel={handleCloseDeleteDialog}
+                functionConfirm={handleConfirmDeleteDialog}
             />
         </>
     )

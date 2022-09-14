@@ -127,8 +127,8 @@ const ForwardingLayout = (props) => {
         }
     }, [props]);
 
-    const handleRetry = async(id) => {
-        const response = await ForwardingService.retryOrders(id);
+    const handleRetry = async(study_uid, called_aet) => {
+        const response = await ForwardingService.retryOrders(study_uid, called_aet);
 
         if (response.error) {
             console.log(response.error);
@@ -138,8 +138,8 @@ const ForwardingLayout = (props) => {
         refreshOrders();
     }
 
-    const handleCancel = async (series_uid, called_aet) => {
-        const response = await ForwardingService.cancelOrders(series_uid, called_aet);
+    const handleCancel = async (study_uid, called_aet) => {
+        const response = await ForwardingService.cancelOrders(study_uid, called_aet);
 
         if (response.error) {
             console.log(response.error);
@@ -194,6 +194,7 @@ const ForwardingLayout = (props) => {
             "flex": 1,
             "minWidth": 200,
             renderCell: (params) => {
+                if (params.row.nb_images<=0) return;
                 return <div style={{ lineHeight: "normal" }}>{params.row.nb_images_sent} / {params.row.nb_images} images</div>;
             }
         }
@@ -208,19 +209,19 @@ const ForwardingLayout = (props) => {
             getActions: (params) => {
 
                 let actions = [];
-                if (params.row.status === 3) {
+                if (params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
                         label={t("buttons.retry")}
-                        onClick={() => handleRetry(params.row.id)}
+                        onClick={() => handleRetry(params.row.study_uid, params.row.called_aet)}
                         showInMenu
                     />);
                 }
-                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
+                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
                         label={t("buttons.cancel")}
-                        onClick={() => handleCancel(params.row.series_uid, params.row.called_aet)}
+                        onClick={() => handleCancel(params.row.study_uid, params.row.called_aet)}
                         showInMenu
                     />);
                 }
