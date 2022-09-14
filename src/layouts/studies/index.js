@@ -188,7 +188,7 @@ function StudiesLayout(props) {
         const response = await StudiesService.delete(study.st_uid);
 
         if (response.error) {
-            messageAlert('error', t("msg_error.delete_study", {patient: study.p_name, description: study.st_description}));
+            messageAlert('error', t("msg_error.delete_study", {patient: study.p_name, description: study.st_description, error:response.error}));
             return;
         }
 
@@ -573,7 +573,7 @@ function StudiesLayout(props) {
                 open={dialogDeleteOpen}
                 title={"Are you sure?"}
                 text={"Do you really want to delete this study? This process cannot be undone."}
-                study={dialogDeleteStudy}
+                data={dialogDeleteStudy}
                 buttonCancel="Cancel"
                 buttonConfirm="Delete"
                 functionCancel={handleCloseDeleteDialog}

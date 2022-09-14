@@ -34,15 +34,16 @@ export default function ChangePassword(props) {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('change_password')} </Typography>
+            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.change_password')} </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                 <Grid item xs={12}>
                     <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                        <InputLabel htmlFor="filled-adornment-password">{t('old_password')}</InputLabel>
+                        <InputLabel htmlFor="filled-adornment-password">{t('fields.old_password')}</InputLabel>
                         <Input
                             id="pwd"
+                            name="pwd"
                             type={getValue('old_show') ? 'text' : 'password'}
                             value={getValue('old') || ''}
                             onChange={(e) => {handleValue('old', e.target.value)}}
@@ -58,14 +59,16 @@ export default function ChangePassword(props) {
                                     </IconButton>
                                 </InputAdornment>
                             }
+                            autoComplete="off"
                         />
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                     <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                        <InputLabel htmlFor="filled-adornment-password">{t('new_password')}</InputLabel>
+                        <InputLabel htmlFor="filled-adornment-password">{t('fields.new_password')}</InputLabel>
                         <Input
                             id="new"
+                            name="new"
                             type={getValue('new_show') ? 'text' : 'password'}
                             value={getValue('new')}
                             onChange={(e) => {handleValue('new', e.target.value)}}
@@ -81,14 +84,16 @@ export default function ChangePassword(props) {
                                     </IconButton>
                                 </InputAdornment>
                             }
+                            autoComplete="off"
                         />
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                     <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                        <InputLabel htmlFor="filled-adornment-password">{t('repeat_password')}</InputLabel>
+                        <InputLabel htmlFor="filled-adornment-password">{t('fields.repeat_password')}</InputLabel>
                         <Input
                             id="repeat"
+                            name="repeat"
                             type={getValue('repeat_show') ? 'text' : 'password'}
                             value={getValue('repeat')}
                             onChange={(e) => {handleValue('repeat', e.target.value)}}
@@ -104,6 +109,7 @@ export default function ChangePassword(props) {
                                     </IconButton>
                                 </InputAdornment>
                             }
+                            autoComplete="off"
                         />
                     </FormControl>
                 </Grid>

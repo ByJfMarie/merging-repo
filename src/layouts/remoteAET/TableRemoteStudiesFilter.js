@@ -20,7 +20,7 @@ import {
     CardContent,
     ToggleButtonGroup,
     ToggleButton,
-    Badge
+    Badge, Typography
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
@@ -28,6 +28,7 @@ import { TextField } from "@mui/material";
 import BlockIcon from '@mui/icons-material/Block';
 import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SearchIcon from '@mui/icons-material/Search';
 import moment from "moment";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
@@ -76,9 +77,13 @@ const useStyles = makeStyles((theme) => ({
     },
 
     button: {
-        color: theme.palette.text.primary,
         float: 'right',
         backgroundColor: theme.palette.chip.color + "!important",
+        margin: '10px !important'
+    },
+
+    buttonQuery: {
+        float: 'right',
         margin: '10px !important'
     },
 
@@ -118,6 +123,11 @@ export default function TableRemoteStudiesFilter(props) {
     /** POP UP MORE FILTERS */
     const [anchorElMore, setAnchorElMore] = React.useState(null);
 
+    const handleClickQuery = (event) => {
+        event.preventDefault();
+        props.searchFunction(values);
+    };
+
     const handleClickMore = (event) => {
         setAnchorElMore(event.currentTarget);
     };
@@ -146,7 +156,7 @@ export default function TableRemoteStudiesFilter(props) {
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
-        handleChangeDate(values.date_preset);
+        handleChangeDate(values.date_preset, false);
     }, []);
 
     const handleClose = () => {
@@ -162,7 +172,7 @@ export default function TableRemoteStudiesFilter(props) {
     };
 
     /** PRESET BUTTON FUNCTION */
-    const handleChangeDate = (param) => {
+    const handleChangeDate = (param, refresh) => {
 
         let items = values;
         items = {...items, date_preset: param};
@@ -194,14 +204,14 @@ export default function TableRemoteStudiesFilter(props) {
         }
 
         setValues(items);
-        props.searchFunction(items);
+        if (refresh) props.searchFunction(items);
     }
 
     /** RESET BUTTON */
     const clearValues = () => {
         setValues(props.initialValues);
         setActiveSecondaryFilters([]);
-        props.searchFunction(props.initialValues);
+        //props.searchFunction(props.initialValues);
     }
 
     /** SEND VALUE */
@@ -215,7 +225,7 @@ export default function TableRemoteStudiesFilter(props) {
         filter = {...filter, [id]: value};
 
         setValues(filter);
-        props.searchFunction(filter);
+        //props.searchFunction(filter);
     }
 
     const modalityComponent = (primary) => (
@@ -332,7 +342,7 @@ export default function TableRemoteStudiesFilter(props) {
                 </DialogActions>
             </Dialog>
 
-            <form>
+            <form onSubmit={handleClickQuery}>
                 <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -386,7 +396,7 @@ export default function TableRemoteStudiesFilter(props) {
                                             <ToggleButton
                                                 key={key}
                                                 style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
-                                                onClick={() => handleChangeDate(key)}
+                                                onClick={() => handleChangeDate(key, true)}
                                                 value={key}
                                                 className={key > 2 ? classes.presetPhone : ""}
                                             >
@@ -399,6 +409,17 @@ export default function TableRemoteStudiesFilter(props) {
                             </ToggleButtonGroup>
 
                         </Container>
+
+                        <Box sx={{ float: "left", height: "42px", display: "flex", alignItems: 'flex-end', color: 'warning.main'}}>
+                            <Typography variant="caption">
+                                {t("msg_info.remote_use_wildcard")}
+                            </Typography>
+                        </Box>
+
+                        <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonQuery} style={{ fontSize: '12px', width: '80px' }}>
+                            <SearchIcon style={{ transform: "scale(0.8)" }} />
+                            {t('buttons.query')+"   "}
+                        </Button>
 
                         <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
                             <MoreVertIcon style={{ transform: "scale(0.8)" }} />
@@ -427,8 +448,8 @@ export default function TableRemoteStudiesFilter(props) {
                             }}
                             className={classes.popover}
                         >
+                            <form>
                             <Container style={{ maxWidth: "500px" }}>
-
                                 {
                                     settings &&
                                     settings.filters_studies_primary.length < fields.length ? (<>
@@ -441,7 +462,6 @@ export default function TableRemoteStudiesFilter(props) {
 
                                         {
                                             fields.map((value) => {
-                                                console.log()
                                                 if (settings.filters_aets_primary.includes(value)) return;
 
                                                 if (value === "modality") {
@@ -534,8 +554,9 @@ export default function TableRemoteStudiesFilter(props) {
                                     }
                                 </Container>
                             </Container>
+                                <Button type="submit"/>
+                            </form>
                         </Popover>
-
                     </CardContent>
                 </Card>
             </form>

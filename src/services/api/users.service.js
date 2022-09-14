@@ -22,6 +22,15 @@ class UsersService {
         return apiPOST('/users/profile/password.set', pwd_data);
     }
 
+    resetPassword(user, new_password, repeat_password) {
+        let pwd_data = {
+            new: sha512(new_password),
+            repeat: sha512(repeat_password)
+        }
+
+        return apiPOST('/users/'+user+'/password.reset', pwd_data);
+    }
+
     privileges() {
         let state = {
             items: [],

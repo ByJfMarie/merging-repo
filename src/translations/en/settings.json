@@ -22,7 +22,8 @@
     "transfer": "Transfer",
     "reporting" : "Reporting",
     "database" : "Database",
-    "plugins" : "Plugins"
+    "plugins" : "Plugins",
+    "change_password": "Change Password"
   },
 
   "menu": {
@@ -71,6 +72,13 @@
       "radiologist": "Radiologist"
     },
     "title": "Title",
+    "title_value": {
+      "mr": "Mr.",
+      "mrs": "Mrs.",
+      "miss": "Miss.",
+      "ms": "Ms.",
+      "dr": "Dr."
+    },
     "zip": "Zip / Postal code",
     "dicom_tag": "DICOM Tag",
     "dicom_tag_value": "DICOM Tag Value",
@@ -184,7 +192,10 @@
       "dicom": "DICOM Receive"
     },
     "request": "Request",
-    "database_name" : "Database Name"
+    "database_name" : "Database Name",
+    "old_password": "Old Password",
+    "new_password": "New password",
+    "repeat_password": "Repeat password"
   },
 
   "buttons": {
@@ -203,7 +214,8 @@
     "uninstall": "Uninstall",
     "install": "Install",
     "activate": "Activate",
-    "deactivate": "Deactivate"
+    "deactivate": "Deactivate",
+    "reset_password": "Reset Password"
   },
 
   "filters": {
@@ -257,7 +269,8 @@
     "logo_uploaded": "Logo File successfully uploaded!",
     "help_uploaded": "Help File successfully uploaded!",
     "loginSheet_uploaded": "Login Sheet successfully uploaded!",
-    "license_uploaded": "License successfully uploaded!"
+    "license_uploaded": "License successfully uploaded!",
+    "reset_password": "Password successfully updated!"
   },
 
   "msg_error": {
@@ -277,6 +290,7 @@
     "logo_uploaded": "Impossible to upload Logo File: {{error}}",
     "help_uploaded": "Impossible to upload Help File: {{error}}",
     "loginSheet_uploaded": "Impossible to upload Login Sheet File: {{error}}",
-    "license_uploaded": "Impossible to upload License File!"
+    "license_uploaded": "Impossible to upload License File!",
+    "reset_password": "Impossible to reset password: {{error}}"
   }
 }

@@ -57,7 +57,7 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-export default function AlertDialog({open, title, text, study, buttonCancel, buttonConfirm, functionCancel, functionConfirm}) {
+export default function AlertDialog({open, title, text, data, buttonCancel, buttonConfirm, functionCancel, functionConfirm}) {
 
     return (
             <BootstrapDialog
@@ -76,7 +76,7 @@ export default function AlertDialog({open, title, text, study, buttonCancel, but
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={functionCancel}>{buttonCancel}</Button>
-                    <Button onClick={() => {functionConfirm(study);}} autoFocus color="error">{buttonConfirm}</Button>
+                    <Button onClick={() => {functionConfirm(data);}} autoFocus color="error">{buttonConfirm}</Button>
                 </DialogActions>
             </BootstrapDialog>
     );

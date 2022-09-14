@@ -97,6 +97,7 @@ const DialogAddEdit = (props) => {
 
         if (!props.values || !props.values.login) {
             setAddMode(true);
+            props.values['dicom_tag'] = '[0008,0090]';
             return;
         }
 
@@ -172,11 +173,11 @@ const DialogAddEdit = (props) => {
                                     <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>
-                                    <MenuItem value="mr">Mr</MenuItem>
-                                    <MenuItem value="mrs">Mrs</MenuItem>
-                                    <MenuItem value="miss">Miss</MenuItem>
-                                    <MenuItem value="ms">Ms</MenuItem>
-                                    <MenuItem value="dr">Dr</MenuItem>
+                                    <MenuItem value="mr">{t("fields.title_value.mr")}</MenuItem>
+                                    <MenuItem value="mrs">{t("fields.title_value.mrs")}</MenuItem>
+                                    <MenuItem value="miss">{t("fields.title_value.miss")}</MenuItem>
+                                    <MenuItem value="ms">{t("fields.title_value.ms")}</MenuItem>
+                                    <MenuItem value="dr">{t("fields.title_value.dr")}</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -197,7 +198,7 @@ const DialogAddEdit = (props) => {
                                     id="birthdate"
                                     label={t('fields.birthdate')}
                                     inputFormat={settings?settings.date_format:""}
-                                    value={getUserValue("birthdate")}
+                                    value={getUserValue("birthdate") || null}
                                     onChange={(date, keyboardInputValue) => {
                                         if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
                                         handleSaveUserChange('birthdate', date);

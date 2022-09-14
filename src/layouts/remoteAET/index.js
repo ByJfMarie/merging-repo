@@ -148,10 +148,6 @@ function Index(props) {
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowsData, setSelectedRowsData] = useState([]);
 
-    React.useEffect(() => {
-        if (props.currentAET) queryStudies(filters).then();
-    }, [props.currentAET]);
-
     //Create Columns
     const columns = [
         {

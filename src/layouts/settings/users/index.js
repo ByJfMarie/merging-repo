@@ -3,15 +3,22 @@ import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import UsersService from "../../../services/api/users.service";
-import {IconButton} from "@mui/material";
+import DialogResetPassword from "./DialogResetPassword";
+import {Dialog, DialogActions, DialogContent, IconButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import LockResetIcon from '@mui/icons-material/LockReset';
+
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../../translations/i18n";
+import ChangePassword from "../../../pages/settings/ChangePassword";
+import {useState} from "react";
+import StudiesService from "../../../services/api/studies.service";
+import AlertDialog from "../../../components/AlertDialog";
 
 
 const Index = (props) => {
@@ -70,19 +77,37 @@ const Index = (props) => {
         });
     }
 
+    const [resetPasswordUser, setResetPasswordUser] = React.useState(null);
+    const [resetPasswordOpen, setResetPasswordOpen] = React.useState(false);
+    const handleResetPassword = async (row) => {
+        setResetPasswordUser(row);
+        setResetPasswordOpen(true);
+    }
+
     const handleEdit = async (row) => {
         props.editUser(row);
     }
 
-    const handleDelete = async (id) => {
-        const response = await UsersService.deleteUser(id);
+    //Delete
+    const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+    const [dialogDeleteUser, setDialogDeleteUser] = useState(null);
+    const handleCloseDeleteDialog = () => {
+        setDialogDeleteOpen(false);
+    }
+    const handleDelete = (user) => {
+        setDialogDeleteUser(user);
+        setDialogDeleteOpen(true);
+    }
+    const handleConfirmDeleteDialog = async (user) => {
+        setDialogDeleteOpen(false);
+        const response = await UsersService.deleteUser(user.login);
 
         if (response.error) {
             props.alertMessage({
                 show: true,
                 severity: "error",
-                message: t("msg_error.user_deleted", {error: response.error})
- }           );
+                message: t("msg_error.user_deleted", {user: user.login, error: response.error})
+            }           );
             return;
         }
 
@@ -90,7 +115,7 @@ const Index = (props) => {
         props.alertMessage({
             show: true,
             severity: "success",
-            message: t("msg_info.user_deleted")
+            message: t("msg_info.user_deleted", {user: user.login})
         });
     }
 
@@ -111,7 +136,7 @@ const Index = (props) => {
             description: "Name",
             headerAlign: "left",
             renderCell: (params) => {
-                return <div style={{ lineHeight: "normal" }}>{params.row.title || ''} {params.row.first_name || ''} {params.row.last_name || ''}</div>;
+                return <div style={{ lineHeight: "normal" }}>{params.row.title?t("fields.title_value."+params.row.title):""} {params.row.first_name || ''} {params.row.last_name || ''}</div>;
             }
         },
         {
@@ -173,6 +198,13 @@ const Index = (props) => {
                 }
 
                 actions.push(<GridActionsCellItem
+                    icon={<LockResetIcon/>}
+                    label={t("buttons.reset_password")}
+                    onClick={() => handleResetPassword(params.row)}
+                    showInMenu
+                />);
+
+                actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
                     label={t("buttons.edit")}
                     onClick={() => handleEdit(params.row)}
@@ -183,7 +215,7 @@ const Index = (props) => {
                     icon={<DeleteIcon/>}
                     label={t("buttons.delete")}
                     color="error"
-                    onClick={() => handleDelete(params.row.id)}
+                    onClick={() => handleDelete(params.row)}
                     showInMenu
                 />);
 
@@ -223,6 +255,24 @@ const Index = (props) => {
                     disableColumnMenu={true}
                 />
             </div>
+
+            <DialogResetPassword
+                open={resetPasswordOpen}
+                setOpen={setResetPasswordOpen}
+                user={resetPasswordUser}
+                alertMessage={(message) => props.alertMessage(message)}
+            />
+
+            <AlertDialog
+                open={dialogDeleteOpen}
+                title={"Are you sure?"}
+                text={"Do you really want to delete this user? This process cannot be undone."}
+                data={dialogDeleteUser}
+                buttonCancel="Cancel"
+                buttonConfirm="Delete"
+                functionCancel={handleCloseDeleteDialog}
+                functionConfirm={handleConfirmDeleteDialog}
+            />
         </React.Fragment>
     )
 }

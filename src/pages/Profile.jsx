@@ -173,7 +173,7 @@ function Settings(props) {
                 ...message,
                 show: true,
                 severity: "error",
-                message: response.error
+                message: t("msg_error.reset_password", {error: response.error})
             });
             return;
         }

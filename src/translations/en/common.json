@@ -76,7 +76,9 @@
     "faq": "FAQ",
     "close": "Close",
     "retry": "Retry",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "find": "Find",
+    "query": "Query"
   },
 
   "status": {
@@ -122,7 +124,8 @@
     "downloading": "Downloading file",
     "download_completed": "Download Completed",
     "forward_success": "Forwarding order has been successfully created.",
-    "delete_study": "Study {{description}} for patient {{patient}} has been marked for delete."
+    "delete_study": "Study {{description}} for patient {{patient}} has been marked for delete.",
+    "remote_use_wildcard": "Use \"*\" as a wildcard for your search"
   },
 
   "msg_error" : {
@@ -136,6 +139,6 @@
     "forward_error": "Impossible to forward study: {{error}}",
     "query_no_criteria": "You can't query studies without criteria!",
     "query_no_aet": "You have to select a query AET!",
-    "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete."
+    "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete: {{error}}"
   }
 }

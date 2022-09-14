@@ -96,7 +96,17 @@ const Users = (props) => {
 
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={4}>
-                            <TextField className={classes.field} id="filled-basic" label={t("filters.username")} variant="standard" onChange={(e) => {handleFiltersChange("username", e.target.value)}} />
+                            <TextField
+                                className={classes.field}
+                                id="login"
+                                name={"login"}
+                                label={t("filters.username")}
+                                variant="standard"
+                                onChange={(e) => {handleFiltersChange("username", e.target.value)}}
+                                inputProps={{
+                                    autoComplete: "off",
+                                }}
+                            />
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl className={classes.root} variant="standard" fullWidth >

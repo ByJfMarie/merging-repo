@@ -41,6 +41,7 @@ import UserContext from "../../components/UserContext";
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import SearchIcon from "@mui/icons-material/Search";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,9 +79,13 @@ const useStyles = makeStyles((theme) => ({
     },
 
     button: {
-        color: theme.palette.text.primary,
         float: 'right',
         backgroundColor: theme.palette.chip.color + "!important",
+        margin: '10px !important'
+    },
+
+    buttonFind: {
+        float: 'right',
         margin: '10px !important'
     },
 
@@ -128,6 +133,11 @@ export default function TableLocalStudiesFilter(props) {
     };
     const openMore = Boolean(anchorElMore);
     const id = openMore ? 'simple-popover' : undefined;
+
+    const handleClickQuery = (event) => {
+        event.preventDefault();
+        props.searchFunction(values);
+    };
 
     /** THEME AND CSS */
     const MenuProps = {
@@ -201,7 +211,7 @@ export default function TableLocalStudiesFilter(props) {
     const clearValues = () => {
         setValues(props.initialValues);
         setActiveSecondaryFilters([]);
-        props.searchFunction(props.initialValues);
+        //props.searchFunction(props.initialValues);
     }
 
     /** SEND VALUE */
@@ -215,7 +225,8 @@ export default function TableLocalStudiesFilter(props) {
         filter = {...filter, [id]: value};
 
         setValues(filter);
-        props.searchFunction(filter);
+
+        if (id==='showDeleted') props.searchFunction(filter);
     }
 
     const modalityComponent = (primary) => (
@@ -328,7 +339,7 @@ export default function TableLocalStudiesFilter(props) {
                 </DialogActions>
             </Dialog>
 
-            <form>
+            <form onSubmit={handleClickQuery}>
                 <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -401,6 +412,11 @@ export default function TableLocalStudiesFilter(props) {
 
                         </Container>
 
+                        <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonFind} style={{ fontSize: '12px', width: '80px' }}>
+                            <SearchIcon style={{ transform: "scale(0.8)" }} />
+                            {t('buttons.find')+"   "}
+                        </Button>
+
                         <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
                             <MoreVertIcon style={{ transform: "scale(0.8)" }} />
                             <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
@@ -428,6 +444,7 @@ export default function TableLocalStudiesFilter(props) {
                             }}
                             className={classes.popover}
                         >
+                            <form>
                             <Container style={{ maxWidth: "500px" }}>
 
                                 {
@@ -544,8 +561,9 @@ export default function TableLocalStudiesFilter(props) {
                                     </Grid>
                                 </Container>
                             </Container>
+                                <Button type="submit"/>
+                            </form>
                         </Popover>
-
                     </CardContent>
                 </Card>
             </form>
