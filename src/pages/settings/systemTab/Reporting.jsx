@@ -67,7 +67,7 @@ export default function Reporting(props) {
     }, []);
 
     const getSettingsValue = (id) => {
-        if (!config[id]) return '';
+        if (!config || !config[id]) return '';
         return config[id]['value'] || '';
     }
     const handleSettingsChange = (id, value) => {
@@ -152,7 +152,7 @@ export default function Reporting(props) {
                                     >
                                         {
                                             Object.keys(printers).map((printer) => {
-                                                return <MenuItem value={printer}>{printer}</MenuItem>
+                                                return <MenuItem key={printer} value={printer}>{printer}</MenuItem>
                                             })
                                         }
                                     </Select>
@@ -213,9 +213,9 @@ export default function Reporting(props) {
                                     multiline={true}
                                     rows={4}
                                     fullWidth
-                                    value={getSettingsValue('NOT.requestURL')}
+                                    value={getSettingsValue('RRS.requestURL')}
                                     onChange={(e) => {
-                                        handleSettingsChange('NOT.requestURL', e.target.value)
+                                        handleSettingsChange('RRS.requestURL', e.target.value)
                                     }}
                                 />
                             </Grid>

@@ -161,16 +161,17 @@ function StudiesLayout(props) {
     };
 
     //Viewer
-    const handleViewStudy = async (study, viewer_id) => {
-        const response = await ViewersService.getURL(study.key, viewer_id);
+    const handleViewStudy = (study, viewer_id) => {
+        ViewersService.getURL(study.key, viewer_id).then((response) => {
+                if (response.error) {
+                    messageAlert('error', t("msg_error.open_viewer", {error: response.error}));
+                    return;
+                }
 
-        if (response.error) {
-            messageAlert('error', t("msg_error.open_viewer", {error: response.error}));
-            return;
-        }
-
-        //Open link in new tab
-        window.open(response.items);
+                //Open link in new tab
+                window.open(response.items);
+            }
+        );
     }
 
     //Delete
