@@ -67,6 +67,8 @@ export const apiPOST = (url, data) => {
             }
         })
         .catch((error) => {
+            console.log(error.response);
+
             state.error = "Unknown error";
             if (error.response) {
                 state.error = error.response.data.error || error.message;

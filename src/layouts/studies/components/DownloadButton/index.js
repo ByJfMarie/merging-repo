@@ -32,6 +32,7 @@ const Index = (props) => {
             label={t('buttons.download')}
             options={options}
             handleAction={handleDownload}
+            disabled={props.actionDisabled}
         />
     )
 }

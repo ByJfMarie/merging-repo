@@ -369,6 +369,7 @@ function Index(props) {
             <TableRemoteStudiesActions
                 page={props.page}
                 retrieveFunction={retrieveStudies}
+                actionDisabled={selectedRows!=null?(selectedRows.length<=0):true}
             />
         </>
     )

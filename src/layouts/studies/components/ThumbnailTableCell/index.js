@@ -32,7 +32,7 @@ const Index = (props) => {
 
     useEffect(() => {
         loadThumbnail(props.study_uid, props.size);
-    }, [props]);
+    }, [props.study_uid]);
 
     return (
         <img src={thumbnail} alt="thumbnail" style={{

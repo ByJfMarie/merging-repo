@@ -4,7 +4,7 @@ import * as React from "react";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 
-function PryButtonSelect({label, options, handleAction, children}) {
+function PryButtonSelect({label, options, handleAction, disabled, children}) {
 
     const theme = useTheme();
 
@@ -37,6 +37,7 @@ function PryButtonSelect({label, options, handleAction, children}) {
                         size="medium"
                         className={classes.button}
                         onClick={handleClick}
+                        disabled={disabled}
                     >
                         {label}
                         <ArrowDropDownIcon/>

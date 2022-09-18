@@ -38,6 +38,7 @@ const Index = (props) => {
             label={t('buttons.retrieve')}
             options={options}
             handleAction={handleRetrieve}
+            disabled={props.actionDisabled}
         />
     )
 }

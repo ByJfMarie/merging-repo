@@ -124,7 +124,7 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
                             <Grid item xs={12}><Divider/></Grid>
 
                             <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_modalities")}</Grid>
-                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_modalities}</Grid>
+                            <Grid item xs="auto" style={{fontSize: '80%'}}>{""+values.st_modalities}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 

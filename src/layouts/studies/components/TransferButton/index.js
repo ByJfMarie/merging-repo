@@ -38,6 +38,7 @@ const Index = (props) => {
             label={t('buttons.transfer')}
             options={options}
             handleAction={handleTransfer}
+            disabled={props.actionDisabled}
         />
     )
 }

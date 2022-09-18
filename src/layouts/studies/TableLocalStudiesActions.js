@@ -18,6 +18,7 @@ const TableLocalStudiesActions = (props) => {
                         <DownloadButton
                             key='download'
                             downloadFunction={props.downloadFunction}
+                            actionDisabled={props.actionDisabled}
                         />
                     )}
                 </Grid>
@@ -30,6 +31,7 @@ const TableLocalStudiesActions = (props) => {
                                     <Grid key={value} item xs="auto">
                                         <ForwardButton
                                             forwardFunction={props.forwardFunction}
+                                            actionDisabled={props.actionDisabled}
                                         />
                                     </Grid>
                                 )
@@ -39,6 +41,7 @@ const TableLocalStudiesActions = (props) => {
                                     <Grid key={value} item xs="auto">
                                     <TransferButton
                                         transferFunction={props.transferFunction}
+                                        actionDisabled={props.actionDisabled}
                                     />
                                     </Grid>
                                 )
@@ -53,6 +56,7 @@ const TableLocalStudiesActions = (props) => {
                                         color="primary"
                                         style={{ marginLeft: "10px" }}
                                         onClick={() => {props.mediaFunction();}}
+                                        actionDisabled={props.actionDisabled}
                                     >
                                         {t(value)}
                                     </Button>

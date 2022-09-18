@@ -548,6 +548,7 @@ function StudiesLayout(props) {
                 forwardFunction={forwardStudies}
                 transferFunction={transferStudies}
                 mediaFunction={mediaStudies}
+                actionDisabled={selectedRows!=null?(selectedRows.length<=0):true}
             />
 
             <CustomDialogStudyInfo

@@ -38,6 +38,7 @@ const Index = (props) => {
             label={t('buttons.forward')}
             options={options}
             handleAction={handleForward}
+            disabled={props.actionDisabled}
         />
     )
 }

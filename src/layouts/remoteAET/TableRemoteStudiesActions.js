@@ -65,7 +65,13 @@ const TableRemoteStudiesActions = (props) => {
                 <Grid item sm={4} xs={12} className={classes.left} style={{ display: "flex" }}>
                     {privileges.tables[props.page].actions.includes('download') && (
                         <>
-                            <Button variant="outlined" size="medium" className={classes.buttonRetrieve} onClick={handleClick}>
+                            <Button
+                                variant="outlined"
+                                size="medium"
+                                className={classes.buttonRetrieve}
+                                onClick={handleClick}
+                                disabled={props.actionDisabled}
+                            >
                                 {t('buttons.download')}
                                 <ArrowDropDownIcon />
                             </Button>
@@ -93,12 +99,21 @@ const TableRemoteStudiesActions = (props) => {
                                     <RetrieveButton
                                         key={"buttons."+value}
                                         retrieveFunction={props.retrieveFunction}
+                                        actionDisabled={props.actionDisabled}
                                     />
                                 )
                             }
                             else if (value !== "download") {
                                 return (
-                                    <Button key={value} className={classes.buttonMain} variant="outlined" size="medium" color="primary" style={{ marginLeft: "10px" }}>
+                                    <Button
+                                        key={value}
+                                        className={classes.buttonMain}
+                                        variant="outlined"
+                                        size="medium"
+                                        color="primary"
+                                        style={{ marginLeft: "10px" }}
+                                        disabled={props.actionDisabled}
+                                    >
                                         {t("buttons."+value)}
                                     </Button>)
                             }
