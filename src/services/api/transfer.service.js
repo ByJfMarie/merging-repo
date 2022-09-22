@@ -70,8 +70,8 @@ class TransferService {
         return apiPOST('transfer/orders.cancel/'+study_uid+'/'+site_id);
     }
 
-    retryOrders(id) {
-        return apiPOST('transfer/orders.retry/'+id);
+    retryOrders(study_uid, site_id) {
+        return apiPOST('transfer/orders.retry/'+study_uid+'/'+site_id);
     }
 
     getRules() {

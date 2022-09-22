@@ -44,7 +44,7 @@ const TransferStatusLayout = (props) => {
                 statusIcon = <UploadIcon color="success" fontSize="small"/>;
                 break;
             case 100: //Error
-                statusIcon = <ReportProblemIcon color="error" fontSize="small"/>;
+                statusIcon = <Tooltip title={row.tr_message}><ReportProblemIcon color="error" fontSize="small"/></Tooltip>;
                 break;
         }
 
@@ -59,10 +59,10 @@ const TransferStatusLayout = (props) => {
                 remoteStatusIcon = <PlayArrowIcon color="primary" fontSize="small"/>;
                 break;
             case 4: //Done
-                remoteStatusIcon = <DownloadIcon color="success" fontSize="small"/>
+                remoteStatusIcon = <DownloadIcon color="success" fontSize="small"/>;
                 break;
             case 100: //Error
-                remoteStatusIcon = <ReportProblemIcon color="error" fontSize="small"/>
+                remoteStatusIcon = <Tooltip title={row.tr_message}><ReportProblemIcon color="error" fontSize="small"/></Tooltip>;
                 break;
         }
 
@@ -92,17 +92,17 @@ const TransferStatusLayout = (props) => {
                 statusIcon = <PlayArrowIcon color="primary" fontSize="small"/>;
                 break;
             case 4: //Done
-                statusIcon = <DownloadIcon color="success" fontSize="small"/>
+                statusIcon = <DownloadIcon color="success" fontSize="small"/>;
                 break;
             case 100: //Error
-                statusIcon = <ReportProblemIcon color="error" fontSize="small"/>
+                statusIcon = <Tooltip title={row.tr_message}><ReportProblemIcon color="error" fontSize="small"/></Tooltip>;
                 break;
         }
 
         return (
             <Grid container direction="row" alignItems="center">
-                <Grid item xs="auto">{statusIcon}</Grid>
-                <Grid item xs="auto">{row.tr_status_str + ' from ' + row.tr_alias}</Grid>
+                <Grid item xs="auto" mr={0.5}>{statusIcon}</Grid>
+                <Grid item xs="auto">{row.tr_status_str + ' from ' + (row.tr_transfer_site_alias?row.tr_transfer_site_alias:row.tr_transfer_site_id)}</Grid>
                 <Box width="100%"/>
                 <Grid item xs={12} pl={'4px'}>{row.tr_last_try_formatted?row.tr_last_try_formatted:''}</Grid>
             </Grid>
@@ -155,8 +155,8 @@ const TransferStatusLayout = (props) => {
         }
     }, [props]);
 
-    const handleRetry = async(id) => {
-        const response = await TransferService.retryOrders(id);
+    const handleRetry = async(row) => {
+        const response = await TransferService.retryOrders(row.st_uid, row.tr_site_id);
 
         if (response.error) {
             console.log(response.error);
@@ -166,8 +166,8 @@ const TransferStatusLayout = (props) => {
         props.refresh();
     }
 
-    const handleCancel = async (id) => {
-        const response = await TransferService.cancelOrders(id);
+    const handleCancel = async (row) => {
+        const response = await TransferService.cancelOrders(row.st_uid, row.tr_site_id);
 
         if (response.error) {
             console.log(response.error);
@@ -178,6 +178,19 @@ const TransferStatusLayout = (props) => {
     }
 
     const column = [
+        {
+            field: "status",
+            headerName: t("tables_header.status"),
+            flex: 1,
+            minWidth: 200,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return <>
+                    {params.row.tr_direction===0 ? LocalstatusComponent(params.row) : RemoteStatusComponent(params.row)}
+                </>
+
+            }
+        },
         {
             field: 'patient',
             headerName: t("tables_header.patient"),
@@ -205,19 +218,6 @@ const TransferStatusLayout = (props) => {
             }
         },
         {
-            field: "status",
-            headerName: t("tables_header.status"),
-            flex: 2,
-            minWidth: 200,
-            encodeHtml: false,
-            renderCell: (params) => {
-                return <>
-                    {params.row.tr_direction===0 ? LocalstatusComponent(params.row) : RemoteStatusComponent(params.row)}
-                </>
-
-            }
-        },
-        {
             field: 'actions',
             type: 'actions',
             width: 80,
@@ -232,7 +232,7 @@ const TransferStatusLayout = (props) => {
                         actions.push(<GridActionsCellItem
                             icon={<CancelIcon/>}
                             label={t("buttons.cancel")}
-                            onClick={() => handleCancel(params.row.id)}
+                            onClick={() => handleCancel(params.row)}
                             showInMenu
                         />);
                         break;
@@ -241,7 +241,7 @@ const TransferStatusLayout = (props) => {
                         actions.push(<GridActionsCellItem
                             icon={<ReplayIcon/>}
                             label={t("buttons.retry")}
-                            onClick={() => handleRetry(params.row.id)}
+                            onClick={() => handleRetry(params.row)}
                             showInMenu
                         />);
                         break;
