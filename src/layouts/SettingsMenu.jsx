@@ -21,8 +21,8 @@ import "../translations/i18n";
 
 /** ICONS */
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import LockIcon from '@mui/icons-material/Lock';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';  
@@ -31,7 +31,6 @@ import EmailIcon from '@mui/icons-material/Email';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
-import UserStorage from "../services/storage/user.storage";
 import UserContext from "../components/UserContext";
 import AuthService from "../services/api/auth.service";
 
@@ -117,7 +116,7 @@ function SettingsMenu(props) {
                 <Divider classes={{ root: classes.divider }} />
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/site" selected={location === '/site'} >
-                    <SearchIcon />
+                    <DesignServicesIcon />
                     <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.site")} />
                 </ListItem>
 
@@ -142,7 +141,7 @@ function SettingsMenu(props) {
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/license" selected={location === '/license'} >
-                    <PermContactCalendarIcon />
+                    <ReceiptLongIcon />
                     <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.license")} />
                 </ListItem>
 

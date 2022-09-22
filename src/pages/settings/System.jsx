@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Divider, Tab, Tabs, Box } from '@mui/material';
+import {Typography, Divider, Tab, Tabs, Box, Grid} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import "react-phone-input-2/lib/high-res.css";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 /** TABS */
 import LocalServer from './systemTab/LocalServer';
@@ -65,7 +66,15 @@ export default function System() {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.system')} </Typography>
+            <Typography
+                variant="h4"
+                style={{textAlign: 'left', color: theme.palette.primary.main}}
+            >
+                <Grid container direction="row" alignItems="center">
+                    <SettingsIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.system')}
+                </Grid>
+            </Typography>
+
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

@@ -141,15 +141,25 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
                             <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_uid")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_uid}</Grid>
 
-                            <Grid item xs={12}><Divider/></Grid>
+                            {
+                                values.st_reference &&
+                                <>
+                                    <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_reference")}</Grid>
-                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_reference}</Grid>
+                                    <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_reference")}</Grid>
+                                    <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_reference}</Grid>
+                                </>
+                            }
 
-                            <Grid item xs={12}><Divider/></Grid>
+                            {
+                                values.st_storage_key &&
+                                <>
+                                    <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_storage_key")}</Grid>
-                            <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_storage_key}</Grid>
+                                    <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_storage_key")}</Grid>
+                                    <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_storage_key}</Grid>
+                                </>
+                            }
                         </Grid>
                 }
             </DialogContent>

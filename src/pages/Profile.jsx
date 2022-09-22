@@ -25,6 +25,7 @@ import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
 import ChangePassword from "./settings/ChangePassword.jsx";
 import Index from "../layouts/settings/actions";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -202,8 +203,16 @@ function Settings(props) {
     /** DRAG N DROP */
     return (
         <React.Fragment>
-            <Typography variant="h4"
-                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('titles.profile')} </Typography>
+
+            <Typography
+                variant="h4"
+                style={{textAlign: 'left', color: theme.palette.primary.main}}
+            >
+                <Grid container direction="row" alignItems="center">
+                    <AccountCircleIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.profile')}
+                </Grid>
+            </Typography>
+
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}

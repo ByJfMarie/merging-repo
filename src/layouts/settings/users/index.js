@@ -265,11 +265,11 @@ const Index = (props) => {
 
             <AlertDialog
                 open={dialogDeleteOpen}
-                title={"Are you sure?"}
-                text={"Do you really want to delete this user? This process cannot be undone."}
+                title={t("confirm.delete_title")}
+                text={t("confirm.delete_user")}
                 data={dialogDeleteUser}
-                buttonCancel="Cancel"
-                buttonConfirm="Delete"
+                buttonCancel={t("buttons.cancel")}
+                buttonConfirm={t("buttons.delete")}
                 functionCancel={handleCloseDeleteDialog}
                 functionConfirm={handleConfirmDeleteDialog}
             />

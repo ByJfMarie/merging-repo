@@ -1,6 +1,7 @@
 import * as React from 'react';
 import AETService from "../../../../services/api/aet.service";
 import PryButtonSelect from "../../../../components/PryTable/PryButtonSelect";
+import FastForwardIcon from '@mui/icons-material/FastForward';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -35,6 +36,7 @@ const Index = (props) => {
 
     return (
         <PryButtonSelect
+            icon={<FastForwardIcon fontSize="small"/>}
             label={t('buttons.forward')}
             options={options}
             handleAction={handleForward}

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import TransferService from "../../../../services/api/transfer.service";
 import PryButtonSelect from "../../../../components/PryTable/PryButtonSelect";
+import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -35,6 +36,7 @@ const Index = (props) => {
 
     return (
         <PryButtonSelect
+            icon={<ConnectingAirportsIcon fontSize="small" />}
             label={t('buttons.transfer')}
             options={options}
             handleAction={handleTransfer}

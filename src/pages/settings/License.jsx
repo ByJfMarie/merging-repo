@@ -8,11 +8,12 @@ import {
     FormControlLabel,
     Checkbox,
     Grid,
-    Button, Alert, Snackbar
+    Button, Alert, Snackbar, Box
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import SystemService from "../../services/api/system.service";
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -107,8 +108,15 @@ const License = () => {
     return (
         <React.Fragment>
 
-            <Typography variant="h4"
-                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('titles.license')} </Typography>
+            <Typography
+                variant="h4"
+                style={{textAlign: 'left', color: theme.palette.primary.main}}
+            >
+                <Grid container direction="row" alignItems="center">
+                    <ReceiptLongIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.license')}
+                </Grid>
+            </Typography>
+
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}

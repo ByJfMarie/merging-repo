@@ -5,12 +5,16 @@ import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from '@mui/icons-material/Error';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import DownloadIcon from '@mui/icons-material/Download';
 import Chip from "@mui/material/Chip";
-import {Tooltip} from "@mui/material";
+import {Box, Grid, Tooltip} from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
-import QRService from "../../services/api/queryRetrieve.service";
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import UploadIcon from '@mui/icons-material/Upload';
+import DownloadIcon from '@mui/icons-material/Download';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import TransferService from "../../services/api/transfer.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -23,61 +27,86 @@ const TransferStatusLayout = (props) => {
     const { t } = useTranslation('common');
     //const { privileges } = React.useContext(UserContext);
 
-    const statusComponent = (params) => {
+    const LocalstatusComponent = (row) => {
+
+        if (row.tr_direction!==0) return null;
+
+        let statusIcon = "";
+        switch (row.tr_status) {
+            case 0: //Wait
+            case 1: //Ready
+                statusIcon = <PauseIcon color="warning" fontSize="small"/>;
+            case 2: //Sending
+            case 3: //Receiving
+                statusIcon = <PlayArrowIcon color="primary" fontSize="small"/>;
+                break;
+            case 4: //Done
+                statusIcon = <UploadIcon color="success" fontSize="small"/>;
+                break;
+            case 100: //Error
+                statusIcon = <ReportProblemIcon color="error" fontSize="small"/>;
+                break;
+        }
+
+        let remoteStatusIcon = "";
+        switch (row.tr_remote_status) {
+            case 0: //Wait
+            case 1: //Ready
+                remoteStatusIcon = <PauseIcon color="warning" fontSize="small"/>;
+                break;
+            case 2: //Sending
+            case 3: //Receiving
+                remoteStatusIcon = <PlayArrowIcon color="primary" fontSize="small"/>;
+                break;
+            case 4: //Done
+                remoteStatusIcon = <DownloadIcon color="success" fontSize="small"/>
+                break;
+            case 100: //Error
+                remoteStatusIcon = <ReportProblemIcon color="error" fontSize="small"/>
+                break;
+        }
 
         return (
-            <>
-                {
-                    params.value === 0 && (
-                        <Chip
-                            variant="filled"
-                            size="small"
-                            icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                            label={t("status.waiting")}
-                            //color: "default"
-                        />
-                    )
-                }
+            <Grid container direction="row" alignItems="center">
+                <Grid item xs="auto">{statusIcon}</Grid>
+                <Grid item xs="auto">{row.tr_status_str + ' to ' + row.tr_site_id_alias}</Grid>
+                <Box width="100%"/>
+                <Grid item xs="auto">{remoteStatusIcon}</Grid>
+                <Grid item xs="auto"> {'Remote Status: ' + row.tr_remote_status_str}</Grid>
+                <Grid item xs={12} pl={'4px'}>{row.tr_last_try_formatted?row.tr_last_try_formatted:''}</Grid>
+            </Grid>
+        )
+    }
 
-                {
-                    params.value === 1 && (
-                        <Chip
-                            variant="filled"
-                            size="small"
-                            icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                            label={t("status.retrieving")}
-                            color= "info"
-                        />
-                    )
-                }
+    const RemoteStatusComponent = (row) => {
+        if (row.tr_direction!==1) return null;
 
-                {
-                    params.value === 2 && (
-                        <Chip
-                            variant="filled"
-                            size="small"
-                            icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                            label={t("status.completed")}
-                            color= "success"
-                        />
-                    )
-                }
+        let statusIcon = "";
+        switch (row.tr_status) {
+            case 0: //Wait
+            case 1: //Ready
+                statusIcon = <PauseIcon color="warning" fontSize="small"/>;
+                break;
+            case 2: //Sending
+            case 3: //Receiving
+                statusIcon = <PlayArrowIcon color="primary" fontSize="small"/>;
+                break;
+            case 4: //Done
+                statusIcon = <DownloadIcon color="success" fontSize="small"/>
+                break;
+            case 100: //Error
+                statusIcon = <ReportProblemIcon color="error" fontSize="small"/>
+                break;
+        }
 
-                {
-                    params.value === 3 && (
-                        <Tooltip title={params.row.error}>
-                            <Chip
-                                variant="filled"
-                                size="small"
-                                icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                                label={t("status.error")}
-                                color= "error"
-                            />
-                        </Tooltip>
-                    )
-                }
-            </>
-        );
+        return (
+            <Grid container direction="row" alignItems="center">
+                <Grid item xs="auto">{statusIcon}</Grid>
+                <Grid item xs="auto">{row.tr_status_str + ' from ' + row.tr_alias}</Grid>
+                <Box width="100%"/>
+                <Grid item xs={12} pl={'4px'}>{row.tr_last_try_formatted?row.tr_last_try_formatted:''}</Grid>
+            </Grid>
+        )
     }
 
     /** THEME AND CSS */
@@ -97,7 +126,7 @@ const TransferStatusLayout = (props) => {
     const [rows, setRows] = React.useState([]);
 
     const refreshOrders = async() => {
-        const response = await QRService.getOrders({});
+        const response = await TransferService.getOrders({});
 
         if (response.error) {
             console.log(response.error);
@@ -114,17 +143,20 @@ const TransferStatusLayout = (props) => {
     }
 
     React.useEffect(() => {
-        let autoRefresh = false;
-        if (autoRefresh) {
+        refreshOrders();
+    }, []);
+
+    React.useEffect(() => {
+        if (props.autoRefresh) {
             const interval = setInterval(() => {
                 refreshOrders();
             }, 5000);
             return () => clearInterval(interval);
         }
-    }, []);
+    }, [props]);
 
     const handleRetry = async(id) => {
-        const response = await QRService.retryOrders(id);
+        const response = await TransferService.retryOrders(id);
 
         if (response.error) {
             console.log(response.error);
@@ -135,7 +167,7 @@ const TransferStatusLayout = (props) => {
     }
 
     const handleCancel = async (id) => {
-        const response = await QRService.cancelOrders(id);
+        const response = await TransferService.cancelOrders(id);
 
         if (response.error) {
             console.log(response.error);
@@ -147,26 +179,42 @@ const TransferStatusLayout = (props) => {
 
     const column = [
         {
-            field: 'p_name',
-            "headerName": t("tables_header.patient"),
-            flex: 2,
-            minWidth: 200
+            field: 'patient',
+            headerName: t("tables_header.patient"),
+            flex: 1,
+            minWidth: 150,
+            maxWidth: 250,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return <div
+                    style={{lineHeight: "normal"}}>{params.row.p_name || ''} ({params.row.p_id || ''})<br/>{params.row.p_birthdate_formatted || ''} - {params.row.p_sex || ''}
+                </div>
+            }
         },
         {
-            field: 'st_description',
-            "headerName": t("tables_header.description"),
-            flex: 3,
-            minWidth: 200
+            field: 'study',
+            headerName: t("tables_header.study"),
+            flex: 1,
+            minWidth: 350,
+            maxWidth: 450,
+            encodeHtml: false,
+            renderCell: (params) => {
+                return <div
+                    style={{lineHeight: "normal"}}>{params.row.st_description || ''} - {params.row.st_accession_number || ''}<br/>{params.row.tr_calling_aet || ''}@{params.row.tr_called_aet || ''}<br />{params.row.st_date_formatted || ''}
+                </div>
+            }
         },
         {
             field: "status",
             headerName: t("tables_header.status"),
-            flex: 1,
-            minWidth: 110,
-            description: "Status",
-            headerAlign: "left",
+            flex: 2,
+            minWidth: 200,
+            encodeHtml: false,
             renderCell: (params) => {
-                return statusComponent(params);
+                return <>
+                    {params.row.tr_direction===0 ? LocalstatusComponent(params.row) : RemoteStatusComponent(params.row)}
+                </>
+
             }
         },
         {
@@ -176,21 +224,27 @@ const TransferStatusLayout = (props) => {
             getActions: (params) => {
 
                 let actions = [];
-                if (params.row.status === 3) {
-                    actions.push(<GridActionsCellItem
-                        icon={<ReplayIcon/>}
-                        label={t("buttons.retry")}
-                        onClick={() => handleRetry(params.row.id)}
-                        showInMenu
-                    />);
-                }
-                if (params.row.status === 0 || params.row.status === 1 || params.row.status === 3) {
-                    actions.push(<GridActionsCellItem
-                        icon={<CancelIcon/>}
-                        label={t("buttons.cancel")}
-                        onClick={() => handleCancel(params.row.id)}
-                        showInMenu
-                    />);
+                switch (params.row.tr_status) {
+                    case 0: //Wait
+                    case 1: //Ready
+                    case 2: //Sending
+                    case 3: //Receiving
+                        actions.push(<GridActionsCellItem
+                            icon={<CancelIcon/>}
+                            label={t("buttons.cancel")}
+                            onClick={() => handleCancel(params.row.id)}
+                            showInMenu
+                        />);
+                        break;
+                    case 4: //Done
+                    case 100: //Error
+                        actions.push(<GridActionsCellItem
+                            icon={<ReplayIcon/>}
+                            label={t("buttons.retry")}
+                            onClick={() => handleRetry(params.row.id)}
+                            showInMenu
+                        />);
+                        break;
                 }
                 return actions;
             }
@@ -205,6 +259,7 @@ const TransferStatusLayout = (props) => {
                     style={{marginTop: '25px'}}
                     autoWidth={true}
                     autoHeight={true}
+                    rowHeight={80}
                     rows={rows}
                     columns={column}
                     pageSize={pageSize}

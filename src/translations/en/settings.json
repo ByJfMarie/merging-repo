@@ -112,7 +112,10 @@
       "study_notification": "Study Notification",
       "registration_error": "Registration Error",
       "physicians": "Physicians",
-      "radiologist": "Radiologist"
+      "radiologist": "Radiologist",
+      "guest": "Guests",
+      "new_account": "New Account",
+      "new_account_password": "New Account Password"
     },
     "subject": "Subject",
     "serial": "Serial",
@@ -292,5 +295,10 @@
     "loginSheet_uploaded": "Impossible to upload Login Sheet File: {{error}}",
     "license_uploaded": "Impossible to upload License File!",
     "reset_password": "Impossible to reset password: {{error}}"
+  },
+
+  "confirm": {
+    "delete_title": "Are you sure?",
+    "delete_user": "Do you really want to delete this user? This process cannot be undone."
   }
 }

@@ -30,6 +30,7 @@ import "react-phone-input-2/lib/high-res.css";
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import MailingService from "../../services/api/mailing.service";
+import EmailIcon from '@mui/icons-material/Email';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -201,7 +202,15 @@ export default function Emailing() {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }}> {t("titles.emailing")}  </Typography>
+            <Typography
+                variant="h4"
+                style={{textAlign: 'left', color: theme.palette.primary.main}}
+            >
+                <Grid container direction="row" alignItems="center">
+                    <EmailIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.emailing')}
+                </Grid>
+            </Typography>
+
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
@@ -373,7 +382,6 @@ export default function Emailing() {
                                         onChange={(e) => handleTemplateSelect(e.target.value)}
                                     >
                                         <ListSubheader>{t("fields.template_value.general")}</ListSubheader>
-                                        <MenuItem value="NOT.share_guest">{t("fields.template_value.share_to")}</MenuItem>
                                         <MenuItem value="NOT.download_ready">{t("fields.template_value.download_ready")}</MenuItem>
                                         <MenuItem value="NOT.mail_change_confirmation">{t("fields.template_value.mail_change")}</MenuItem>
                                         <MenuItem value="NOT.reset_password">{t("fields.template_value.reset_password")}</MenuItem>
@@ -392,6 +400,10 @@ export default function Emailing() {
                                         <MenuItem value="NOT.radio-activation">{t("fields.template_value.activation_request")}</MenuItem>
                                         <MenuItem value="NOT.radio_activation_request">{t("fields.template_value.activation_request2")}</MenuItem>
                                         <MenuItem value="NOT.radio_activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
+                                        <ListSubheader>{t("fields.template_value.guest")}</ListSubheader>
+                                        <MenuItem value="NOT.share_new_guest">{t("fields.template_value.new_account")}</MenuItem>
+                                        <MenuItem value="NOT.share_new_guest_password">{t("fields.template_value.new_account_password")}</MenuItem>
+                                        <MenuItem value="NOT.share_guest">{t("fields.template_value.share_to")}</MenuItem>
 
                                     </Select>
                                 </FormControl>

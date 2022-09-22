@@ -5,16 +5,18 @@ import {
     Card,
     CardContent,
     Grid,
-    Alert, Snackbar
+    Alert, Snackbar, Box
 } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import RolesTable from "../../layouts/settings/roles";
 import DialogAddEdit from "../../layouts/settings/roles/DialogAddEdit";
 import ViewersService from "../../services/api/viewers.service";
+import LockIcon from '@mui/icons-material/Lock';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import DesignServicesIcon from "@mui/icons-material/DesignServices";
 
 /*const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -60,7 +62,14 @@ const Roles = () => {
     return (
         <React.Fragment>
 
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.roles_perm')} </Typography>
+            <Typography
+                variant="h4"
+                style={{ textAlign: 'left', color: theme.palette.primary.main }}
+            >
+                <Grid container direction="row" alignItems="center">
+                    <LockIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.roles_perm')}
+                </Grid>
+            </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>

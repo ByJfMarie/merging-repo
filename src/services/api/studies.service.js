@@ -104,6 +104,18 @@ class StudiesService {
             });
     }
 
+    share(studies, to, comment, valid_until) {
+        let end_date = null;
+        if (valid_until instanceof Date) end_date = moment(valid_until).format("YYYY-MM-DD");
+
+        return apiPOST('studies/share', {
+            study_uids: studies,
+            recipients: to,
+            comments: comment,
+            valid_until: end_date
+        });
+    }
+
     delete(study_uid) {
         return apiPOST('studies/delete/'+study_uid);
     }

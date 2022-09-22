@@ -22,6 +22,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import LoginStorage from "../../services/storage/login.storage";
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -234,8 +235,14 @@ export default function SiteDesign() {
 
     return (
         <React.Fragment>
-            <Typography variant="h4"
-                        style={{textAlign: 'left', color: theme.palette.primary.main}}> {t('titles.site_design')} </Typography>
+            <Typography
+                variant="h4"
+                style={{textAlign: 'left', color: theme.palette.primary.main}}
+            >
+                <Grid container direction="row" alignItems="center">
+                    <DesignServicesIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.site_design')}
+                </Grid>
+            </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
             <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>

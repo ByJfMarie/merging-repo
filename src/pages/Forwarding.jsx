@@ -1,7 +1,8 @@
 import React from 'react';
-import { Divider, Typography } from "@mui/material";
+import {Box, Divider, Grid, Typography} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import ForwardingLayout from '../layouts/forwarding';
+import FastForwardIcon from '@mui/icons-material/FastForward';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -15,7 +16,16 @@ const Forwarding = () => {
 
   return (
     <React.Fragment>
-        <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.forwarding')} </Typography>
+
+        <Typography
+            variant="h4"
+            style={{textAlign: 'left', color: theme.palette.primary.main}}
+        >
+            <Grid container direction="row" alignItems="center">
+                <FastForwardIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.forwarding')}
+            </Grid>
+        </Typography>
+
         <Divider style={{ marginBottom: theme.spacing(2) }} />
 
         <ForwardingLayout

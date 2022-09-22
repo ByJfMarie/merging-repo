@@ -18,7 +18,8 @@
     "user": "User",
     "general": "General",
     "study_information": "Study Information",
-    "study_permissions": "Study Permissions"
+    "study_permissions": "Study Permissions",
+    "study_sharing": "Sharing Studies"
   },
 
   "filters": {
@@ -78,7 +79,9 @@
     "retry": "Retry",
     "cancel": "Cancel",
     "find": "Find",
-    "query": "Query"
+    "query": "Query",
+    "share": "Share",
+    "delete": "Delete"
   },
 
   "status": {
@@ -116,7 +119,10 @@
     "st_id": "Study ID",
     "st_uid": "Study UID",
     "st_reference": "Reference",
-    "st_storage_key": "Storage Key"
+    "st_storage_key": "Storage Key",
+    "share_to": "Share To",
+    "share_validUntil": "Choose an End Date",
+    "share_comments": "Comments"
   },
 
   "msg_info": {
@@ -125,7 +131,10 @@
     "download_completed": "Download Completed",
     "forward_success": "Forwarding order has been successfully created.",
     "delete_study": "Study {{description}} for patient {{patient}} has been marked for delete.",
-    "remote_use_wildcard": "Use \"*\" as a wildcard for your search"
+    "remote_use_wildcard": "Use \"*\" as a wildcard for your search",
+    "share_to": "Enter your recipients email addresses",
+    "share_comments": "Enter an optionally comment",
+    "share_success": "Your study selection has been successfully shared."
   },
 
   "msg_error" : {
@@ -139,6 +148,12 @@
     "forward_error": "Impossible to forward study: {{error}}",
     "query_no_criteria": "You can't query studies without criteria!",
     "query_no_aet": "You have to select a query AET!",
-    "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete: {{error}}"
+    "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete: {{error}}",
+    "share_error": "Impossible to share your study selection: {{error}}"
+  },
+
+  "confirm": {
+    "delete_title": "Are you sure?",
+    "delete_study": "Do you really want to delete this study? This process cannot be undone."
   }
 }

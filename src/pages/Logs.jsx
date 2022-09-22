@@ -1,10 +1,12 @@
 import {
-    Divider,
+    Box,
+    Divider, Grid,
     Typography
 } from "@mui/material"
 import { useTheme } from '@emotion/react';
 import * as React from "react";
 import TableLogs from "../layouts/logs";
+import DescriptionIcon from '@mui/icons-material/Description';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -44,7 +46,14 @@ const Logs = () => {
 
     return (
         <React.Fragment>
-            <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.logs')} </Typography>
+            <Typography
+                variant="h4"
+                style={{ textAlign: 'left', color: theme.palette.primary.main }}
+            >
+                <Grid container direction="row" alignItems="center">
+                    <DescriptionIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.logs')}
+                </Grid>
+            </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
             <TableLogs

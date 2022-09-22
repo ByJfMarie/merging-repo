@@ -413,12 +413,12 @@ export default function TableLocalStudiesFilter(props) {
                         </Container>
 
                         <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonFind} style={{ fontSize: '12px', width: '80px' }}>
-                            <SearchIcon style={{ transform: "scale(0.8)" }} />
+                            <SearchIcon fontSize="small" />
                             {t('buttons.find')+"   "}
                         </Button>
 
                         <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
-                            <MoreVertIcon style={{ transform: "scale(0.8)" }} />
+                            <MoreVertIcon fontSize="small" />
                             <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
                         </Button>
 
@@ -429,7 +429,7 @@ export default function TableLocalStudiesFilter(props) {
                             className={classes.button}
                             style={{ fontSize: '12px', width: '80px', heigh: '50px' }}
                         >
-                            <BlockIcon style={{ transform: "scale(0.8)" }} />
+                            <BlockIcon fontSize="small"/>
                             {t('buttons.reset')}
                         </Button>
 

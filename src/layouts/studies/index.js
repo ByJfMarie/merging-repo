@@ -15,6 +15,7 @@ import ForwardingService from "../../services/api/forwarding.service";
 import ViewersService from "../../services/api/viewers.service";
 import CustomDialogAddPermission from "./CustomDialogAddPermission";
 import CustomDialogStudyInfo from "./CustomDialogStudyInfo";
+import DialogSharing from './DialogSharing';
 import TableLocalStudiesActions from "./TableLocalStudiesActions";
 import DownloadStudies from "./DownloadStudies";
 import UserContext from "../../components/UserContext";
@@ -304,6 +305,25 @@ function StudiesLayout(props) {
         console.log("Transfer "+selectedRows+" to "+site);
     };
 
+    //Sharing
+    const [sharingDialogOpen, setSharingDialogOpen] = useState(false);
+    const sharingStudies  = async(studies, values) => {
+        if (!studies || studies.length<=0) {
+            messageAlert('error', t("msg_error.study_no_selection"));
+            return;
+        }
+
+        const response = await StudiesService.share(studies, values.share_to, values.comments, values.valid_until);
+        if (response.error) {
+            messageAlert('error', t("msg_error.share_error", {error: response.error}));
+            return;
+        }
+
+        messageAlert("success", t("msg_info.share_success"));
+        setSelectedRows([]);
+        setSharingDialogOpen(false);
+    };
+
     //Media
     const mediaStudies = async() => {
         console.log("Media "+selectedRows);
@@ -547,6 +567,7 @@ function StudiesLayout(props) {
                 downloadFunction={downloadStudies}
                 forwardFunction={forwardStudies}
                 transferFunction={transferStudies}
+                sharingFunction={() => {setSharingDialogOpen(true);}}
                 mediaFunction={mediaStudies}
                 actionDisabled={selectedRows!=null?(selectedRows.length<=0):true}
             />
@@ -565,6 +586,13 @@ function StudiesLayout(props) {
                 study={dialogPermissions}
             />
 
+            <DialogSharing
+                open={sharingDialogOpen}
+                studies={selectedRows}
+                handleCloseDialog={() => {setSharingDialogOpen(false)}}
+                handleShareDialog={sharingStudies}
+            />
+
             <DownloadStudies
                 isOpen={downloadOpen}
                 progress={downloadProgress}
@@ -573,11 +601,11 @@ function StudiesLayout(props) {
 
             <AlertDialog
                 open={dialogDeleteOpen}
-                title={"Are you sure?"}
-                text={"Do you really want to delete this study? This process cannot be undone."}
+                title={t("confirm.delete_title")}
+                text={t("confirm.delete_study")}
                 data={dialogDeleteStudy}
-                buttonCancel="Cancel"
-                buttonConfirm="Delete"
+                buttonCancel={t("buttons.cancel")}
+                buttonConfirm={t("buttons.delete")}
                 functionCancel={handleCloseDeleteDialog}
                 functionConfirm={handleConfirmDeleteDialog}
             />

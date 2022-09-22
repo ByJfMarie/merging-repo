@@ -22,12 +22,12 @@ import "../translations/i18n";
 import SettingsIcon from '@mui/icons-material/Settings';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import FastForwardIcon from '@mui/icons-material/FastForward';
+import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import LocationOn from '@mui/icons-material/LocationOn';
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import AuthService from "../services/api/auth.service";
 import UserContext from "../components/UserContext";
 
@@ -121,21 +121,21 @@ function MenuBackup(props) {
 
                 {privileges.pages.indexOf('aet') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/aet" selected={location === '/aet'}>
-                        <LocationOn />
+                        <TravelExploreIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.remote_aet")} />
                     </ListItem>
                 )}
 
                 {privileges.pages.indexOf('forwarding') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/forwarding" selected={location === '/forwarding'}>
-                        <ForwardToInboxIcon />
+                        <FastForwardIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.forwarding")} />
                     </ListItem>
                 )}
 
                 {privileges.pages.indexOf('transfer') !== -1 && (
                     <ListItem button classes={{ selected: classes.selected }} component="a" href="/transfer" selected={location === '/transfer'} >
-                        <CompareArrowsIcon />
+                        <ConnectingAirportsIcon />
                         <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.transfer")} />
                     </ListItem>
                 )}
@@ -200,10 +200,10 @@ function MenuBackup(props) {
                             </Typography>
                         </Grid>
 
-                        <Grid item style={{ paddingRight: '12px' }}>
+                        <Grid item>
                             <Link href="/profile">
                                 <IconButton style={{ color: theme.palette.menu.text }}>
-                                    <AccountCircleIcon style={{ transform: 'scale(1.2)' }} />
+                                    <AccountCircleIcon fontSize="medium" />
                                 </IconButton>
                             </Link>
                         </Grid>
@@ -213,9 +213,9 @@ function MenuBackup(props) {
                         </Grid>*/
                         }
 
-                        <Grid item style={{ paddingRight: '12px' }}>
+                        <Grid item>
                             <IconButton style={{ color: theme.palette.menu.text }} onClick={handleLogoutClick}>
-                                <ExitToAppIcon style={{ transform: 'scale(1.2)' }} />
+                                <ExitToAppIcon fontSize="medium" />
                             </IconButton>
                         </Grid>
                     </Grid>

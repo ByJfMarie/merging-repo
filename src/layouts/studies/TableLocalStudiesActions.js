@@ -4,6 +4,7 @@ import DownloadButton from "./components/DownloadButton";
 import ForwardButton from "./components/ForwardButton";
 import TransferButton from "./components/TransferButton";
 import UserContext from "../../components/UserContext";
+import SharingButton from "./components/SharingButton";
 
 const TableLocalStudiesActions = (props) => {
 
@@ -26,7 +27,17 @@ const TableLocalStudiesActions = (props) => {
                     <Grid container spacing={1} direction={"row-reverse"}>
                     {  // eslint-disable-next-line 
                         privileges.tables[props.page].actions.map((value, key) => {
-                            if (value === "forward") {
+                            if (value === "share") {
+                                return (
+                                    <Grid key={"sharing"} item xs="auto">
+                                        <SharingButton
+                                            sharingFunction={props.sharingFunction}
+                                            actionDisabled={props.actionDisabled}
+                                        />
+                                    </Grid>
+                                )
+                            }
+                            else if (value === "forward") {
                                 return (
                                     <Grid key={value} item xs="auto">
                                         <ForwardButton

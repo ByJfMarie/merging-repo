@@ -1,7 +1,8 @@
 import React from 'react';
-import {Divider, Typography, Container, Grid, FormControl, InputLabel} from "@mui/material";
+import {Divider, Typography, Container, Grid, FormControl, InputLabel, Box} from "@mui/material";
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -42,12 +43,14 @@ export default function AET() {
             <Container maxWidth="false"
                        style={{display: "flex", margin: 0, padding: 0, justifyContent: 'space-between'}}>
 
-                <Typography variant="h4" style={{
-                    textAlign: 'left',
-                    color: theme.palette.primary.main,
-                    width: "300px",
-                    marginTop: "auto"
-                }}> {t('titles.remote_aet')} </Typography>
+                <Typography
+                    variant="h4"
+                    style={{textAlign: 'left', color: theme.palette.primary.main, width: "300px", marginTop: "auto"}}
+                >
+                    <Grid container direction="row" alignItems="center">
+                        <TravelExploreIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.remote_aet')}
+                    </Grid>
+                </Typography>
 
                 <FormControl className={classes.root} variant="filled" style={{width: "300px"}}>
                     <InputLabel id="aet">{t("filters.aet")}</InputLabel>

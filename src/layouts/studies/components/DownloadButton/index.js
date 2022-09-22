@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PryButtonSelect from "../../../../components/PryTable/PryButtonSelect";
+import DownloadIcon from '@mui/icons-material/Download';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -29,6 +30,7 @@ const Index = (props) => {
 
     return (
         <PryButtonSelect
+            icon={<DownloadIcon fontSize="small" />}
             label={t('buttons.download')}
             options={options}
             handleAction={handleDownload}
