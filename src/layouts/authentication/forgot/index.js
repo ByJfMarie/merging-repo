@@ -6,8 +6,8 @@ import {makeStyles} from "@mui/styles";
 import swal from "sweetalert";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
-import LoginStorage from "../../../services/storage/login.storage";
 import Reaptcha from "reaptcha";
+import AuthService from "../../../services/api/auth.service";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -58,11 +58,11 @@ function Forgot() {
     const [useCaptcha, setUseCaptcha] = useState(false);
     const [captchaSiteKey, setCaptchaSiteKey] = useState(false);
     React.useEffect(() => {
-        LoginStorage.getConfig()
+        AuthService.config()
             .then(rsp => {
-                if (!rsp) return;
-                setUseCaptcha(rsp.enable_captcha);
-                setCaptchaSiteKey(rsp.captcha_site_key);
+                if (!rsp || !rsp.items) return;
+                setUseCaptcha(rsp.items.enable_captcha);
+                setCaptchaSiteKey(rsp.items.captcha_site_key);
             });
     }, []);
 

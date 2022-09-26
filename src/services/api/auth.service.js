@@ -2,6 +2,7 @@ import axios from 'axios';
 import api from "./apiManager";
 import TokenStorage from "../storage/token.storage";
 import UserStorage from "../storage/user.storage";
+import moment from "moment";
 
 const login_axios = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
@@ -81,6 +82,8 @@ class AuthService {
             items: [],
             error: ''
         }
+
+        if (birthdate instanceof Date) birthdate = moment(birthdate).format("YYYY-MM-DD");
 
         return login_axios
             .post("/auth/ref", { reference: ref, birthdate: birthdate, captcha: captcha })

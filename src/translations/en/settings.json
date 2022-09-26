@@ -38,6 +38,12 @@
   },
 
   "fields": {
+    "language": "Default Language",
+    "language_value": {
+      "fr": "French",
+      "en": "English"
+    },
+    "date_format": "Default Date Format",
     "institution" : "Institution",
     "departement" : "Departement",
     "phone" : "Phone",

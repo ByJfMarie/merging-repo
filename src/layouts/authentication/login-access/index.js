@@ -7,8 +7,10 @@ import swal from "sweetalert";
 import AuthService from "../../../services/api/auth.service";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
-import LoginStorage from "../../../services/storage/login.storage";
 import Reaptcha from "reaptcha";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -72,14 +74,16 @@ function LoginAccess() {
         setCaptchaValue(value);
     }
 
+    const [dateFormat, setDateFormat] = useState("dd/MM/yyyy");
     const [useCaptcha, setUseCaptcha] = useState(false);
     const [captchaSiteKey, setCaptchaSiteKey] = useState(false);
     React.useEffect(() => {
-        LoginStorage.getConfig()
+        AuthService.config()
             .then(rsp => {
-                if (!rsp) return;
-                setUseCaptcha(rsp.enable_captcha);
-                setCaptchaSiteKey(rsp.captcha_site_key);
+                if (!rsp || !rsp.items) return;
+                setDateFormat(rsp.items.date_format);
+                setUseCaptcha(rsp.items.enable_captcha);
+                setCaptchaSiteKey(rsp.items.captcha_site_key);
             });
     }, []);
 
@@ -139,16 +143,22 @@ function LoginAccess() {
                                 label="Access Code"
                                 onChange={e => setReference(e.target.value)}
                             />
-                            <TextField
-                                style={{ marginBottom: '15px' }}
-                                variant="standard"
-                                required
-                                fullWidth
-                                id="birthdate"
-                                name="birthdate"
-                                label="Birthdate"
-                                onChange={e => setBirthdate(e.target.value)}
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DesktopDatePicker
+                                    id="birthdate"
+                                    label="Birthdate"
+                                    inputFormat={dateFormat}
+                                    value={""}
+                                    onChange={(date, keyboardInputValue) => {
+                                        if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
+                                        setBirthdate(date);
+                                    }}
+                                    renderInput={
+                                        (params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" fullWidth {...params} required/>
+                                    }
+                                    dateAdapter={AdapterDateFns}
+                                />
+                            </LocalizationProvider>
 
                             {
                                 (useCaptcha===true || useCaptcha==="true") &&

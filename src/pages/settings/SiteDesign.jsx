@@ -11,7 +11,7 @@ import {
     TextField,
     Button,
     Tooltip,
-    Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup,
+    Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup, MenuItem, Select, FormControl, InputLabel,
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -21,7 +21,6 @@ import "react-phone-input-2/lib/high-res.css";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
-import LoginStorage from "../../services/storage/login.storage";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 
 /** Translation */
@@ -154,7 +153,6 @@ export default function SiteDesign() {
             return;
         }
 
-        LoginStorage.removeConfig();
         refreshSettings();
         setMessage({
             ...message,
@@ -264,6 +262,47 @@ export default function SiteDesign() {
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                     <CardContent>
                         <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
+                                    <InputLabel>{t('fields.language')}</InputLabel>
+                                    <Select
+                                        value={getSettingsValue('WEB.language') || "en"}
+                                        label="Language"
+                                        onChange={(e) => {
+                                            handleSettingsChange('WEB.language', e.target.value)
+                                        }}
+                                        fullWidth={true}
+                                    >
+                                        <MenuItem value={"fr"}>{t("fields.language_value.fr")}</MenuItem>
+                                        <MenuItem value={"en"}>{t("fields.language_value.en")}</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
+                                    <InputLabel>{t('fields.date_format')}</InputLabel>
+                                    <Select
+                                        value={getSettingsValue('ALL.date_format')}
+                                        label={t('fields.date_format')}
+                                        onChange={(e) => {
+                                            handleSettingsChange('ALL.date_format', e.target.value)
+                                        }}
+                                    >
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        <MenuItem value={"dd/MM/yyyy"}>dd/MM/yyyy</MenuItem>
+                                        <MenuItem value={"dd.MM.yyyy"}>dd.MM.yyyy</MenuItem>
+                                        <MenuItem value={"dd-MM-yyyy"}>dd-MM-yyyy</MenuItem>
+                                        <MenuItem value={"MM/dd/yyyy"}>MM/dd/yyyy</MenuItem>
+                                        <MenuItem value={"MM.dd.yyyy"}>MM.dd.yyyy</MenuItem>
+                                        <MenuItem value={"MM-dd-yyyy"}>MM-dd-yyyy</MenuItem>
+                                        <MenuItem value={"yyyy/MM/dd"}>yyyy/MM/dd</MenuItem>
+                                        <MenuItem value={"yyyy.MM.dd"}>yyyy.MM.dd</MenuItem>
+                                        <MenuItem value={"yyyy-MM-dd"}>yyyy-MM-dd</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
                             <Grid item xs>
                                     <TextField
                                         className={classes.field}

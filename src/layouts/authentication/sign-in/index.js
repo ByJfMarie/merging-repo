@@ -8,7 +8,6 @@ import AuthService from "../../../services/api/auth.service";
 import sha512 from "js-sha512";
 import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
-import LoginStorage from "../../../services/storage/login.storage";
 import Reaptcha from 'reaptcha';
 
 // Image
@@ -78,12 +77,12 @@ function Signin() {
     const [captchaSiteKey, setCaptchaSiteKey] = useState(false);
     const [useReference, setUseReference] = useState(false);
     React.useEffect(() => {
-        LoginStorage.getConfig()
+        AuthService.config()
             .then(rsp => {
-                if (!rsp) return;
-                setUseCaptcha(rsp.enable_captcha);
-                setCaptchaSiteKey(rsp.captcha_site_key);
-                setUseReference(rsp.enable_ref_login);
+                if (!rsp || !rsp.items) return;
+                setUseCaptcha(rsp.items.enable_captcha);
+                setCaptchaSiteKey(rsp.items.captcha_site_key);
+                setUseReference(rsp.items.enable_ref_login);
             });
     }, [])
 
