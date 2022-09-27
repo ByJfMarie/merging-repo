@@ -108,7 +108,7 @@ export default function TableLocalStudiesFilter(props) {
     const { t } = useTranslation('common');
 
     /** User & privileges */
-    const { settings } = React.useContext(UserContext);
+    const { settings, privileges } = React.useContext(UserContext);
 
     const fields = [
         "patient_id",
@@ -541,24 +541,28 @@ export default function TableLocalStudiesFilter(props) {
 
                                         </Grid>
                                     }
-                                    <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
-                                        <Grid item xs={12} sm={8} md={7} className={classes.delete}>
-                                            <FormGroup>
-                                                <FormControlLabel size="small"
-                                                    control={
-                                                        <Checkbox
-                                                            id="showDeleted"
-                                                            checked={values.showDeleted || false} />
-                                                    }
-                                                    label={t('filters.show_deleted')}
-                                                    onChange={(e) => {
-                                                        handleSearch("showDeleted", !values.showDeleted);
-                                                        handleSecondaryFilters("showDeleted", e.target.checked);
-                                                    }}
-                                                />
-                                            </FormGroup>
-                                        </Grid>
-                                    </Grid>
+                                    {
+                                        privileges.tables[props.page].filters && privileges.tables[props.page].filters.includes('show_deleted') && (
+                                            <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
+                                                <Grid item xs={12} sm={8} md={7} className={classes.delete}>
+                                                    <FormGroup>
+                                                        <FormControlLabel size="small"
+                                                                          control={
+                                                                              <Checkbox
+                                                                                  id="showDeleted"
+                                                                                  checked={values.showDeleted || false} />
+                                                                          }
+                                                                          label={t('filters.show_deleted')}
+                                                                          onChange={(e) => {
+                                                                              handleSearch("showDeleted", !values.showDeleted);
+                                                                              handleSecondaryFilters("showDeleted", e.target.checked);
+                                                                          }}
+                                                        />
+                                                    </FormGroup>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    }
                                 </Container>
                             </Container>
                                 <Button type="submit"/>

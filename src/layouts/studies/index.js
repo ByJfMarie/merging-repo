@@ -1,4 +1,4 @@
-import {Alert, Box, IconButton, Paper, Snackbar} from "@mui/material";
+import {Alert, alpha, Box, Chip, gridClasses, IconButton, Paper, Snackbar} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
@@ -22,12 +22,13 @@ import UserContext from "../../components/UserContext";
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import AlertDialog from "../../components/AlertDialog";
+import TransferService from "../../services/api/transfer.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
-import AlertDialog from "../../components/AlertDialog";
-import TransferService from "../../services/api/transfer.service";
+import ErrorIcon from "@mui/icons-material/Error";
 
 function StudiesLayout(props) {
     const { t } = useTranslation('common');
@@ -349,6 +350,24 @@ function StudiesLayout(props) {
     //Create Columns
     const columns = [];
     if (privileges.tables[props.page].columns && privileges.tables[props.page].columns.length !== 0) {
+        if (privileges.tables[props.page].columns.includes("status")) {
+            columns.push(
+                {
+                    field: "storage_status",
+                    headerName: t("tables_header.status"),
+                    valueGetter: (params) => params.row.storage_status,
+                    flex: 2,
+                    minWidth: 80,
+                    maxWidth: 100,
+                    //resizable: true,
+                    encodeHtml: false,
+                    renderCell: (params) => {
+                        return statusComponent(params.row, t("status."+params.row.storage_status));
+                    },
+                }
+            );
+        }
+
         if (privileges.tables[props.page].columns.includes("patient_full")) {
             columns.push(
                 {
@@ -572,7 +591,7 @@ function StudiesLayout(props) {
                             setSelectedRows(ids);
                         }}
                         disableColumnMenu={true}
-                        getRowClassName={(params) => `storage-status-${params.row.storage_status}`}
+                        isRowSelectable={(params) => params.row.storage_status!=="offline"}
                     />
                 </div>
             </div>
@@ -626,6 +645,46 @@ function StudiesLayout(props) {
             />
         </>
     )
+}
+
+const statusComponent = (row, label) => {
+
+    return (
+        <>
+            {
+                row.storage_status === 'offline' && (
+                    <Chip
+                        variant="filled"
+                        size="small"
+                        label={label}
+                        color= "error"
+                    />
+                )
+            }
+
+            {
+                row.storage_status === 'online' && (
+                    <Chip
+                        variant="filled"
+                        size="small"
+                        label={label}
+                        color= "success"
+                    />
+                )
+            }
+
+            {
+                row.storage_status === 'nearline' && (
+                    <Chip
+                        variant="filled"
+                        size="small"
+                        label={label}
+                        color= "info"
+                    />
+                )
+            }
+        </>
+    );
 }
 
 export default StudiesLayout;

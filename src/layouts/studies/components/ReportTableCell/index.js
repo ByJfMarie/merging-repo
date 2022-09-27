@@ -9,7 +9,7 @@ const Index = (props) => {
     const [reports, setReports] = useState({})
 
     const loadReports = async (study) => {
-        if (study.storage_status=="offline") return;
+        if (study.storage_status==="offline") return;
 
         const response = await StudiesService.getReports(study.st_uid);
         if (response.error) {

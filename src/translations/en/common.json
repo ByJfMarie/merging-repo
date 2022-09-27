@@ -89,7 +89,10 @@
     "forwarding": "Forwarding",
     "completed": "Completed",
     "error": "Error",
-    "retrieving": "Retrieving"
+    "retrieving": "Retrieving",
+    "online": "Online",
+    "nearline": "Nearline",
+    "offline": "Offline"
   },
 
   "fields": {
@@ -130,6 +133,7 @@
     "downloading": "Downloading file",
     "download_completed": "Download Completed",
     "forward_success": "Forwarding order has been successfully created.",
+    "transfer_success": "Transfer order has been successfully created.",
     "delete_study": "Study {{description}} for patient {{patient}} has been marked for delete.",
     "remote_use_wildcard": "Use \"*\" as a wildcard for your search",
     "share_to": "Enter your recipients email addresses",
@@ -146,6 +150,7 @@
     "open_viewer": "Impossible to open viewer: {{error}}",
     "study_no_selection": "You have to select at least one study!",
     "forward_error": "Impossible to forward study: {{error}}",
+    "transfer_error": "Impossible to transfer study: {{error}}",
     "query_no_criteria": "You can't query studies without criteria!",
     "query_no_aet": "You have to select a query AET!",
     "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete: {{error}}",

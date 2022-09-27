@@ -7,7 +7,7 @@ const Index = (props) => {
     const [thumbnail, setThumbnail] = useState({});
 
     const loadThumbnail = async (study, size) => {
-        if (study.storage_status=="offline") {
+        if (study.storage_status==="offline") {
             setThumbnail("./images/no_thumb.png");
             return;
         }
