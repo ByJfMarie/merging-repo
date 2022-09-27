@@ -154,13 +154,14 @@ function Index(props) {
             field: "patient_full",
             headerName: t("tables_header.patient"),
             valueGetter: (params) => params.row.p_name,
-            flex: 3,
+            flex: 2,
+            minWidth: 150,
             maxWidth: 250,
             //resizable: true,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div
-                    style={{lineHeight: "normal"}}>{params.row.p_name || ''} ({params.row.p_id || ''})<br/>{params.row.p_birthdate || ''}
+                    style={{lineHeight: "normal"}}>{params.row.p_name || ''}<br/>{params.row.p_id || ''}<br/>{params.row.p_birthdate_formatted || ''}
                 </div>
             }
         },
@@ -168,8 +169,9 @@ function Index(props) {
             field: "study_full",
             headerName: t('tables_header.study'),
             valueGetter: (params) => params.row.st_date,
-            flex: 4,
-            maxWidth: 250,
+            flex: 3,
+            minWidth: 350,
+            maxWidth: 800,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
@@ -182,7 +184,8 @@ function Index(props) {
             }
         },
         {
-            flex: 2,
+            flex: 1,
+            minWidth: 180,
             field: 'st_ref_physician',
             headerName: t('tables_header.referring_physician')
         },
@@ -339,32 +342,34 @@ function Index(props) {
                 page="aet"
             />
 
-            <TableContainer component={Paper} style={{ marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                    //loading={!rows.length}
-                    //error={error}
-                    rowHeight={60}
-                    autoHeight={true}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[10,20,50]}
-                    getRowId={(row) => row.key}
-                    checkboxSelection
-                    selectionModel={selectedRows}
-                    onSelectionModelChange={(ids) => {
-                        const selectedIDs = new Set(ids);
-                        const selectedRowData = rows.filter((row) =>
-                            selectedIDs.has(row.key.toString())
-                        );
-                        setSelectedRows(ids);
-                        setSelectedRowsData(selectedRowData);
-                    }}
-                    loading={isLoading}
-                    disableColumnMenu={true}
-                />
-            </TableContainer>
+            <div component={Paper} style={{ display: 'flex', marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                        columns={columns}
+                        rows={rows}
+                        //loading={!rows.length}
+                        //error={error}
+                        rowHeight={60}
+                        autoHeight={true}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        rowsPerPageOptions={[10,20,50]}
+                        getRowId={(row) => row.key}
+                        checkboxSelection
+                        selectionModel={selectedRows}
+                        onSelectionModelChange={(ids) => {
+                            const selectedIDs = new Set(ids);
+                            const selectedRowData = rows.filter((row) =>
+                                selectedIDs.has(row.key.toString())
+                            );
+                            setSelectedRows(ids);
+                            setSelectedRowsData(selectedRowData);
+                        }}
+                        loading={isLoading}
+                        disableColumnMenu={true}
+                    />
+                </div>
+            </div>
 
             <TableRemoteStudiesActions
                 page={props.page}
