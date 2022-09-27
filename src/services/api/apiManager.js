@@ -137,18 +137,16 @@ const networkError = (message, timer) => {
 }
 
 // Obtain the fresh token each time the function is called
-function getAccessToken(){
-    let token = TokenStorage.getToken();
-    return token?.acces_token;
+/*function getAccessToken(){
+    return TokenStorage.getLocalAccessToken();
 }
 function getRefreshToken() {
-    let token = TokenStorage.getToken();
-    return token?.refresh_token;
-}
+    return TokenStorage.getRefreshToken();
+}*/
 
 // Use interceptor to inject the token to requests
 miAPI.interceptors.request.use(request => {
-    request.headers['Authorization'] = `Bearer ${getAccessToken()}`;
+    request.headers['Authorization'] = `Bearer ${TokenStorage.getAccessToken()}`;
     return request;
 });
 
@@ -157,14 +155,12 @@ const refreshAuthLogic = failedRequest =>
     axios
         .post(BASE_URL+URL_REFRESH_TOKEN,
             {
-                token: getAccessToken(),
-                refresh_token: getRefreshToken()
+                token: TokenStorage.getAccessToken(),
+                refresh_token: TokenStorage.getRefreshToken()
             })
         .then(tokenRefreshResponse => {
-            const token = TokenStorage.getToken();
-            token.acces_token = tokenRefreshResponse.data.acces_token;
-            token.refresh_token = tokenRefreshResponse.data.refresh_token;
-            TokenStorage.setToken(token);
+            TokenStorage.setAccessToken(tokenRefreshResponse.data.acces_token);
+            TokenStorage.setRefreshToken(tokenRefreshResponse.data.refresh_token);
 
             failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.acces_token;
             return Promise.resolve();
@@ -172,8 +168,8 @@ const refreshAuthLogic = failedRequest =>
         .catch(() => {
 
             //Don't display error when not logged in
-            const token = TokenStorage.getToken();
-            if (!token || !token.acces_token) {
+            const token = TokenStorage.getAccessToken();
+            if (!token) {
                 AuthService.logout();
                 return;
             }

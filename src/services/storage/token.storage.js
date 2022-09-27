@@ -1,31 +1,35 @@
-/** JSON  */
-import privilegesAdmin from "../../assets/json/privilegesAdmin.json";
-import privilegesPatient from "../../assets/json/privilegesPatient.json";
-import privilegesDoctor from "../../assets/json/privilegesDoctor.json";
-import privilegesRadiologist from "../../assets/json/privilegesRadiologist.json";
+import secureLocalStorage from "react-secure-storage";
 
 class TokenStorage {
 
-    getLocalAccessToken() {
-        const user = JSON.parse(localStorage.getItem("user.auth"));
-        return user?.acces_token;
+    getAccessToken() {
+        return secureLocalStorage.getItem("user.access_token");
     }
 
-    getLocalAccessTokenExp() {
+    /*getLocalAccessTokenExp() {
         const user = JSON.parse(localStorage.getItem("user.auth"));
         return user?.access_token_exp;
+    }*/
+
+    getRefreshToken() {
+        return secureLocalStorage.getItem("user.refresh_token");
     }
 
-    getToken() {
+    /*getToken() {
         return JSON.parse(localStorage.getItem("user.auth"));
+    }*/
+
+    setAccessToken(token) {
+        secureLocalStorage.setItem("user.access_token", token);
     }
 
-    setToken(data) {
-        localStorage.setItem("user.auth", JSON.stringify(data));
+    setRefreshToken(token) {
+        secureLocalStorage.setItem("user.refresh_token", token);
     }
 
     clean() {
-        localStorage.removeItem("user.auth");
+        secureLocalStorage.removeItem("user.access_token");
+        secureLocalStorage.removeItem("user.refresh_token");
     }
 }
 

@@ -59,7 +59,8 @@ class AuthService {
                 UserStorage.clean();
 
                 if (response.status === 200) {
-                    TokenStorage.setToken(response.data);
+                    TokenStorage.setAccessToken(response.data.acces_token);
+                    TokenStorage.setRefreshToken(response.data.refresh_token);
 
                     //Load User Settings
                     UserStorage.getUser().then();

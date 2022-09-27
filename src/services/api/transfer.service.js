@@ -62,8 +62,8 @@ class TransferService {
         return apiPOST('transfer/orders/', filter);
     }
 
-    transfer(aet, studies_uid) {
-        return apiPOST('transfer/orders.create/'+aet, studies_uid);
+    transfer(studies_uid, site_id) {
+        return apiPOST('transfer/orders.create/'+site_id, studies_uid);
     }
 
     cancelOrders(study_uid, site_id) {

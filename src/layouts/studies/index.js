@@ -27,6 +27,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
 import AlertDialog from "../../components/AlertDialog";
+import TransferService from "../../services/api/transfer.service";
 
 function StudiesLayout(props) {
     const { t } = useTranslation('common');
@@ -302,7 +303,20 @@ function StudiesLayout(props) {
 
     //Transfer
     const transferStudies = async(site) => {
-        console.log("Transfer "+selectedRows+" to "+site);
+        if (!selectedRows || selectedRows.length<=0) {
+            messageAlert('error', t("msg_error.study_no_selection"));
+            return;
+        }
+
+        const response = await TransferService.transfer(selectedRows, site);
+        if (response.error) {
+            messageAlert('error', t("msg_error.transfer_error", {error: response.error}));
+            return;
+        }
+
+        messageAlert("success", t("msg_info.transfer_success"))
+
+        setSelectedRows([]);
     };
 
     //Sharing

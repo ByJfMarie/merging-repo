@@ -5,7 +5,6 @@ import { makeStyles } from "@mui/styles";
 import { Container } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import Footer from '../layouts/Footer';
-import AuthService from "../services/api/auth.service";
 import UserStorage from "../services/storage/user.storage";
 import UserContext from "../components/UserContext";
 import Announcement from "../layouts/Announcement";
