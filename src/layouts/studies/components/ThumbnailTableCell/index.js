@@ -6,9 +6,13 @@ const Index = (props) => {
 
     const [thumbnail, setThumbnail] = useState({});
 
-    const loadThumbnail = async (study_uid, size) => {
-        const rsp = await StudiesService.getThumbnail(study_uid, size);
+    const loadThumbnail = async (study, size) => {
+        if (study.storage_status=="offline") {
+            setThumbnail("./images/no_thumb.png");
+            return;
+        }
 
+        const rsp = await StudiesService.getThumbnail(study.st_uid, size);
         if (rsp && rsp.data && rsp.data.size) {
             const dataInfo = rsp.data;
             let reader = new window.FileReader();
@@ -31,8 +35,8 @@ const Index = (props) => {
 
 
     useEffect(() => {
-        loadThumbnail(props.study_uid, props.size);
-    }, [props.study_uid]);
+        loadThumbnail(props.study, props.size);
+    }, [props.study.st_uid]);
 
     return (
         <img src={thumbnail} alt="thumbnail" style={{

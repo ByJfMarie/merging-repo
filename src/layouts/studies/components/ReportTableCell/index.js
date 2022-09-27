@@ -8,9 +8,10 @@ const Index = (props) => {
 
     const [reports, setReports] = useState({})
 
-    const loadReports = async (study_uid) => {
-        const response = await StudiesService.getReports(study_uid);
+    const loadReports = async (study) => {
+        if (study.storage_status=="offline") return;
 
+        const response = await StudiesService.getReports(study.st_uid);
         if (response.error) {
             console.log(response.error);
             //window.location.href = "/login";
@@ -37,8 +38,8 @@ const Index = (props) => {
     }
 
     useEffect(() => {
-        loadReports(props.study_uid);
-    }, [props.study_uid]);
+        loadReports(props.study);
+    }, [props.study.st_uid]);
 
     return (
             Object.values(reports).map((report) => {

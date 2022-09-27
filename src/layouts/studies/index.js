@@ -387,7 +387,7 @@ function StudiesLayout(props) {
                             maxHeight: "100%"
                         }}>
                             <ThumbnailCell
-                                study_uid={params.row.st_uid}
+                                study={params.row}
                                 size={50}
                             />
                             <Box style={{paddingLeft: '15px'}}>
@@ -425,7 +425,7 @@ function StudiesLayout(props) {
                         return (
                             <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
                                 <ReportCell
-                                    study_uid={params.row.st_uid}
+                                    study={params.row}
                                 />
                             </div>
                         )
@@ -572,6 +572,7 @@ function StudiesLayout(props) {
                             setSelectedRows(ids);
                         }}
                         disableColumnMenu={true}
+                        getRowClassName={(params) => `storage-status-${params.row.storage_status}`}
                     />
                 </div>
             </div>
