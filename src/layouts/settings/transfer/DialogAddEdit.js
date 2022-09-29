@@ -54,11 +54,22 @@ const DialogAddEdit = (props) => {
         return props.values[id] || '';
     }
     const handleChange = (id, value) => {
+        console.log(value);
         props.setValues({...props.values, [id]: value});
+    }
+    const handleDeleteDestination = (id, value) => {
+        let dests = props.values[id];
+        var index = dests.indexOf(value);
+        if (index > -1) { //Make sure item is present in the array, without if condition, -n indexes will be considered from the end of the array.
+            dests.splice(index, 1);
+        }
+        console.log(dests);
+        props.setValues({...props.values, [id]: dests});
     }
     const handleCancel = () => {
         props.toggle();
         props.setValues({});
+        props.onSave();
     }
     const handleSave = async () => {
         let response = null;
@@ -141,7 +152,14 @@ const DialogAddEdit = (props) => {
                                     renderValue={(selected) => (
                                         <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
                                             {selected.map((value) => (
-                                                <Chip key={value} label={props.remoteSites[value]}/>
+                                                <Chip
+                                                    key={value}
+                                                    label={props.remoteSites[value]+" ("+value+")"}
+                                                    onDelete={() => handleDeleteDestination("destinations", value)}
+                                                    onMouseDown={(event) => {
+                                                        event.stopPropagation();
+                                                    }}
+                                                />
                                             ))}
                                         </Box>
                                     )}
@@ -153,7 +171,7 @@ const DialogAddEdit = (props) => {
                                                 key={key}
                                                 value={key}
                                             >
-                                                {props.remoteSites[key]}
+                                                {props.remoteSites[key]+" ("+key+")"}
                                             </MenuItem>
                                         )
                                     }

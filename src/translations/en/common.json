@@ -19,7 +19,8 @@
     "general": "General",
     "study_information": "Study Information",
     "study_permissions": "Study Permissions",
-    "study_sharing": "Sharing Studies"
+    "study_sharing": "Sharing Studies",
+    "about": "About"
   },
 
   "filters": {
@@ -125,7 +126,9 @@
     "st_storage_key": "Storage Key",
     "share_to": "Share To",
     "share_validUntil": "Choose an End Date",
-    "share_comments": "Comments"
+    "share_comments": "Comments",
+    "version": "Version",
+    "build": "build"
   },
 
   "msg_info": {

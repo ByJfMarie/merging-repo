@@ -8,6 +8,7 @@ import BackgroundLayout from "../components/BackgroundLayout";
 import IllustrationLayout from "../components/IllustrationLayout";
 import Reaptcha from "reaptcha";
 import AuthService from "../../../services/api/auth.service";
+import GeneralService from "../../../services/api/general.service";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -107,8 +108,7 @@ function Forgot() {
                         lg={8}
                     >
                         <Grid align='center'>
-                            <img src="/images/logo.svg" alt="Logo" style={{ width: "100%"}} />
-                            {/*<h2>Sign In</h2>*/}
+                            <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"/>
                         </Grid>
 
                         <form noValidate onSubmit={handleSubmit}>

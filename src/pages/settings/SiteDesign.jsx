@@ -11,7 +11,7 @@ import {
     TextField,
     Button,
     Tooltip,
-    Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup, MenuItem, Select, FormControl, InputLabel,
+    Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup, MenuItem, Select, FormControl, InputLabel, Link,
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -22,10 +22,12 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import {DropzoneArea} from 'react-mui-dropzone';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import GeneralService from "../../services/api/general.service";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -84,8 +86,11 @@ export default function SiteDesign() {
             [theme.breakpoints.down('sm')]: {
                 flexDirection: 'flex'
             }
-        }
+        },
 
+        myDropZone: {
+            minHeight: '100px'
+        }
     });
     const classes = useStyles();
 
@@ -167,8 +172,9 @@ export default function SiteDesign() {
     };
 
     /** LOGO */
-    const handleUploadLogo = async (event) => {
-        const response = await SettingsService.uploadLogo(event.target.files[0]);
+    const handleUploadLogo = async (files) => {
+        if (!files || files.length<=0) return;
+        const response = await SettingsService.uploadLogo(files[0]);
 
         if (response.error) {
             setMessage({
@@ -188,8 +194,9 @@ export default function SiteDesign() {
         });
     }
 
-    const handleUploadHelp = async (event) => {
-        const response = await SettingsService.uploadHelp(event.target.files[0]);
+    const handleUploadHelp = async (files) => {
+        if (!files || files.length<=0) return;
+        const response = await SettingsService.uploadHelp(files[0]);
 
         if (response.error) {
             setMessage({
@@ -209,8 +216,9 @@ export default function SiteDesign() {
         });
     }
 
-    const handleUploadLoginSheet = async (event) => {
-        const response = await SettingsService.uploadLoginSheet(event.target.files[0]);
+    const handleUploadLoginSheet = async (files) => {
+        if (!files || files.length<=0) return;
+        const response = await SettingsService.uploadLoginSheet(files[0]);
 
         if (response.error) {
             setMessage({
@@ -490,46 +498,60 @@ export default function SiteDesign() {
             </TabPanel>
 
             <TabPanel value={value} index={2} dir="ltr">
-                <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+                <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
                     <CardContent>
-                        <div className={classes.div}>
-                            <Typography className={classes.spaceAfter}>{t('fields.company_logo')}</Typography>
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    component="label"
-                                    style={{float: 'left'}}
-                                >
-                                    Upload File
-                                    <input type="file" hidden onChange={handleUploadLogo}/>
-                                </Button>
-                        </div>
-                        <br/>
-                        <div className={classes.div}>
-                            <Typography className={classes.spaceAfter}>{t('fields.help_file')}</Typography>
-                            <Button
-                                size="small"
-                                variant="contained"
-                                component="label"
-                                style={{float: 'left'}}
-                            >
-                                Upload File
-                                <input type="file" hidden onChange={handleUploadHelp}/>
-                            </Button>
-                        </div>
-                        <br/>
-                        <div className={classes.div}>
-                            <Typography className={classes.spaceAfter}>{t('fields.login_sheet')}</Typography>
-                            <Button
-                                size="small"
-                                variant="contained"
-                                component="label"
-                                style={{float: 'left'}}
-                            >
-                                Upload File
-                                <input type="file" hidden onChange={handleUploadLoginSheet}/>
-                            </Button>
-                        </div>
+                        <Typography gutterBottom variant="h6" component="div">{t('fields.company_logo')}
+                            &nbsp;<Link target="_blank" href={GeneralService.getLogoURL()} variant="body2" rel="noreferrer">View</Link>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">Only *.svg images will be accepted</Typography>
+                        <Box m={2}/>
+                        <DropzoneArea
+                            dropzoneClass={classes.myDropZone}
+                            acceptedFiles={['.svg']}
+                            filesLimit={1}
+                            dropzoneText={("Drag and drop a file here or click to select a file")}
+                            onChange={(files) => handleUploadLogo(files)}
+                            showPreviewsInDropzone={false}
+                            showAlerts={false}
+                        />
+                    </CardContent>
+                </Card>
+
+                <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h6" component="div">{t('fields.help_file')}
+                            &nbsp;<Link target="_blank" href={GeneralService.getHelpFileURL()} variant="body2" rel="noreferrer">View</Link>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
+                        <Box m={2}/>
+                        <DropzoneArea
+                            dropzoneClass={classes.myDropZone}
+                            acceptedFiles={['.pdf']}
+                            filesLimit={1}
+                            dropzoneText={("Drag and drop a file here or click to select a file")}
+                            onChange={(files) => handleUploadHelp(files)}
+                            showPreviewsInDropzone={false}
+                            showAlerts={false}
+                        />
+                    </CardContent>
+                </Card>
+
+                <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h6" component="div">{t('fields.login_sheet')}
+                            &nbsp;<Link target="_blank" href={GeneralService.getLoginSheetFileURL()} variant="body2" rel="noreferrer">View</Link>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
+                        <Box m={2}/>
+                        <DropzoneArea
+                            dropzoneClass={classes.myDropZone}
+                            acceptedFiles={['.pdf']}
+                            filesLimit={1}
+                            dropzoneText={("Drag and drop a file here or click to select a file")}
+                            onChange={(files) => handleUploadLoginSheet(files)}
+                            showPreviewsInDropzone={false}
+                            showAlerts={false}
+                        />
                     </CardContent>
                 </Card>
             </TabPanel>

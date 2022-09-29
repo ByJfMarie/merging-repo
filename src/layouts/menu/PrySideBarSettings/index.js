@@ -1,38 +1,34 @@
 import React from 'react';
-//import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import { Grid } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
-import { Typography, Link } from '@mui/material';
+import { Link } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
+import UserContext from "../../../components/UserContext";
+import AuthService from "../../../services/api/auth.service";
+import GeneralService from "../../../services/api/general.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
+import "../../../translations/i18n";
 
 /** ICONS */
-import MenuIcon from '@mui/icons-material/Menu';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import LockIcon from '@mui/icons-material/Lock';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';  
 import GroupIcon from '@mui/icons-material/Group';
 import EmailIcon from '@mui/icons-material/Email';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
-import UserContext from "../components/UserContext";
-import AuthService from "../services/api/auth.service";
+import PryToolBar from "../PryToolBar";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -67,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function SettingsMenu(props) {
+function PrySideBarSettings(props) {
     const { t } = useTranslation('settings');
 
     /** User & privileges */
@@ -101,7 +97,7 @@ function SettingsMenu(props) {
         <div>
             <Toolbar>
                 <Link href="/studies" underline="none" style={{ display: "flex", alignItems: 'center' }}>
-                    <img src="/images/logo.svg" alt="Logo" width="100%"/>
+                    <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"/>
                 </Link>
             </Toolbar>
 
@@ -145,12 +141,6 @@ function SettingsMenu(props) {
                     <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.license")} />
                 </ListItem>
 
-                <ListItem button classes={{ selected: classes.selected }} component="a" href="/about" selected={location === '/about'}>
-                    <InfoIcon />
-                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.about")} />
-                </ListItem>
-
-
             </List>
 
             <Divider classes={{ root: classes.divider }} />
@@ -176,60 +166,9 @@ function SettingsMenu(props) {
                 position="fixed"
                 sx={{ background: 'transparent', backgroundColor: theme.palette.menu.background + " !important" }}
             >
-                <Toolbar>
-                    <IconButton
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        style={{ marginLeft: '240px', color: theme.palette.menu.text }}
-                        sx={{ mr: 2, display: { md: 'none' } }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-
-                    <Grid container style={{ color: theme.palette.menu.text }}>
-                        <Grid item xs />
-
-                        <Grid item className={classes.userNameGrid}>
-                            <Typography variant="" noWrap style={{ fontWeight: "", marginTop: '5px' }}>
-                                <UserName/>
-                            </Typography>
-                        </Grid>
-
-                        <Grid item style={{ paddingRight: '12px' }}>
-                            <Link href="/profile">
-                                <IconButton style={{ color: theme.palette.menu.text }}>
-                                    <AccountCircleIcon style={{ transform: 'scale(1.2)' }} />
-                                </IconButton>
-                            </Link>
-                        </Grid>
-
-                        {/* <Grid item style={{ paddingRight: '12px' }}>
-                            <IconButton style={{ color: theme.palette.menu.text }}>
-                                <Badge
-                                badgeContent={4}
-                                sx={{
-                                    "& .MuiBadge-badge": {
-                                    backgroundColor: "#2db4eb"
-                                    }
-                                }}>
-                                <NotificationsIcon style={{ transform: 'scale(1.2)', color: theme.palette.menu.text }} />
-                                </Badge>
-                            </IconButton>
-                            </Grid> */}
-
-                        {/*<Grid item style={{ paddingRight: '12px' }}>
-                            <NotificationsDropdown />
-                        </Grid>*/
-                        }
-
-                        <Grid item style={{ paddingRight: '12px' }}>
-                            <IconButton style={{ color: theme.palette.menu.text }} onClick={handleLogoutClick}>
-                                <ExitToAppIcon style={{ transform: 'scale(1.2)' }} />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                </Toolbar>
+                <PryToolBar
+                    handleDrawerToggle={handleDrawerToggle}
+                />
             </AppBar>
 
             <Box
@@ -271,4 +210,4 @@ function SettingsMenu(props) {
     );
 }
 
-export default SettingsMenu;
+export default PrySideBarSettings;

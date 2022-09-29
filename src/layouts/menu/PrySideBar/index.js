@@ -1,35 +1,31 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import { Grid } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
-import { Typography, Link } from '@mui/material';
+import { Link } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
+import GeneralService from "../../../services/api/general.service";
+import UserContext from "../../../components/UserContext";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
+import "../../../translations/i18n";
 
 /** ICONS */
 import SettingsIcon from '@mui/icons-material/Settings';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import DescriptionIcon from '@mui/icons-material/Description';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import AuthService from "../services/api/auth.service";
-import UserContext from "../components/UserContext";
+import PryToolBar from "../PryToolBar";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -64,10 +60,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function MenuBackup(props) {
+function PrySideBar(props) {
     const { t } = useTranslation('common');
 
-        /** THEME AND CSS */
+    /** THEME AND CSS */
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -83,22 +79,12 @@ function MenuBackup(props) {
     /** User & privileges */
     const { user, privileges } = React.useContext(UserContext);
 
-    const handleLogoutClick = () => {
-        AuthService.logout();
-    };
-
-    const UserName = function() {
-        if (!user) return <>{"Hello"}</>;
-        if (user.last_name)return <>{user.title}+" "+{user.last_name}+" "+{user.first_name}</>;
-        return  <>{user.login}</>;
-    }
-
     /** LIST OF ITEMS */
     const drawer = (
         <div>
             <Toolbar>
                 <Link href="/studies" underline="none" style={{ display: "flex", alignItems: 'center' }}>
-                    <img src="/images/logo.svg" alt="Logo" width="100%"/>
+                    <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"/>
                 </Link>
             </Toolbar>
 
@@ -180,46 +166,9 @@ function MenuBackup(props) {
                 position="fixed"
                 sx={{ background: 'transparent', backgroundColor: theme.palette.menu.background + " !important" }}
             >
-                <Toolbar>
-                    <IconButton
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        style={{ marginLeft: '240px', color: theme.palette.menu.text }}
-                        sx={{ mr: 2, display: { md: 'none' } }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-
-                    <Grid container style={{ color: theme.palette.menu.text }}>
-                        <Grid item xs />
-
-                        <Grid item className={classes.userNameGrid}>
-                            <Typography variant="" noWrap style={{ fontWeight: "", marginTop: '5px' }}>
-                                <UserName/>
-                            </Typography>
-                        </Grid>
-
-                        <Grid item>
-                            <Link href="/profile">
-                                <IconButton style={{ color: theme.palette.menu.text }}>
-                                    <AccountCircleIcon fontSize="medium" />
-                                </IconButton>
-                            </Link>
-                        </Grid>
-
-                        {/*<Grid item style={{ paddingRight: '12px' }}>
-                            <NotificationsDropdown />
-                        </Grid>*/
-                        }
-
-                        <Grid item>
-                            <IconButton style={{ color: theme.palette.menu.text }} onClick={handleLogoutClick}>
-                                <ExitToAppIcon fontSize="medium" />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                </Toolbar>
+                <PryToolBar
+                    handleDrawerToggle={handleDrawerToggle}
+                />
             </AppBar>
 
 
@@ -262,4 +211,4 @@ function MenuBackup(props) {
     );
 }
 
-export default MenuBackup;
+export default PrySideBar;

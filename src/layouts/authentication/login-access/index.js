@@ -11,6 +11,7 @@ import Reaptcha from "reaptcha";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import GeneralService from "../../../services/api/general.service";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -128,8 +129,7 @@ function LoginAccess() {
                         lg={8}
                     >
                         <Grid align='center'>
-                            <img src="/images/logo.svg" alt="Logo" style={{ width: "100%"}} />
-                            {/*<h2>Sign In</h2>*/}
+                            <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"/>
                         </Grid>
 
                         <form noValidate onSubmit={handleSubmit}>

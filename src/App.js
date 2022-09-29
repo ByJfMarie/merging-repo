@@ -10,9 +10,8 @@ import PrivateRoute from "./routes/PrivateRoute";
 import UserStorage from "./services/storage/user.storage";
 
 /** PAGE */
-import Home from './pages/Home';
-import Menu from './layouts/Menu';
-import SettingsMenu from './layouts/SettingsMenu';
+import PrySideBar from './layouts/menu/PrySideBar';
+import PrySideBarSettings from './layouts/menu/PrySideBarSettings';
 import Studies from './pages/Studies';
 import Profile from './pages/Profile';
 import Logs from "./pages/Logs";
@@ -32,7 +31,6 @@ import Users from "./pages/settings/Users";
 import Roles from "./pages/settings/Roles";
 import Emailing from "./pages/settings/Emailing";
 import System from "./pages/settings/System";
-import About from "./pages/settings/About";
 import License from "./pages/settings/License";
 import ChangePassword from "./pages/settings/ChangePassword";
 
@@ -81,7 +79,7 @@ function App() {
             {/* <RoleContext.Provider value={{ privileges }}> */}
             <Switch>
 
-              <PrivateRoute exact path="/" component={<Studies />} menu={Menu} />
+              <PrivateRoute exact path="/" component={<Studies />} menu={PrySideBar} />
 
               <Route exact path="/login" component={Login} />
 
@@ -89,44 +87,42 @@ function App() {
 
               <Route exact path="/forgot" component={Forgot} />
 
-              <PrivateRoute path="/studies" component={<Studies />} menu={Menu} />
+              <PrivateRoute path="/studies" component={<Studies />} menu={PrySideBar} />
 
-              <PrivateRoute path="/aet" component={<AET />} menu={Menu} />
+              <PrivateRoute path="/aet" component={<AET />} menu={PrySideBar} />
 
-              <PrivateRoute path="/forwarding" component={<Forwarding />} menu={Menu} />
+              <PrivateRoute path="/forwarding" component={<Forwarding />} menu={PrySideBar} />
 
-              <PrivateRoute path="/transfer" component={<Transfer />} menu={Menu} />
+              <PrivateRoute path="/transfer" component={<Transfer />} menu={PrySideBar} />
 
-              <PrivateRoute path="/media_output" component={<Media />} menu={Menu} />
+              <PrivateRoute path="/media_output" component={<Media />} menu={PrySideBar} />
 
-              <PrivateRoute path="/logs" component={<Logs />} menu={Menu} />
+              <PrivateRoute path="/logs" component={<Logs />} menu={PrySideBar} />
 
-              <PrivateRoute exact path="/profile" menu={Menu} component={<Profile themeChange={handleTheme} languageChange={handleLanguage} />} />
+              <PrivateRoute exact path="/profile" menu={PrySideBar} component={<Profile themeChange={handleTheme} languageChange={handleLanguage} />} />
 
               {/* SETTINGS */}
-              <PrivateRoute exact path="/changePassword" component={<ChangePassword />} menu={SettingsMenu} />
+              <PrivateRoute exact path="/changePassword" component={<ChangePassword />} menu={PrySideBarSettings} />
 
-              <PrivateRoute exact path="/site" menu={SettingsMenu} component={<SiteDesign />} />
+              <PrivateRoute exact path="/site" menu={PrySideBarSettings} component={<SiteDesign />} />
 
-              <PrivateRoute exact path="/users" menu={SettingsMenu} component={<Users />} />
+              <PrivateRoute exact path="/users" menu={PrySideBarSettings} component={<Users />} />
 
-              <PrivateRoute exact path="/roles" menu={SettingsMenu} component={<Roles />} />
+              <PrivateRoute exact path="/roles" menu={PrySideBarSettings} component={<Roles />} />
 
-              <PrivateRoute exact path="/emailing" menu={SettingsMenu} component={<Emailing />} />
+              <PrivateRoute exact path="/emailing" menu={PrySideBarSettings} component={<Emailing />} />
 
-              <PrivateRoute exact path="/system" menu={SettingsMenu} component={<System />} />
+              <PrivateRoute exact path="/system" menu={PrySideBarSettings} component={<System />} />
 
-              <PrivateRoute exact path="/about" menu={SettingsMenu} component={<About />} />
-
-              <PrivateRoute exact path="/license" menu={SettingsMenu} component={<License />} />
+              <PrivateRoute exact path="/license" menu={PrySideBarSettings} component={<License />} />
 
               {/* AUTRES PAGES */}
 
-              <PrivateRoute exact path="/test" menu={Menu} component={<TestZone />} />
+              <PrivateRoute exact path="/test" menu={PrySideBar} component={<TestZone />} />
 
-              <PrivateRoute exact path="/loading" menu={Menu} component={<Loading />} />
+              <PrivateRoute exact path="/loading" menu={PrySideBar} component={<Loading />} />
 
-              <PrivateRoute component={<NotFound />} menu={Menu} />
+              <PrivateRoute component={<NotFound />} menu={PrySideBar} />
 
             </Switch>
             {/* </RoleContext.Provider> */}
