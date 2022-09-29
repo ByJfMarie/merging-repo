@@ -13,8 +13,11 @@ import {makeStyles} from "@mui/styles";
 import UserContext from "../../../components/UserContext";
 import AuthService from "../../../services/api/auth.service";
 import CustomDialogAbout from "./CustomDialogAbout";
+import {useTranslation} from "react-i18next";
 
 function PryToolBar(props) {
+
+    const { t } = useTranslation('common');
 
     const { user } = React.useContext(UserContext);
 
@@ -64,6 +67,7 @@ function PryToolBar(props) {
                         <Typography variant="" noWrap style={{ fontWeight: "", marginTop: '5px' }}>
                             <UserName
                                 user={user}
+                                trans={t}
                             />
                         </Typography>
                     </Grid>
@@ -107,7 +111,7 @@ function PryToolBar(props) {
                             target={"_blank"}
                             onClick={helpMenuHandleClose}
                         >
-                            Help File
+                            Help
                         </MenuItem>
                         <MenuItem
                             onClick={() => {handleDialogAboutOpen(); helpMenuHandleClose();}}
@@ -133,10 +137,11 @@ function PryToolBar(props) {
     );
 }
 
-const UserName = ({user}) => {
-    if (!user) return <>{"Hello"}</>;
-    if (user.last_name)return <>{user.title}+" "+{user.last_name}+" "+{user.first_name}</>;
-    return  <>{user.login}</>;
+const UserName = ({user, trans}) => {
+    let message = trans("texts.welcome");
+    if (!user) return <>{message}</>;
+    if (user.first_name) return <>{message} {trans("fields.title_value."+user.title)} {user.last_name} {user.first_name}</>;
+    else return <>{message} {user.login}</>;
 }
 
 const useStyles = makeStyles((theme) => ({

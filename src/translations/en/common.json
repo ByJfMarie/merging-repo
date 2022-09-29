@@ -128,7 +128,21 @@
     "share_validUntil": "Choose an End Date",
     "share_comments": "Comments",
     "version": "Version",
-    "build": "build"
+    "build": "build",
+    "title_value": {
+      "mr": "Mr.",
+      "mrs": "Mrs.",
+      "miss": "Miss.",
+      "ms": "Ms.",
+      "dr": "Dr."
+    }
+  },
+
+  "texts": {
+    "welcome": "Welcome",
+    "our_website": "Our Website",
+    "technical_support": "Technical support",
+    "license_request": "Request a license"
   },
 
   "msg_info": {

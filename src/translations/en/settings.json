@@ -253,12 +253,6 @@
     "type": "Type"
   },
 
-  "texts": {
-    "our_website": "Our Website",
-    "technical_support": "Technical support",
-    "license_request": "Request a license"
-  },
-
   "msg_info": {
     "user_deleted": "User has been successfully deleted!",
     "user_saved": "User has been successfully saved!",
