@@ -1,6 +1,7 @@
 import * as React from 'react';
 import AETService from "../../../services/api/aet.service";
 import PryButtonSelect from "../../../components/PryTable/PryButtonSelect";
+import PublishIcon from '@mui/icons-material/Publish';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -35,6 +36,7 @@ const Index = (props) => {
 
     return (
         <PryButtonSelect
+            icon={<PublishIcon fontSize="small"/>}
             label={t('buttons.retrieve')}
             options={options}
             handleAction={handleRetrieve}

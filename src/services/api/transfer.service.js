@@ -1,4 +1,4 @@
-import api, {apiGET, apiPOST} from "./apiManager";
+import api, {apiDELETE, apiGET, apiPATCH, apiPOST, apiPUT} from "./apiManager";
 
 class TransferService {
 
@@ -59,35 +59,42 @@ class TransferService {
     }
 
     getOrders(filter) {
-        return apiPOST('transfer/orders/', filter);
+        const params = new URLSearchParams({});
+
+        return apiGET('transfer/orders/', params);
     }
 
     transfer(studies_uid, site_id) {
-        return apiPOST('transfer/orders.create/'+site_id, studies_uid);
+        const params = {
+            site_id: site_id,
+            study_uids: studies_uid
+        };
+
+        return apiPOST('transfer/orders/', params);
     }
 
     cancelOrders(study_uid, site_id) {
-        return apiPOST('transfer/orders.cancel/'+study_uid+'/'+site_id);
+        return apiDELETE('transfer/orders/'+study_uid+'/'+site_id);
     }
 
     retryOrders(study_uid, site_id) {
-        return apiPOST('transfer/orders.retry/'+study_uid+'/'+site_id);
+        return apiPATCH('transfer/orders/'+study_uid+'/'+site_id+'/retry');
     }
 
     getRules() {
-        return apiGET('transfer/rules.get/');
+        return apiGET('transfer/rules');
     }
 
     addRule(fields) {
-        return apiPOST('transfer/rules.add/', fields);
+        return apiPOST('transfer/rules', fields);
     }
 
     editRule(id, fields) {
-        return apiPOST('transfer/rules.edit/'+id, fields);
+        return apiPUT('transfer/rules/'+id, fields);
     }
 
     deleteRule(id) {
-        return apiPOST('transfer/rules.delete/'+id);
+        return apiDELETE('transfer/rules/'+id);
     }
 }
 

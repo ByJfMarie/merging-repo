@@ -1,4 +1,4 @@
-import miAPI, {apiGET, apiPOST} from "./apiManager";
+import miAPI, {apiDELETE, apiGET, apiPATCH, apiPOST, apiPUT} from "./apiManager";
 import {sha512} from "js-sha512";
 import moment from "moment";
 
@@ -19,7 +19,7 @@ class UsersService {
             repeat: sha512(data.repeat)
         }
 
-        return apiPOST('/users/profile/password.set', pwd_data);
+        return apiPUT('/users/profile/password.set', pwd_data);
     }
 
     resetPassword(user, new_password, repeat_password) {
@@ -28,7 +28,7 @@ class UsersService {
             repeat: sha512(repeat_password)
         }
 
-        return apiPOST('/users/'+user+'/password.reset', pwd_data);
+        return apiPATCH('/users/'+user+'/password', pwd_data);
     }
 
     privileges() {
@@ -38,7 +38,7 @@ class UsersService {
         }
 
         return miAPI
-            .get('/users/profile/privileges.get')
+            .get('/users/profile/privileges')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -68,7 +68,7 @@ class UsersService {
         }
 
         return miAPI
-            .get('/users/profile/settings.get')
+            .get('/users/profile/settings')
             .then((response) => {
                 if (response.status === 200) {
                     state.items = response.data;
@@ -92,27 +92,27 @@ class UsersService {
     }
 
     updateSettings(data) {
-        return apiPOST('/users/profile/settings.set', data);
+        return apiPUT('/users/profile/settings', data);
     }
 
     getUsers(filters) {
-        return apiPOST('/users/list', filters);
+        return apiGET('/users', filters);
     }
 
     addUser(fields) {
         if (fields.birthdate instanceof Date) fields.birthdate = moment(fields.birthdate).format("YYYY-MM-DD");
 
-        return apiPOST('/users/add', fields);
+        return apiPOST('/users', fields);
     }
 
     editUser(id, fields) {
         if (fields.birthdate instanceof Date) fields.birthdate = moment(fields.birthdate).format("YYYY-MM-DD");
 
-        return apiPOST('/users/edit/' + id, fields);
+        return apiPUT('/users/' + id, fields);
     }
 
     deleteUser(id) {
-        return apiPOST('/users/delete/' + id);
+        return apiDELETE('/users/' + id);
     }
 }
 

@@ -4,10 +4,12 @@ import moment from "moment";
 class LogsService {
 
     search(filters) {
-        //Format dates
-        if (filters.date instanceof Date) filters.date = moment(filters.date).format("YYYY-MM-DD");
+        const params = new URLSearchParams({
+            name: filters.name,
+            date: (filters.date instanceof Date)?moment(filters.date).format("YYYY-MM-DD"):''
+        });
 
-        return apiPOST('logs/search/', filters);
+        return apiGET('logs/search', {params});
     }
 
     download(name) {

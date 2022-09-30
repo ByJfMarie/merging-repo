@@ -1,21 +1,25 @@
-import api, {apiGET, apiPOST} from "./apiManager";
+import api, {apiDELETE, apiGET, apiPOST} from "./apiManager";
 
 class PluginsService {
 
     list(force_refresh) {
-        return apiGET('/plugins/list?force-refresh='+(force_refresh || false));
+        const params = new URLSearchParams({
+            force_refresh: force_refresh,
+        });
+
+        return apiGET('/plugins/list', {params});
     }
 
     install(id) {
-        return apiPOST('/plugins/install/'+id);
+        return apiPOST('/plugins/'+id+'/install');
     }
 
     uninstall(id) {
-        return apiPOST('/plugins/uninstall/'+id);
+        return apiPOST('/plugins/'+id+'/uninstall');
     }
 
     delete(id) {
-        return apiPOST('/plugins/delete/'+id);
+        return apiDELETE('/plugins/'+id);
     }
 }
 

@@ -3,7 +3,7 @@ import {BASE_URL} from "./apiManager";
 class GeneralService {
 
     getLogoURL() {
-        return BASE_URL+'general/logo.svg';
+        return BASE_URL+'general/logo';
     }
 
     getHelpFileURL() {

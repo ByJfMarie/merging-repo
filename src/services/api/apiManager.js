@@ -88,6 +88,117 @@ export const apiPOST = (url, data) => {
         });
 }
 
+export const apiPATCH = (url, data) => {
+    let state = {
+        items: [],
+        error: ''
+    }
+
+    return miAPI
+        .patch(url, JSON.stringify(data))
+        .then((response) => {
+            if (response.status === 200) {
+                state.items = response.data;
+            } else {
+                state.error = "Unknown error";
+            }
+        })
+        .catch((error) => {
+            console.log(error.response);
+
+            state.error = "Unknown error";
+            if (error.response) {
+                state.error = error.response.data.error || error.message;
+                if (error.response.status===401 || error.response.status===403) return state;
+                else networkError(state.error, 5000);
+            }
+            else if (error.message) {
+                state.error = error.message;
+                networkError(state.error, 2000);
+            }
+            else {
+                networkError(state.error, 2000);
+            }
+        })
+        .then(() => {
+            return state;
+        });
+}
+
+export const apiPUT = (url, data) => {
+    let state = {
+        items: [],
+        error: ''
+    }
+
+    return miAPI
+        .put(url, JSON.stringify(data))
+        .then((response) => {
+            if (response.status === 200) {
+                state.items = response.data;
+            } else {
+                state.error = "Unknown error";
+            }
+        })
+        .catch((error) => {
+            console.log(error.response);
+
+            state.error = "Unknown error";
+            if (error.response) {
+                state.error = error.response.data.error || error.message;
+                if (error.response.status===401 || error.response.status===403) return state;
+                else networkError(state.error, 5000);
+            }
+            else if (error.message) {
+                state.error = error.message;
+                networkError(state.error, 2000);
+            }
+            else {
+                networkError(state.error, 2000);
+            }
+        })
+        .then(() => {
+            return state;
+        });
+}
+
+export const apiDELETE = (url, data) => {
+    let state = {
+        items: [],
+        error: ''
+    }
+
+    return miAPI
+        .delete(url, JSON.stringify(data))
+        .then((response) => {
+            if (response.status === 200) {
+                state.items = response.data;
+            } else {
+                state.error = "Unknown error";
+            }
+        })
+        .catch((error) => {
+            console.log(error.response);
+
+            state.error = "Unknown error";
+            if (error.response) {
+                state.error = error.response.data.error || error.message;
+                if (error.response.status===401 || error.response.status===403) return state;
+                else networkError(state.error, 5000);
+            }
+            else if (error.message) {
+                state.error = error.message;
+                networkError(state.error, 2000);
+            }
+            else {
+                networkError(state.error, 2000);
+            }
+        })
+        .then(() => {
+            return state;
+        });
+}
+
 export const apiUPLOAD = (url, data) => {
     let state = {
         items: [],

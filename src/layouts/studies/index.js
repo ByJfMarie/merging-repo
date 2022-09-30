@@ -291,7 +291,7 @@ function StudiesLayout(props) {
             return;
         }
 
-        const response = await ForwardingService.forward(aet, selectedRows);
+        const response = await ForwardingService.createOrder(aet, selectedRows);
         if (response.error) {
             messageAlert('error', t("msg_error.forward_error", {error: response.error}));
             return;

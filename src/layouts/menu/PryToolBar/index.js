@@ -139,9 +139,16 @@ function PryToolBar(props) {
 
 const UserName = ({user, trans}) => {
     let message = trans("texts.welcome");
-    if (!user) return <>{message}</>;
-    if (user.first_name) return <>{message} {trans("fields.title_value."+user.title)} {user.last_name} {user.first_name}</>;
-    else return <>{message} {user.login}</>;
+
+    if (user) {
+        if (user.first_name) {
+            if (user.title) message += " "+trans("fields.title_value."+user.title);
+            if (user.last_name) message += " "+user.last_name;
+            if (user.first_name) message += " "+user.first_name;
+        }
+        else message += " "+user.login;
+    }
+    return <>{message}</>;
 }
 
 const useStyles = makeStyles((theme) => ({

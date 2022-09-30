@@ -1,17 +1,21 @@
-import api, {apiGET, apiPOST} from "./apiManager";
+import api, {apiGET, apiPOST, apiPUT, apiDELETE} from "./apiManager";
 
 class AETService {
 
     search(queryRetrieve, store, forward) {
-        return apiPOST('/aet/search', {
+
+        const params = new URLSearchParams({
             qr: queryRetrieve,
             store: store,
             forward: forward
         });
+
+        return apiGET('/aets', {params})
     }
 
-    getAETs() {
-        return apiGET('/aet/list');
+    all() {
+
+        return apiGET('aets/all')
     }
 
     echoAET(id) {
@@ -21,7 +25,7 @@ class AETService {
         }
 
         return api
-            .get('/aet/echo/'+id, {
+            .get('/aets/'+id+'/echo/', {
                 timeout: 70000
             })
             .then((response) => {
@@ -51,15 +55,15 @@ class AETService {
             forward: false,
             qr: false
         };
-        return apiPOST('/aet/add',  {...default_fields, ...fields});
+        return apiPOST('/aets',  {...default_fields, ...fields});
     }
 
     editAET(id, fields) {
-        return apiPOST('/aet/edit/'+id, fields);
+        return apiPUT('/aets/'+id, fields);
     }
 
     deleteAET(id) {
-        return apiPOST('/aet/delete/'+id);
+        return apiDELETE('/aets/'+id);
     }
 }
 

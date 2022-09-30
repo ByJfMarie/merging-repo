@@ -1,20 +1,28 @@
-import api, {apiGET, apiPOST} from "./apiManager";
+import api, {apiDELETE, apiGET, apiPOST} from "./apiManager";
 import moment from 'moment';
 
 class StudiesService {
 
     searchStudies(filters) {
-        //Format dates
-        if (filters.from instanceof Date) filters.from = moment(filters.from).format("YYYY-MM-DD");
-        if (filters.to instanceof Date) filters.to = moment(filters.to).format("YYYY-MM-DD");
-        if (filters.birthdate instanceof Date) filters.birthdate = moment(filters.birthdate).format("YYYY-MM-DD");
+        const params = new URLSearchParams({
+            patient_id: filters.patient_id,
+            patient_name: filters.patient_name,
+            referring_physician: filters.referring_physician,
+            accession_number: filters.accession_number,
+            description: filters.description,
+            modalities: filters.modality,
+            birthdate: (filters.birthdate instanceof Date)?moment(filters.birthdate).format("YYYY-MM-DD"):'',
+            from: (filters.from instanceof Date)?moment(filters.from).format("YYYY-MM-DD"):'',
+            to: (filters.to instanceof Date)?moment(filters.to).format("YYYY-MM-DD"):'',
+            show_deleted: filters.showDeleted
+        });
 
-        return apiPOST('studies/search', filters);
+        return apiGET('/studies', {params});
     }
 
     getThumbnail(study_uid, size) {
         return api
-            .get('/studies/thumbnail/' + study_uid + '/' + size, {
+            .get('/studies/'+study_uid+'/thumbnail/' + size, {
                 responseType: 'blob'
             })
             .then((response) => {
@@ -30,12 +38,12 @@ class StudiesService {
     }
 
     getReports(study_uid) {
-        return apiGET('studies/reports/'+study_uid+'/pdf');
+        return apiGET('studies/'+study_uid+'/reports/pdf');
     }
 
     openReport(key) {
         return api
-            .get('studies/reports.download/' + encodeURIComponent(key), {
+            .get('studies/reports/' + encodeURIComponent(key)+'/download', {
                 responseType: 'blob'
             })
             .then((response) => {
@@ -52,7 +60,7 @@ class StudiesService {
 
     openLoginSheet(key) {
         return api
-            .get('studies/loginsheet.download/' + encodeURIComponent(key), {
+            .get('studies/loginsheet/' + encodeURIComponent(key)+'/download', {
                 responseType: 'blob'
             })
             .then((response) => {
@@ -68,11 +76,11 @@ class StudiesService {
     }
 
     getPermissions(study_uid) {
-        return apiGET('studies/permissions.physicians/'+study_uid);
+        return apiGET('studies/'+study_uid+'/permissions');
     }
 
     setPermission(login, study_uid, checked) {
-        return apiPOST('studies/permissions.physicians/set/'+study_uid, {
+        return apiPOST('studies/'+study_uid+'/permissions', {
             login: login,
             checked: checked
         });
@@ -117,7 +125,7 @@ class StudiesService {
     }
 
     delete(study_uid) {
-        return apiPOST('studies/delete/'+study_uid);
+        return apiDELETE('studies/'+study_uid);
     }
 }
 

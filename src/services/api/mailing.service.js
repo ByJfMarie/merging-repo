@@ -9,7 +9,7 @@ class MailingService {
         }
 
         return api
-            .post('/mailing/test/'+encodeURIComponent(recipient), settings, {
+            .post('/mailing/'+encodeURIComponent(recipient)+'/test', settings, {
                 timeout: 70000
             })
             .then((response) => {

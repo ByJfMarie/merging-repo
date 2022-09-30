@@ -114,6 +114,9 @@ const DialogAddEdit = (props) => {
                                 variant="standard"
                                 value={getValue('title')}
                                 onChange={(e) => {handleChange('title', e.target.value);}}
+                                InputProps={{
+                                    readOnly: !addMode,
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12} style={{ marginBottom: '10px' }}>

@@ -97,7 +97,7 @@ function PrySideBarSettings(props) {
         <div>
             <Toolbar>
                 <Link href="/studies" underline="none" style={{ display: "flex", alignItems: 'center' }}>
-                    <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"/>
+                    <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"  style={{minHeight: "64px"}}/>
                 </Link>
             </Toolbar>
 

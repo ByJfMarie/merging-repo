@@ -34,7 +34,7 @@ const TableAets = (props) => {
     const [rows, setRows] = React.useState([]);
 
     const refresh = async() => {
-        const response = await AETService.getAETs();
+        const response = await AETService.all();
 
         if (response.error) {
             console.log(response.error);

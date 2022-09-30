@@ -1,38 +1,45 @@
-import {apiGET, apiPOST} from "./apiManager";
+import {apiGET, apiPOST, apiPATCH, apiPUT, apiDELETE} from "./apiManager";
 
 class ForwardingService {
 
     getOrders(filter) {
-        return apiPOST('/forwarding/orders', filter);
+        const params = new URLSearchParams({});
+
+        return apiGET('/forwarding/orders', params);
     }
 
-    forward(aet, studies_uid) {
-        return apiPOST('/forwarding/orders.create/'+aet, studies_uid);
+    createOrder(aet, studies_uid) {
+        const params = {
+            aet: aet,
+            study_uids: studies_uid
+        };
+
+        return apiPOST('/forwarding/orders', params);
     }
 
 
     cancelOrders(study_uid, called_aet) {
-        return apiPOST('/forwarding/orders.cancel/'+study_uid+'/'+called_aet);
+        return apiDELETE('/forwarding/orders/'+study_uid+'/'+called_aet);
     }
 
     retryOrders(study_uid, called_aet) {
-        return apiPOST('/forwarding/orders.retry/'+study_uid+'/'+called_aet);
+        return apiPATCH('/forwarding/orders/'+study_uid+'/'+called_aet+'/retry');
     }
 
     getRules() {
-        return apiGET('/forwarding/rules.get/');
+        return apiGET('/forwarding/rules');
     }
 
     addRule(fields) {
-        return apiPOST('/forwarding/rules.add/', fields);
+        return apiPOST('/forwarding/rules', fields);
     }
 
     editRule(id, fields) {
-        return apiPOST('/forwarding/rules.edit/'+id, fields);
+        return apiPUT('/forwarding/rules/'+id, fields);
     }
 
     deleteRule(id) {
-        return apiPOST('/forwarding/rules.delete/'+id);
+        return apiDELETE('/forwarding/rules/'+id);
     }
 }
 

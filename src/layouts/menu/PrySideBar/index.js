@@ -26,6 +26,7 @@ import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import PryToolBar from "../PryToolBar";
+import {height} from "@mui/system";
 
 /** SIDEBAR MENU SIZE */
 const drawerWidth = 240;
@@ -84,7 +85,7 @@ function PrySideBar(props) {
         <div>
             <Toolbar>
                 <Link href="/studies" underline="none" style={{ display: "flex", alignItems: 'center' }}>
-                    <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"/>
+                    <img src={GeneralService.getLogoURL()} alt="Logo" width="100%" style={{minHeight: "64px"}}/>
                 </Link>
             </Toolbar>
 
