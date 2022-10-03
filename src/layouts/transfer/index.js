@@ -121,8 +121,8 @@ const TransferStatusLayout = (props) => {
     const [pageSize, setPageSize] = React.useState(20);
     const [rows, setRows] = React.useState([]);
 
-    const refreshOrders = async() => {
-        const response = await TransferService.getOrders({});
+    const refreshOrders = async(filters) => {
+        const response = await TransferService.getOrders(filters);
 
         if (response.error) {
             console.log(response.error);
@@ -139,8 +139,8 @@ const TransferStatusLayout = (props) => {
     }
 
     React.useEffect(() => {
-        refreshOrders();
-    }, []);
+        refreshOrders(props.filters);
+    }, [props.filters]);
 
     React.useEffect(() => {
         if (props.autoRefresh) {

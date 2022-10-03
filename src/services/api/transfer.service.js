@@ -58,12 +58,12 @@ class TransferService {
             });
     }
 
-    getOrders(filter) {
+    getOrders(filters) {
         const params = new URLSearchParams({
-            site_id: '',
-            direction: -1,
-            status: -1,
-            remote_status: -1,
+            site_id: filters.site_id==="all"?"":filters.site_id,
+            direction: filters.direction==="all"?-1:filters.direction,
+            status: filters.status==="all"?-1:filters.status,
+            remote_status: filters.remote_status==="all"?-1:filters.remote_status,
             from: '',
             to: ''
         });

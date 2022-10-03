@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Divider, Grid, Typography} from "@mui/material";
+import {Box, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import TransferStatusLayout from '../layouts/transfer';
 import TransferService from "../services/api/transfer.service";
@@ -15,7 +15,23 @@ export default function Transfer() {
     /** THEME */
     const theme = useTheme();
 
+    //Local Site
     const [localSite, setLocalSite] = React.useState("");
+
+    //Remote Sites
+    const [remoteSites, setRemoteSites] = React.useState([]);
+
+    //Filters
+    const [filters, setFilters] = React.useState({
+        site_id: "all",
+        direction: "all",
+        status: "all",
+        remote_status: "all"
+    });
+    const handleFiltersChange = (id, value) => {
+        setFilters({...filters, [id]: value});
+    }
+
     React.useEffect(() => {
         TransferService.getLocalSite().then((response) => {
                 if (response.items) {
@@ -23,6 +39,16 @@ export default function Transfer() {
                 }
             }
         );
+
+        TransferService.getRemoteSites().then((response) => {
+            if (response.items) {
+                const items = Object.keys(response.items).map((key, i) => ({
+                    name: key,
+                    label: response.items[key]
+                }));
+                setRemoteSites(items);
+            }
+        });
     }, []);
 
     return (
@@ -38,9 +64,102 @@ export default function Transfer() {
 
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
+            <Grid container spacing={2} style={{ marginBottom: '15px' }}>
+                <Grid item xs={3}>
+                    <FormControl
+                        //className={classes.root}
+                        variant="standard"
+                        fullWidth
+                    >
+                        <InputLabel id="site" >{t("filters.site")}</InputLabel>
+                        <Select
+                            labelId="site"
+                            id="site"
+                            value={filters.site_id}
+                            onChange={(e) => {handleFiltersChange("site_id", e.target.value)}}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            {
+                                remoteSites.map((option) => (
+                                    <MenuItem value={option.name}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                    <FormControl
+                        //className={classes.root}
+                        variant="standard"
+                        fullWidth
+                    >
+                        <InputLabel id="direction" >{t("filters.direction")}</InputLabel>
+                        <Select
+                            labelId="direction"
+                            id="direction"
+                            value={filters.direction}
+                            onChange={(e) => {handleFiltersChange("direction", e.target.value)}}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="0">Send</MenuItem>
+                            <MenuItem value="1">Receive</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                    <FormControl
+                        //className={classes.root}
+                        variant="standard"
+                        fullWidth
+                    >
+                        <InputLabel id="status" >{t("filters.status")}</InputLabel>
+                        <Select
+                            labelId="status"
+                            id="status"
+                            value={filters.status}
+                            onChange={(e) => {handleFiltersChange("status", e.target.value)}}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="0">Wait</MenuItem>
+                            <MenuItem value="1">Ready</MenuItem>
+                            <MenuItem value="2">Sending</MenuItem>
+                            <MenuItem value="3">Receiving</MenuItem>
+                            <MenuItem value="4">Done</MenuItem>
+                            <MenuItem value="100">Error</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                    <FormControl
+                        //className={classes.root}
+                        variant="standard"
+                        fullWidth
+                    >
+                        <InputLabel id="remote_status" >{t("filters.remote_status")}</InputLabel>
+                        <Select
+                            labelId="remote_status"
+                            id="remote_status"
+                            value={filters.remote_status}
+                            onChange={(e) => {handleFiltersChange("remote_status", e.target.value)}}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="0">Wait</MenuItem>
+                            <MenuItem value="1">Ready</MenuItem>
+                            <MenuItem value="2">Sending</MenuItem>
+                            <MenuItem value="3">Receiving</MenuItem>
+                            <MenuItem value="4">Done</MenuItem>
+                            <MenuItem value="100">Error</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
+
             <TransferStatusLayout
                 page="transfer"
                 autoRefresh={true}
+                filters={filters}
             />
             
         </React.Fragment>
