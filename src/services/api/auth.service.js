@@ -90,7 +90,13 @@ class AuthService {
             .post("/auth/ref", { reference: ref, birthdate: birthdate, captcha: captcha })
             .then((response) => {
                 if (response.status === 200) {
-                    TokenStorage.setToken(response.data);
+                    TokenStorage.setAccessToken(response.data.acces_token);
+                    TokenStorage.setRefreshToken(response.data.refresh_token);
+
+                    //Load User Settings
+                    UserStorage.getUser().then();
+                    UserStorage.getPrivileges().then();
+                    UserStorage.getSettings().then();
                 } else {
                     state.error = "Unknown error";
                 }
