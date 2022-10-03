@@ -5,11 +5,11 @@ import moment from "moment";
 class UsersService {
 
     me() {
-        return apiGET('/users/profile/user.get');
+        return apiGET('/users/profile/user');
     }
 
     update(data) {
-        return apiPOST('/users/profile/user.set', data);
+        return apiPUT('/users/profile/user', data);
     }
 
     changePassword(data) {
@@ -19,7 +19,7 @@ class UsersService {
             repeat: sha512(data.repeat)
         }
 
-        return apiPUT('/users/profile/password.set', pwd_data);
+        return apiPATCH('/users/profile/password', pwd_data);
     }
 
     resetPassword(user, new_password, repeat_password) {
@@ -96,7 +96,13 @@ class UsersService {
     }
 
     getUsers(filters) {
-        return apiGET('/users', filters);
+        const params = new URLSearchParams({
+            username: filters.username,
+            role: filters.role,
+            status: filters.status==='all'?'':filters.status
+        });
+
+        return apiGET('/users', {params});
     }
 
     addUser(fields) {

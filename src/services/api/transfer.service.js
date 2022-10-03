@@ -30,7 +30,7 @@ class TransferService {
     }
 
     getLocalSite() {
-        return apiGET('transfer/localSite/');
+        return apiGET('transfer/localSite');
     }
 
     getRemoteSites() {
@@ -59,9 +59,16 @@ class TransferService {
     }
 
     getOrders(filter) {
-        const params = new URLSearchParams({});
+        const params = new URLSearchParams({
+            site_id: '',
+            direction: -1,
+            status: -1,
+            remote_status: -1,
+            from: '',
+            to: ''
+        });
 
-        return apiGET('transfer/orders/', params);
+        return apiGET('transfer/orders', {params});
     }
 
     transfer(studies_uid, site_id) {
@@ -70,7 +77,7 @@ class TransferService {
             study_uids: studies_uid
         };
 
-        return apiPOST('transfer/orders/', params);
+        return apiPOST('transfer/orders', params);
     }
 
     cancelOrders(study_uid, site_id) {
