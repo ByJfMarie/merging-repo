@@ -28,6 +28,7 @@ import {DropzoneArea} from 'react-mui-dropzone';
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
 import GeneralService from "../../services/api/general.service";
+import PryInfo from "../../components/PryInfo";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -267,7 +268,10 @@ export default function SiteDesign() {
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0} dir="ltr">
-                <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+                <PryInfo
+                    text={t("info.site_design_general")}
+                />
+                <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                     <CardContent>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -433,9 +437,14 @@ export default function SiteDesign() {
 
             <TabPanel value={value} index={1} dir="ltr">
 
+                <PryInfo
+                    text={t("info.site_design_login")}
+                />
+
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('titles.security')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <FormGroup>
                         <FormControlLabel
                             control={
@@ -475,11 +484,13 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                    </CardContent>
                 </Card>
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('titles.patients')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <FormGroup>
                         <FormControlLabel
                             control={
@@ -494,15 +505,21 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                    </CardContent>
                 </Card>
             </TabPanel>
 
             <TabPanel value={value} index={2} dir="ltr">
+                <PryInfo
+                    text={t("info.site_design_customFiles")}
+                />
+
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
+                    <Typography gutterBottom variant="h6" component="div">{t('fields.company_logo')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getLogoURL()} variant="body2" rel="noreferrer">View</Link>
+                    </Typography>
+                    <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography gutterBottom variant="h6" component="div">{t('fields.company_logo')}
-                            &nbsp;<Link target="_blank" href={GeneralService.getLogoURL()} variant="body2" rel="noreferrer">View</Link>
-                        </Typography>
                         <Typography variant="body2" color="text.secondary">Only *.svg images will be accepted</Typography>
                         <Box m={2}/>
                         <DropzoneArea
@@ -518,10 +535,11 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
+                    <Typography gutterBottom variant="h6" component="div">{t('fields.help_file')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getHelpFileURL()} variant="body2" rel="noreferrer">View</Link>
+                    </Typography>
+                    <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography gutterBottom variant="h6" component="div">{t('fields.help_file')}
-                            &nbsp;<Link target="_blank" href={GeneralService.getHelpFileURL()} variant="body2" rel="noreferrer">View</Link>
-                        </Typography>
                         <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
                         <Box m={2}/>
                         <DropzoneArea
@@ -537,10 +555,11 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
+                    <Typography gutterBottom variant="h6" component="div">{t('fields.login_sheet')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getLoginSheetFileURL()} variant="body2" rel="noreferrer">View</Link>
+                    </Typography>
+                    <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography gutterBottom variant="h6" component="div">{t('fields.login_sheet')}
-                            &nbsp;<Link target="_blank" href={GeneralService.getLoginSheetFileURL()} variant="body2" rel="noreferrer">View</Link>
-                        </Typography>
                         <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
                         <Box m={2}/>
                         <DropzoneArea
@@ -557,10 +576,14 @@ export default function SiteDesign() {
             </TabPanel>
 
             <TabPanel value={value} index={3} dir="ltr">
+                <PryInfo
+                    text={t("info.site_design_customTexts")}
+                />
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('fields.disclaimer')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <Editor
                         id="disclaimer"
                         defaultValue={getSettingsValue('WEB.disclaimer')}
@@ -570,11 +593,13 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                    </CardContent>
                 </Card>
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('fields.privacy_policy')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <Editor
                         id="privacy"
                         defaultValue={getSettingsValue('WEB.privacy_policy')}
@@ -584,11 +609,13 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                        </CardContent>
                 </Card>
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('fields.copyright')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <Editor
                         id="copyright"
                         defaultValue={getSettingsValue('WEB.copyright')}
@@ -598,11 +625,13 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                        </CardContent>
                 </Card>
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('fields.faq')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <Editor
                         id="faq"
                         defaultValue={getSettingsValue('WEB.faq')}
@@ -612,12 +641,14 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                        </CardContent>
                 </Card>
 
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('fields.terms_conditions')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <Editor
                         id="terms"
                         defaultValue={getSettingsValue('WEB.terms')}
@@ -627,11 +658,13 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                        </CardContent>
                 </Card>
 
                 <Card className={classes.card}>
                     <Typography variant="h6" align="left"> {t('fields.contact_us')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
                     <Editor
                         id="contactus"
                         defaultValue={getSettingsValue('WEB.contactus')}
@@ -641,6 +674,7 @@ export default function SiteDesign() {
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />
+                        </CardContent>
                 </Card>
 
             </TabPanel>

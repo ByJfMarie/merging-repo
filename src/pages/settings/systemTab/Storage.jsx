@@ -134,7 +134,7 @@ export default function Storage() {
                     {message.message}
                 </Alert>
             </Snackbar>
-            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+            <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                         <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
                             <Grid item xs={12}>

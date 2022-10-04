@@ -8,6 +8,7 @@ import {
     Alert, Snackbar, Box
 } from '@mui/material';
 import { useTheme } from '@emotion/react';
+import { makeStyles } from "@mui/styles";
 import RolesTable from "../../layouts/settings/roles";
 import DialogAddEdit from "../../layouts/settings/roles/DialogAddEdit";
 import ViewersService from "../../services/api/viewers.service";
@@ -17,6 +18,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
+import PryInfo from "../../components/PryInfo";
 
 /*const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -27,7 +29,14 @@ const Roles = () => {
 
     /** THEME */
     const theme = useTheme();
-    //const classes = useStyles();
+    const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        }
+    });
+    const classes = useStyles();
 
     /** MESSAGES */
     const [message, setMessage] = React.useState({
@@ -78,7 +87,11 @@ const Roles = () => {
                 </Alert>
             </Snackbar>
 
-            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }}>
+            <PryInfo
+                text={t("info.roles_perms")}
+            />
+
+            <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                 <CardContent>
                     <Grid container style={{ marginBottom: '15px' }}>
                         <Grid item xs />

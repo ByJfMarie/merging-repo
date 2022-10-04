@@ -17,6 +17,11 @@ export default function Transfer() {
 
     const theme = useTheme();
     const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        },
         field: {
             width: '100%'
         },
@@ -159,7 +164,7 @@ export default function Transfer() {
                     {message.message}
                 </Alert>
             </Snackbar>
-            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important", margin: '0px 0px'}}>
+            <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <Grid container spacing={2} style={{marginBottom: '15px'}}>
                         <Grid item xs={12}>
@@ -243,7 +248,7 @@ export default function Transfer() {
                     />
                 </CardContent>
             </Card>
-            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important", margin: '30px 0px'}}>
+            <Card  className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <Grid container spacing={2} style={{marginBottom: '15px'}}>
                         <Grid item xs/>

@@ -16,6 +16,11 @@ export default function RemoteAET() {
 
     const theme = useTheme();
     const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        },
         field: {
             width: '100%'
         },
@@ -104,11 +109,10 @@ export default function RemoteAET() {
                     {message.message}
                 </Alert>
             </Snackbar>
-            <Card style={{
+
+            <Card className={classes.card} style={{
                 backgroundColor: theme.palette.card.color,
                 width: "100% !important",
-                padding: '25px 0px',
-                margin: '0px 0px'
             }}>
                 <CardContent>
                     <Grid container style={{marginBottom: '15px'}}>

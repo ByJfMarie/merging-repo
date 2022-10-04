@@ -19,6 +19,7 @@ import RemoteAET from './systemTab/RemoteAET';
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import PryInfo from "../../components/PryInfo";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -98,26 +99,41 @@ export default function System() {
 
             {/* LOCAL SERVER */}
             <TabPanel value={value} index={0} dir="ltr">
+                <PryInfo
+                    text={t("info.system_localServer")}
+                />
                 <LocalServer />
             </TabPanel>
 
             {/* STORAGE */}
             <TabPanel value={value} index={1} dir="ltr">
+                <PryInfo
+                    text={t("info.system_storage")}
+                />
                 <Storage />
             </TabPanel>
 
             {/* REMOTE AET */}
             <TabPanel value={value} index={2} dir="ltr">
+                <PryInfo
+                    text={t("info.system_remoteAets")}
+                />
                 <RemoteAET />
             </TabPanel>
 
             {/* FORWARDING */}
             <TabPanel value={value} index={3} dir="ltr">
+                <PryInfo
+                    text={t("info.system_forwarding")}
+                />
                 <Forwarding />
             </TabPanel>
 
             {/* TRANSFER */}
             <TabPanel value={value} index={4} dir="ltr">
+                <PryInfo
+                    text={t("info.system_transfer")}
+                />
                 <Transfer />
             </TabPanel>
 
@@ -128,16 +144,25 @@ export default function System() {
 
             {/* REPORTING */}
             <TabPanel value={value} index={5} dir="ltr">
+                <PryInfo
+                    text={t("info.system_reporting")}
+                />
                 <Reporting />
             </TabPanel>
 
             {/* DATABASE */}
             <TabPanel value={value} index={6} dir="ltr">
+                <PryInfo
+                    text={t("info.system_database")}
+                />
                 <Database />
             </TabPanel>
 
             {/* PLUGINS */}
             <TabPanel value={value} index={7} dir="ltr">
+                <PryInfo
+                    text={t("info.system_plugins")}
+                />
                 <Plugins />
             </TabPanel>
 

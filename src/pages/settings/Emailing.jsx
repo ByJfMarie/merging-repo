@@ -35,6 +35,7 @@ import EmailIcon from '@mui/icons-material/Email';
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import PryInfo from "../../components/PryInfo";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -232,7 +233,11 @@ export default function Emailing() {
             >
 
                 <TabPanel value={value} index={0} dir="ltr">
-                    <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+                    <PryInfo
+                        text={t("info.emailing_general")}
+                    />
+
+                    <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                         <CardContent>
                             <Stack
                                 component="form"
@@ -370,8 +375,12 @@ export default function Emailing() {
                 </TabPanel>
 
                 <TabPanel value={value} index={1} dir="ltr">
-                    <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '10px' }}>
+                    <PryInfo
+                        text={t("info.emailing_templates")}
+                    />
 
+                    <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+                        <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                             <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
@@ -432,6 +441,7 @@ export default function Emailing() {
                             handleSave={handleSave}
                             handleCancel={handleCancel}
                         />
+                        </CardContent>
                     </Card>
                 </TabPanel>
             </SwipeableViews>

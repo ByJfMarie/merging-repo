@@ -71,14 +71,14 @@ export default function Transfer() {
                         variant="standard"
                         fullWidth
                     >
-                        <InputLabel id="site" >{t("filters.site")}</InputLabel>
+                        <InputLabel id="site" >{t("filters.transfer_site")}</InputLabel>
                         <Select
                             labelId="site"
                             id="site"
                             value={filters.site_id}
                             onChange={(e) => {handleFiltersChange("site_id", e.target.value)}}
                         >
-                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="all">{t("filters.transfer_site_value.all")}</MenuItem>
                             {
                                 remoteSites.map((option) => (
                                     <MenuItem value={option.name}>
@@ -95,16 +95,16 @@ export default function Transfer() {
                         variant="standard"
                         fullWidth
                     >
-                        <InputLabel id="direction" >{t("filters.direction")}</InputLabel>
+                        <InputLabel id="direction" >{t("filters.transfer_direction")}</InputLabel>
                         <Select
                             labelId="direction"
                             id="direction"
                             value={filters.direction}
                             onChange={(e) => {handleFiltersChange("direction", e.target.value)}}
                         >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="0">Send</MenuItem>
-                            <MenuItem value="1">Receive</MenuItem>
+                            <MenuItem value="all">{t("filters.transfer_direction_value.all")}</MenuItem>
+                            <MenuItem value="0">{t("filters.transfer_direction_value.send")}</MenuItem>
+                            <MenuItem value="1">{t("filters.transfer_direction_value.receive")}</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -114,20 +114,20 @@ export default function Transfer() {
                         variant="standard"
                         fullWidth
                     >
-                        <InputLabel id="status" >{t("filters.status")}</InputLabel>
+                        <InputLabel id="status" >{t("filters.transfer_status")}</InputLabel>
                         <Select
                             labelId="status"
                             id="status"
                             value={filters.status}
                             onChange={(e) => {handleFiltersChange("status", e.target.value)}}
                         >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="0">Wait</MenuItem>
-                            <MenuItem value="1">Ready</MenuItem>
-                            <MenuItem value="2">Sending</MenuItem>
-                            <MenuItem value="3">Receiving</MenuItem>
-                            <MenuItem value="4">Done</MenuItem>
-                            <MenuItem value="100">Error</MenuItem>
+                            <MenuItem value="all">{t("filters.transfer_status_value.all")}</MenuItem>
+                            <MenuItem value="0">{t("filters.transfer_status_value.wait")}</MenuItem>
+                            <MenuItem value="1">{t("filters.transfer_status_value.ready")}</MenuItem>
+                            <MenuItem value="2">{t("filters.transfer_status_value.sending")}</MenuItem>
+                            <MenuItem value="3">{t("filters.transfer_status_value.receiving")}</MenuItem>
+                            <MenuItem value="4">{t("filters.transfer_status_value.done")}</MenuItem>
+                            <MenuItem value="100">{t("filters.transfer_status_value.error")}</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -137,20 +137,20 @@ export default function Transfer() {
                         variant="standard"
                         fullWidth
                     >
-                        <InputLabel id="remote_status" >{t("filters.remote_status")}</InputLabel>
+                        <InputLabel id="remote_status" >{t("filters.transfer_remoteStatus")}</InputLabel>
                         <Select
                             labelId="remote_status"
                             id="remote_status"
                             value={filters.remote_status}
                             onChange={(e) => {handleFiltersChange("remote_status", e.target.value)}}
                         >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="0">Wait</MenuItem>
-                            <MenuItem value="1">Ready</MenuItem>
-                            <MenuItem value="2">Sending</MenuItem>
-                            <MenuItem value="3">Receiving</MenuItem>
-                            <MenuItem value="4">Done</MenuItem>
-                            <MenuItem value="100">Error</MenuItem>
+                            <MenuItem value="all">{t("filters.transfer_remoteStatus_value.all")}</MenuItem>
+                            <MenuItem value="0">{t("filters.transfer_remoteStatus_value.wait")}</MenuItem>
+                            <MenuItem value="1">{t("filters.transfer_remoteStatus_value.ready")}</MenuItem>
+                            <MenuItem value="2">{t("filters.transfer_remoteStatus_value.sending")}</MenuItem>
+                            <MenuItem value="3">{t("filters.transfer_remoteStatus_value.receiving")}</MenuItem>
+                            <MenuItem value="4">{t("filters.transfer_remoteStatus_value.done")}</MenuItem>
+                            <MenuItem value="100">{t("filters.transfer_remoteStatus_value.error")}</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>

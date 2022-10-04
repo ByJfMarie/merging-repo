@@ -36,10 +36,36 @@
     "to": "To",
     "birthdate": "Date of birth",
     "aet": "AET",
-    "site": "Site",
-    "direction": "Direction",
-    "status": "Status",
-    "remote_status": "Remote Status",
+    "transfer_site": "Site",
+    "transfer_site_value": {
+      "all": "All"
+    },
+    "transfer_direction": "Direction",
+    "transfer_direction_value": {
+      "all": "All",
+      "send": "Send",
+      "receive": "Receive"
+    },
+    "transfer_status": "Status",
+    "transfer_status_value": {
+      "all": "All",
+      "wait": "Wait",
+      "ready": "Ready",
+      "sending": "Sending",
+      "receiving": "Receiving",
+      "done": "Done",
+      "error": "Error"
+    },
+    "transfer_remoteStatus": "Remote Status",
+    "transfer_remoteStatus_value": {
+      "all": "All",
+      "wait": "Wait",
+      "ready": "Ready",
+      "sending": "Sending",
+      "receiving": "Receiving",
+      "done": "Done",
+      "error": "Error"
+    },
     "more": "More",
     "show_deleted": "Show deleted",
     "termTooShort": "Search term is too short",

@@ -6,7 +6,7 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Grid, Alert, Snackbar
+    Grid, Alert, Snackbar, Typography
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -126,47 +126,53 @@ export default function LocalServer() {
                     {message.message}
                 </Alert>
             </Snackbar>
-            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+
+            <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
-                        <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    className={classes.field} id="filled-basic"
-                                    label={t("fields.aet")}
-                                    variant="standard"
-                                    value={getSettingsValue('DCMS.server_aet')}
-                                    onChange={(e) => {
-                                        handleSettingsChange('DCMS.server_aet', e.target.value)
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    style={{width: '100%'}}
-                                    id="filled-basic"
-                                    label={t("fields.port")}
-                                    variant="standard"
-                                    value={getSettingsValue('DCMS.port_dicom')}
-                                    onChange={(e) => {
-                                        handleSettingsChange('DCMS.port_dicom', e.target.value)
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    style={{width: '100%'}}
-                                    id="filled-basic"
-                                    label={t("fields.latency")}
-                                    variant="standard"
-                                    value={getSettingsValue('DCMS.latency_time')}
-                                    onChange={(e) => {
-                                        handleSettingsChange('DCMS.latency_time', e.target.value)
-                                    }}
-                                />
-                            </Grid>
+                    <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
+                        <Grid item xs={12}>
+                            <TextField
+                                className={classes.field} id="filled-basic"
+                                label={t("fields.aet")}
+                                variant="standard"
+                                value={getSettingsValue('DCMS.server_aet')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMS.server_aet', e.target.value)
+                                }}
+                            />
                         </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                style={{width: '100%'}}
+                                id="filled-basic"
+                                label={t("fields.port")}
+                                variant="standard"
+                                value={getSettingsValue('DCMS.port_dicom')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMS.port_dicom', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                style={{width: '100%'}}
+                                id="filled-basic"
+                                label={t("fields.latency")}
+                                variant="standard"
+                                value={getSettingsValue('DCMS.latency_time')}
+                                onChange={(e) => {
+                                    handleSettingsChange('DCMS.latency_time', e.target.value)
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                </CardContent>
+            </Card>
 
-
+            <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+                <Typography variant="h6" align="left"> {t('titles.accepted_transfer_syntax')} </Typography>
+                <Divider style={{marginBottom: theme.spacing(2)}}/>
+                <CardContent>
                     <FormGroup>
                         <FormControlLabel
                             classes={{label: classes.label}}

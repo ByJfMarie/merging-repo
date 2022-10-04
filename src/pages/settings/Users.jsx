@@ -24,6 +24,7 @@ import GroupIcon from '@mui/icons-material/Group';
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import PryInfo from "../../components/PryInfo";
 
 const Users = (props) => {
     const { t } = useTranslation('settings');
@@ -31,13 +32,13 @@ const Users = (props) => {
     /** THEME */
     const theme = useTheme();
     const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        },
         field: {
             width: '100%'
-        },
-        card: {
-            "&.MuiCard-root": {
-                padding: '0px !important'
-            }
         },
         button: {
             color: theme.palette.text.primary,
@@ -91,15 +92,12 @@ const Users = (props) => {
                 </Alert>
             </Snackbar>
 
-            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
-                <CardContent>
+            <PryInfo
+                text={t("info.users")}
+            />
 
-                    <Card style={{ width: "100% !important", marginBottom: '20px' }} className={classes.card} >
-                        <CardContent style={{ display: "flex" }}>
-                            <InfoOutlinedIcon sx={{ color: theme.palette.textfield.text, marginRight: '15px' }} />
-                            <Typography style={{ color: theme.palette.textfield.text, textAlign: "left" }}>{t("info.users")}</Typography>
-                        </CardContent>
-                    </Card>
+            <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important"}} >
+                <CardContent>
 
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={4}>

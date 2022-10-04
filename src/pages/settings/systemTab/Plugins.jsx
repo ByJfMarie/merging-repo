@@ -6,11 +6,20 @@ import TablePlugins from "../../../layouts/settings/plugins";
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../../translations/i18n";
+import {makeStyles} from "@mui/styles";
 
 export default function Plugins() {
     const { t } = useTranslation('settings');
 
     const theme = useTheme();
+    const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        }
+    });
+    const classes = useStyles();
 
     /** MESSAGES */
     const [message, setMessage] = React.useState({
@@ -34,11 +43,9 @@ export default function Plugins() {
                     {message.message}
                 </Alert>
             </Snackbar>
-            <Card style={{
+            <Card className={classes.card} style={{
                 backgroundColor: theme.palette.card.color,
                 width: "100% !important",
-                padding: '25px 0px',
-                margin: '0px 0px'
             }}>
                 <CardContent>
                     <Grid container spacing={2} style={{marginBottom: '15px'}}>

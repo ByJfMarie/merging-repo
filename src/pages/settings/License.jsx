@@ -18,6 +18,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../translations/i18n";
+import PryInfo from "../../components/PryInfo";
 
 const License = () => {
     const { t } = useTranslation('settings');
@@ -25,6 +26,11 @@ const License = () => {
     /** THEME */
     const theme = useTheme();
     const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        },
         field: {
             width: '100%',
             marginBottom: '15px !important',
@@ -130,7 +136,11 @@ const License = () => {
                 </Alert>
             </Snackbar>
 
-            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+            <PryInfo
+                text={t("info.license")}
+            />
+
+            <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
                         <Grid item xs={12}>

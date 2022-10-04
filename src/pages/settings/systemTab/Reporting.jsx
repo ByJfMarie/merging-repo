@@ -21,11 +21,20 @@ import Index from "../../../layouts/settings/actions";
 /** Translation */
 import { useTranslation } from 'react-i18next';
 import "../../../translations/i18n";
+import {makeStyles} from "@mui/styles";
 
 export default function Reporting(props) {
     const { t } = useTranslation('settings');
 
     const theme = useTheme();
+    const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        }
+    });
+    const classes = useStyles();
 
     /** MESSAGES */
     const [message, setMessage] = React.useState({
@@ -116,7 +125,7 @@ export default function Reporting(props) {
                 </Alert>
             </Snackbar>
 
-            <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
+            <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <FormGroup>
                         <FormControlLabel

@@ -15,6 +15,11 @@ export default function Database() {
     /** STYLE & THEME */
     const theme = useTheme();
     const useStyles = makeStyles({
+        card: {
+            padding: "20px",
+            margin: "20px 0px",
+            backgroundColor: theme.palette.card.color + "!important"
+        },
         field: {
             width: '100%'
         },
@@ -102,7 +107,7 @@ export default function Database() {
                     {message.message}
                 </Alert>
             </Snackbar>
-        <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+        <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
             <CardContent>
                 <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                     <Grid item xs={9}>

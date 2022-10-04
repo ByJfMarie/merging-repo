@@ -17,13 +17,14 @@
     "about": "About",
     "local_server" : "Local Server",
     "storage" : "Storage",
-    "remote_aets" : "Remote AETs",
+    "remote_aets" : "DICOM Nodes",
     "forwarding": "Forwarding",
     "transfer": "Transfer",
     "reporting" : "Reporting",
     "database" : "Database",
     "plugins" : "Plugins",
-    "change_password": "Change Password"
+    "change_password": "Change Password",
+    "accepted_transfer_syntax": "Accepted transfer syntaxes"
   },
 
   "menu": {
@@ -232,7 +233,23 @@
   },
 
   "info": {
-    "users": "To complete...."
+    "users": "Create, edit and delete users; including their assignment to a particular role. You can also deactivate a user or change his/her password.",
+    "site_design_general": "Set default language and date format, general site information, and the external address (URL) to access the portal.",
+    "site_design_login": "Enable Google reCAPTCHA and/or reference number (access code) login.",
+    "site_design_customFiles": "Upload custom logo, help file and login sheet, which will replace the default ones.",
+    "site_design_customTexts": "Customize the texts for the Disclaimer, Privacy Policy, Copyright, FAQ,\nTerms and Conditions, and Contact us buttons.",
+    "roles_perms": "Edit roles and assign permissions to them (currently only a viewer).",
+    "emailing_general": "Configure SMTP email server settings.",
+    "emailing_templates": "Configure email templates.",
+    "system_localServer": "Configure the default DICOM parameters for Perennity, and define negotiated transfer syntaxes.",
+    "system_storage": "Configure primary and secondary storage paths and storage retention rules.",
+    "system_remoteAets": "Configure remote and/or local AETs and define their capabilities for DICOM communication.",
+    "system_forwarding": "Set up forwarding rules, based on AET conditions.",
+    "system_transfer": "Configure the connection to an SFTP server for inter-site transfers, and set up transfer rules based on AET conditions.",
+    "system_reporting": "Define the connection to a report source, from which Perennity can pull diagnostic study reports. Additional configurations include automatic report printing and applying a template.",
+    "system_database": "Configure the Perennity database connection.",
+    "system_plugins": "Plugins add functionality to Perennity (e.g. diagnostic viewer).",
+    "license": "Upload a license activation key and check your license."
   },
 
   "tables_header": {
