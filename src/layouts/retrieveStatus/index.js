@@ -216,6 +216,14 @@ const RetrievingLayout = (props) => {
                         showInMenu
                     />);
                 }
+                if (params.row.status === 2) {
+                    actions.push(<GridActionsCellItem
+                        icon={<CancelIcon/>}
+                        label={t("buttons.delete")}
+                        onClick={() => handleCancel(params.row.id)}
+                        showInMenu
+                    />);
+                }
                 return actions;
             }
         }

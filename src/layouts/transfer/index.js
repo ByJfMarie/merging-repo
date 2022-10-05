@@ -159,7 +159,7 @@ const TransferStatusLayout = (props) => {
             return;
         }
 
-        props.refresh();
+        refreshOrders(props.filters);
     }
 
     const handleCancel = async (row) => {
@@ -170,7 +170,7 @@ const TransferStatusLayout = (props) => {
             return;
         }
 
-        props.refresh();
+        refreshOrders(props.filters);
     }
 
     const column = [
@@ -233,6 +233,12 @@ const TransferStatusLayout = (props) => {
                         />);
                         break;
                     case 4: //Done
+                        actions.push(<GridActionsCellItem
+                            icon={<CancelIcon/>}
+                            label={t("buttons.delete")}
+                            onClick={() => handleCancel(params.row)}
+                            showInMenu
+                        />);
                     case 100: //Error
                         actions.push(<GridActionsCellItem
                             icon={<ReplayIcon/>}

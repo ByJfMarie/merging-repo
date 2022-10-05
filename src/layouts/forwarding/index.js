@@ -225,6 +225,14 @@ const ForwardingLayout = (props) => {
                         showInMenu
                     />);
                 }
+                if (params.row.status === 2) {
+                    actions.push(<GridActionsCellItem
+                        icon={<CancelIcon/>}
+                        label={t("buttons.delete")}
+                        onClick={() => handleCancel(params.row.study_uid, params.row.called_aet)}
+                        showInMenu
+                    />);
+                }
                 return actions;
             }
         }
