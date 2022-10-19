@@ -8,7 +8,6 @@ import UserContext from "../../components/UserContext";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 const TableRemoteStudiesActions = (props) => {
     const { t } = useTranslation('common');
@@ -84,9 +83,9 @@ const TableRemoteStudiesActions = (props) => {
                                     'aria-labelledby': 'basic-button',
                                 }}
                             >
-                                <MenuItem onClick={handleClose}>JPEG</MenuItem>
-                                <MenuItem onClick={handleClose}>JPEG Overlay</MenuItem>
-                                <MenuItem onClick={handleClose}>DICOM Files</MenuItem>
+                                <MenuItem onClick={handleClose}>{t("buttons.download_jpeg")}</MenuItem>
+                                <MenuItem onClick={handleClose}>{t("buttons.download_jpeg_overlay")}</MenuItem>
+                                <MenuItem onClick={handleClose}>{t("buttons.download_dicom")}</MenuItem>
                             </Menu>
                         </>
                     )}

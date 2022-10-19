@@ -6,7 +6,6 @@ import AuthService from "../services/api/auth.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 const Media = () => {
     const { t } = useTranslation('settings');

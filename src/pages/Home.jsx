@@ -5,7 +5,6 @@ import UsersService from "../services/api/users.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 const Home = () => {
     const { t } = useTranslation('settings');

@@ -12,7 +12,6 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 const TableAets = (props) => {
     const { t } = useTranslation('settings');

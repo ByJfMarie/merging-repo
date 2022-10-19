@@ -10,7 +10,6 @@ import DescriptionIcon from '@mui/icons-material/Description';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 const Logs = () => {
     const { t } = useTranslation('common');

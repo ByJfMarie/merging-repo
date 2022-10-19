@@ -1,0 +1,45 @@
+{
+  "texts": {
+    "portal_name": "My Image Portal",
+    "portal_subtitle": "Access your studies",
+    "portal_welcome_text": {
+      "line_1": "Welcome to the Perennity Radiology Portal.",
+      "line_2": "This portal access is only available for authorized users.",
+      "line_3": "",
+      "line_4": "",
+      "line_5": ""
+    }
+  },
+  "fields": {
+    "username": "Utilisateur",
+    "password": "Mort de passe",
+    "access_code": "Access Code",
+    "birthdate": "Birthdate"
+  },
+  "buttons": {
+    "sign_in": "Sign in",
+    "forgot": "Forgot Password"
+  },
+  "actions": {
+    "forgot_password": "Forgot password?",
+    "access_code": {
+      "text": "Sign in with an",
+      "link": "Access Code"
+    },
+    "sign_in": {
+      "text": "Sign in with",
+      "link": "Login & Password"
+    },
+    "back_login": "Back to Login"
+  },
+  "msg_info": {
+    "login_success": "Login successful"
+  },
+  "msg_error": {
+    "username_required": "Username is required!",
+    "captcha_required": "Captcha is required!",
+    "password_required": "Password is required!",
+    "reference_required": "Reference is required!",
+    "birthdate_required": "Birthdate is required!"
+  }
+}

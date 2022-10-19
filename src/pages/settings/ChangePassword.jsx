@@ -11,7 +11,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 export default function ChangePassword(props) {
     const { t } = useTranslation('settings');

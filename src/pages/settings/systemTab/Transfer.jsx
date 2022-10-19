@@ -10,7 +10,6 @@ import Index from "../../../layouts/settings/actions";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 export default function Transfer() {
     const { t } = useTranslation('settings');

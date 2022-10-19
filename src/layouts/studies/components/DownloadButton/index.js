@@ -4,7 +4,6 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../../translations/i18n";
 
 const Index = (props) => {
     const { t } = useTranslation('common');
@@ -12,15 +11,15 @@ const Index = (props) => {
     const options = [
         {
             name: 'jpg',
-            label: 'JPEG'
+            label: t("buttons.download_jpeg")
         },
         {
             name: 'jpg-overlay',
-            label: 'JPEG Overlay'
+            label: t("buttons.download_jpeg_overlay")
         },
         {
             name: 'dcm',
-            label: 'DICOM Files'
+            label: t("buttons.download_dicom")
         }
     ];
 

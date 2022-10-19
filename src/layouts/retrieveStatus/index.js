@@ -15,7 +15,6 @@ import {useState} from "react";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 

@@ -1,14 +1,11 @@
 import * as React from 'react';
-import TransferService from "../../../../services/api/transfer.service";
-import PryButtonSelect from "../../../../components/PryTable/PryButtonSelect";
-
-/** Translation */
-import { useTranslation } from 'react-i18next';
-import "../../../../translations/i18n";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import {Button} from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
 
 const SharingButton = (props) => {
     const { t } = useTranslation('common');
@@ -26,8 +23,8 @@ const SharingButton = (props) => {
     const handleClick = (event) => {
         props.sharingFunction();
     };
-    const handleClose = () => {
-    };
+    /*const handleClose = () => {
+    };*/
 
 
 

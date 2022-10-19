@@ -1,0 +1,225 @@
+{
+  "menu": {
+    "studies": "Local Studies",
+    "remote_aet": "Remote Servers",
+    "forwarding": "Forwarding",
+    "transfer": "Transfer",
+    "settings": "Settings",
+    "logs": "Logs",
+    "help": "Help",
+    "about": "About"
+  },
+
+  "titles": {
+    "studies": "Local Studies",
+    "remote_aet": "Remote Servers",
+    "forwarding": "Forwarding",
+    "transfer": "Transfer",
+    "logs": "Logs",
+    "profile": "Profile",
+    "user": "User",
+    "general": "General",
+    "study_information": "Study Information",
+    "study_permissions": "Study Permissions",
+    "study_sharing": "Sharing Studies",
+    "about": "About",
+    "warning": "Warning"
+  },
+
+  "filters": {
+    "patient_id": "Patient ID / MRN",
+    "patient_name": "Patient Name",
+    "accession_number": "Accession #",
+    "referring_physician": "Referring Physician",
+    "modality": "Modality",
+    "study_id": "Study ID",
+    "description": "Study Description",
+    "study_date": "Study Date",
+    "from": "From",
+    "to": "To",
+    "birthdate": "Date of birth",
+    "aet": "AET",
+    "transfer_site": "Site",
+    "transfer_site_value": {
+      "all": "All"
+    },
+    "transfer_direction": "Direction",
+    "transfer_direction_value": {
+      "all": "All",
+      "send": "Send",
+      "receive": "Receive"
+    },
+    "transfer_status": "Status",
+    "transfer_status_value": {
+      "all": "All",
+      "wait": "Wait",
+      "ready": "Ready",
+      "sending": "Sending",
+      "receiving": "Receiving",
+      "done": "Done",
+      "error": "Error"
+    },
+    "transfer_remoteStatus": "Remote Status",
+    "transfer_remoteStatus_value": {
+      "all": "All",
+      "wait": "Wait",
+      "ready": "Ready",
+      "sending": "Sending",
+      "receiving": "Receiving",
+      "done": "Done",
+      "error": "Error"
+    },
+    "more": "More",
+    "show_deleted": "Show deleted",
+    "termTooShort": "Search term is too short",
+    "termMessage": " Search term is too short, please enter at least 3 characters in order to trigger a search"
+  },
+
+  "date_presets": {
+    "all": "All",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last_month": "Last month",
+    "last_year": "Last year",
+    "last_week": "Last week",
+    "last_3days": "Last 3 days"
+  },
+
+  "tables_header": {
+    "patient": "Patient",
+    "study": "Study",
+    "description": "Study Description",
+    "referring_physician": "Ref. Physician",
+    "report": "Report",
+    "assignations": "Assigned To",
+    "status": "Status",
+    "noi" : "# Images",
+    "aet": "AET",
+    "creation_date": "Creation Date"
+  },
+
+  "buttons": {
+    "forward": "Forward",
+    "download": "Download",
+    "download_jpeg": "JPEG",
+    "download_jpeg_overlay": "JPEG Overlay",
+    "download_dicom": "DICOM Files",
+    "transfer": "Transfer",
+    "retrieve": "Retrieve",
+    "reset": "Reset",
+    "change_password": "Change Password",
+    "contact_us": "Contact us",
+    "privacy_policy": "Privacy Policy",
+    "terms_conditions": "Terms & Conditions",
+    "faq": "FAQ",
+    "close": "Close",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "find": "Find",
+    "query": "Query",
+    "share": "Share",
+    "delete": "Delete",
+    "view": "View",
+    "study_info": "Study Info",
+    "login_sheet": "Login Sheet",
+    "set_permissions": "Set Permissions",
+    "restart": "Restart"
+  },
+
+  "status": {
+    "waiting": "Waiting",
+    "forwarding": "Forwarding",
+    "completed": "Completed",
+    "error": "Error",
+    "retrieving": "Retrieving",
+    "online": "Online",
+    "nearline": "Nearline",
+    "offline": "Offline"
+  },
+
+  "fields": {
+    "login": "Login",
+    "name": "Name",
+    "mail": "Email",
+    "theme": "Theme",
+    "dark_mode": "Dark Mode",
+    "language": "Language",
+    "language_value": {
+      "fr": "French",
+      "en": "English"
+    },
+    "format": "Format",
+    "filters": "Filters",
+    "filter": "Filter",
+    "date": "Date",
+    "dates": "Dates Presets",
+    "p_name": "Patient Name",
+    "p_id": "Patient ID",
+    "p_birthdate": "Patient Birthdate",
+    "st_institution": "Institution",
+    "st_ref_physician": "Referring Physician",
+    "st_accession_number": "Accession Number",
+    "st_description": "Study Description",
+    "st_modalities": "Modalities",
+    "st_date": "Study Date",
+    "st_id": "Study ID",
+    "st_uid": "Study UID",
+    "st_reference": "Reference",
+    "st_storage_key": "Storage Key",
+    "share_to": "Share To",
+    "share_validUntil": "Choose an End Date",
+    "share_comments": "Comments",
+    "version": "Version",
+    "build": "build",
+    "title_value": {
+      "mr": "Mr.",
+      "mrs": "Mrs.",
+      "miss": "Miss.",
+      "ms": "Ms.",
+      "dr": "Dr."
+    },
+    "file_name": "File Name"
+  },
+
+  "texts": {
+    "welcome": "Welcome",
+    "our_website": "Our Website",
+    "technical_support": "Technical support",
+    "license_request": "Request a license"
+  },
+
+  "msg_info": {
+    "creating_zip": "Creating ZIP File",
+    "downloading": "Downloading file",
+    "download_completed": "Download Completed",
+    "forward_success": "Forwarding order has been successfully created.",
+    "transfer_success": "Transfer order has been successfully created.",
+    "delete_study": "Study {{description}} for patient {{patient}} has been marked for delete.",
+    "remote_use_wildcard": "Use \"*\" as a wildcard for your search",
+    "share_to": "Enter your recipients email addresses",
+    "share_comments": "Enter an optionally comment",
+    "share_success": "Your study selection has been successfully shared.",
+    "settings_changed": "Your settings have changed. Please restart Perennity for these changes to take effect!"
+  },
+
+  "msg_error" : {
+    "patientID_too_short": "Patient ID is too short (Min 3 characters allowed...)",
+    "patientName_too_short": "Patient Name is too short (Min 3 characters allowed...)",
+    "studyDesc_too_short": "Study Description is too short (Min 3 characters allowed...)",
+    "accession_too_short": "Accession Number is too short (Min 3 characters allowed...)",
+    "refPhys_too_short": "Referring Physician is too short (Min 3 characters allowed...)",
+    "open_viewer": "Impossible to open viewer: {{error}}",
+    "study_no_selection": "You have to select at least one study!",
+    "forward_error": "Impossible to forward study: {{error}}",
+    "transfer_error": "Impossible to transfer study: {{error}}",
+    "query_no_criteria": "You can't query studies without criteria!",
+    "query_no_aet": "You have to select a query AET!",
+    "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete: {{error}}",
+    "share_error": "Impossible to share your study selection: {{error}}"
+  },
+
+  "confirm": {
+    "delete_title": "Are you sure?",
+    "delete_study": "Do you really want to delete this study? This process cannot be undone."
+  }
+}

@@ -17,7 +17,6 @@ import GeneralService from "../../../services/api/general.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 /** ICONS */
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
@@ -25,7 +24,6 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import LockIcon from '@mui/icons-material/Lock';
 import GroupIcon from '@mui/icons-material/Group';
 import EmailIcon from '@mui/icons-material/Email';
-import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PryToolBar from "../PryToolBar";
@@ -67,7 +65,7 @@ function PrySideBarSettings(props) {
     const { t } = useTranslation('settings');
 
     /** User & privileges */
-    const { user, privileges } = React.useContext(UserContext);
+    const { user } = React.useContext(UserContext);
 
     /** THEME AND CSS */
     const theme = useTheme();

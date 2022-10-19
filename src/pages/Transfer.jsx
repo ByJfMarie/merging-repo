@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {Box, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Typography} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import TransferStatusLayout from '../layouts/transfer';
 import TransferService from "../services/api/transfer.service";
@@ -7,7 +7,6 @@ import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 export default function Transfer() {
     const { t } = useTranslation('common');

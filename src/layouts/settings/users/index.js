@@ -4,21 +4,17 @@ import {makeStyles} from "@mui/styles";
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import UsersService from "../../../services/api/users.service";
 import DialogResetPassword from "./DialogResetPassword";
-import {Dialog, DialogActions, DialogContent, IconButton} from "@mui/material";
+import {IconButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import LockResetIcon from '@mui/icons-material/LockReset';
-
+import {useState} from "react";
+import AlertDialog from "../../../components/AlertDialog";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
-import ChangePassword from "../../../pages/settings/ChangePassword";
-import {useState} from "react";
-import StudiesService from "../../../services/api/studies.service";
-import AlertDialog from "../../../components/AlertDialog";
 
 
 const Index = (props) => {

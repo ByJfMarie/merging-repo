@@ -111,12 +111,12 @@ function PryToolBar(props) {
                             target={"_blank"}
                             onClick={helpMenuHandleClose}
                         >
-                            Help
+                            {t("menu.help")}
                         </MenuItem>
                         <MenuItem
                             onClick={() => {handleDialogAboutOpen(); helpMenuHandleClose();}}
                         >
-                            About
+                            {t("menu.about")}
                         </MenuItem>
                     </Menu>
 

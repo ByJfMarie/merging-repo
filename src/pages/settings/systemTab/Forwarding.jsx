@@ -7,7 +7,6 @@ import DialogAddEdit from "../../../layouts/settings/forwarding/DialogAddEdit";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 export default function Storage() {
     const { t } = useTranslation('settings');

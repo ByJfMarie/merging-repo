@@ -13,12 +13,10 @@ import RolesTable from "../../layouts/settings/roles";
 import DialogAddEdit from "../../layouts/settings/roles/DialogAddEdit";
 import ViewersService from "../../services/api/viewers.service";
 import LockIcon from '@mui/icons-material/Lock';
+import PryInfo from "../../components/PryInfo";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
-import DesignServicesIcon from "@mui/icons-material/DesignServices";
-import PryInfo from "../../components/PryInfo";
 
 /*const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

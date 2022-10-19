@@ -14,7 +14,6 @@ import UsersService from "../../../services/api/users.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

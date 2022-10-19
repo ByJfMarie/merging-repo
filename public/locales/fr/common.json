@@ -1,11 +1,13 @@
 {
   "menu": {
-    "studies": "Local Studies",
+    "studies": "Etudes Locales",
     "remote_aet": "Remote Servers",
     "forwarding": "Forwarding",
     "transfer": "Transfer",
     "settings": "Settings",
-    "logs": "Logs"
+    "logs": "Logs",
+    "help": "Help",
+    "about": "About"
   },
 
   "titles": {
@@ -20,7 +22,8 @@
     "study_information": "Study Information",
     "study_permissions": "Study Permissions",
     "study_sharing": "Sharing Studies",
-    "about": "About"
+    "about": "About",
+    "warning": "Warning"
   },
 
   "filters": {
@@ -97,7 +100,10 @@
 
   "buttons": {
     "forward": "Forward",
-    "download":"Download",
+    "download": "Download",
+    "download_jpeg": "JPEG",
+    "download_jpeg_overlay": "JPEG Overlay",
+    "download_dicom": "DICOM Files",
     "transfer": "Transfer",
     "retrieve": "Retrieve",
     "reset": "Reset",
@@ -112,7 +118,12 @@
     "find": "Find",
     "query": "Query",
     "share": "Share",
-    "delete": "Delete"
+    "delete": "Delete",
+    "view": "View",
+    "study_info": "Study Info",
+    "login_sheet": "Login Sheet",
+    "set_permissions": "Set Permissions",
+    "restart": "Restart"
   },
 
   "status": {
@@ -140,6 +151,7 @@
     "format": "Format",
     "filters": "Filters",
     "filter": "Filter",
+    "date": "Date",
     "dates": "Dates Presets",
     "p_name": "Patient Name",
     "p_id": "Patient ID",
@@ -165,7 +177,8 @@
       "miss": "Miss.",
       "ms": "Ms.",
       "dr": "Dr."
-    }
+    },
+    "file_name": "File Name"
   },
 
   "texts": {
@@ -185,7 +198,8 @@
     "remote_use_wildcard": "Use \"*\" as a wildcard for your search",
     "share_to": "Enter your recipients email addresses",
     "share_comments": "Enter an optionally comment",
-    "share_success": "Your study selection has been successfully shared."
+    "share_success": "Your study selection has been successfully shared.",
+    "settings_changed": "Your settings have changed. Please restart Perennity for these changes to take effect!"
   },
 
   "msg_error" : {

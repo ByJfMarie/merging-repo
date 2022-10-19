@@ -9,15 +9,13 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import {Divider, Grid, Link, List, ListItem, ListItemText} from "@mui/material";
-
-/** Translation */
-import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
+import {Link} from "@mui/material";
 import SystemService from "../../../services/api/system.service";
 import {makeStyles} from "@mui/styles";
 import {useTheme} from "@emotion/react";
+
+/** Translation */
+import { useTranslation } from 'react-i18next';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {

@@ -5,7 +5,6 @@ import PublishIcon from '@mui/icons-material/Publish';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 const Index = (props) => {
     const { t } = useTranslation('common');

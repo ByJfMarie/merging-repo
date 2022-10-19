@@ -14,7 +14,6 @@ import QRService from "../../services/api/queryRetrieve.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 const MediaLayout = (props) => {
     const { t } = useTranslation('common');

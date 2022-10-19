@@ -6,7 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 export default function Studies() {
     const { t } = useTranslation('common');

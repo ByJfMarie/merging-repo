@@ -9,7 +9,6 @@ import SettingsService from "../../../services/api/settings.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 export default function RemoteAET() {
     const { t } = useTranslation('settings');

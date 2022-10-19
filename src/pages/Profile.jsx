@@ -29,7 +29,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 import UsersService from "../services/api/users.service";
 import UserStorage from "../services/storage/user.storage";
@@ -89,6 +88,7 @@ function Settings(props) {
         if (!currentSettings) return '';
         setCurrentSettings({...currentSettings, [id]: value});
         if (id === 'theme') props.themeChange(value);
+        if (id === 'language') props.languageChange(value);
     }
     const handleSaveSettings = async () => {
         let response = await UsersService.updateSettings(currentSettings);
@@ -117,7 +117,12 @@ function Settings(props) {
     };
     const handleCancelSettings = () => {
         setCurrentSettings(settings);
-        props.themeChange(UserStorage.getSettings().theme);
+
+        UserStorage.getSettings()
+            .then((rsp) => {
+                props.themeChange(rsp.theme);
+                props.languageChange(rsp.language);
+            });
     };
 
     /** User Profile */

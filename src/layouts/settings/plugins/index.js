@@ -9,7 +9,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 const TablePlugins = (props) => {
     const { t } = useTranslation('settings');

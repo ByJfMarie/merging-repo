@@ -40,7 +40,6 @@ import UserContext from "../../components/UserContext";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 import SearchIcon from "@mui/icons-material/Search";
 
 const useStyles = makeStyles((theme) => ({

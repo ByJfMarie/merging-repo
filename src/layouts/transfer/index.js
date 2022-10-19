@@ -14,7 +14,6 @@ import TransferService from "../../services/api/transfer.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 
@@ -32,6 +31,7 @@ const TransferStatusLayout = (props) => {
             case 0: //Wait
             case 1: //Ready
                 statusIcon = <PauseIcon color="warning" fontSize="small"/>;
+                break;
             case 2: //Sending
             case 3: //Receiving
                 statusIcon = <PlayArrowIcon color="primary" fontSize="small"/>;
@@ -41,6 +41,8 @@ const TransferStatusLayout = (props) => {
                 break;
             case 100: //Error
                 statusIcon = <Tooltip title={row.tr_message}><ReportProblemIcon color="error" fontSize="small"/></Tooltip>;
+                break;
+            default:
                 break;
         }
 
@@ -59,6 +61,8 @@ const TransferStatusLayout = (props) => {
                 break;
             case 100: //Error
                 remoteStatusIcon = <Tooltip title={row.tr_message}><ReportProblemIcon color="error" fontSize="small"/></Tooltip>;
+                break;
+            default:
                 break;
         }
 
@@ -92,6 +96,8 @@ const TransferStatusLayout = (props) => {
                 break;
             case 100: //Error
                 statusIcon = <Tooltip title={row.tr_message}><ReportProblemIcon color="error" fontSize="small"/></Tooltip>;
+                break;
+            default:
                 break;
         }
 
@@ -239,6 +245,7 @@ const TransferStatusLayout = (props) => {
                             onClick={() => handleCancel(params.row)}
                             showInMenu
                         />);
+                        break;
                     case 100: //Error
                         actions.push(<GridActionsCellItem
                             icon={<ReplayIcon/>}
@@ -246,6 +253,8 @@ const TransferStatusLayout = (props) => {
                             onClick={() => handleRetry(params.row)}
                             showInMenu
                         />);
+                        break;
+                    default:
                         break;
                 }
                 return actions;

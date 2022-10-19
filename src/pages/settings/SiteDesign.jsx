@@ -9,7 +9,6 @@ import {
     Card,
     CardContent,
     TextField,
-    Button,
     Tooltip,
     Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup, MenuItem, Select, FormControl, InputLabel, Link,
 } from '@mui/material';
@@ -23,12 +22,11 @@ import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import {DropzoneArea} from 'react-mui-dropzone';
+import GeneralService from "../../services/api/general.service";
+import PryInfo from "../../components/PryInfo";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
-import GeneralService from "../../services/api/general.service";
-import PryInfo from "../../components/PryInfo";
 
 /** TABS FUNCTION */
 function TabPanel(props) {

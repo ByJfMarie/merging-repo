@@ -31,11 +31,10 @@ import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import MailingService from "../../services/api/mailing.service";
 import EmailIcon from '@mui/icons-material/Email';
+import PryInfo from "../../components/PryInfo";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
-import PryInfo from "../../components/PryInfo";
 
 /** TABS FUNCTION */
 function TabPanel(props) {

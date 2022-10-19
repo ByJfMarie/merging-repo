@@ -5,7 +5,6 @@ import TablePlugins from "../../../layouts/settings/plugins";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 import {makeStyles} from "@mui/styles";
 
 export default function Plugins() {

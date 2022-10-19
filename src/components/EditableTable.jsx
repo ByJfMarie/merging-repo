@@ -14,7 +14,6 @@ import { useTheme } from '@emotion/react';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 // Icons
 import EditIcon from "@mui/icons-material/EditOutlined";

@@ -6,7 +6,6 @@ import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 import RemoteAETLayout from '../layouts/remoteAET';
 import RetrievingLayout from '../layouts/retrieveStatus';

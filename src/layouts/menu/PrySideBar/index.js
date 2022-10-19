@@ -16,7 +16,6 @@ import UserContext from "../../../components/UserContext";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 /** ICONS */
 import SettingsIcon from '@mui/icons-material/Settings';

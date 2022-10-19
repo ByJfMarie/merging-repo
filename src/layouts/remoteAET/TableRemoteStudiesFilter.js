@@ -38,7 +38,6 @@ import styled from "styled-components";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 
 const useStyles = makeStyles((theme) => ({

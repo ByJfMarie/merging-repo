@@ -1,4 +1,4 @@
-import {Alert, alpha, Box, Chip, gridClasses, IconButton, Paper, Snackbar} from "@mui/material";
+import {Alert, Box, Chip, IconButton, Paper, Snackbar} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
@@ -27,8 +27,6 @@ import TransferService from "../../services/api/transfer.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
-import ErrorIcon from "@mui/icons-material/Error";
 
 function StudiesLayout(props) {
     const { t } = useTranslation('common');

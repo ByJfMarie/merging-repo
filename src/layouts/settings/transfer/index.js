@@ -9,7 +9,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 const TableTransferRules = (props) => {
     const { t } = useTranslation('settings');

@@ -14,7 +14,6 @@ import ForwardingService from "../../services/api/forwarding.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 /** STATUS CHIP (ERROR / SUCCESS) */
 

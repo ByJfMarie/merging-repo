@@ -1,4 +1,4 @@
-import {Alert, Box, Paper, Snackbar, TableContainer,} from "@mui/material";
+import {Alert, Box, Paper, Snackbar} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
@@ -13,7 +13,6 @@ import UserContext from "../../components/UserContext";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 function Index(props) {
     const { t } = useTranslation('common');
@@ -300,7 +299,7 @@ function Index(props) {
                         if (action ==='info') {
                             return <GridActionsCellItem
                                 icon={<InfoIcon/>}
-                                label="Study Info"
+                                label={t("buttons.study_info")}
                                 onClick={() => props.handleOpenDialogStudy(params.row)}
                                 showInMenu
                             />
@@ -308,7 +307,7 @@ function Index(props) {
                         else if (action === 'login_sheet') {
                             return <GridActionsCellItem
                                 icon={<ContactPageIcon/>}
-                                label="Login Sheet"
+                                label={t("buttons.login_sheet")}
                                 onClick={() => props.handleLoginSheet(params.row.key)}
                                 showInMenu
                             />
@@ -316,7 +315,7 @@ function Index(props) {
                         else if (action === 'permissions') {
                             return <GridActionsCellItem
                                 icon={<LockIcon/>}
-                                label="Set Permissions"
+                                label={t("buttons.set_permissions")}
                                 onClick={() => props.handleOpenDialogPermissions(params.row.key)}
                                 showInMenu
                             />

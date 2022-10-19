@@ -16,15 +16,12 @@ import {
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
 import Index from "../../layouts/settings/users";
-
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DialogAddEdit from "../../layouts/settings/users/DialogAddEdit";
 import GroupIcon from '@mui/icons-material/Group';
+import PryInfo from "../../components/PryInfo";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
-import PryInfo from "../../components/PryInfo";
 
 const Users = (props) => {
     const { t } = useTranslation('settings');

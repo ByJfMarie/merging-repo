@@ -13,7 +13,6 @@ import moment from "moment";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
 
 const LogsLayout = (props) => {
     const { t } = useTranslation('common');
@@ -134,13 +133,13 @@ const LogsLayout = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<VisibilityIcon/>}
-                    label={"View"}
+                    label={t("buttons.view")}
                     onClick={() => handleActionView(params.row.key)}
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<DownloadIcon/>}
-                    label={"Download"}
+                    label={t("buttons.download")}
                     onClick={() => handleActionDownload(params.row.key)}
                 />);
 
@@ -168,28 +167,29 @@ const LogsLayout = (props) => {
             <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                 <CardContent>
                     <Box sx={{p:2 ,flexGrow: 1 }}>
-                        <Grid container spacing={1}>
+                        <Grid container spacing={2}>
                             <Grid item xs={3}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DesktopDatePicker
-                                        label="Date desktop"
+                                        label={t("fields.date")}
                                         inputFormat="MM/dd/yyyy"
                                         value={filters.date}
                                         onChange={(date, keyboardInputValue) => {
                                             if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
                                             handleFiltersChange("date", date);}
                                         }
-                                        renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" {...params} />}
+                                        renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" fullWidth {...params} />}
                                         clearable={true}
                                     />
                                 </LocalizationProvider>
                             </Grid>
                             <Grid item xs={3}>
                                 <TextField
-                                    label={"Name"}
+                                    label={t("fields.file_name")}
                                     variant="standard"
                                     value={filters.name}
                                     onChange={(e) => {handleFiltersChange("name", e.target.value);}}
+                                    fullWidth
                                 />
                             </Grid>
                         </Grid>

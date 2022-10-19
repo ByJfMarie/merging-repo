@@ -7,6 +7,9 @@ import SystemService from "../services/api/system.service";
 import CloseIcon from '@mui/icons-material/Close';
 import UserContext from "../components/UserContext";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
         backgroundColor: theme.palette.menu.background,
@@ -25,6 +28,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Announcement() {
+    const { t } = useTranslation('common');
+
     /** THEME */
     useTheme();
 
@@ -52,7 +57,7 @@ export default function Announcement() {
             ...message,
             show: true,
             severity: "warning",
-            message: 'Your settings have changed. Please restart Perennity for these changes to take effect!',
+            message: t("msg_info.settings_changed"),
             action: restartAction
         });
     }
@@ -74,7 +79,7 @@ export default function Announcement() {
                 size="small"
                 onClick={handleRestart}
             >
-                Restart
+                {t("buttons.restart")}
             </Button>
             <IconButton
                 size="small"
@@ -101,7 +106,7 @@ export default function Announcement() {
                     sx={{ width: '100%' }}
                     action={message.action}
                 >
-                    <AlertTitle>Warning</AlertTitle>
+                    <AlertTitle>{t("titles.warning")}</AlertTitle>
                     {message.message}
                 </Alert>
             </Snackbar>

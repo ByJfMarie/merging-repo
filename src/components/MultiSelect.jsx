@@ -5,7 +5,6 @@ import { useTheme } from '@emotion/react';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 function arrayMove(array, from, to) {
     array = array.slice();

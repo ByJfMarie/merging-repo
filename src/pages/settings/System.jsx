@@ -4,6 +4,7 @@ import {Typography, Divider, Tab, Tabs, Box, Grid} from '@mui/material';
 import { useTheme } from '@emotion/react';
 import "react-phone-input-2/lib/high-res.css";
 import SettingsIcon from '@mui/icons-material/Settings';
+import PryInfo from "../../components/PryInfo";
 
 /** TABS */
 import LocalServer from './systemTab/LocalServer';
@@ -18,8 +19,7 @@ import RemoteAET from './systemTab/RemoteAET';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
-import PryInfo from "../../components/PryInfo";
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

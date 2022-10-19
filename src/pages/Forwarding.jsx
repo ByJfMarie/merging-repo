@@ -6,7 +6,6 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../translations/i18n";
 
 const Forwarding = () => {
     const { t } = useTranslation('common');

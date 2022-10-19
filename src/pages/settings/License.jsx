@@ -14,11 +14,10 @@ import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import SystemService from "../../services/api/system.service";
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import PryInfo from "../../components/PryInfo";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../translations/i18n";
-import PryInfo from "../../components/PryInfo";
 
 const License = () => {
     const { t } = useTranslation('settings');

@@ -13,10 +13,15 @@ import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import GeneralService from "../../../services/api/general.service";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+
 // Image
 const bgImage = "/images/loginbg.jpg";
 
 function LoginAccess() {
+    const { t } = useTranslation('login');
+
     /** THEME AND CSS */
     const theme = useTheme();
 
@@ -39,17 +44,17 @@ function LoginAccess() {
         e.preventDefault();
 
         if (!reference) {
-            swal("Failed", "Reference is required!", "error");
+            swal("Failed", t("msg_error.reference_required"), "error");
             return;
         }
 
         if (!birthdate) {
-            swal("Failed", "Birthdate is required!", "error");
+            swal("Failed", t("msg_error.birthdate_required"), "error");
             return;
         }
 
         if (useCaptcha===true && !captchaValue) {
-            swal("Failed", "Captcha is incorrect!", "error");
+            swal("Failed", t("msg_error.captcha_required"), "error");
             return;
         }
 
@@ -59,7 +64,7 @@ function LoginAccess() {
             return;
         }
 
-        swal("Success", "Login successful", "success", {
+        swal("Success", t("msg_info.login_success"), "success", {
             buttons: false,
             timer: 2000,
         })
@@ -102,10 +107,18 @@ function LoginAccess() {
                 <BackgroundLayout
                     bgImage={bgImage}
                 >
-                    <Grid item xs={12}><Typography variant="h2">My Image Portal</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h2">{t("texts.portal_name")}</Typography></Grid>
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
-                    <Grid item xs={12}><Typography variant="h4">Access your studies</Typography></Grid>
-                    <Grid item xs={12}><Typography variant="body2">Welcome to the Perennity Radiology Portal.<br/>This portal access is only available for authorized users.</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h4">{t("texts.portal_subtitle")}</Typography></Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="body2">
+                            {t("texts.portal_welcome_text.line_1")}<br/>
+                            {t("texts.portal_welcome_text.line_2")}<br/>
+                            {t("texts.portal_welcome_text.line_3")}<br/>
+                            {t("texts.portal_welcome_text.line_4")}<br/>
+                            {t("texts.portal_welcome_text.line_5")}<br/>
+                        </Typography>
+                    </Grid>
                 </BackgroundLayout>
             </Grid>
 
@@ -140,13 +153,13 @@ function LoginAccess() {
                                 fullWidth
                                 id="access_code"
                                 name="access_code"
-                                label="Access Code"
+                                label={t("fields.access_code")}
                                 onChange={e => setReference(e.target.value)}
                             />
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DesktopDatePicker
                                     id="birthdate"
-                                    label="Birthdate"
+                                    label={t("fields.birthdate")}
                                     inputFormat={dateFormat}
                                     value={""}
                                     onChange={(date, keyboardInputValue) => {
@@ -192,7 +205,7 @@ function LoginAccess() {
                                 fullWidth
                                 disabled={useCaptcha && !verified}
                             >
-                                Sign in
+                                {t("buttons.sign_in")}
                             </Button>
 
                             <Box sx={{ m: 2 }} />
@@ -204,7 +217,7 @@ function LoginAccess() {
                                 justifyContent="left"
                                 alignItems="center"
                             >
-                                <Typography variant="h6">Sign in with <Link href="/login">Login & Password</Link></Typography>
+                                <Typography variant="h6">{t("actions.sign_in.text")} <Link href="/login">{t("actions.sign_in.link")}</Link></Typography>
                             </Grid>
                         </form>
                     </Grid>

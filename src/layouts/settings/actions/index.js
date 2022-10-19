@@ -3,7 +3,6 @@ import * as React from "react";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 export default function SettingsActionsLayout(props) {
     const { t } = useTranslation('settings');

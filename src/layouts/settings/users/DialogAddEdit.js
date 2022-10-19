@@ -16,12 +16,11 @@ import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import UserContext from "../../../components/UserContext";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import UserContext from "../../../components/UserContext";
 
 const useStyles = makeStyles((theme) => ({
     field: {

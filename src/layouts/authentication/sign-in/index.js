@@ -11,10 +11,15 @@ import IllustrationLayout from "../components/IllustrationLayout";
 import Reaptcha from 'reaptcha';
 import GeneralService from "../../../services/api/general.service";
 
+/** Translation */
+import { useTranslation } from 'react-i18next';
+
 // Image
 const bgImage = "/images/loginbg.jpg";
 
 function Signin() {
+    const { t } = useTranslation('login');
+
     /** THEME AND CSS */
     const theme = useTheme();
 
@@ -41,17 +46,17 @@ function Signin() {
         e.preventDefault();
 
         if (!username) {
-            swal("Failed", "Username is required!", "error");
+            swal("Failed", t("msg_error.username_required"), "error");
             return;
         }
 
         if (!password) {
-            swal("Failed", "Password is required!", "error");
+            swal("Failed", t("msg_error.password_required"), "error");
             return;
         }
 
         if (useCaptcha===true && !captchaValue) {
-            swal("Failed", "Captcha is incorrect!", "error");
+            swal("Failed", t("msg_error.captcha_required"), "error");
             return;
         }
 
@@ -61,7 +66,7 @@ function Signin() {
             return;
         }
 
-        swal("Success", "Login successful", "success", {
+        swal("Success", t("msg_info.login_success"), "success", {
             buttons: false,
             timer: 2000,
         })
@@ -108,10 +113,18 @@ function Signin() {
                 <BackgroundLayout
                     bgImage={bgImage}
                 >
-                    <Grid item xs={12}><Typography variant="h2">My Image Portal</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h2">{t("texts.portal_name")}</Typography></Grid>
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
-                    <Grid item xs={12}><Typography variant="h4">Access your studies</Typography></Grid>
-                    <Grid item xs={12}><Typography variant="body2">Welcome to the Perennity Radiology Portal.<br/>This portal access is only available for authorized users.</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h4">{t("texts.portal_subtitle")}</Typography></Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="body2">
+                            {t("texts.portal_welcome_text.line_1")}<br/>
+                            {t("texts.portal_welcome_text.line_2")}<br/>
+                            {t("texts.portal_welcome_text.line_3")}<br/>
+                            {t("texts.portal_welcome_text.line_4")}<br/>
+                            {t("texts.portal_welcome_text.line_5")}<br/>
+                        </Typography>
+                    </Grid>
                 </BackgroundLayout>
             </Grid>
 
@@ -146,7 +159,7 @@ function Signin() {
                                 fullWidth
                                 id="username"
                                 name="username"
-                                label="Username"
+                                label={t("fields.username")}
                                 autoComplete="username"
                                 onChange={e => setUserName(e.target.value)}
                             />
@@ -157,7 +170,7 @@ function Signin() {
                                 fullWidth
                                 id="password"
                                 name="password"
-                                label="Password"
+                                label={t("fields.password")}
                                 type="password"
                                 autoComplete="current-password"
                                 onChange={e => setPassword(e.target.value)}
@@ -169,7 +182,7 @@ function Signin() {
                                 xs
                                 justifyContent="right"
                                 alignItems="center">
-                                <Link href="/forgot">Forgot password?</Link>
+                                <Link href="/forgot">{t("actions.forgot_password")}</Link>
                             </Grid>
 
                             {
@@ -204,7 +217,7 @@ function Signin() {
                                 fullWidth
                                 disabled={useCaptcha && !verified}
                             >
-                                Sign in
+                                {t("buttons.sign_in")}
                             </Button>
 
                             <Box sx={{ m: 2 }} />
@@ -218,8 +231,8 @@ function Signin() {
                                     justifyContent="left"
                                     alignItems="center"
                                 >
-                                    <Typography variant="h6">Sign in with an <Link
-                                        href="/login-access">Access Code</Link></Typography>
+                                    <Typography variant="h6">{t("actions.access_code.text")} <Link
+                                        href="/login-access">{t("actions.access_code.link")}</Link></Typography>
                                 </Grid>
                             }
 

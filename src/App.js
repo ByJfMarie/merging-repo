@@ -9,6 +9,10 @@ import PrivateRoute from "./routes/PrivateRoute";
 
 import UserStorage from "./services/storage/user.storage";
 
+/** Translation */
+import "./translations/i18n";
+import { useTranslation } from 'react-i18next';
+
 /** PAGE */
 import PrySideBar from './layouts/menu/PrySideBar';
 import PrySideBarSettings from './layouts/menu/PrySideBarSettings';
@@ -38,32 +42,31 @@ import ChangePassword from "./pages/settings/ChangePassword";
 import Loading from "./layouts/Loading";
 
 function App() {
+  const { i18n } = useTranslation();
 
   const [settings, setSettings] = useState(null);
   const [theme, setTheme] = useState(lighttheme);
-
-
-
-  //eslint-disable-next-line
-  const [language, setLanguage] = useState(localStorage.getItem('language') !== null ? localStorage.getItem('language') : "en")
 
   const handleTheme = (props) => {
     setTheme(props === "light" ? lighttheme : darktheme)
   }
 
   const handleLanguage = (props) => {
-    setLanguage(props)
+    i18n.changeLanguage(props);
   }
 
   React.useEffect(() => {
     UserStorage.getSettings(false)
         .then(set => {
           let user_theme = lighttheme;
+          let language = "en";
           if (set) {
             user_theme = set.theme === "dark"? darktheme : lighttheme;
+            language = set.language;
             setSettings(set);
           }
           setTheme(user_theme);
+          i18n.changeLanguage(language);
           setSettings([]);
         });
   }, []);

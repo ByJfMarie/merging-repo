@@ -6,7 +6,7 @@ export default function Loading(props) {
   /** STYLE */
   const useStyles = makeStyles({
         root: {
-            background: props.theme.palette.background.default,
+            //background: props.theme.palette.background.default,
             minWidth: "100%",
             minHeight: "100vh",
             display: "flex",

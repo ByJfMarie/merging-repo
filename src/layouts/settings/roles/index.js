@@ -7,7 +7,6 @@ import EditIcon from '@mui/icons-material/Edit';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import "../../../translations/i18n";
 
 const Index = (props) => {
     const { t } = useTranslation('settings');
