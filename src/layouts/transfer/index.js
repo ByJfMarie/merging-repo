@@ -151,7 +151,7 @@ const TransferStatusLayout = (props) => {
     React.useEffect(() => {
         if (props.autoRefresh) {
             const interval = setInterval(() => {
-                refreshOrders();
+                refreshOrders(props.filters);
             }, 5000);
             return () => clearInterval(interval);
         }

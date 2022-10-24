@@ -121,10 +121,7 @@ export default function Transfer() {
                             onChange={(e) => {handleFiltersChange("status", e.target.value)}}
                         >
                             <MenuItem value="all">{t("filters.transfer_status_value.all")}</MenuItem>
-                            <MenuItem value="0">{t("filters.transfer_status_value.wait")}</MenuItem>
-                            <MenuItem value="1">{t("filters.transfer_status_value.ready")}</MenuItem>
-                            <MenuItem value="2">{t("filters.transfer_status_value.sending")}</MenuItem>
-                            <MenuItem value="3">{t("filters.transfer_status_value.receiving")}</MenuItem>
+                            <MenuItem value="0,1,2,3">{t("filters.transfer_remoteStatus_value.in_progress")}</MenuItem>
                             <MenuItem value="4">{t("filters.transfer_status_value.done")}</MenuItem>
                             <MenuItem value="100">{t("filters.transfer_status_value.error")}</MenuItem>
                         </Select>
@@ -144,10 +141,7 @@ export default function Transfer() {
                             onChange={(e) => {handleFiltersChange("remote_status", e.target.value)}}
                         >
                             <MenuItem value="all">{t("filters.transfer_remoteStatus_value.all")}</MenuItem>
-                            <MenuItem value="0">{t("filters.transfer_remoteStatus_value.wait")}</MenuItem>
-                            <MenuItem value="1">{t("filters.transfer_remoteStatus_value.ready")}</MenuItem>
-                            <MenuItem value="2">{t("filters.transfer_remoteStatus_value.sending")}</MenuItem>
-                            <MenuItem value="3">{t("filters.transfer_remoteStatus_value.receiving")}</MenuItem>
+                            <MenuItem value="0,1,2,3">{t("filters.transfer_remoteStatus_value.in_progress")}</MenuItem>
                             <MenuItem value="4">{t("filters.transfer_remoteStatus_value.done")}</MenuItem>
                             <MenuItem value="100">{t("filters.transfer_remoteStatus_value.error")}</MenuItem>
                         </Select>
