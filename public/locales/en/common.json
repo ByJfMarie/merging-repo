@@ -146,7 +146,8 @@
     "language": "Language",
     "language_value": {
       "fr": "French",
-      "en": "English"
+      "en": "English",
+      "es": "Spanish"
     },
     "format": "Format",
     "filters": "Filters",

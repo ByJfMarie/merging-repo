@@ -29,7 +29,7 @@
 
   "menu": {
     "site" : "Site & Design",
-    "users" : "Users",
+    "users" : "Utilisateurs",
     "roles_perm" : "Roles & Permissions",
     "emailing" : "Emailing",
     "system" : "System",
@@ -42,8 +42,7 @@
     "language": "Default Language",
     "language_value": {
       "fr": "French",
-      "en": "English",
-      "es": "Spanish"
+      "en": "English"
     },
     "date_format": "Default Date Format",
     "institution" : "Institution",

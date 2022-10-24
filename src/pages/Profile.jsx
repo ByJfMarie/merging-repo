@@ -328,6 +328,7 @@ function Settings(props) {
                                     >
                                         <MenuItem value={"fr"}>{t("fields.language_value.fr")}</MenuItem>
                                         <MenuItem value={"en"}>{t("fields.language_value.en")}</MenuItem>
+                                        <MenuItem value={"es"}>{t("fields.language_value.es")}</MenuItem>
                                     </Select>
                                 </Grid>
                             </Grid>
