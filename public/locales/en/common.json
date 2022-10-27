@@ -56,7 +56,8 @@
       "ready": "Ready",
       "sending": "Sending",
       "receiving": "Receiving",
-      "done": "Done",
+      "in_progress": "In Progress",
+      "done": "Completed",
       "error": "Error"
     },
     "transfer_remoteStatus": "Remote Status",

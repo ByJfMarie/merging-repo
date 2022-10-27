@@ -121,7 +121,7 @@ export default function Transfer() {
                             onChange={(e) => {handleFiltersChange("status", e.target.value)}}
                         >
                             <MenuItem value="all">{t("filters.transfer_status_value.all")}</MenuItem>
-                            <MenuItem value="0,1,2,3">{t("filters.transfer_remoteStatus_value.in_progress")}</MenuItem>
+                            <MenuItem value="0,1,2,3">{t("filters.transfer_status_value.in_progress")}</MenuItem>
                             <MenuItem value="4">{t("filters.transfer_status_value.done")}</MenuItem>
                             <MenuItem value="100">{t("filters.transfer_status_value.error")}</MenuItem>
                         </Select>
