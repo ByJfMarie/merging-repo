@@ -46,8 +46,8 @@
     "transfer_direction": "Direction",
     "transfer_direction_value": {
       "all": "All",
-      "send": "Send",
-      "receive": "Receive"
+      "send": "Outgoing",
+      "receive": "Incoming"
     },
     "transfer_status": "Status",
     "transfer_status_value": {
@@ -185,10 +185,12 @@
   },
 
   "texts": {
+    "portal_name": "My Image Portal",
     "welcome": "Welcome",
     "our_website": "Our Website",
     "technical_support": "Technical support",
-    "license_request": "Request a license"
+    "license_request": "Request a license",
+    "warning_medical_device": "According to EU guidance document MDCG 2019-11 and the MD Borderline Manual, Perennity is not qualified as a Medical Device as it performs no action on data different from storage, archival, communication or simple search. The default embedded DICOM viewer is not certified for diagnostic usage."
   },
 
   "msg_info": {

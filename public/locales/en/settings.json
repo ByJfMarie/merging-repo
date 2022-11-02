@@ -148,6 +148,7 @@
     "iqview": "Iqview",
     "aet": "AET",
     "alias": "Alias",
+    "splitting_volumes": "Split to volumes",
     "latency": "Latency",
     "transfer_syntax": {
       "1_2_840_10008_1_2": "Implicit VR Endian",

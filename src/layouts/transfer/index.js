@@ -185,6 +185,7 @@ const TransferStatusLayout = (props) => {
             headerName: t("tables_header.status"),
             flex: 1,
             minWidth: 200,
+            maxWidth: 350,
             encodeHtml: false,
             renderCell: (params) => {
                 return <>
@@ -198,7 +199,7 @@ const TransferStatusLayout = (props) => {
             headerName: t("tables_header.patient"),
             flex: 1,
             minWidth: 150,
-            maxWidth: 250,
+            maxWidth: 450,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div
@@ -211,7 +212,7 @@ const TransferStatusLayout = (props) => {
             headerName: t("tables_header.study"),
             flex: 1,
             minWidth: 350,
-            maxWidth: 450,
+            //maxWidth: 450,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div

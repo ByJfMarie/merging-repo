@@ -355,6 +355,7 @@ function Index(props) {
                         rowsPerPageOptions={[10,20,50]}
                         getRowId={(row) => row.key}
                         checkboxSelection
+                        disableSelectionOnClick
                         selectionModel={selectedRows}
                         onSelectionModelChange={(ids) => {
                             const selectedIDs = new Set(ids);

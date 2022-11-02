@@ -108,7 +108,7 @@ export default function CustomDialogAbout({open, handleOpenDialog, handleCloseDi
                 {t("titles.about")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
-                <Typography variant="h6" >Perennity iMAGE Portal</Typography>
+                <Typography variant="h6" >{t("texts.portal_name")}</Typography>
                 <Typography variant="h6" >{t("fields.version")} {version.version} {t("fields.build")} {version.build}</Typography>
                 <br/>
                 <div className={classes.div}>
@@ -123,6 +123,12 @@ export default function CustomDialogAbout({open, handleOpenDialog, handleCloseDi
                 <div className={classes.div}>
                     <Typography className={classes.spaceAfter}>{t("texts.license_request")}</Typography>
                     <Typography ><Link href='#'>license@perennity.io</Link></Typography>
+                </div>
+                <br/>
+                <div className={classes.div}>
+                    <Typography variant="subtitle2" align="justify">
+                        {t("texts.warning_medical_device")}
+                    </Typography>
                 </div>
             </DialogContent>
             <DialogActions>

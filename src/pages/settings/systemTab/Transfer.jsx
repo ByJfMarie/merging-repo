@@ -1,5 +1,16 @@
 import React from 'react';
-import {Card, CardContent, Button, TextField, Grid, Alert, Snackbar} from '@mui/material';
+import {
+    Card,
+    CardContent,
+    Button,
+    TextField,
+    Grid,
+    Alert,
+    Snackbar,
+    Checkbox,
+    FormGroup,
+    FormControlLabel, InputAdornment
+} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import TableTransferRules from '../../../layouts/settings/transfer';
@@ -238,6 +249,35 @@ export default function Transfer() {
                                     handleSettingsChange('DCMT.sftp_password', e.target.value)
                                 }}
                             />
+                        </Grid>
+                        <Grid container item xs={12}>
+                            <Grid item xs="auto">
+                                <FormGroup>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={getSettingsValue('DCMT.splitting_enabled') ? true : false}
+                                                onChange={(e) => handleSettingsChange('DCMT.splitting_enabled', e.target.checked)}
+                                            />}
+                                        label={t("fields.splitting_volumes")}
+                                    />
+                                </FormGroup>
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    id="DCMT.splitting_volumes_mb"
+                                    label={null}
+                                    type="number"
+                                    variant="standard"
+                                    value={getSettingsValue('DCMT.splitting_volumes_mb')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('DCMT.splitting_volumes_mb', e.target.value)
+                                    }}
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">MB</InputAdornment>,
+                                    }}
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Index
