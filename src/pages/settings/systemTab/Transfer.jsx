@@ -256,8 +256,8 @@ export default function Transfer() {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={getSettingsValue('DCMT.splitting_enabled') ? true : false}
-                                                onChange={(e) => handleSettingsChange('DCMT.splitting_enabled', e.target.checked)}
+                                                checked={getSettingsValue('DCMT.splitting_enabled') === "true"}
+                                                onChange={(e) => handleSettingsChange('DCMT.splitting_enabled', e.target.checked+"")}
                                             />}
                                         label={t("fields.splitting_volumes")}
                                     />
@@ -269,6 +269,7 @@ export default function Transfer() {
                                     label={null}
                                     type="number"
                                     variant="standard"
+                                    disabled={getSettingsValue('DCMT.splitting_enabled') === "false"}
                                     value={getSettingsValue('DCMT.splitting_volumes_mb')}
                                     onChange={(e) => {
                                         handleSettingsChange('DCMT.splitting_volumes_mb', e.target.value)
