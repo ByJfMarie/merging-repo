@@ -190,7 +190,8 @@
     "our_website": "Our Website",
     "technical_support": "Technical support",
     "license_request": "Request a license",
-    "warning_medical_device": "According to EU guidance document MDCG 2019-11 and the MD Borderline Manual, Perennity is not qualified as a Medical Device as it performs no action on data different from storage, archival, communication or simple search. The default embedded DICOM viewer is not certified for diagnostic usage."
+    "warning_medical_device": "According to EU guidance document MDCG 2019-11 and the MD Borderline Manual, Perennity is not qualified as a Medical Device as it performs no action on data different from storage, archival, communication or simple search. The default embedded DICOM viewer is not certified for diagnostic usage.",
+    "restart_perennity": "Perennity is restarting"
   },
 
   "msg_info": {
@@ -204,7 +205,8 @@
     "share_to": "Enter your recipients email addresses",
     "share_comments": "Enter an optionally comment",
     "share_success": "Your study selection has been successfully shared.",
-    "settings_changed": "Your settings have changed. Please restart Perennity for these changes to take effect!"
+    "settings_changed": "Your settings have changed. Please restart Perennity for these changes to take effect!",
+    "perennity_restart": "Perennity Services have been restarted successfully!"
   },
 
   "msg_error" : {
@@ -220,7 +222,8 @@
     "query_no_criteria": "You can't query studies without criteria!",
     "query_no_aet": "You have to select a query AET!",
     "delete_study": "Impossible to mark Study {{description}} for Patient {{patient}} for delete: {{error}}",
-    "share_error": "Impossible to share your study selection: {{error}}"
+    "share_error": "Impossible to share your study selection: {{error}}",
+    "perennity_restart": "PImpossible to restart Perennity Services!"
   },
 
   "confirm": {

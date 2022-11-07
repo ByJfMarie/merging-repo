@@ -1,4 +1,14 @@
-import {Alert, Snackbar, Button, IconButton, AlertTitle} from "@mui/material";
+import {
+    Alert,
+    Snackbar,
+    Button,
+    IconButton,
+    AlertTitle,
+    Backdrop,
+    CircularProgress,
+    Typography,
+    Box
+} from "@mui/material";
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import * as React from "react";
@@ -40,6 +50,7 @@ export default function Announcement() {
     const [message, setMessage] = React.useState({
         show: false,
         severity: "info",
+        title: null,
         message: "",
         action: null
     });
@@ -57,6 +68,7 @@ export default function Announcement() {
             ...message,
             show: true,
             severity: "warning",
+            title: t("titles.warning"),
             message: t("msg_info.settings_changed"),
             action: restartAction
         });
@@ -67,9 +79,39 @@ export default function Announcement() {
     }, []);
 
     const handleRestart = async() => {
-        await SystemService.restartPerennity();
-
         setMessage({...message, show: false});
+        setOverlayActive(true);
+        SystemService.restartPerennity()
+            .then((rsp => {
+                    handleOverlayClose();
+
+                    if (rsp.error) {
+                        setMessage({
+                            ...message,
+                            show: true,
+                            severity: "error",
+                            title: null,
+                            message: t("msg_error.perennity_restart"),
+                            action: null
+                        });
+                    } else {
+                        setMessage({
+                            ...message,
+                            show: true,
+                            severity: "success",
+                            title: null,
+                            message: t("msg_info.perennity_restart"),
+                            action: null
+                        });
+                    }
+                })
+            );
+    }
+
+    //Progress Overlay
+    const [overlayActive, setOverlayActive] = React.useState(false);
+    const handleOverlayClose = () => {
+        setOverlayActive(false);
     }
 
     const restartAction = (
@@ -96,6 +138,17 @@ export default function Announcement() {
 
     return (
         <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={overlayActive}
+                onClick={handleOverlayClose}
+            >
+                <CircularProgress color="inherit" />
+                <Box ml={2}>
+                    <Typography variant="h3">{t("texts.restart_perennity")}</Typography>
+                </Box>
+            </Backdrop>
+
             <Snackbar
                 open={message.show}
                 autoHideDuration={null}
@@ -106,7 +159,10 @@ export default function Announcement() {
                     sx={{ width: '100%' }}
                     action={message.action}
                 >
-                    <AlertTitle>{t("titles.warning")}</AlertTitle>
+                    {
+                        message.title &&
+                        <AlertTitle>{message.title}</AlertTitle>
+                    }
                     {message.message}
                 </Alert>
             </Snackbar>

@@ -1,4 +1,4 @@
-import {apiGET, apiPOST, apiUPLOAD} from "./apiManager";
+import api, {apiGET, apiUPLOAD} from "./apiManager";
 
 class SystemService {
 
@@ -34,7 +34,30 @@ class SystemService {
     }
 
     restartPerennity() {
-        return apiPOST('system/perennity.restart');
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post('system/perennity.restart',
+                null,
+                {timeout: 60000})
+            .then((response) => {
+                if (response.status === 200) {
+                    state.items = response.data;
+                } else {
+                    state.error = "Unknown error";
+                }
+            })
+            .catch((error) => {
+                state.error = "Unknown error";
+                if (error.response) state.error = error.response.data.error || error.message;
+                else if (error.message) state.error = error.message;
+            })
+            .then(() => {
+                return state;
+            });
     }
 }
 
