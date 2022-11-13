@@ -425,7 +425,10 @@ export default function Emailing() {
                                     variant="standard"
                                     //style={{ marginBottom: "10px", width: "100%" }}
                                     value={template.subject || ''}
-                                    onChange={(e) => {handleSettingsChange(template.name+'_title', e.target.value)}}
+                                    onChange={(e) => {
+                                        setTemplate({...template, subject: e.target.value});
+                                        handleSettingsChange(template.name+'_title', e.target.value);
+                                    }}
                                 />
                             </Grid>
                         </Grid>
