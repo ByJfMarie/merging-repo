@@ -64,12 +64,6 @@ const License = () => {
         refresh();
     }, []);
 
-    const getDate = (date) => {
-        if (!date) return '';
-        if (!date.day || !date.month || !date.year) return '';
-        return date.day + "/" + date.month + '/' + date.year;
-    }
-
     const handleUploadLicense = async (event) => {
         const response = await SystemService.setLicense(event.target.files[0]);
 
@@ -177,7 +171,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={getDate(getLicenseValue('hardware_id'))}
+                                value={getLicenseValue('exp_date_formatted')}
                             />
                         </Grid>
 
@@ -190,7 +184,7 @@ const License = () => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={getDate(getLicenseValue('amp'))}
+                                value={getLicenseValue('amp_formatted')}
                             />
                         </Grid>
 
