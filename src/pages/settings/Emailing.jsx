@@ -409,10 +409,8 @@ export default function Emailing() {
                                         <MenuItem value="NOT.radio_activation_request">{t("fields.template_value.activation_request2")}</MenuItem>
                                         <MenuItem value="NOT.radio_activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
                                         <ListSubheader>{t("fields.template_value.guest")}</ListSubheader>
-                                        <MenuItem value="NOT.share_new_guest">{t("fields.template_value.new_account")}</MenuItem>
-                                        <MenuItem value="NOT.share_new_guest_password">{t("fields.template_value.new_account_password")}</MenuItem>
                                         <MenuItem value="NOT.share_guest">{t("fields.template_value.share_to")}</MenuItem>
-
+                                        <MenuItem value="NOT.share_guest_password">{t("fields.template_value.share_to_password")}</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>

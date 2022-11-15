@@ -109,7 +109,6 @@
     "template": "Template",
     "template_value": {
       "general": "General",
-      "share_to": "Share To",
       "download_ready": "Download Ready",
       "mail_change": "Mail Change",
       "reset_password": "Reset Password",
@@ -122,8 +121,8 @@
       "physicians": "Physicians",
       "radiologist": "Radiologist",
       "guest": "Guests",
-      "new_account": "New Account",
-      "new_account_password": "New Account Password"
+      "share_to": "Share To",
+      "share_to_password": "Share To (Password)"
     },
     "subject": "Subject",
     "serial": "Serial",
