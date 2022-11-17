@@ -76,7 +76,7 @@ export default function Reporting(props) {
 
     const getSettingsValue = (id) => {
         if (!config || !config[id]) return '';
-        return config[id]['value'] || '';
+        return config[id]['value'];
     }
     const handleSettingsChange = (id, value) => {
         let cfg = config[id];
@@ -168,22 +168,25 @@ export default function Reporting(props) {
                             </Grid>
 
 
-                            <Grid item xs={12} sm={4} lg={2} style={{display: "flex"}}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={getSettingsValue('RRS.useHtmlTemplate') === "true"}
-                                            onChange={(e) => handleSettingsChange('RRS.useHtmlTemplate', e.target.checked + "")}
-                                        />
-                                    }
-                                    label={t("fields.template")}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={8} lg={10} style={{display: "flex", alignItems: 'center'}}>
-                                <Typography variant="h8" style={{textAlign: 'left'}}>
-                                    <Link>{t("buttons.configure")}</Link>
-                                </Typography>
-                            </Grid>
+                            {
+                                /*<Grid item xs={12} sm={4} lg={2} style={{display: "flex"}}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={getSettingsValue('RRS.useHtmlTemplate') === "true"}
+                                                onChange={(e) => handleSettingsChange('RRS.useHtmlTemplate', e.target.checked + "")}
+                                            />
+                                        }
+                                        label={t("fields.template")}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={8} lg={10} style={{display: "flex", alignItems: 'center'}}>
+                                    <Typography variant="h8" style={{textAlign: 'left'}}>
+                                        <Link>{t("buttons.configure")}</Link>
+                                    </Typography>
+                                </Grid>*/
+                            }
 
                             <Grid item xs={12} sm={4} lg={2} style={{display: "flex", alignItems: 'center'}}>
                                 <Typography variant="h8" style={{textAlign: 'left'}}>
