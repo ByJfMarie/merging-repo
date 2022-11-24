@@ -36,7 +36,7 @@ export default function Footer() {
     const [title, setTitle] = React.useState(null);
     const [content, setContent] = React.useState(null);
     const handleClickOpen = async (name) => {
-        setTitle(t(name));
+        setTitle(t("titles."+name));
 
         let response = null;
         if (name==="contactUs") response = await SystemService.getContactUs();

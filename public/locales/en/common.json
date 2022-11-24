@@ -23,7 +23,11 @@
     "study_permissions": "Study Permissions",
     "study_sharing": "Sharing Studies",
     "about": "About",
-    "warning": "Warning"
+    "warning": "Warning",
+    "faq": "FAQ",
+    "contactUs": "Contact Us",
+    "privacyPolicy": "Privacy Policy",
+    "terms&Conditions": "Terms & Conditions"
   },
 
   "filters": {
