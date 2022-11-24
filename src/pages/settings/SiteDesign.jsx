@@ -260,9 +260,8 @@ export default function SiteDesign() {
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable"
                       scrollButtons allowScrollButtonsMobile>
                     <Tab label={t('titles.general')} {...a11yProps(0)} />
-                    <Tab label={t('titles.login')} {...a11yProps(1)} />
-                    <Tab label={t('titles.custom_files')} {...a11yProps(2)} />
-                    <Tab label={t('titles.custom_texts')} {...a11yProps(3)} />
+                    <Tab label={t('titles.custom_files')} {...a11yProps(1)} />
+                    <Tab label={t('titles.custom_texts')} {...a11yProps(2)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0} dir="ltr">
@@ -434,80 +433,6 @@ export default function SiteDesign() {
             </TabPanel>
 
             <TabPanel value={value} index={1} dir="ltr">
-
-                <PryInfo
-                    text={t("info.site_design_login")}
-                />
-
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('titles.security')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={getSettingsValue('WEB.login_captcha')==="true"}
-                                    onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked+"")}
-                                />
-                            }
-                            label={t("fields.enable_google_recaptcha")}
-                        />
-                    </FormGroup>
-
-                    <Box sx={{ m: 4 }} />
-
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("fields.site_key")}
-                        variant="standard"
-                        InputLabelProps={{shrink: true}}
-                        value={getSettingsValue('WEB.login_captcha_site_key')}
-                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_site_key', e.target.value)}}
-                    />
-
-                    <Box sx={{ m: 2 }} />
-
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("fields.secret_key")}
-                        variant="standard"
-                        InputLabelProps={{shrink: true}}
-                        value={getSettingsValue('WEB.login_captcha_secret_key')}
-                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_secret_key', e.target.value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                    </CardContent>
-                </Card>
-
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('titles.patients')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={getSettingsValue('WEB.login_by_reference')==="true"}
-                                    onChange={(e) => handleSettingsChange('WEB.login_by_reference', e.target.checked+"")}
-                                />
-                            }
-                            label={t("fields.enable_ref_login")}/>
-                    </FormGroup>
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                    </CardContent>
-                </Card>
-            </TabPanel>
-
-            <TabPanel value={value} index={2} dir="ltr">
                 <PryInfo
                     text={t("info.site_design_customFiles")}
                 />
@@ -573,7 +498,7 @@ export default function SiteDesign() {
                 </Card>
             </TabPanel>
 
-            <TabPanel value={value} index={3} dir="ltr">
+            <TabPanel value={value} index={2} dir="ltr">
                 <PryInfo
                     text={t("info.site_design_customTexts")}
                 />

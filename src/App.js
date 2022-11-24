@@ -31,6 +31,7 @@ import NotFound from './pages/NotFound';
 
 /** SETTINGS */
 import SiteDesign from "./pages/settings/SiteDesign";
+import Security from "./pages/settings/Security";
 import Users from "./pages/settings/Users";
 import Roles from "./pages/settings/Roles";
 import Emailing from "./pages/settings/Emailing";
@@ -108,6 +109,8 @@ function App() {
               <PrivateRoute exact path="/changePassword" component={<ChangePassword />} menu={PrySideBarSettings} />
 
               <PrivateRoute exact path="/site" menu={PrySideBarSettings} component={<SiteDesign />} />
+
+              <PrivateRoute exact path="/security" menu={PrySideBarSettings} component={<Security />} />
 
               <PrivateRoute exact path="/users" menu={PrySideBarSettings} component={<Users />} />
 

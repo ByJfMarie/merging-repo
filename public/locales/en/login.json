@@ -13,7 +13,7 @@
   "fields": {
     "username": "Username",
     "password": "Password",
-    "access_code": "Access Code",
+    "reference_number": "Reference Number",
     "birthdate": "Birthdate"
   },
   "buttons": {
@@ -22,9 +22,9 @@
   },
   "actions": {
     "forgot_password": "Forgot password?",
-    "access_code": {
-      "text": "Sign in with an",
-      "link": "Access Code"
+    "reference_login": {
+      "text": "Sign in with a",
+      "link": "Reference Number"
     },
     "sign_in": {
       "text": "Sign in with",

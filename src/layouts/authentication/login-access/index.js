@@ -153,7 +153,7 @@ function LoginAccess() {
                                 fullWidth
                                 id="access_code"
                                 name="access_code"
-                                label={t("fields.access_code")}
+                                label={t("fields.reference_number")}
                                 onChange={e => setReference(e.target.value)}
                             />
                             <LocalizationProvider dateAdapter={AdapterDateFns}>

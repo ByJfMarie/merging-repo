@@ -231,8 +231,8 @@ function Signin() {
                                     justifyContent="left"
                                     alignItems="center"
                                 >
-                                    <Typography variant="h6">{t("actions.access_code.text")} <Link
-                                        href="/login-access">{t("actions.access_code.link")}</Link></Typography>
+                                    <Typography variant="h6">{t("actions.reference_login.text")} <Link
+                                        href="/login-access">{t("actions.reference_login.link")}</Link></Typography>
                                 </Grid>
                             }
 

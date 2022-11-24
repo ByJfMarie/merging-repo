@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 /** ICONS */
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import SecurityIcon from '@mui/icons-material/Security';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import LockIcon from '@mui/icons-material/Lock';
 import GroupIcon from '@mui/icons-material/Group';
@@ -112,6 +113,11 @@ function PrySideBarSettings(props) {
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/site" selected={location === '/site'} >
                     <DesignServicesIcon />
                     <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.site")} />
+                </ListItem>
+
+                <ListItem button classes={{ selected: classes.selected }} component="a" href="/security" selected={location === '/security'} >
+                    <SecurityIcon />
+                    <ListItemText style={{ marginLeft: theme.spacing(2) }} primary={t("menu.security")} />
                 </ListItem>
 
                 <ListItem button classes={{ selected: classes.selected }} component="a" href="/users" selected={location === '/users'}>
