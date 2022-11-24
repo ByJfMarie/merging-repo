@@ -323,7 +323,8 @@ export default function SiteDesign() {
                                         onChange={(e) => {handleSettingsChange('WEB.general_institution', e.target.value)}}
                                     />
                             </Grid>
-                            <Grid item xs="auto" style={{ display: "flex", alignItems: "center" }}>
+                            {
+                                /*<Grid item xs="auto" style={{ display: "flex", alignItems: "center" }}>
                                     <Tooltip title="Lorry mange tous les chocolats">
                                         <InfoOutlinedIcon
                                             style={{
@@ -334,7 +335,8 @@ export default function SiteDesign() {
                                             }}
                                         />
                                     </Tooltip>
-                            </Grid>
+                                </Grid>*/
+                            }
                             <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
