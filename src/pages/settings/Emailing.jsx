@@ -318,19 +318,22 @@ export default function Emailing() {
                                             />
                                         </Grid>
                                         <Grid item xs={11}>
-                                            <Select
-                                                labelId="security-label"
-                                                id="security"
-                                                value={getSettingsValue('NOT.smtp_security')}
-                                                label={t("fields.security")}
-                                                onChange={(e) => {handleSettingsChange('NOT.smtp_security', e.target.value)}}
-                                                fullWidth={true}
-                                                style={{ maxWidth: '600px' }}
-                                            >
-                                                <MenuItem value={"tls"}>{t("fields.security_value.tls")}</MenuItem>
-                                                <MenuItem value={"ssl"}>{t("fields.security_value.ssl")}</MenuItem>
-                                                <MenuItem value={"none"}>{t("fields.security_value.none")}</MenuItem>
-                                            </Select>
+                                            <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
+                                                <InputLabel>{t('fields.security')}</InputLabel>
+                                                    <Select
+                                                        labelId="security-label"
+                                                        id="security"
+                                                        value={getSettingsValue('NOT.smtp_security') || 'none'}
+                                                        label={t("fields.security")}
+                                                        onChange={(e) => {handleSettingsChange('NOT.smtp_security', e.target.value)}}
+                                                        fullWidth={true}
+                                                        style={{ maxWidth: '600px' }}
+                                                    >
+                                                        <MenuItem value={"tls"}>{t("fields.security_value.tls")}</MenuItem>
+                                                        <MenuItem value={"ssl"}>{t("fields.security_value.ssl")}</MenuItem>
+                                                        <MenuItem value={"none"}>{t("fields.security_value.none")}</MenuItem>
+                                                    </Select>
+                                            </FormControl>
                                         </Grid>
                                     </Grid>
                                 </Container>
