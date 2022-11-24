@@ -66,13 +66,16 @@ function Signin() {
             return;
         }
 
-        swal("Success", t("msg_info.login_success"), "success", {
+        //Redirection to 2FA (if enabled for the user)
+        window.location.href = "/login-2fa";
+
+        /*swal("Success", t("msg_info.login_success"), "success", {
             buttons: false,
             timer: 2000,
         })
             .then(() => {
                 window.location.href = "/studies"; // REDIRECTION APRES SUCCESS ? PROFILE OU STUDIES ?
-            });
+            });*/
     }
 
     /*const handleRecaptcha = (token, ekey) => {

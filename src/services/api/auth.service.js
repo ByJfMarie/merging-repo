@@ -102,11 +102,51 @@ class AuthService {
                 }
             })
             .catch((error) => {
-                state.error = error.response?error.response.data:"Unknown error";;
+                state.error = error.response?error.response.data:"Unknown error";
             })
             .then (() => {
                 return state;
             });
+    }
+
+    loginGenerate2FACode() {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post("/auth/gen2fa", {})
+            .then((response) => {
+                if (response.status !== 200) state.error = "Unknown error";
+            })
+            .catch((error) => {
+                state.error = error.response?error.response.data:"Unknown error";
+            })
+            .then (() => {
+                return state;
+            });
+
+    }
+
+    loginValidate2FACode(code) {
+        let state = {
+            items: [],
+            error: ''
+        }
+
+        return api
+            .post("/auth/val2fa", {code: code})
+            .then((response) => {
+                if (response.status !== 200) state.error = "Unknown error";
+            })
+            .catch((error) => {
+                state.error = error.response?error.response.data:"Unknown error";
+            })
+            .then (() => {
+                return state;
+            });
+
     }
 
     logout() {

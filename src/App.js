@@ -21,6 +21,7 @@ import Profile from './pages/Profile';
 import Logs from "./pages/Logs";
 import Login from './layouts/authentication/sign-in';
 import LoginAccess from './layouts/authentication/login-access';
+import Login2FA from './layouts/authentication/2fa';
 import Forgot from './layouts/authentication/forgot';
 import Forwarding from './pages/Forwarding';
 import Media from './pages/Media_Output';
@@ -47,9 +48,19 @@ function App() {
 
   const [settings, setSettings] = useState(null);
   const [theme, setTheme] = useState(lighttheme);
-
   const handleTheme = (props) => {
-    setTheme(props === "light" ? lighttheme : darktheme)
+
+    let path = window.location.pathname;
+    switch (path) {
+        case '/login':
+        case '/login-access':
+        case '/login-2fa':
+        case 'forgot':
+          setTheme(lighttheme);
+          break;
+      default:
+        setTheme(props === "light" ? lighttheme : darktheme);
+    }
   }
 
   const handleLanguage = (props) => {
@@ -59,14 +70,15 @@ function App() {
   React.useEffect(() => {
     UserStorage.getSettings(false)
         .then(set => {
-          let user_theme = lighttheme;
+          let user_theme = "light";
           let language = "en";
           if (set) {
-            user_theme = set.theme === "dark"? darktheme : lighttheme;
+            user_theme = set.theme;
             language = set.language;
             setSettings(set);
           }
-          setTheme(user_theme);
+          //setTheme(user_theme);
+          handleTheme(user_theme);
           i18n.changeLanguage(language);
           setSettings([]);
         });
@@ -88,6 +100,8 @@ function App() {
               <Route exact path="/login" component={Login} />
 
               <Route exact path="/login-access" component={LoginAccess} />
+
+              <Route exact path="/login-2fa" component={Login2FA} />
 
               <Route exact path="/forgot" component={Forgot} />
 
