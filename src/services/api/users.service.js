@@ -1,8 +1,33 @@
 import miAPI, {apiDELETE, apiGET, apiPATCH, apiPOST, apiPUT} from "./apiManager";
 import {sha512} from "js-sha512";
 import moment from "moment";
+import api from "./apiManager";
 
 class UsersService {
+
+    isUse2FA() {
+        const params = new URLSearchParams({});
+
+        return apiGET("/users/profile/use2fa", params);
+    }
+
+    generate2FA() {
+        const params = new URLSearchParams({});
+
+        return apiPOST("/users/profile/gen2fa", {});
+    }
+
+    validate2FA(code) {
+        const params = new URLSearchParams({});
+
+        return apiPOST("/users/profile/val2fa", {code: code});
+    }
+
+    isValid2FA() {
+        const params = new URLSearchParams({});
+
+        return apiGET("/users/profile/valid2fa", params);
+    }
 
     me() {
         return apiGET('/users/profile/user');
