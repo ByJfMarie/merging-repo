@@ -14,6 +14,14 @@ class SettingsService {
         return apiPOST('settings/design.set', settings);
     }
 
+    getSecurity() {
+        return apiGET('settings/security.get');
+    }
+
+    saveSecurity(settings) {
+        return apiPOST('settings/security.set', settings);
+    }
+
     getEmailing() {
         return apiGET('settings/emailing.get');
     }

@@ -3,6 +3,19 @@ import secureLocalStorage from "react-secure-storage";
 
 class UserStorage {
 
+    async check2FA() {
+        let valid2FA = secureLocalStorage.getItem("user.2fa");
+        if (valid2FA!=null) return valid2FA;
+
+        const response = await UsersService.isValid2FA();
+        if (response && !response.error) {
+            secureLocalStorage.setItem("user.2fa", response.items);
+            return secureLocalStorage.getItem("user.2fa");
+        }
+    }
+
+
+
     async getUser() {
         let user = secureLocalStorage.getItem("user.me");
         if (user) return user;
@@ -39,6 +52,10 @@ class UserStorage {
         return [];
     }
 
+    removeUser2FA() {
+        secureLocalStorage.removeItem("user.2fa");
+    }
+
     removeUserProfile() {
         secureLocalStorage.removeItem("user.me");
     }
@@ -52,6 +69,7 @@ class UserStorage {
     }
 
     clean() {
+        this.removeUser2FA();
         this.removeUserProfile();
         this.removeUserPrivileges();
         this.removeUserSettings();

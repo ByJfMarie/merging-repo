@@ -9,8 +9,8 @@ import GeneralService from "../../../services/api/general.service";
 import { useTranslation } from 'react-i18next';
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import AuthService from "../../../services/api/auth.service";
 import swal from "sweetalert";
+import UsersService from "../../../services/api/users.service";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -60,7 +60,7 @@ const TwoFactorAuthentication = () => {
         if (!res) return;
         if (res.length!=6) return;
 
-        AuthService.loginValidate2FACode(res).then((res) => {
+        UsersService.validate2FA(res).then((res) => {
             if (res.error) {
                 swal("Failed", res.error, "error");
 
@@ -83,7 +83,7 @@ const TwoFactorAuthentication = () => {
 
     React.useEffect(() => {
         //Generate new code
-        AuthService.loginGenerate2FACode().then((res) => {
+        UsersService.generate2FA().then((res) => {
             if (res.error) {
                 swal("Failed", res.error, "error");
                 return;

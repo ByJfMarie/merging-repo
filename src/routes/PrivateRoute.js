@@ -8,6 +8,7 @@ import Footer from '../layouts/Footer';
 import UserStorage from "../services/storage/user.storage";
 import UserContext from "../components/UserContext";
 import Announcement from "../layouts/Announcement";
+import AuthService from "../services/api/auth.service";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -63,9 +64,15 @@ export default function PrivateRoute(props) {
     }
 
     React.useEffect(() => {
-        loadUser();
-        loadPrivileges();
-        loadSettings();
+        UserStorage.check2FA()
+            .then(rsp => {
+                if (!rsp) AuthService.logout();
+                else {
+                    loadUser();
+                    loadPrivileges();
+                    loadSettings();
+                }
+            })
     }, [])
 
     if (user && privileges) {

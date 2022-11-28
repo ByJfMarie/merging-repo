@@ -114,7 +114,7 @@ export default function Security() {
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
     const refreshSettings = async () => {
-        const response = await SettingsService.getDesign();
+        const response = await SettingsService.getSecurity();
 
         if (response.error) {
             setMessage({
@@ -146,7 +146,7 @@ export default function Security() {
     }
 
     const handleSave = async () => {
-        const response = await SettingsService.saveDesign(settingsValue);
+        const response = await SettingsService.saveSecurity(settingsValue);
 
         if (response.error) {
             setMessage({
@@ -286,11 +286,12 @@ export default function Security() {
                 <Card className={classes.card}>
                     <CardContent>
                         <FormControl>
-                            <FormLabel id="demo-radio-buttons-group-label">Enable Two-Factor Authentication</FormLabel>
+                            <FormLabel id="enable-2fa-label">Enable Two-Factor Authentication</FormLabel>
                             <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue="female"
+                                aria-labelledby="enable-2fa-label"
                                 name="radio-buttons-group"
+                                value={getSettingsValue('WEB.login_2fa') || 'disabled'}
+                                onChange={(e) => {handleSettingsChange('WEB.login_2fa', e.target.value)}}
                             >
                                 <FormControlLabel value="disabled" control={<Radio />} label="Disabled. Do not required a verification code" />
                                 <FormControlLabel value="optional" control={<Radio />} label="Optional. User can decide to use 2FA or not" />
@@ -302,12 +303,26 @@ export default function Security() {
 
 
                             <FormControl>
-                                <FormLabel id="demo-radio-buttons-group-label">Available Services</FormLabel>
+                                <FormLabel id="2fa-services-label">Available Services</FormLabel>
 
                                 <FormGroup>
-                                    <FormControlLabel control={<Checkbox />} label="2FA over email" />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={getSettingsValue('WEB.login_2fa_service_mail')==="true"}
+                                                onChange={(e) => handleSettingsChange('WEB.login_2fa_service_mail', e.target.checked+"")}
+                                            />
+                                        }
+                                        label="2FA over email" />
                                     {/*<FormControlLabel control={<Checkbox />} label="2FA over SMS" />*/}
-                                    <FormControlLabel control={<Checkbox />} label="2FA over WhatsApp" />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={getSettingsValue('WEB.login_2fa_service_whatsapp')==="true"}
+                                                onChange={(e) => handleSettingsChange('WEB.login_2fa_service_whatsapp', e.target.checked+"")}
+                                            />
+                                        }
+                                        label="2FA over WhatsApp" />
                                     {/*<FormControlLabel control={<Checkbox />} label="2FA over Google Authenticator" />*/}
                                 </FormGroup>
                             </FormControl>

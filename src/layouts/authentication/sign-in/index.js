@@ -13,6 +13,7 @@ import GeneralService from "../../../services/api/general.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import UsersService from "../../../services/api/users.service";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
@@ -67,15 +68,25 @@ function Signin() {
         }
 
         //Redirection to 2FA (if enabled for the user)
-        window.location.href = "/login-2fa";
+        const use2FA = await UsersService.isUse2FA();
+        if (use2FA.error) {
+            swal("Failed", response.error, "error");
+            return;
+        }
 
-        /*swal("Success", t("msg_info.login_success"), "success", {
+        if (use2FA.items && use2FA.items.use2FA==="true") {
+            window.location.href = "/login-2fa";
+            return;
+        }
+
+        //No 2FA => Login successful
+        swal("Success", t("msg_info.login_success"), "success", {
             buttons: false,
             timer: 2000,
         })
             .then(() => {
                 window.location.href = "/studies"; // REDIRECTION APRES SUCCESS ? PROFILE OU STUDIES ?
-            });*/
+            });
     }
 
     /*const handleRecaptcha = (token, ekey) => {
