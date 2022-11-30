@@ -66,11 +66,16 @@ export default function PrivateRoute(props) {
     React.useEffect(() => {
         UserStorage.check2FA()
             .then(rsp => {
-                if (!rsp) AuthService.logout();
+                if (!rsp && !rsp.approved) AuthService.logout();
                 else {
                     loadUser();
                     loadPrivileges();
                     loadSettings();
+
+                    if (rsp.configure ) {
+                        let path = window.location.pathname;
+                        if (path !== "/profile") window.location.href = "/profile";
+                    }
                 }
             })
     }, [])
@@ -78,7 +83,7 @@ export default function PrivateRoute(props) {
     if (user && privileges) {
 
         if (privileges.role !== "administrator" && props.path === "/") {
-            return window.location.href = "/studies"
+            return window.location.href = "/studies";
         }
 
         return (<Route {...rest} render={(props) => {

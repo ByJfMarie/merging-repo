@@ -114,6 +114,7 @@
     "retrieve": "Retrieve",
     "reset": "Reset",
     "change_password": "Change Password",
+    "configure_2fa" : "Configure",
     "contact_us": "Contact us",
     "privacy_policy": "Privacy Policy",
     "terms_conditions": "Terms & Conditions",
@@ -144,11 +145,13 @@
   },
 
   "fields": {
-    "login": "Login",
+    "login": "Username",
     "name": "Name",
     "mail": "Email",
     "theme": "Theme",
     "dark_mode": "Dark Mode",
+    "password": "Password",
+    "enable_2fa": "Enable Two factor authentication",
     "language": "Language",
     "language_value": {
       "fr": "French",
@@ -195,7 +198,8 @@
     "technical_support": "Technical support",
     "license_request": "Request a license",
     "warning_medical_device": "According to EU guidance document MDCG 2019-11 and the MD Borderline Manual, Perennity is not qualified as a Medical Device as it performs no action on data different from storage, archival, communication or simple search. The default embedded DICOM viewer is not certified for diagnostic usage.",
-    "restart_perennity": "Perennity is restarting"
+    "restart_perennity": "Perennity is restarting",
+    "profile_2fa": "Two factor authentication (2FA) adds another layer of security to your account. When enabled, you are required to login both with your password and a one-time verification code from your mobile or desktop app."
   },
 
   "msg_info": {

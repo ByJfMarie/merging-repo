@@ -12,37 +12,32 @@ import {
     Divider,
     Chip,
     TextField,
-    Dialog,
-    Slide,
-    DialogContent,
-    DialogActions,
     Alert, Snackbar, Box
 } from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import {useTheme} from '@emotion/react';
-import React from 'react';
+import React, {useRef} from 'react';
 import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
-import ChangePassword from "./settings/ChangePassword.jsx";
 import Index from "../layouts/settings/actions";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 /** Translation */
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import UsersService from "../services/api/users.service";
 import UserStorage from "../services/storage/user.storage";
 import UserContext from "../components/UserContext";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import DialogConfigure2FA from "../layouts/profile/DialogConfigure2FA";
+import DialogChangePassword from "../layouts/profile/DialogChangePassword";
+import EmailIcon from "@mui/icons-material/Email";
 
 function Settings(props) {
-    const { t } = useTranslation('common');
+    const {t} = useTranslation('common');
 
     /** User & privileges */
-    const { user, privileges, settings } = React.useContext(UserContext);
+    const {user, privileges, settings} = React.useContext(UserContext);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [currentSettings, setCurrentSettings] = React.useState(null);
 
@@ -90,6 +85,7 @@ function Settings(props) {
         if (id === 'theme') props.themeChange(value);
         if (id === 'language') props.languageChange(value);
     }
+
     const handleSaveSettings = async () => {
         let response = await UsersService.updateSettings(currentSettings);
 
@@ -124,6 +120,13 @@ function Settings(props) {
                 props.languageChange(rsp.language);
             });
     };
+    const refreshSettings = () => {
+        UserStorage.removeUserSettings();
+        UserStorage.getSettings()
+            .then((rsp) => {
+                setCurrentSettings(rsp);
+            });
+    }
 
     /** User Profile */
     const getUserValue = (id) => {
@@ -132,7 +135,7 @@ function Settings(props) {
     }
     const handleUserChange = (id, value) => {
         if (!currentUser) return;
-        setCurrentUser({...currentUser, [id]:value});
+        setCurrentUser({...currentUser, [id]: value});
     }
     const handleSaveUser = async () => {
         let response = await UsersService.update(currentUser);
@@ -164,38 +167,19 @@ function Settings(props) {
         setCurrentUser(user);
     };
 
-    /** CHANGE PASSWORD */
-    const [scroll] = React.useState('paper');
-    const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const [password, setPassword] = React.useState({});
-    const handleSavePassword = async () => {
-        let response = await UsersService.changePassword(password);
-
-        if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.reset_password", {error: response.error})
-            });
-            return;
-        }
-
-        setOpen(false);
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: "Password successfully updated!"
-        });
+    /** Dialog Password */
+    const dialogPasswordRef = useRef();
+    const handleDialogPasswordOpen = () => {
+        dialogPasswordRef.current.openDialog();
     }
-    const handleCancelPassword = () => {
-        setOpen(false);
-        setPassword({});
-    };
+
+    /** Dialog 2FA */
+    const dialog2FARef = useRef();
+    const handleClick2FAOpen = () => {
+        dialog2FARef.current.defaultMail(getUserValue('mail'));
+        dialog2FARef.current.defaultPhone(getUserValue('phone'));
+        dialog2FARef.current.openDialog();
+    }
 
     React.useEffect(() => {
         setCurrentUser(user);
@@ -214,7 +198,7 @@ function Settings(props) {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <AccountCircleIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.profile')}
+                    <AccountCircleIcon fontSize="large"/> <Box sx={{m: 0.5}}/> {t('titles.profile')}
                 </Grid>
             </Typography>
 
@@ -243,46 +227,121 @@ function Settings(props) {
                             <Typography variant="h6" align="left"> {t('titles.user')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('fields.login')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
                                     <TextField
                                         id="login"
                                         fullWidth
-                                        label={t('fields.login')}
                                         variant="standard"
                                         value={getUserValue('login')}
                                         inputProps={
-                                            { readOnly: true, }
+                                            {readOnly: true,}
                                         }
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                            </Grid>
+
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('fields.name')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
                                     <TextField
                                         id="name"
                                         fullWidth
-                                        label={t('fields.name')}
                                         variant="standard"
                                         value={getUserValue('first_name')}
                                         onChange={(e) => handleUserChange('first_name', e.target.value)}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                            </Grid>
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('fields.mail')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
                                     <TextField
                                         id="email"
                                         fullWidth
-                                        label={t('fields.mail')}
                                         variant="standard"
                                         value={getUserValue('mail')}
                                         onChange={(e) => handleUserChange('mail', e.target.value)}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Link onClick={handleClickOpen}>{t('buttons.change_password')}</Link>
+                            </Grid>
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('fields.password')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Link onClick={handleDialogPasswordOpen}>{t('buttons.change_password')}</Link>
                                 </Grid>
                             </Grid>
+
                             <Index
                                 handleSave={handleSaveUser}
                                 handleCancel={handleCancelUser}
+                            />
+                        </CardContent>
+                    </Card>
+
+                    <Card className={classes.settingCard}>
+                        <CardContent>
+
+                            <Typography variant="h6" align="left"> {t('titles.security')} </Typography>
+                            <Divider style={{marginBottom: theme.spacing(2)}}/>
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                onChange={(e) => {
+                                                    handleSettingsChange('2fa_enabled', e.target.checked)
+                                                }}
+                                                checked={getSettingsValue('2fa_enabled')}
+                                            />
+                                        }
+                                        label={t("fields.enable_2fa")}
+                                    />
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Link onClick={handleClick2FAOpen}>{t('buttons.configure_2fa')}</Link>
+                                    {
+                                        getSettingsValue('2fa_channel') === "mail" && (
+                                            <React.Fragment>
+                                                <Typography variant="body1" component="div" sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    flexWrap: 'wrap',
+                                                    mt: 1
+                                                }}>
+                                                    (<EmailIcon/> &nbsp;Mail to {getSettingsValue('2fa_to')})
+                                                </Typography>
+                                            </React.Fragment>
+                                        )
+                                    }
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="caption">
+                                        {t("texts.profile_2fa")}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Index
+                                handleSave={handleSaveSettings}
+                                handleCancel={handleCancelSettings}
                             />
                         </CardContent>
                     </Card>
@@ -294,11 +353,12 @@ function Settings(props) {
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                             <Grid container spacing={2} style={{marginBottom: "20px"}}>
-                                <Grid item xs={4}>
-                                    <Chip label={t('fields.theme')} style={{backgroundColor: theme.palette.chip.background}}/>
+                                <Grid item xs={3}>
+                                    <Chip label={t('fields.theme')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
-                                <Grid item xs={8} align="left">
+                                <Grid item xs={9} align="left">
                                     <FormControlLabel
                                         control={
                                             <Switch
@@ -313,12 +373,12 @@ function Settings(props) {
                             </Grid>
 
                             <Grid container spacing={2} style={{marginBottom: "20px"}}>
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
                                     <Chip label={t('fields.language')}
                                           style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
-                                <Grid item xs={8} align="left">
+                                <Grid item xs={9} align="left">
                                     <Select
                                         value={getSettingsValue('language') || "en"}
                                         label="Language"
@@ -334,11 +394,12 @@ function Settings(props) {
                             </Grid>
 
                             <Grid container spacing={2}>
-                                <Grid item xs={4}>
-                                    <Chip label={t('fields.format')} style={{backgroundColor: theme.palette.chip.background}}/>
+                                <Grid item xs={3}>
+                                    <Chip label={t('fields.format')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
-                                <Grid item xs={8} align="left">
+                                <Grid item xs={9} align="left">
                                     <Select
                                         value={getSettingsValue('date_format')}
                                         label={t('fields.dateFormat')}
@@ -362,7 +423,7 @@ function Settings(props) {
                                 </Grid>
                             </Grid>
 
-                            <Box sx={{ mt: 5 }} />
+                            <Box sx={{mt: 5}}/>
 
                             <Typography variant="h6" align="left"> {t('titles.studies')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
@@ -381,7 +442,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                            selection={currentSettings?currentSettings.filters_studies_primary:[]}
+                                            selection={currentSettings ? currentSettings.filters_studies_primary : []}
                                             setSelection={(value) => handleSettingsChange("filters_studies_primary", value)}
                                         />
 
@@ -391,7 +452,8 @@ function Settings(props) {
 
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>
-                                    <Chip label={t('fields.dates')} style={{backgroundColor: theme.palette.chip.background}}/>
+                                    <Chip label={t('fields.dates')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={9}>
@@ -402,7 +464,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                            selection={currentSettings?currentSettings.filters_studies_date_presets:[]}
+                                            selection={currentSettings ? currentSettings.filters_studies_date_presets : []}
                                             setSelection={(value) => handleSettingsChange("filters_studies_date_presets", value)}
                                         />
                                     </Grid>
@@ -411,7 +473,7 @@ function Settings(props) {
 
                             {privileges.pages.includes('aet') && (
                                 <>
-                                    <Box sx={{ mt: 5 }} />
+                                    <Box sx={{mt: 5}}/>
 
                                     <Typography variant="h6" align="left"> {t('titles.remote_aet')} </Typography>
                                     <Divider style={{marginBottom: theme.spacing(2)}}/>
@@ -431,7 +493,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="aet"
                                                     fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                                    selection={currentSettings?currentSettings.filters_aets_primary:[]}
+                                                    selection={currentSettings ? currentSettings.filters_aets_primary : []}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_primary", value)}
                                                 />
                                             </Grid>
@@ -452,7 +514,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="studies"
                                                     fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                                    selection={currentSettings?currentSettings.filters_aets_date_presets:[]}
+                                                    selection={currentSettings ? currentSettings.filters_aets_date_presets : []}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_date_presets", value)}
                                                 />
                                             </Grid>
@@ -463,34 +525,20 @@ function Settings(props) {
                             <Index
                                 handleSave={handleSaveSettings}
                                 handleCancel={handleCancelSettings}
-                        />
+                            />
                         </CardContent>
                     </Card>
                 </Masonry>
             </Container>
 
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={open}
-                onClose={handleCancelPassword}
-                scroll={scroll}
-                TransitionComponent={Transition}
-            >
-                <DialogContent dividers={scroll === 'paper'} style={{backgroundColor: theme.palette.dialog.color}}>
-                    <ChangePassword
-                        password={password}
-                        setPassword={setPassword}
-                    />
-                </DialogContent>
-                <DialogActions style={{backgroundColor: theme.palette.dialog.color}}>
-                    <Index
-                        labelReset={t('buttons.cancel')}
-                        handleSave={handleSavePassword}
-                        handleCancel={handleCancelPassword}
-                    />
-                </DialogActions>
-            </Dialog>
+            <DialogChangePassword
+                ref={dialogPasswordRef}
+            />
+
+            <DialogConfigure2FA
+                ref={dialog2FARef}
+                refreshSettings={refreshSettings}
+            />
         </React.Fragment>
 
     )

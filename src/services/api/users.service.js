@@ -8,25 +8,41 @@ class UsersService {
     isUse2FA() {
         const params = new URLSearchParams({});
 
-        return apiGET("/users/profile/use2fa", params);
+        return apiGET("/users/use2fa", params);
     }
 
     generate2FA() {
         const params = new URLSearchParams({});
 
-        return apiPOST("/users/profile/gen2fa", {});
+        return apiPOST("/users/gen2fa", {});
     }
 
     validate2FA(code) {
         const params = new URLSearchParams({});
 
-        return apiPOST("/users/profile/val2fa", {code: code});
+        return apiPOST("/users/val2fa", {code: code});
     }
 
     isValid2FA() {
         const params = new URLSearchParams({});
 
-        return apiGET("/users/profile/valid2fa", params);
+        return apiGET("/users/valid2fa", params);
+    }
+
+    profileTest2FA(channel, to) {
+        const params = new URLSearchParams({});
+
+        return apiPOST("/users/profile/test2FA/"+channel+"/"+to, {});
+    }
+
+    profileTest2FAConfirm(channel, code) {
+        const params = new URLSearchParams({});
+
+        return apiPOST("/users/profile/test2FAConfirm/"+channel+"/"+code, {});
+    }
+
+    save2FAConfig(channel, to) {
+        return apiPUT("/users/profile/save2FA/"+channel+"/"+to, {});
     }
 
     me() {

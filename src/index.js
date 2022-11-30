@@ -4,11 +4,19 @@ import './assets/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Loading from "./layouts/Loading";
+import {SnackbarProvider} from "notistack";
 
 ReactDOM.render(
   <React.StrictMode>
       <React.Suspense fallback={<Loading />}>
-          <App />
+          <SnackbarProvider
+              autoHideDuration={6000}
+              maxSnack={3}
+              anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+          >
+              <App />
+          </SnackbarProvider>
+
       </React.Suspense>
   </React.StrictMode>,
   document.getElementById('root')

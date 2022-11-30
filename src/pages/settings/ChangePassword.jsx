@@ -53,6 +53,7 @@ export default function ChangePassword(props) {
                                         onClick={() => {handleValue('old_show', !getValue('old_show'))}}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
+                                        tabIndex="-1"
                                     >
                                         {getValue('old_show') ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
@@ -78,6 +79,7 @@ export default function ChangePassword(props) {
                                         onClick={() => {handleValue('new_show', !getValue('new_show'))}}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
+                                        tabIndex="-1"
                                     >
                                         {getValue('new_show') ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
@@ -103,6 +105,7 @@ export default function ChangePassword(props) {
                                         onClick={() => {handleValue('repeat_show', !getValue('repeat_show'))}}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
+                                        tabIndex="-1"
                                     >
                                         {getValue('repeat_show') ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>

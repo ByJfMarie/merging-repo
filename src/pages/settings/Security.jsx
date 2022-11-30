@@ -27,7 +27,7 @@ import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import PryInfo from "../../components/PryInfo";
 
 /** Translation */
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -64,7 +64,7 @@ function a11yProps(index) {
 }
 
 export default function Security() {
-    const { t } = useTranslation('settings');
+    const {t} = useTranslation('settings');
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -179,13 +179,18 @@ export default function Security() {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <DesignServicesIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.security')}
+                    <DesignServicesIcon fontSize="large"/> <Box sx={{m: 0.5}}/> {t('titles.security')}
                 </Grid>
             </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                      onClose={() => {
+                          setMessage({...message, show: !message.show})
+                      }}>
+                <Alert onClose={() => {
+                    setMessage({...message, show: !message.show})
+                }} severity={message.severity} sx={{width: '100%'}}>
                     {message.message}
                 </Alert>
             </Snackbar>
@@ -211,8 +216,8 @@ export default function Security() {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={getSettingsValue('WEB.login_by_reference')==="true"}
-                                        onChange={(e) => handleSettingsChange('WEB.login_by_reference', e.target.checked+"")}
+                                        checked={getSettingsValue('WEB.login_by_reference') === "true"}
+                                        onChange={(e) => handleSettingsChange('WEB.login_by_reference', e.target.checked + "")}
                                     />
                                 }
                                 label={t("fields.enable_ref_login")}/>
@@ -234,45 +239,49 @@ export default function Security() {
 
                 <Card className={classes.card}>
                     <CardContent>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={getSettingsValue('WEB.login_captcha')==="true"}
-                                    onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked+"")}
-                                />
-                            }
-                            label={t("fields.enable_google_recaptcha")}
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={getSettingsValue('WEB.login_captcha') === "true"}
+                                        onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked + "")}
+                                    />
+                                }
+                                label={t("fields.enable_google_recaptcha")}
+                            />
+                        </FormGroup>
+
+                        <Box sx={{m: 4}}/>
+
+                        <TextField
+                            className={classes.field}
+                            id="filled-basic"
+                            label={t("fields.site_key")}
+                            variant="standard"
+                            InputLabelProps={{shrink: true}}
+                            value={getSettingsValue('WEB.login_captcha_site_key')}
+                            onChange={(e) => {
+                                handleSettingsChange('WEB.login_captcha_site_key', e.target.value)
+                            }}
                         />
-                    </FormGroup>
 
-                    <Box sx={{ m: 4 }} />
+                        <Box sx={{m: 2}}/>
 
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("fields.site_key")}
-                        variant="standard"
-                        InputLabelProps={{shrink: true}}
-                        value={getSettingsValue('WEB.login_captcha_site_key')}
-                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_site_key', e.target.value)}}
-                    />
-
-                    <Box sx={{ m: 2 }} />
-
-                    <TextField
-                        className={classes.field}
-                        id="filled-basic"
-                        label={t("fields.secret_key")}
-                        variant="standard"
-                        InputLabelProps={{shrink: true}}
-                        value={getSettingsValue('WEB.login_captcha_secret_key')}
-                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_secret_key', e.target.value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
+                        <TextField
+                            className={classes.field}
+                            id="filled-basic"
+                            label={t("fields.secret_key")}
+                            variant="standard"
+                            InputLabelProps={{shrink: true}}
+                            value={getSettingsValue('WEB.login_captcha_secret_key')}
+                            onChange={(e) => {
+                                handleSettingsChange('WEB.login_captcha_secret_key', e.target.value)
+                            }}
+                        />
+                        <Index
+                            handleSave={handleSave}
+                            handleCancel={handleCancel}
+                        />
                     </CardContent>
                 </Card>
             </TabPanel>
@@ -287,49 +296,110 @@ export default function Security() {
                     <CardContent>
                         <FormControl>
                             <FormLabel id="enable-2fa-label">Enable Two-Factor Authentication</FormLabel>
-                            <RadioGroup
-                                aria-labelledby="enable-2fa-label"
-                                name="radio-buttons-group"
-                                value={getSettingsValue('WEB.login_2fa') || 'disabled'}
-                                onChange={(e) => {handleSettingsChange('WEB.login_2fa', e.target.value)}}
-                            >
-                                <FormControlLabel value="disabled" control={<Radio />} label="Disabled. Do not required a verification code" />
-                                <FormControlLabel value="optional" control={<Radio />} label="Optional. User can decide to use 2FA or not" />
-                                <FormControlLabel value="required" control={<Radio />} label="Required. Enforce all users to use 2FA" />
-                            </RadioGroup>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, mt: 1 }}>
+                                <RadioGroup
+                                    aria-labelledby="enable-2fa-label"
+                                    name="radio-buttons-group"
+                                    value={getSettingsValue('WEB.login_2fa') || 'disabled'}
+                                    onChange={(e) => {
+                                        handleSettingsChange('WEB.login_2fa', e.target.value)
+                                    }}
+                                >
+                                    <FormControlLabel value="disabled" control={<Radio/>}
+                                                      label="Disabled. Do not required a verification code"/>
+                                    <FormControlLabel value="optional" control={<Radio/>}
+                                                      label="Optional. User can decide to use 2FA or not"/>
+                                    <FormControlLabel value="required" control={<Radio/>}
+                                                      label="Required. Enforce all users to use 2FA"/>
+                                </RadioGroup>
+                            </Box>
                         </FormControl>
 
-                        <Box sx={{ m: 4 }} />
+                        <Box sx={{m: 4}}/>
 
+                        <FormControl>
+                            <FormLabel id="2fa-services-label">Perennity Channels</FormLabel>
 
-                            <FormControl>
-                                <FormLabel id="2fa-services-label">Available Services</FormLabel>
-
+                            <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, mt: 1 }}>
                                 <FormGroup>
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={getSettingsValue('WEB.login_2fa_service_mail')==="true"}
-                                                onChange={(e) => handleSettingsChange('WEB.login_2fa_service_mail', e.target.checked+"")}
+                                                checked={getSettingsValue('WEB.login_2fa_perennity_mail') === "true"}
+                                                onChange={(e) => handleSettingsChange('WEB.login_2fa_perennity_mail', e.target.checked + "")}
                                             />
                                         }
-                                        label="2FA over email" />
-                                    {/*<FormControlLabel control={<Checkbox />} label="2FA over SMS" />*/}
+                                        label="2FA over email"/>
+                                </FormGroup>
+                            </Box>
+                        </FormControl>
+
+                        <Box sx={{m: 4}}/>
+
+                        <FormControl fullWidth>
+                            <FormLabel id="2fa-services-label">Twilio Channels</FormLabel>
+
+                            <Box sx={{ display: 'flex', flexDirection: 'column', width: 'auto', ml: 3, mt: 2 }}>
+                                <FormGroup>
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={getSettingsValue('WEB.login_2fa_service_whatsapp')==="true"}
-                                                onChange={(e) => handleSettingsChange('WEB.login_2fa_service_whatsapp', e.target.checked+"")}
+                                                checked={getSettingsValue('WEB.login_2fa_twilio_sms') === "true"}
+                                                onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_sms', e.target.checked + "")}
+                                            />
+                                        }
+                                        label="2FA over SMS" />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={getSettingsValue('WEB.login_2fa_twilio_whatsapp')==="true"}
+                                                onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_whatsapp', e.target.checked+"")}
                                             />
                                         }
                                         label="2FA over WhatsApp" />
                                     {/*<FormControlLabel control={<Checkbox />} label="2FA over Google Authenticator" />*/}
                                 </FormGroup>
-                            </FormControl>
+                                <Box sx={{ mt: 1 }}/>
+                                <TextField
+                                    id="twilio-sid"
+                                    label={"Account SID"}
+                                    variant="standard"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    fullWidth
+                                    value={getSettingsValue('WEB.login_2fa_twilio_account_sid') || ''}
+                                    onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_account_sid', e.target.value)}
+                                />
+                                <Box sx={{ mt: 1 }}/>
+                                <TextField
+                                    id="twilio-token"
+                                    label={"Auth Token"}
+                                    variant="standard"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    fullWidth
+                                    value={getSettingsValue('WEB.login_2fa_twilio_auth_token') || ''}
+                                    onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_auth_token', e.target.value)}
+                                />
+                                <Box sx={{ mt: 1 }}/>
+                                <TextField
+                                    id="twilio-service-sid"
+                                    label={"Verify Service SID"}
+                                    variant="standard"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    fullWidth
+                                    value={getSettingsValue('WEB.login_2fa_twilio_service_sid') || ''}
+                                    onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_service_sid', e.target.value)}
+                                />
+                            </Box>
+                        </FormControl>
 
 
-
-                        <Box sx={{ m: 4 }} />
+                        <Box sx={{m: 4}}/>
 
                         <Index
                             handleSave={handleSave}

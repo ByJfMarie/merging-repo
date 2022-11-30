@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Select, { components, StylesConfig } from "react-select";
+import Select, { components } from "react-select";
 import { SortableContainer, SortableElement, sortableHandle } from "react-sortable-hoc";
 import { useTheme } from '@emotion/react';
 
@@ -37,7 +37,7 @@ export default function MultiSelectSort(props) {
     const theme = useTheme();
 
     /** STYLE */
-    const colourStyles: StylesConfig<ColourOption, true> = {
+    const colourStyles = {
         control: (styles) => ({ ...styles, backgroundColor: theme.palette.background.default }),
         // option: (styles) => ({ ...styles, backgroundColor: theme.palette.background.default, color: theme.palette.table.text }),
         multiValue: (styles, { data }) => {
