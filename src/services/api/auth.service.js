@@ -1,5 +1,5 @@
 import axios from 'axios';
-import api, {apiGET} from "./apiManager";
+import api from "./apiManager";
 import TokenStorage from "../storage/token.storage";
 import UserStorage from "../storage/user.storage";
 import moment from "moment";

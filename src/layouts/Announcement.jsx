@@ -19,6 +19,7 @@ import UserContext from "../components/UserContext";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
@@ -40,20 +41,15 @@ const useStyles = makeStyles((theme) => ({
 export default function Announcement() {
     const { t } = useTranslation('common');
 
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
     /** THEME */
     useTheme();
 
     /** User & privileges */
     const { privileges } = React.useContext(UserContext);
 
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        title: null,
-        message: "",
-        action: null
-    });
+    let snackbarId = "";
 
     const refresh = async() => {
         if (!privileges || !privileges.pages.includes("settings")) return;
@@ -64,13 +60,11 @@ export default function Announcement() {
         if (!response.items.value) return;
         if (response.items.value==="false") return;
 
-        setMessage({
-            ...message,
-            show: true,
-            severity: "warning",
-            title: t("titles.warning"),
-            message: t("msg_info.settings_changed"),
-            action: restartAction
+        snackbarId = enqueueSnackbar(t("msg_info.settings_changed"), {
+            persist: true,
+            preventDuplicate: true,
+            variant: "warning",
+            action
         });
     }
 
@@ -79,31 +73,14 @@ export default function Announcement() {
     }, []);
 
     const handleRestart = async() => {
-        setMessage({...message, show: false});
+        closeSnackbar(snackbarId);
         setOverlayActive(true);
         SystemService.restartPerennity()
             .then((rsp => {
                     handleOverlayClose();
 
-                    if (rsp.error) {
-                        setMessage({
-                            ...message,
-                            show: true,
-                            severity: "error",
-                            title: null,
-                            message: t("msg_error.perennity_restart"),
-                            action: null
-                        });
-                    } else {
-                        setMessage({
-                            ...message,
-                            show: true,
-                            severity: "success",
-                            title: null,
-                            message: t("msg_info.perennity_restart"),
-                            action: null
-                        });
-                    }
+                    if (rsp.error) enqueueSnackbar(t("msg_error.perennity_restart"), {variant: 'error'});
+                    else enqueueSnackbar(t("msg_info.perennity_restart"), {variant: 'success'});
                 })
             );
     }
@@ -114,8 +91,8 @@ export default function Announcement() {
         setOverlayActive(false);
     }
 
-    const restartAction = (
-        <React.Fragment>
+    const action = snackbarId => (
+        <>
             <Button
                 color="secondary"
                 size="small"
@@ -127,13 +104,13 @@ export default function Announcement() {
                 size="small"
                 aria-label="close"
                 color="inherit"
-                onClick={() => {setMessage({...message, show: false})}}
+                onClick={() => {closeSnackbar(snackbarId);}}
             >
                 <CloseIcon
                     fontSize="small"
                 />
             </IconButton>
-        </React.Fragment>
+        </>
     );
 
     return (
@@ -148,24 +125,6 @@ export default function Announcement() {
                     <Typography variant="h3">{t("texts.restart_perennity")}</Typography>
                 </Box>
             </Backdrop>
-
-            <Snackbar
-                open={message.show}
-                autoHideDuration={null}
-                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-            >
-                <Alert
-                    severity={message.severity}
-                    sx={{ width: '100%' }}
-                    action={message.action}
-                >
-                    {
-                        message.title &&
-                        <AlertTitle>{message.title}</AlertTitle>
-                    }
-                    {message.message}
-                </Alert>
-            </Snackbar>
         </>
     )
 }

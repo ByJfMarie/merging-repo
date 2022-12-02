@@ -25,7 +25,6 @@
     "reporting" : "Reporting",
     "database" : "Database",
     "plugins" : "Plugins",
-    "change_password": "Change Password",
     "accepted_transfer_syntax": "Accepted transfer syntaxes"
   },
 
@@ -204,10 +203,7 @@
       "dicom": "DICOM Receive"
     },
     "request": "Request",
-    "database_name" : "Database Name",
-    "old_password": "Old Password",
-    "new_password": "New password",
-    "repeat_password": "Repeat password"
+    "database_name" : "Database Name"
   },
 
   "buttons": {

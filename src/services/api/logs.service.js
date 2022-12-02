@@ -1,4 +1,4 @@
-import api, {apiGET, apiPOST} from "./apiManager";
+import api, {apiGET} from "./apiManager";
 import moment from "moment";
 
 class LogsService {

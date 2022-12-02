@@ -1,4 +1,4 @@
-import api, {apiGET, apiPOST} from "./apiManager";
+import api from "./apiManager";
 
 class MailingService {
 

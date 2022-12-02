@@ -38,7 +38,6 @@ import Roles from "./pages/settings/Roles";
 import Emailing from "./pages/settings/Emailing";
 import System from "./pages/settings/System";
 import License from "./pages/settings/License";
-import ChangePassword from "./pages/settings/ChangePassword";
 
 /** Layout */
 import Loading from "./layouts/Loading";
@@ -120,7 +119,6 @@ function App() {
               <PrivateRoute exact path="/profile" menu={PrySideBar} component={<Profile themeChange={handleTheme} languageChange={handleLanguage} />} />
 
               {/* SETTINGS */}
-              <PrivateRoute exact path="/changePassword" component={<ChangePassword />} menu={PrySideBarSettings} />
 
               <PrivateRoute exact path="/site" menu={PrySideBarSettings} component={<SiteDesign />} />
 

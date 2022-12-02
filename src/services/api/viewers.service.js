@@ -1,4 +1,4 @@
-import {apiGET, apiPOST} from "./apiManager";
+import {apiGET} from "./apiManager";
 
 class ViewersService {
 

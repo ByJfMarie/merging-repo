@@ -1,4 +1,4 @@
-import api, {apiDELETE, apiGET, apiPOST} from "./apiManager";
+import {apiDELETE, apiGET, apiPOST} from "./apiManager";
 
 class PluginsService {
 

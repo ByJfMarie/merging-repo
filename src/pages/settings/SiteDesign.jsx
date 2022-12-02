@@ -9,15 +9,13 @@ import {
     Card,
     CardContent,
     TextField,
-    Tooltip,
-    Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup, MenuItem, Select, FormControl, InputLabel, Link,
+    Grid, Alert, Snackbar, MenuItem, Select, FormControl, InputLabel, Link,
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import PhoneInput from "react-phone-input-2";
 import Editor from "../../components/Editor.jsx";
 import "react-phone-input-2/lib/high-res.css";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
