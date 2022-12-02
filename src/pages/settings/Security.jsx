@@ -28,6 +28,7 @@ import PryInfo from "../../components/PryInfo";
 
 /** Translation */
 import {useTranslation} from 'react-i18next';
+import UserStorage from "../../services/storage/user.storage";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -144,6 +145,12 @@ export default function Security() {
         cfg['value'] = value;
         setSettingsValue({...settingsValue, [id]: cfg});
     }
+    const isTwilioActive = () => {
+        if (!getSettingsValue('WEB.login_2fa_twilio_account_sid')) return false;
+        if (!getSettingsValue('WEB.login_2fa_twilio_auth_token')) return false;
+        if (!getSettingsValue('WEB.login_2fa_twilio_service_sid')) return false;
+        return true;
+    }
 
     const handleSave = async () => {
         const response = await SettingsService.saveSecurity(settingsValue);
@@ -158,6 +165,7 @@ export default function Security() {
             return;
         }
 
+        UserStorage.removeUser2FA(); //Force refresh for 2FA
         refreshSettings();
         setMessage({
             ...message,
@@ -327,6 +335,7 @@ export default function Security() {
                                             <Checkbox
                                                 checked={getSettingsValue('WEB.login_2fa_perennity_mail') === "true"}
                                                 onChange={(e) => handleSettingsChange('WEB.login_2fa_perennity_mail', e.target.checked + "")}
+                                                disabled={getSettingsValue('WEB.login_2fa')==='disabled'}
                                             />
                                         }
                                         label="2FA over email"/>
@@ -346,6 +355,7 @@ export default function Security() {
                                             <Checkbox
                                                 checked={getSettingsValue('WEB.login_2fa_twilio_sms') === "true"}
                                                 onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_sms', e.target.checked + "")}
+                                                disabled={!isTwilioActive() || getSettingsValue('WEB.login_2fa')==='disabled'}
                                             />
                                         }
                                         label="2FA over SMS" />
@@ -354,6 +364,7 @@ export default function Security() {
                                             <Checkbox
                                                 checked={getSettingsValue('WEB.login_2fa_twilio_whatsapp')==="true"}
                                                 onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_whatsapp', e.target.checked+"")}
+                                                disabled={!isTwilioActive() || getSettingsValue('WEB.login_2fa')==='disabled'}
                                             />
                                         }
                                         label="2FA over WhatsApp" />
@@ -370,6 +381,7 @@ export default function Security() {
                                     fullWidth
                                     value={getSettingsValue('WEB.login_2fa_twilio_account_sid') || ''}
                                     onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_account_sid', e.target.value)}
+                                    disabled={getSettingsValue('WEB.login_2fa')==='disabled'}
                                 />
                                 <Box sx={{ mt: 1 }}/>
                                 <TextField
@@ -382,6 +394,7 @@ export default function Security() {
                                     fullWidth
                                     value={getSettingsValue('WEB.login_2fa_twilio_auth_token') || ''}
                                     onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_auth_token', e.target.value)}
+                                    disabled={getSettingsValue('WEB.login_2fa')==='disabled'}
                                 />
                                 <Box sx={{ mt: 1 }}/>
                                 <TextField
@@ -394,6 +407,7 @@ export default function Security() {
                                     fullWidth
                                     value={getSettingsValue('WEB.login_2fa_twilio_service_sid') || ''}
                                     onChange={(e) => handleSettingsChange('WEB.login_2fa_twilio_service_sid', e.target.value)}
+                                    disabled={getSettingsValue('WEB.login_2fa')==='disabled'}
                                 />
                             </Box>
                         </FormControl>

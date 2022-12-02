@@ -19,6 +19,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
 import UsersService from "../../../services/api/users.service";
 import UserStorage from "../../../services/storage/user.storage";
+import {useSnackbar} from "notistack";
+import UserContext from "../../../components/UserContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -26,7 +28,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
 
-    const {t} = useTranslation('common');
+    const {t} = useTranslation('profile');
+
+    const { enqueueSnackbar } = useSnackbar();
+
+    /** User & privileges */
+    const {status2FA} = React.useContext(UserContext);
 
     const theme = useTheme();
 
@@ -56,25 +63,29 @@ const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
 
     const handleVerifyEmail = () => {
         //Send code (API)
-        UsersService.profileTest2FA(channel, email).then((rsp) => {
+        UsersService.profileTest2FA(channel, channel==="mail"?email:phone).then((rsp) => {
             if (!rsp.error) setActiveStep(2);
         });
     }
     const handleFinish = () => {
         //Validate code (API)
-        UsersService.profileTest2FAConfirm(channel, code).then((rsp) => {
+        UsersService.profileTest2FAConfirm(channel, channel==="mail"?email:phone,code).then((rsp) => {
             if (!rsp.error) setActiveStep(3);
         });
     }
     const handleSave = async () => {
         //Save config
-        UsersService.save2FAConfig(channel, email).then((rsp) => {
-            if (!rsp.error) {
-                //Remove
-                UserStorage.removeUser2FA();
-                refreshSettings();
-                handleClose();
+        UsersService.save2FAConfig(channel, channel==="mail"?email:phone).then((rsp) => {
+            if (rsp.error) {
+                enqueueSnackbar(t("messages.save_2fa.error", {error: rsp.error}), {variant: 'error'});
+                return;
             }
+
+            //Remove
+            UserStorage.removeUser2FA();
+            refreshSettings();
+            handleClose();
+            enqueueSnackbar(t("messages.save_2fa.success"), {variant: 'success'});
         });
     }
     const handleClose = () => {
@@ -88,6 +99,7 @@ const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
 
     const handlePrevious = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        setCode("");
     }
 
     return (
@@ -137,79 +149,108 @@ const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
 
                                     <Box sx={{mt: 2}}/>
 
-                                    <CardActionArea
-                                        onClick={() => {
-                                            handleSelectChannel("mail")
-                                        }}
-                                    >
-                                        <Card sx={{display: 'flex'}}>
-                                            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                                <CardContent sx={{flex: '1 0 auto'}}>
-                                                    <Typography variant="h5" component="div" sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        flexWrap: 'wrap'
-                                                    }}>
-                                                        <EmailIcon/> &nbsp; Email &nbsp; <ArrowForwardIcon/>
-                                                    </Typography>
-                                                    <Typography sx={{mb: 1.5}} color="text.secondary">
-                                                        Receive an email to your inbox when signing in.
-                                                    </Typography>
-                                                </CardContent>
-                                            </Box>
-                                        </Card>
-                                    </CardActionArea>
+                                    {
+                                        status2FA && status2FA.mail && (
+                                            <React.Fragment>
+                                                <CardActionArea
+                                                    onClick={() => {
+                                                        handleSelectChannel("mail")
+                                                    }}
+                                                >
+                                                    <Card sx={{display: 'flex'}}>
+                                                        <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                                            <CardContent sx={{flex: '1 0 auto'}}>
+                                                                <Typography variant="h5" component="div" sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexWrap: 'wrap'
+                                                                }}>
+                                                                    <EmailIcon/> &nbsp; Email &nbsp; <ArrowForwardIcon/>
+                                                                </Typography>
+                                                                <Typography sx={{mb: 1.5}} color="text.secondary">
+                                                                    Receive an email to your inbox when signing in.
+                                                                </Typography>
+                                                            </CardContent>
+                                                        </Box>
+                                                    </Card>
+                                                </CardActionArea>
 
-                                    <Box sx={{mt: 2}}/>
+                                                <Box sx={{mt: 2}}/>
+                                            </React.Fragment>
+                                        )
+                                    }
 
-                                    <CardActionArea
-                                        onClick={() => {
-                                            handleSelectChannel("sms")
-                                        }}
-                                    >
-                                        <Card sx={{display: 'flex'}}>
-                                            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                                <CardContent sx={{flex: '1 0 auto'}}>
-                                                    <Typography variant="h5" component="div" sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        flexWrap: 'wrap'
-                                                    }}>
-                                                        <SmsIcon/> &nbsp; SMS Text Message &nbsp; <ArrowForwardIcon/>
-                                                    </Typography>
-                                                    <Typography sx={{mb: 1.5}} color="text.secondary">
-                                                        Receive a text message to your mobile device when signing in.
-                                                    </Typography>
-                                                </CardContent>
-                                            </Box>
-                                        </Card>
-                                    </CardActionArea>
+                                    {
+                                        status2FA && status2FA.sms && (
+                                            <React.Fragment>
+                                                <CardActionArea
+                                                    onClick={() => {
+                                                        handleSelectChannel("sms")
+                                                    }}
+                                                >
+                                                    <Card sx={{display: 'flex'}}>
+                                                        <Box sx={{
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <CardContent sx={{flex: '1 0 auto'}}>
+                                                                <Typography variant="h5" component="div" sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexWrap: 'wrap'
+                                                                }}>
+                                                                    <SmsIcon/> &nbsp; SMS Text Message &nbsp;
+                                                                    <ArrowForwardIcon/>
+                                                                </Typography>
+                                                                <Typography sx={{mb: 1.5}} color="text.secondary">
+                                                                    Receive a text message to your mobile device when
+                                                                    signing in.
+                                                                </Typography>
+                                                            </CardContent>
+                                                        </Box>
+                                                    </Card>
+                                                </CardActionArea>
 
-                                    <Box sx={{mt: 2}}/>
+                                                <Box sx={{mt: 2}}/>
+                                            </React.Fragment>
+                                        )
+                                    }
 
-                                    <CardActionArea
-                                        onClick={() => {
-                                            handleSelectChannel("whatsapp")
-                                        }}
-                                    >
-                                        <Card sx={{display: 'flex'}}>
-                                            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                                <CardContent sx={{flex: '1 0 auto'}}>
-                                                    <Typography variant="h5" component="div" sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        flexWrap: 'wrap'
-                                                    }}>
-                                                        <WhatsAppIcon/> &nbsp; Whatsapp Text Message &nbsp;
-                                                        <ArrowForwardIcon/>
-                                                    </Typography>
-                                                    <Typography sx={{mb: 1.5}} color="text.secondary">
-                                                        Receive a whatsapp message to your mobile device when signing in.
-                                                    </Typography>
-                                                </CardContent>
-                                            </Box>
-                                        </Card>
-                                    </CardActionArea>
+                                    {
+                                        status2FA && status2FA.whatsapp && (
+                                            <React.Fragment>
+                                                <CardActionArea
+                                                    onClick={() => {
+                                                        handleSelectChannel("whatsapp")
+                                                    }}
+                                                >
+                                                    <Card sx={{display: 'flex'}}>
+                                                        <Box sx={{
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <CardContent sx={{flex: '1 0 auto'}}>
+                                                                <Typography variant="h5" component="div" sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexWrap: 'wrap'
+                                                                }}>
+                                                                    <WhatsAppIcon/> &nbsp; Whatsapp Text Message &nbsp;
+                                                                    <ArrowForwardIcon/>
+                                                                </Typography>
+                                                                <Typography sx={{mb: 1.5}} color="text.secondary">
+                                                                    Receive a whatsapp message to your mobile device when
+                                                                    signing in.
+                                                                </Typography>
+                                                            </CardContent>
+                                                        </Box>
+                                                    </Card>
+                                                </CardActionArea>
+                                            </React.Fragment>
+                                        )
+                                    }
                                 </React.Fragment>
                             )
                         }
@@ -218,13 +259,11 @@ const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
                             activeStep === 1 && (
                                 <React.Fragment>
                                     <Typography variant="h5">
-                                        Email
+                                        {t("dialog_2fa_configure.step_configure."+channel+".title")}
                                     </Typography>
                                     <Box sx={{mt: 1}}/>
-                                    <Typography variant="subtitle2">
-                                        Please enter your email address, then click the button "Next". <br/> You will
-                                        receive a security code in your inbox. On the next step you
-                                        must confirm this code.
+                                    <Typography variant="subtitle2" sx={{whiteSpace:"pre-wrap"}}>
+                                        {t("dialog_2fa_configure.step_configure."+channel+".subtitle")}
                                     </Typography>
 
                                     <Box sx={{mt: 2}}/>
@@ -232,8 +271,8 @@ const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
                                     <TextField
                                         id="email"
                                         fullWidth
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={channel==="mail"?email:phone}
+                                        onChange={(e) => channel==="mail"?setEmail(e.target.value):setPhone(e.target.value)}
                                     />
                                 </React.Fragment>
                             )
@@ -243,13 +282,11 @@ const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
                             activeStep === 2 && (
                                 <React.Fragment>
                                     <Typography variant="h5">
-                                        Verify your Email
+                                        {t("dialog_2fa_configure.step_verify."+channel+".title")}
                                     </Typography>
                                     <Box sx={{mt: 1}}/>
-                                    <Typography variant="subtitle2">
-                                        You'll need to confirm that you still have access to this email before change
-                                        authentication method. Please check your email inbox for incoming mail and enter the
-                                        security code below:
+                                    <Typography variant="subtitle2" sx={{whiteSpace:"pre-wrap"}}>
+                                        {t("dialog_2fa_configure.step_verify."+channel+".subtitle")}
                                     </Typography>
 
                                     <Box sx={{mt: 2}}/>
@@ -270,27 +307,27 @@ const DialogConfigure2FA = forwardRef(({refreshSettings}, ref) => {
                             activeStep === 3 && (
                                 <React.Fragment>
                                     <Typography variant="h5">
-                                        Successfully
+                                        {t("dialog_2fa_configure.step_status."+channel+".title")}
                                     </Typography>
                                     <Box sx={{mt: 1}}/>
-                                    <Typography variant="subtitle2">
-                                        You have successfully confirmed your email.
+                                    <Typography variant="subtitle2" sx={{whiteSpace:"pre-wrap"}}>
+                                        {t("dialog_2fa_configure.step_status."+channel+".subtitle")}
                                     </Typography>
                                     <Box sx={{mt: 2}}/>
                                     <Typography variant="h6">
-                                        How it works
+                                        {t("dialog_2fa_configure.step_status."+channel+".how_it_works.title")}
                                     </Typography>
                                     <List>
                                         <ListItem>
                                             <ListItemText
-                                                primary="1. You will enter your password"
-                                                secondary="Whenever you sign in, you will enter your password as usual."
+                                                primary={t("dialog_2fa_configure.step_status."+channel+".how_it_works.step1.title")}
+                                                secondary={t("dialog_2fa_configure.step_status."+channel+".how_it_works.step1.subtitle")}
                                             />
                                         </ListItem>
                                         <ListItem>
                                             <ListItemText
-                                                primary="2. You will ask for a security code"
-                                                secondary="Then enter the security code from your email inbox."
+                                                primary={t("dialog_2fa_configure.step_status."+channel+".how_it_works.step2.title")}
+                                                secondary={t("dialog_2fa_configure.step_status."+channel+".how_it_works.step2.subtitle")}
                                             />
                                         </ListItem>
                                     </List>

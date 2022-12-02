@@ -63,11 +63,14 @@ export default function PrivateRoute(props) {
             });
     }
 
+    const [status2FA, setStatus2FA] = React.useState();
     React.useEffect(() => {
         UserStorage.check2FA()
             .then(rsp => {
                 if (!rsp && !rsp.approved) AuthService.logout();
                 else {
+                    setStatus2FA(rsp);
+
                     loadUser();
                     loadPrivileges();
                     loadSettings();
@@ -91,7 +94,7 @@ export default function PrivateRoute(props) {
                 return (Component)
             } else {
                 return (<>
-                    <UserContext.Provider value={{user, privileges, settings}}>
+                    <UserContext.Provider value={{user, privileges, settings, status2FA}}>
                         <Menu {...props}/>
                         <Container style={{marginBottom: '50px'}}
                             maxWidth="false"

@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import AuthCode from 'react-auth-code-input';
 import IllustrationLayout from "../components/IllustrationLayout";
 import BackgroundLayout from "../components/BackgroundLayout";
-import {Divider, Grid, Typography} from "@mui/material";
+import {Button, Divider, Grid, Typography} from "@mui/material";
 import GeneralService from "../../../services/api/general.service";
 
 /** Translation */
@@ -81,14 +81,25 @@ const TwoFactorAuthentication = () => {
 
     };
 
+    const [otpTimer, setOtpTimer] = useState(60);
+    const timeOutCallback = useCallback(() => setOtpTimer(currTimer => currTimer - 1), []);
     React.useEffect(() => {
-        //Generate new code
+        otpTimer > 0 && setTimeout(timeOutCallback, 1000);
+    }, [otpTimer, timeOutCallback]);
+
+    const refreshOTP = () => {
         UsersService.generate2FA().then((res) => {
             if (res.error) {
                 swal("Failed", res.error, "error");
                 return;
             }
+            setOtpTimer(60);
         });
+    }
+
+    React.useEffect(() => {
+        //Generate new code
+        refreshOTP();
     }, []);
 
     return (
@@ -162,6 +173,17 @@ const TwoFactorAuthentication = () => {
                                 A message with a verification code has been sent to <br />
                                 your devices. Enter the code to continue.
                             </p>
+                        </Grid>
+                        <Grid align='center'>
+                            Didn't receive OTP?
+                        </Grid>
+                        <Grid align='center'>
+                            <Button
+                                disabled={otpTimer>0}
+                                onClick={() => {refreshOTP()}}
+                            >
+                                Resend OTP {otpTimer>0?('in '+otpTimer+' seconds'):''}
+                            </Button>
                         </Grid>
                     </Grid>
                 </Grid>

@@ -1,0 +1,164 @@
+{
+  "title": "Profile",
+  "user": {
+    "title": "User",
+    "login": "Username",
+    "name": "Name",
+    "mail": "Email",
+    "password": "Password",
+    "change_password": "Change Password"
+  },
+  "security": {
+    "title": "Security",
+    "2fa": {
+      "enable": "Enable Two Factor Authentication",
+      "configure": "Configure",
+      "description": "Two factor authentication (2FA) adds another layer of security to your account. When enabled, you are required to login both with your password and a one-time verification code from your mobile or desktop app."
+    }
+  },
+  "general": {
+    "title": "General",
+    "theme": "Theme",
+    "dark_mode": "Dark Mode",
+    "language": "Language",
+    "language_value": {
+      "fr": "French",
+      "en": "English",
+      "es": "Spanish"
+    },
+    "format": "Format"
+  },
+  "local": {
+    "title": "Local Studies",
+    "filters": "Filters",
+    "dates": "Dates Presets"
+  },
+  "remote": {
+    "title": "Remote Servers",
+    "filters": "Filters",
+    "dates": "Dates Presets"
+  },
+  "messages": {
+    "save_settings": {
+      "success": "Settings successfully updated!",
+      "error": "Impossible to save Settings: {{error}}"
+    },
+    "save_user": {
+      "success": "User Profile successfully updated!",
+      "error": "Impossible to save User Profile: {{error}}"
+    },
+    "save_2fa": {
+      "success": "Two Factor Authentication successfully updated!",
+      "error": "Impossible to save Two Factor Authentication Profile: {{error}}"
+    },
+    "reset_password": {
+      "success": "Password successfully updated!",
+      "error": "Impossible to reset password: {{error}}"
+    }
+  },
+  "dialog_change_password": {
+    "title": "Change Password",
+    "old_password": "Old Password",
+    "new_password": "New password",
+    "repeat_password": "Repeat password",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "dialog_2fa_configure": {
+    "step_select": {
+      "name": "Select",
+      "title": "How would you like to receive your authentication codes?",
+      "subtitle": "You will be asked for an authentication code when you sign in to your account.",
+      "mail": {
+        "title": "Email",
+        "subtitle": "Receive an email in your inbox when sign in."
+      },
+      "sms": {
+        "title": "SMS Text Message",
+        "subtitle": "Receive a text message to your mobile device when sign in."
+      },
+      "whatsapp": {
+        "title": "WhatsApp Text Message",
+        "subtitle": "Receive a WhatsApp message to your mobile device when sign in."
+      }
+    },
+    "step_configure": {
+      "name": "Configure",
+      "mail": {
+        "title": "Email",
+        "subtitle": "Please enter your email address, then click the button \"Next\".\nYou will receive a security code in your inbox. On the next step you must confirm this code."
+      },
+      "sms": {
+        "title": "SMS Text Message",
+        "subtitle": "Please enter your mobile phone number, then click the button \"Next\".\nYou will receive a security code on your phone via SMS. On the next step you must confirm this code."
+      },
+      "whatsapp": {
+        "title": "WhatsApp Text Message",
+        "subtitle": "Please enter your mobile phone number (Linked to WhatsApp), then click the button \"Next\".\nYou will receive a security code on your phone via WhatsApp. On the next step you must confirm this code."
+      }
+    },
+    "step_verify": {
+      "name": "Verify",
+      "mail": {
+        "title": "Verify your Email",
+        "subtitle": "You'll need to confirm that you still have access to this email before change authentication method. Please check your email inbox for incoming mail and enter the security code below:"
+      },
+      "sms": {
+        "title": "Verify your phone number",
+        "subtitle": "You'll need to confirm that you still have access to this phone number before change authentication method. Please check your mobile phone for incoming SMS and enter the security code below:"
+      },
+      "whatsapp": {
+        "title": "Verify your WhatsApp",
+        "subtitle": "You'll need to confirm that you still have access to this phone number before change authentication method. Please check your mobile phone for incoming WhatsApp and enter the security code below:"
+      }
+    },
+    "step_status": {
+      "name": "Status",
+      "mail": {
+        "title": "Successfully",
+        "subtitle": "You have successfully confirmed your email.",
+        "how_it_works": {
+          "title": "How it works",
+          "step1": {
+            "title": "1. You will enter your password",
+            "subtitle": "Whenever you sign in, you will enter your password as usual."
+          },
+          "step2": {
+            "title": "2. You will ask for a security code",
+            "subtitle": "Then enter the security code from your email inbox"
+          }
+        }
+      },
+      "sms": {
+        "title": "Successfully",
+        "subtitle": "You have successfully confirmed your mobile phone number.",
+        "how_it_works": {
+          "title": "How it works",
+          "step1": {
+            "title": "1. You will enter your password",
+            "subtitle": "Whenever you sign in, you will enter your password as usual."
+          },
+          "step2": {
+            "title": "2. You will ask for a security code",
+            "subtitle": "Then enter the security code from your SMS."
+          }
+        }
+      },
+      "whatsapp": {
+        "title": "Successfully",
+        "subtitle": "You have successfully confirmed your WhatsApp phone number.",
+        "how_it_works": {
+          "title": "How it works",
+          "step1": {
+            "title": "1. You will enter your password",
+            "subtitle": "Whenever you sign in, you will enter your password as usual."
+          },
+          "step2": {
+            "title": "2. You will ask for a security code",
+            "subtitle": "Then enter the security code from your WhatsApp."
+          }
+        }
+      }
+    }
+  }
+}

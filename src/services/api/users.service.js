@@ -1,7 +1,6 @@
 import miAPI, {apiDELETE, apiGET, apiPATCH, apiPOST, apiPUT} from "./apiManager";
 import {sha512} from "js-sha512";
 import moment from "moment";
-import api from "./apiManager";
 
 class UsersService {
 
@@ -12,14 +11,10 @@ class UsersService {
     }
 
     generate2FA() {
-        const params = new URLSearchParams({});
-
         return apiPOST("/users/gen2fa", {});
     }
 
     validate2FA(code) {
-        const params = new URLSearchParams({});
-
         return apiPOST("/users/val2fa", {code: code});
     }
 
@@ -30,15 +25,11 @@ class UsersService {
     }
 
     profileTest2FA(channel, to) {
-        const params = new URLSearchParams({});
-
         return apiPOST("/users/profile/test2FA/"+channel+"/"+to, {});
     }
 
-    profileTest2FAConfirm(channel, code) {
-        const params = new URLSearchParams({});
-
-        return apiPOST("/users/profile/test2FAConfirm/"+channel+"/"+code, {});
+    profileTest2FAConfirm(channel, to, code) {
+        return apiPOST("/users/profile/test2FAConfirm/"+channel+"/"+to+"/"+code, {});
     }
 
     save2FAConfig(channel, to) {
