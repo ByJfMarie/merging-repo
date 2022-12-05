@@ -10,25 +10,6 @@ import UserContext from "../components/UserContext";
 import Announcement from "../layouts/Announcement";
 import AuthService from "../services/api/auth.service";
 
-const useStyles = makeStyles((theme) => ({
-    mainContainer: {
-
-        minHeight: '100vh',
-        position: "relative",
-
-        [theme.breakpoints.up('md')]: {
-            padding: '80px calc(20px + 5%) 40px calc(260px + 5%) !important',
-        },
-
-        [theme.breakpoints.between('sm', 'md')]: {
-            padding: '70px 5% 0px !important',
-        },
-
-        [theme.breakpoints.down('sm')]: {
-            padding: '70px 2% 0px !important',
-        },
-    },
-}));
 
 export default function PrivateRoute(props) {
 
@@ -36,8 +17,6 @@ export default function PrivateRoute(props) {
     const { component: Component, menu: Menu, ...rest } = props;
 
 
-    const theme = useTheme();
-    const classes = useStyles(theme);
 
     const [user, setUser] = React.useState();
     const loadUser = () => {
@@ -90,22 +69,17 @@ export default function PrivateRoute(props) {
         }
 
         return (<Route {...rest} render={(props) => {
-            if (Menu === undefined) {
-                return (Component)
-            } else {
-                return (<>
-                    <UserContext.Provider value={{user, privileges, settings, status2FA}}>
-                        <Menu {...props}/>
-                        <Container style={{marginBottom: '50px'}}
-                            maxWidth="false"
-                            className={classes.mainContainer}>
-                           {Component}
-                        </Container>
-                        <Footer />
-                        <Announcement />
-                    </UserContext.Provider>
-                </>)
-            }
+            return (<>
+                <UserContext.Provider value={{user, privileges, settings}}>
+                    {/* <Menu {...props}/> */}
+                    <Container
+                        maxWidth="false"
+                        className='w-full h-full'>
+                       {Component}
+                    </Container>
+                    <Announcement />
+                </UserContext.Provider>
+            </>)
         }} />)
 
     } else {

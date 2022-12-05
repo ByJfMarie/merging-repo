@@ -371,6 +371,7 @@ function Settings(props) {
                                             <Switch
                                                 onChange={(e) => {
                                                     handleSettingsChange('theme', e.target.checked ? "dark" : "light")
+                                                    props.setDarkToggle(!props.darkToggle)
                                                 }}
                                                 checked={getSettingsValue('theme') === "dark" ? true : false}
                                             />

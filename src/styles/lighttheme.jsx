@@ -12,6 +12,10 @@ const lighttheme = createTheme({
             main: '#EB642D'
         },
 
+        managereport: {
+            bgcolor: '#f0f4f8'
+        },
+
         error: {
             main : "#ff1744"
         },

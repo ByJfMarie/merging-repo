@@ -1,4 +1,4 @@
-import { Box, Chip, IconButton, Paper} from "@mui/material";
+import {Alert, Box, Chip, IconButton, Paper, Snackbar,Button,Modal,Typography} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
@@ -24,15 +24,14 @@ import PersonIcon from '@mui/icons-material/Person';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AlertDialog from "../../components/AlertDialog";
 import TransferService from "../../services/api/transfer.service";
-import {useSnackbar} from "notistack";
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import ManageReports from "../../components/ManageReports";
 
 function StudiesLayout(props) {
-    const { t } = useTranslation(['local_studies', 'study_filter']);
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { privileges } = React.useContext(UserContext);
@@ -62,6 +61,20 @@ function StudiesLayout(props) {
         return new Promise( res => setTimeout(res, delay) );
     }
 
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: 'success',
+        message: ''
+    });
+    const messageAlert = (severity, message) => {
+        setMessage({
+                ...message,
+                show: true,
+                severity: severity,
+                message: message
+            });
+    }
+
     const [filters, setFilters] = useState(filtersInitValue);
     const [pageSize, setPageSize] = React.useState(20);
     const [rows, setRows] = React.useState([]);
@@ -70,30 +83,31 @@ function StudiesLayout(props) {
         if (!filters) return false;
 
         if (filters.patient_id && filters.patient_id.length<3) {
-            enqueueSnackbar(t("messages.patientID_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.patientID_too_short"))
             return false;
         }
 
         if (filters.patient_name && filters.patient_name.length<3) {
-            enqueueSnackbar(t("messages.patientName_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.patientName_too_short"))
             return false;
         }
 
         if (filters.description && filters.description.length<3) {
-            enqueueSnackbar(t("messages.studyDesc_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.studyDesc_too_short"))
             return false;
         }
 
         if (filters.accession_number && filters.accession_number.length<3) {
-            enqueueSnackbar(t("messages.accession_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.accession_too_short"))
             return false;
         }
 
         if (filters.referring_physician && filters.referring_physician.length<3) {
-            enqueueSnackbar(t("messages.refPhys_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.refPhys_too_short"))
             return false;
         }
 
+        setMessage({...message, show: false})
         return true;
     }
     const searchStudies = async(values) => {
@@ -132,6 +146,8 @@ function StudiesLayout(props) {
         setDialogStudy(null)
     }
 
+    //Manage Reports Modal
+
     //Login Sheet
     const handleActionLoginSheet = async (key) => {
         const rsp = await StudiesService.openLoginSheet(key);
@@ -153,7 +169,7 @@ function StudiesLayout(props) {
     const handleViewStudy = (study, viewer_id) => {
         ViewersService.getURL(study.key, viewer_id).then((response) => {
                 if (response.error) {
-                    enqueueSnackbar(t("messages.open_viewer.error", {error: response.error}), {variant: 'error'});
+                    messageAlert('error', t("msg_error.open_viewer", {error: response.error}));
                     return;
                 }
 
@@ -162,6 +178,12 @@ function StudiesLayout(props) {
             }
         );
     }
+
+    /* //Report 
+
+    const handleManageReport = (study) => {
+        window.location.href = '/reports/' + study.key;
+    } */
 
     //Delete
     const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
@@ -178,11 +200,11 @@ function StudiesLayout(props) {
         const response = await StudiesService.delete(study.st_uid);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.delete_study.error", {patient: study.p_name, description: study.st_description, error:response.error}), {variant: 'error'});
+            messageAlert('error', t("msg_error.delete_study", {patient: study.p_name, description: study.st_description, error:response.error}));
             return;
         }
 
-        enqueueSnackbar(t("messages.delete_study.success", {patient: study.p_name, description: study.st_description}), {variant: 'success'});
+        messageAlert('info', t("msg_info.delete_study", {patient: study.p_name, description: study.st_description}));
     }
 
     //Selection
@@ -195,13 +217,13 @@ function StudiesLayout(props) {
     const [downloadMessage, setDownloadMessage] = useState("")
     const downloadStudies = async(type) => {
         if (!selectedRows || selectedRows.length<=0) {
-            enqueueSnackbar(t("messages.study_no_selection"), {variant: 'error'});
+            messageAlert('error', t("msg_error.study_no_selection"));
             return;
         }
 
         //Init Download dialog
         setDownloadProgress(0);
-        setDownloadMessage(t("messages.download.creating_zip"));
+        setDownloadMessage(t("msg_info.creating_zip"));
         setDownloadOpen(true);
 
         //Start Download
@@ -233,7 +255,7 @@ function StudiesLayout(props) {
 
         //Download
         setDownloadProgress(0);
-        setDownloadMessage(t("messages.download.downloading"));
+        setDownloadMessage(t("msg_info.downloading"));
         StudiesService
             .download(download_id,
             {
@@ -242,7 +264,7 @@ function StudiesLayout(props) {
                     const percentage = Math.round((progressEvent.loaded / progressEvent.total)*100);
                     setDownloadProgress(percentage);
                     if (percentage === 100) {
-                        setDownloadMessage(t("messages.download.download_completed"));
+                        setDownloadMessage(t("msg_info.download_completed"));
 
                         setTimeout(() => {
                             setDownloadOpen(false);
@@ -268,39 +290,44 @@ function StudiesLayout(props) {
             });
     };
 
+
+    const [openManageReports, setOpenManageReports] = React.useState(false);
+
     //Forward
     const forwardStudies = async(aet) => {
         if (!aet) return;
 
         if (!selectedRows || selectedRows.length<=0) {
-            enqueueSnackbar(t("messages.study_no_selection"), {variant: 'error'});
+            messageAlert('error', t("msg_error.study_no_selection"));
             return;
         }
 
         const response = await ForwardingService.createOrder(aet, selectedRows);
         if (response.error) {
-            enqueueSnackbar(t("messages.forward.error", {error: response.error}), {variant: 'error'});
+            messageAlert('error', t("msg_error.forward_error", {error: response.error}));
             return;
         }
 
-        enqueueSnackbar(t("messages.forward.success"), {variant: 'success'});
+        messageAlert("success", t("msg_info.forward_success"))
+
         setSelectedRows([]);
     };
 
     //Transfer
     const transferStudies = async(site) => {
         if (!selectedRows || selectedRows.length<=0) {
-            enqueueSnackbar(t("messages.study_no_selection"), {variant: 'error'});
+            messageAlert('error', t("msg_error.study_no_selection"));
             return;
         }
 
         const response = await TransferService.transfer(selectedRows, site);
         if (response.error) {
-            enqueueSnackbar(t("messages.transfer.error", {error: response.error}), {variant: 'error'});
+            messageAlert('error', t("msg_error.transfer_error", {error: response.error}));
             return;
         }
 
-        enqueueSnackbar(t("messages.transfer.success"), {variant: 'success'});
+        messageAlert("success", t("msg_info.transfer_success"))
+
         setSelectedRows([]);
     };
 
@@ -308,17 +335,17 @@ function StudiesLayout(props) {
     const [sharingDialogOpen, setSharingDialogOpen] = useState(false);
     const sharingStudies  = async(studies, values) => {
         if (!studies || studies.length<=0) {
-            enqueueSnackbar(t("messages.study_no_selection"), {variant: 'error'});
+            messageAlert('error', t("msg_error.study_no_selection"));
             return;
         }
 
         const response = await StudiesService.share(studies, values.share_to, values.comments, values.valid_until);
         if (response.error) {
-            enqueueSnackbar(t("messages.share.error", {error: response.error}), {variant: 'error'});
+            messageAlert('error', t("msg_error.share_error", {error: response.error}));
             return;
         }
 
-        enqueueSnackbar(t("messages.share.success"), {variant: 'success'});
+        messageAlert("success", t("msg_info.share_success"));
         setSelectedRows([]);
         setSharingDialogOpen(false);
     };
@@ -338,7 +365,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "storage_status",
-                    headerName: t("table.header.status"),
+                    headerName: t("tables_header.status"),
                     valueGetter: (params) => params.row.storage_status,
                     flex: 2,
                     minWidth: 80,
@@ -346,7 +373,7 @@ function StudiesLayout(props) {
                     //resizable: true,
                     encodeHtml: false,
                     renderCell: (params) => {
-                        return statusComponent(params.row, t("table.status."+params.row.storage_status));
+                        return statusComponent(params.row, t("status."+params.row.storage_status));
                     },
                 }
             );
@@ -356,7 +383,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "patient_full",
-                    headerName: t("table.header.patient"),
+                    headerName: t("tables_header.patient"),
                     valueGetter: (params) => params.row.p_name,
                     flex: 2,
                     minWidth: 150,
@@ -376,7 +403,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "study_full",
-                    headerName: t('table.header.study'),
+                    headerName: t('tables_header.study'),
                     valueGetter: (params) => params.row.st_date && new Date(params.row.st_date),
                     flex: 3,
                     minWidth: 350,
@@ -410,7 +437,7 @@ function StudiesLayout(props) {
                     flex: 1,
                     minWidth: 180,
                     field: 'st_ref_physician',
-                    headerName: t('table.header.referring_physician')
+                    headerName: t('tables_header.referring_physician')
                 }
             );
         }
@@ -419,7 +446,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "report",
-                    headerName: t('table.header.report'),
+                    headerName: t('tables_header.report'),
                     flex: 1,
                     minWidth: 150,
                     maxWidth: 200,
@@ -442,7 +469,7 @@ function StudiesLayout(props) {
             columns.push(
                 {
                     field: "permissions",
-                    headerName: t('table.header.assignations'),
+                    headerName: t('tables_header.assignations'),
                     flex: 2,
                     minWidth: 150,
                     maxWidth: 200,
@@ -483,7 +510,7 @@ function StudiesLayout(props) {
                             if (index === 0) {
                                 actions.push(<GridActionsCellItem
                                     icon={<VisibilityIcon/>}
-                                    label={t("table.menu.view")}
+                                    label="View Study"
                                     onClick={() => handleViewStudy(params.row, key)}
                                 />);
                             }
@@ -494,26 +521,38 @@ function StudiesLayout(props) {
 
                             actions.push(<GridActionsCellItem
                                 icon={<VisibilityIcon/>}
-                                label={t("table.menu.view_with_viewer", {viewer: viewer_name})}
+                                label={"View Study ("+viewer_name+")"}
                                 onClick={() => handleViewStudy(params.row, key)}
+                                showInMenu
+                            />);
+
+                            actions.push(<GridActionsCellItem
+                              
+                               
+                                icon={<AssignmentIcon/>}
+                                label={"Manage Report"}
+                                onClick={() => setOpenManageReports(true)}
                                 showInMenu
                             />);
                         })
                     }
 
+                    
+
                     if (privileges.tables[props.page].actions_rows.includes('info')) {
                         actions.push(<GridActionsCellItem
                             icon={<InfoIcon/>}
-                            label={t("table.menu.info")}
+                            label="Study Info"
                             onClick={() => handleDialogStudyOpen(params.row)}
                             showInMenu
                         />);
                     }
 
+
                     if (privileges.tables[props.page].actions_rows.includes('login_sheet')) {
                         actions.push(<GridActionsCellItem
                             icon={<ContactPageIcon/>}
-                            label={t("table.menu.login_sheet")}
+                            label="Login Sheet"
                             onClick={() => handleActionLoginSheet(params.row.key)}
                             showInMenu
                         />);
@@ -522,7 +561,7 @@ function StudiesLayout(props) {
                     if (privileges.tables[props.page].actions_rows.includes('permissions')) {
                         actions.push(<GridActionsCellItem
                             icon={<LockIcon/>}
-                            label={t("table.menu.permissions")}
+                            label="Set Permissions"
                             onClick={() => handleDialogPermissionsOpen(params.row.key)}
                             showInMenu
                         />);
@@ -531,7 +570,7 @@ function StudiesLayout(props) {
                     if (privileges.tables[props.page].actions_rows.includes('delete')) {
                         actions.push(<GridActionsCellItem
                             icon={<DeleteForeverIcon/>}
-                            label={t("table.menu.delete")}
+                            label="Delete"
                             onClick={() => handleDelete(params.row)}
                             showInMenu
                         />);
@@ -542,8 +581,19 @@ function StudiesLayout(props) {
             });
     }
 
+    console.log(props.darkToggle);
+   
+
     return (
         <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+            
+            <ManageReports openManageReports={openManageReports} setOpenManageReports={setOpenManageReports} darkToggle={props.darkToggle} ></ManageReports>
+
             <TableLocalStudiesFilter
                 initialValues={filtersInitValue}
                 searchFunction={searchStudies}
@@ -564,7 +614,6 @@ function StudiesLayout(props) {
                         rowsPerPageOptions={[10,20,50]}
                         getRowId={(row) => row.key}
                         checkboxSelection
-                        disableSelectionOnClick
                         selectionModel={selectedRows}
                         onSelectionModelChange={(ids) => {
                             setSelectedRows(ids);
@@ -614,11 +663,11 @@ function StudiesLayout(props) {
 
             <AlertDialog
                 open={dialogDeleteOpen}
-                title={t("dialog_delete_study.title")}
-                text={t("dialog_delete_study.message")}
+                title={t("confirm.delete_title")}
+                text={t("confirm.delete_study")}
                 data={dialogDeleteStudy}
-                buttonCancel={t("dialog_delete_study.actions.cancel")}
-                buttonConfirm={t("dialog_delete_study.actions.delete")}
+                buttonCancel={t("buttons.cancel")}
+                buttonConfirm={t("buttons.delete")}
                 functionCancel={handleCloseDeleteDialog}
                 functionConfirm={handleConfirmDeleteDialog}
             />

@@ -4,12 +4,13 @@ const darktheme = createTheme({
     palette: {
         primary: {
             main: "#149AD1",
-            dark: "#1f7da4",
+            dark: "#121729",
             light: "#57c3ef",
         },
 
         secondary: {
-            main: '#EB642D'
+            main: '#EB642D',
+            dark: '#19354c'
         },
 
         error: {
@@ -21,33 +22,41 @@ const darktheme = createTheme({
         },
 
         background: {
-            default: "#222",
-            paper: "#222",
-            accordion: "#2b2b2b"
+            default: "#091021",
+            paper: "#0c111f",
+            accordion: "#0c111f",
+            test: "#19354c"
+        },
+
+        color: {
+            paper: '#141d30'
         },
 
         menu: {
             background: "#111",
             text: "#fff",
-            border: "#020"
+            border: "#0d1c30"
         },
 
         table: {
-            head: '#3D3D3D',
-            body: '#3D3D3D',
+            head: '#121729',
+            body: '#121729',
             text: '#fff',
-            hover: "#4f4f4f",
-            hoverSelected: '#3d3d3d'
+            hover: "#102845",
+            hoverSelected: '#102845',
+        },
 
+        managereport: {
+            bgcolor: '#121729'
         },
 
         input: {
-            borderBottom: '#565656'
+            borderBottom: '#0d1c30'
         },
 
         chip: {
             color: "#555",
-            background: '#5C5C5C'
+            background: 'rgb(20,154,209,0.9)'
         },
 
         mode: "dark",
@@ -58,11 +67,11 @@ const darktheme = createTheme({
         },
 
         card: {
-            color: '#333'
+            color: '#0e1627'
         },
 
         dialog: {
-            color: '#3d3d3d'
+            color: '#1a2132'
         },
 
         avatar: {
@@ -70,20 +79,21 @@ const darktheme = createTheme({
         },
 
         button : {
-            background : "#222"
+            background : "#19354c"
         },
 
         textfield: {
-            background : "#3D3D3D",
+            background : "#1a2132",
             text: '#FFF',
-            button: "#3D3D3D",
-            border: "#7a7a7a"
+            button: "#1a2132",
+            border: "#0a0f1d"
         }
 
     },
 
     typography: {
         fontFamily: [
+            "Montserrat",
             'Inter',
             'Roboto',
             '-apple-system',
