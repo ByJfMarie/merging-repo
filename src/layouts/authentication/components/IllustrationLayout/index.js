@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import React from "react";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+import Footer from "../../../Footer";
 
 function IllustrationLayout({bgImage, children}) {
 
@@ -60,6 +61,7 @@ function IllustrationLayout({bgImage, children}) {
                     </Grid>
                 </Grid>
             </Grid>
+            <Footer />
         </>
     );
 }

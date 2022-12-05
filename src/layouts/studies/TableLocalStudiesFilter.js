@@ -13,12 +13,7 @@ import {
     Select,
     InputLabel,
     FormControl,
-    Dialog,
-    DialogContent,
-    DialogContentText,
     Button,
-    DialogActions,
-    DialogTitle,
     Card,
     CardContent,
     ToggleButtonGroup,
@@ -104,7 +99,7 @@ const BadgeMore = styled(Badge)`
 
 export default function TableLocalStudiesFilter(props) {
 
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('study_filter');
 
     /** User & privileges */
     const { settings, privileges } = React.useContext(UserContext);
@@ -152,15 +147,10 @@ export default function TableLocalStudiesFilter(props) {
     const classes = useStyles(theme);
 
     const [values, setValues] = React.useState(props.initialValues);
-    const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
         props.searchFunction(values);
-    }, [open]);
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    }, []);
 
     /** MODALITY FIELD */
     const handleChangeModality = (event) => {
@@ -230,7 +220,7 @@ export default function TableLocalStudiesFilter(props) {
 
     const modalityComponent = (primary) => (
             <FormControl className={classes.root} size="small" fullWidth={true}>
-                <InputLabel variant="standard" id="modality">{t("filters.modality")}</InputLabel>
+                <InputLabel variant="standard" id="modality">{t("fields.modality")}</InputLabel>
                 <Select
                     labelId="modality"
                     id="modality"
@@ -266,7 +256,7 @@ export default function TableLocalStudiesFilter(props) {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
                 id="birthdate"
-                label={t('filters.birthdate')}
+                label={t('fields.birthdate')}
                 inputFormat={settings.date_format}
                 value={values.birthdate || null}
                 onChange={(date, keyboardInputValue) => {
@@ -316,28 +306,6 @@ export default function TableLocalStudiesFilter(props) {
     // var moreFilters = ""
     return (
         <React.Fragment>
-
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {t('filters.termTooShort')}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {t('filters.termMessage')}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} autoFocus>
-                        OK
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
             <form onSubmit={handleClickQuery}>
                 <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                     <CardContent>
@@ -369,7 +337,7 @@ export default function TableLocalStudiesFilter(props) {
                                                 key={value}
                                                 className={classes.root}
                                                 id={value}
-                                                label={t("filters."+value)}
+                                                label={t("fields."+value)}
                                                 variant="standard"
                                                 fullWidth
                                                 value={values[value] || ""}
@@ -400,7 +368,7 @@ export default function TableLocalStudiesFilter(props) {
                                                 value={key}
                                                 className={key > 2 ? classes.presetPhone : ""}
                                             >
-                                                {t("date_presets."+key)}
+                                                {t("presets."+key)}
                                             </ToggleButton>
                                         )
                                     })
@@ -413,12 +381,12 @@ export default function TableLocalStudiesFilter(props) {
 
                         <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonFind} style={{ fontSize: '12px', width: '80px' }}>
                             <SearchIcon fontSize="small" />
-                            {t('buttons.find')+"   "}
+                            {t('actions.find')+"   "}
                         </Button>
 
                         <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
                             <MoreVertIcon fontSize="small" />
-                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('actions.more')+"   "} </BadgeMore>
                         </Button>
 
                         <Button
@@ -429,7 +397,7 @@ export default function TableLocalStudiesFilter(props) {
                             style={{ fontSize: '12px', width: '80px', heigh: '50px' }}
                         >
                             <BlockIcon fontSize="small"/>
-                            {t('buttons.reset')}
+                            {t('actions.reset')}
                         </Button>
 
                         <Popover
@@ -451,7 +419,7 @@ export default function TableLocalStudiesFilter(props) {
                                     settings.filters_studies_primary.length < fields.length ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('filters.more')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('fields.more')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -478,7 +446,7 @@ export default function TableLocalStudiesFilter(props) {
                                                     <TextField
                                                         className={classes.root}
                                                         id={value}
-                                                        label={t("filters."+value)}
+                                                        label={t("fields."+value)}
                                                         variant="standard"
                                                         fullWidth
                                                         value={values[value]}
@@ -497,7 +465,7 @@ export default function TableLocalStudiesFilter(props) {
                                 <Container maxWidth="false" style={{ padding: '0 0 25px 0 ' }}>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('filters.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('fields.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
 
@@ -509,7 +477,7 @@ export default function TableLocalStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="from"
-                                                        label={t('filters.from')}
+                                                        label={t('fields.from')}
                                                         inputFormat={settings.date_format}
                                                         value={values.from || null}
                                                         onChange={(date, keyboardInputValue) => {
@@ -524,7 +492,7 @@ export default function TableLocalStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="to"
-                                                        label={t('filters.to')}
+                                                        label={t('fields.to')}
                                                         inputFormat={settings.date_format}
                                                         value={values.to || null}
                                                         onChange={(date, keyboardInputValue) => {
@@ -551,7 +519,7 @@ export default function TableLocalStudiesFilter(props) {
                                                                                   id="showDeleted"
                                                                                   checked={values.showDeleted || false} />
                                                                           }
-                                                                          label={t('filters.show_deleted')}
+                                                                          label={t('fields.show_deleted')}
                                                                           onChange={(e) => {
                                                                               handleSearch("showDeleted", !values.showDeleted);
                                                                               handleSecondaryFilters("showDeleted", e.target.checked);

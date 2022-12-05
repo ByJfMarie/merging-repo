@@ -1,5 +1,14 @@
 import React from 'react';
-import {Card, CardContent, Button, TextField, Grid, Alert, Snackbar} from '@mui/material';
+import {
+    Card,
+    CardContent,
+    Button,
+    TextField,
+    Grid,
+    Checkbox,
+    FormGroup,
+    FormControlLabel, InputAdornment
+} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import TableTransferRules from '../../../layouts/settings/transfer';
@@ -7,12 +16,15 @@ import SettingsService from "../../../services/api/settings.service";
 import TransferService from "../../../services/api/transfer.service";
 import DialogAddEdit from "../../../layouts/settings/transfer/DialogAddEdit";
 import Index from "../../../layouts/settings/actions";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
 export default function Transfer() {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -46,13 +58,6 @@ export default function Transfer() {
 
     });
     const classes = useStyles();
-
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
 
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
@@ -97,43 +102,24 @@ export default function Transfer() {
         const response = await TransferService.testTransfer(config);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.transfer_test", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.test_transfer.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.transfer_test")
-        });
+        enqueueSnackbar(t("messages.test_transfer.success"), {variant: 'success'});
     }
 
     const handleSave = async () => {
         const response = await SettingsService.saveTransfer(config);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.settings_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_transfer.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.save_transfer.success"), {variant: 'success'});
         refresh();
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.settings_saved")
-        });
+        refreshRemoteSites();
     };
 
     const handleCancel = () => {
@@ -153,16 +139,6 @@ export default function Transfer() {
 
     return (
         <>
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                      onClose={() => {
-                          setMessage({...message, show: !message.show})
-                      }}>
-                <Alert onClose={() => {
-                    setMessage({...message, show: !message.show})
-                }} severity={message.severity} sx={{width: '100%'}}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
             <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <Grid container spacing={2} style={{marginBottom: '15px'}}>
@@ -170,7 +146,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.alias"
-                                label={t("fields.alias")}
+                                label={t("tab_transfer.alias")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.alias')}
                                 onChange={(e) => {
@@ -182,7 +158,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.sftp_container"
-                                label={t("fields.working_folder_group")}
+                                label={t("tab_transfer.working_folder_group")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_container')}
                                 onChange={(e) => {
@@ -194,7 +170,7 @@ export default function Transfer() {
                             <TextField
                                 className={classes.field}
                                 id="DCMT.sftp_host"
-                                label={t("fields.host")}
+                                label={t("tab_transfer.host")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_host')}
                                 onChange={(e) => {
@@ -206,7 +182,7 @@ export default function Transfer() {
                             <TextField
                                 className={classes.field}
                                 id="DCMT.sftp_port"
-                                label={t("fields.port")}
+                                label={t("tab_transfer.port")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_port')}
                                 onChange={(e) => {
@@ -218,7 +194,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.sftp_user"
-                                label={t("fields.user")}
+                                label={t("tab_transfer.user")}
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_user')}
                                 onChange={(e) => {
@@ -230,7 +206,7 @@ export default function Transfer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="DCMT.sftp_password"
-                                label={t("fields.password")}
+                                label={t("tab_transfer.password")}
                                 type="password"
                                 variant="standard"
                                 value={getSettingsValue('DCMT.sftp_password')}
@@ -238,6 +214,36 @@ export default function Transfer() {
                                     handleSettingsChange('DCMT.sftp_password', e.target.value)
                                 }}
                             />
+                        </Grid>
+                        <Grid container item xs={12}>
+                            <Grid item xs="auto">
+                                <FormGroup>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={getSettingsValue('DCMT.splitting_enabled') === "true"}
+                                                onChange={(e) => handleSettingsChange('DCMT.splitting_enabled', e.target.checked+"")}
+                                            />}
+                                        label={t("tab_transfer.splitting_volumes")}
+                                    />
+                                </FormGroup>
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    id="DCMT.splitting_volumes_mb"
+                                    label={null}
+                                    type="number"
+                                    variant="standard"
+                                    disabled={getSettingsValue('DCMT.splitting_enabled') === "false"}
+                                    value={getSettingsValue('DCMT.splitting_volumes_mb')}
+                                    onChange={(e) => {
+                                        handleSettingsChange('DCMT.splitting_volumes_mb', e.target.value)
+                                    }}
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">MB</InputAdornment>,
+                                    }}
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Index
@@ -253,7 +259,7 @@ export default function Transfer() {
                         <Grid item xs/>
                         <Grid item>
                             <Button variant="contained" component="label" style={{marginTop: '15px'}}
-                                    onClick={toggleDialog}>+ {t('buttons.add')}</Button>
+                                    onClick={toggleDialog}>+ {t('tab_transfer.actions.add')}</Button>
                         </Grid>
                     </Grid>
 
@@ -265,7 +271,6 @@ export default function Transfer() {
                             setSettingsValue(values);
                             toggleDialog();
                         }}
-                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
@@ -279,7 +284,6 @@ export default function Transfer() {
                 onSave={() => {
                     setForceRefresh(!forceRefresh);
                 }}
-                alertMessage={(message) => setMessage(message)}
             />
 
         </>)

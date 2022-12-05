@@ -10,7 +10,7 @@ import UserContext from "../../components/UserContext";
 import { useTranslation } from 'react-i18next';
 
 const TableRemoteStudiesActions = (props) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('remote_servers');
 
     /** User & privileges */
     const { privileges } = React.useContext(UserContext);
@@ -96,7 +96,7 @@ const TableRemoteStudiesActions = (props) => {
                             if (value === "retrieve") {
                                 return (
                                     <RetrieveButton
-                                        key={"buttons."+value}
+                                        key={"table.actions."+value}
                                         retrieveFunction={props.retrieveFunction}
                                         actionDisabled={props.actionDisabled}
                                     />

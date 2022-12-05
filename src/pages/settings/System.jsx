@@ -15,7 +15,6 @@ import Forwarding from './systemTab/Forwarding';
 import Transfer from './systemTab/Transfer';
 import Plugins from './systemTab/Plugins';
 import RemoteAET from './systemTab/RemoteAET';
-import Backups from './systemTab/Backups';
 //import MediaBurner from './systemTab/MediaBurner';
 
 /** Translation */
@@ -56,7 +55,7 @@ function a11yProps(index) {
 }
 
 export default function System() {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
 
     const theme = useTheme();
 
@@ -73,7 +72,7 @@ export default function System() {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <SettingsIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.system')}
+                    <SettingsIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
                 </Grid>
             </Typography>
 
@@ -81,18 +80,17 @@ export default function System() {
 
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable" scrollButtons allowScrollButtonsMobile>
-                    <Tab label={t('titles.local_server')} {...a11yProps(0)} />
-                    <Tab label={t('titles.storage')} {...a11yProps(1)} />
-                    <Tab label={t('titles.remote_aets')} {...a11yProps(2)} />
-                    <Tab label={t('titles.forwarding')} {...a11yProps(3)} />
-                    <Tab label={t('titles.transfer')} {...a11yProps(4)} />
+                    <Tab label={t('tab_local_server.title')} {...a11yProps(0)} />
+                    <Tab label={t('tab_storage.title')} {...a11yProps(1)} />
+                    <Tab label={t('tab_remote_servers.title')} {...a11yProps(2)} />
+                    <Tab label={t('tab_forwarding.title')} {...a11yProps(3)} />
+                    <Tab label={t('tab_transfer.title')} {...a11yProps(4)} />
                     {
                         //<Tab label={t('media_burner')} {...a11yProps(5)} />
                     }
-                    <Tab label={t('titles.reporting')} {...a11yProps(5)} />
-                    <Tab label={t('titles.database')} {...a11yProps(6)} />
-                    <Tab label={t('titles.plugins')} {...a11yProps(7)} />
-                    <Tab label="Backups" {...a11yProps(8)} />
+                    <Tab label={t('tab_reporting.title')} {...a11yProps(5)} />
+                    <Tab label={t('tab_database.title')} {...a11yProps(6)} />
+                    <Tab label={t('tab_plugins.title')} {...a11yProps(7)} />
                     {
                         //<Tab label={t('status')} {...a11yProps(8)} />
                     }
@@ -100,76 +98,78 @@ export default function System() {
             </Box>
 
             {/* LOCAL SERVER */}
-            <TabPanel value={value} index={0} >
+            <TabPanel value={value} index={0} dir="ltr">
                 <PryInfo
-                    text={t("info.system_localServer")}
+                    text={t("tab_local_server.info")}
                 />
                 <LocalServer />
             </TabPanel>
 
             {/* STORAGE */}
-            <TabPanel value={value} index={1} >
+            <TabPanel value={value} index={1} dir="ltr">
                 <PryInfo
-                    text={t("info.system_storage")}
+                    text={t("tab_storage.info")}
                 />
                 <Storage />
             </TabPanel>
 
             {/* REMOTE AET */}
-            <TabPanel value={value} index={2} >
+            <TabPanel value={value} index={2} dir="ltr">
                 <PryInfo
-                    text={t("info.system_remoteAets")}
+                    text={t("tab_remote_servers.info")}
                 />
                 <RemoteAET />
             </TabPanel>
 
             {/* FORWARDING */}
-            <TabPanel value={value} index={3} >
+            <TabPanel value={value} index={3} dir="ltr">
                 <PryInfo
-                    text={t("info.system_forwarding")}
+                    text={t("tab_forwarding.info")}
                 />
                 <Forwarding />
             </TabPanel>
 
             {/* TRANSFER */}
-            <TabPanel value={value} index={4} >
+            <TabPanel value={value} index={4} dir="ltr">
                 <PryInfo
-                    text={t("info.system_transfer")}
+                    text={t("tab_transfer.info")}
                 />
                 <Transfer />
             </TabPanel>
 
+            {/* MEDIA BURNER */}
+            {/*<TabPanel value={value} index={5} dir="ltr">
+                <MediaBurner />
+            </TabPanel>*/}
+
             {/* REPORTING */}
-            <TabPanel value={value} index={5} >
+            <TabPanel value={value} index={5} dir="ltr">
                 <PryInfo
-                    text={t("info.system_reporting")}
+                    text={t("tab_reporting.info")}
                 />
                 <Reporting />
             </TabPanel>
 
             {/* DATABASE */}
-            <TabPanel value={value} index={6} >
+            <TabPanel value={value} index={6} dir="ltr">
                 <PryInfo
-                    text={t("info.system_database")}
+                    text={t("tab_database.info")}
                 />
                 <Database />
             </TabPanel>
 
             {/* PLUGINS */}
-            <TabPanel value={value} index={7} >
+            <TabPanel value={value} index={7} dir="ltr">
                 <PryInfo
-                    text={t("info.system_plugins")}
+                    text={t("tab_plugins.info")}
                 />
                 <Plugins />
             </TabPanel>
 
-            {/* BACKUPS */}
-            <TabPanel value={value} index={8} >
-                <PryInfo
-                    text="Configure and manage backups of Perennity App"
-                />
-                <Backups />
-            </TabPanel>
+            {/* STATUS */}
+            {/*<TabPanel value={value} index={8} dir="ltr">
+                <Status />
+            </TabPanel>*/}
 
         </React.Fragment>
     );

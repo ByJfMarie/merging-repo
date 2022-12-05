@@ -7,7 +7,6 @@ import {
     FormControlLabel,
     Checkbox,
     Typography,
-    Alert, Snackbar
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -17,9 +16,12 @@ import Index from "../../../layouts/settings/actions";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import {useSnackbar} from "notistack";
 
 export default function Storage() {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -60,17 +62,6 @@ export default function Storage() {
     });
     const classes = useStyles();
 
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
-    /*function Message() {
-        if (!message || !message.show) return <></>;
-        return <Alert severity={message.severity}>{message.message}</Alert>;
-    }*/
-
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
     const refreshSettings = async () => {
@@ -104,22 +95,12 @@ export default function Storage() {
         const response = await SettingsService.saveStorage(settingsValue);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.settings_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
         refreshSettings();
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.settings_saved")
-        });
     };
 
     const handleCancel = () => {
@@ -128,11 +109,6 @@ export default function Storage() {
 
     return (
         <>
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
             <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                         <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
@@ -140,7 +116,7 @@ export default function Storage() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.storage_path")}
+                                    label={t("tab_storage.storage_path")}
                                     variant="standard"
                                     value={getSettingsValue('DCMS.storage_folder')}
                                     onChange={(e) => {
@@ -152,7 +128,7 @@ export default function Storage() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.secondary_path")}
+                                    label={t("tab_storage.secondary_path")}
                                     variant="standard"
                                     value={getSettingsValue('DCMS.storage_folder_secondary')}
                                     onChange={(e) => {
@@ -171,7 +147,7 @@ export default function Storage() {
                                                         onChange={(e) => handleSettingsChange('SDS.keep_images', e.target.checked + "")}
                                                     />
                                                 }
-                                                label={t("fields.keep_images_for")}
+                                                label={t("tab_storage.keep_images_for")}
                                             />
                                         </FormGroup>
                                     </Grid>
@@ -201,7 +177,7 @@ export default function Storage() {
                                                 onChange={(e) => handleSettingsChange('SDS.use_treshold', e.target.checked + "")}
                                             />
                                         }
-                                        label={t("fields.capacity_treshold")}
+                                        label={t("tab_storage.capacity_treshold")}
                                     />
                                 </FormGroup>
                             </Grid>
@@ -210,7 +186,7 @@ export default function Storage() {
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
-                                        label={t("fields.maximum")}
+                                        label={t("tab_storage.maximum")}
                                         variant="standard"
                                         value={getSettingsValue('SDS.clean_auto_treshold')}
                                         onChange={(e) => {
@@ -222,7 +198,7 @@ export default function Storage() {
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
-                                        label={t("fields.drop_to")}
+                                        label={t("tab_storage.drop_to")}
                                         variant="standard"
                                         value={getSettingsValue('SDS.clean_auto_treshold_target')}
                                         onChange={(e) => {

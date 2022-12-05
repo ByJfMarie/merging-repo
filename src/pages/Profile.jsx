@@ -12,37 +12,37 @@ import {
     Divider,
     Chip,
     TextField,
-    Dialog,
-    Slide,
-    DialogContent,
-    DialogActions,
-    Alert, Snackbar, Box
+    Box, Button
 } from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import {useTheme} from '@emotion/react';
-import React from 'react';
+import React, {useRef} from 'react';
 import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
-import ChangePassword from "./settings/ChangePassword.jsx";
 import Index from "../layouts/settings/actions";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {useSnackbar} from "notistack";
 
 /** Translation */
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import UsersService from "../services/api/users.service";
 import UserStorage from "../services/storage/user.storage";
 import UserContext from "../components/UserContext";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import DialogConfigure2FA from "../layouts/profile/DialogConfigure2FA";
+import DialogChangePassword from "../layouts/profile/DialogChangePassword";
+import EmailIcon from "@mui/icons-material/Email";
+import SmsIcon from "@mui/icons-material/Sms";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 function Settings(props) {
-    const { t } = useTranslation('common');
+    const {t} = useTranslation('profile');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     /** User & privileges */
-    const { user, privileges, settings } = React.useContext(UserContext);
+    const {user, privileges, settings, status2FA} = React.useContext(UserContext);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [currentSettings, setCurrentSettings] = React.useState(null);
 
@@ -64,20 +64,13 @@ function Settings(props) {
             margin: "10px 0px !important",
         },
         button: {
-            color: theme.palette.text.secondary,
+            color: theme.palette.text.primary,
             float: 'right',
             backgroundColor: theme.palette.chip.color + "!important",
             marginRight: '10px !important'
         },
     });
     const classes = useStyles();
-
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
 
     /** User Settings */
     const getSettingsValue = (id) => {
@@ -90,16 +83,12 @@ function Settings(props) {
         if (id === 'theme') props.themeChange(value);
         if (id === 'language') props.languageChange(value);
     }
+
     const handleSaveSettings = async () => {
         let response = await UsersService.updateSettings(currentSettings);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: response.error
-            });
+            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
@@ -107,12 +96,7 @@ function Settings(props) {
         UserStorage.getSettings()
             .then((rsp) => {
                 setCurrentSettings(rsp);
-                setMessage({
-                    ...message,
-                    show: true,
-                    severity: "success",
-                    message: "Settings successfully updated!"
-                });
+                enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
             });
     };
     const handleCancelSettings = () => {
@@ -124,6 +108,13 @@ function Settings(props) {
                 props.languageChange(rsp.language);
             });
     };
+    const refreshSettings = () => {
+        UserStorage.removeUserSettings();
+        UserStorage.getSettings()
+            .then((rsp) => {
+                setCurrentSettings(rsp);
+            });
+    }
 
     /** User Profile */
     const getUserValue = (id) => {
@@ -132,18 +123,13 @@ function Settings(props) {
     }
     const handleUserChange = (id, value) => {
         if (!currentUser) return;
-        setCurrentUser({...currentUser, [id]:value});
+        setCurrentUser({...currentUser, [id]: value});
     }
     const handleSaveUser = async () => {
         let response = await UsersService.update(currentUser);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: response.error
-            });
+            enqueueSnackbar(t("messages.save_user.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
@@ -151,51 +137,26 @@ function Settings(props) {
         UserStorage.getUser()
             .then(rsp => {
                 setCurrentUser(rsp);
-
-                setMessage({
-                    ...message,
-                    show: true,
-                    severity: "success",
-                    message: "Profile successfully updated!"
-                });
+                enqueueSnackbar(t("messages.save_user.success"), {variant: 'success'});
             });
     };
     const handleCancelUser = () => {
         setCurrentUser(user);
     };
 
-    /** CHANGE PASSWORD */
-    const [scroll] = React.useState('paper');
-    const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const [password, setPassword] = React.useState({});
-    const handleSavePassword = async () => {
-        let response = await UsersService.changePassword(password);
-
-        if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.reset_password", {error: response.error})
-            });
-            return;
-        }
-
-        setOpen(false);
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: "Password successfully updated!"
-        });
+    /** Dialog Password */
+    const dialogPasswordRef = useRef();
+    const handleDialogPasswordOpen = () => {
+        dialogPasswordRef.current.openDialog();
     }
-    const handleCancelPassword = () => {
-        setOpen(false);
-        setPassword({});
-    };
+
+    /** Dialog 2FA */
+    const dialog2FARef = useRef();
+    const handleClick2FAOpen = () => {
+        dialog2FARef.current.defaultMail(getUserValue('mail'));
+        dialog2FARef.current.defaultPhone(getUserValue('phone'));
+        dialog2FARef.current.openDialog();
+    }
 
     React.useEffect(() => {
         setCurrentUser(user);
@@ -214,22 +175,11 @@ function Settings(props) {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <AccountCircleIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.profile')}
+                    <AccountCircleIcon fontSize="large"/> <Box sx={{m: 0.5}}/> {t('title')}
                 </Grid>
             </Typography>
 
             <Divider style={{marginBottom: theme.spacing(2)}}/>
-
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                      onClose={() => {
-                          setMessage({...message, show: !message.show})
-                      }}>
-                <Alert onClose={() => {
-                    setMessage({...message, show: !message.show})
-                }} severity={message.severity} sx={{width: '100%'}}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
 
             <Container maxWidth={false} style={{padding: 0}}>
 
@@ -240,47 +190,71 @@ function Settings(props) {
 
                     <Card className={classes.settingCard}>
                         <CardContent>
-                            <Typography variant="h6" align="left"> {t('titles.user')} </Typography>
+                            <Typography variant="h6" align="left"> {t('user.title')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('user.login')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
                                     <TextField
                                         id="login"
                                         fullWidth
-                                        label={t('fields.login')}
                                         variant="standard"
                                         value={getUserValue('login')}
                                         inputProps={
-                                            { readOnly: true, }
+                                            {readOnly: true,}
                                         }
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                            </Grid>
+
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('user.name')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
                                     <TextField
                                         id="name"
                                         fullWidth
-                                        label={t('fields.name')}
                                         variant="standard"
                                         value={getUserValue('first_name')}
                                         onChange={(e) => handleUserChange('first_name', e.target.value)}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                            </Grid>
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('user.mail')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
                                     <TextField
                                         id="email"
                                         fullWidth
-                                        label={t('fields.mail')}
                                         variant="standard"
                                         value={getUserValue('mail')}
                                         onChange={(e) => handleUserChange('mail', e.target.value)}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Link onClick={handleClickOpen}>{t('buttons.change_password')}</Link>
+                            </Grid>
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('user.password')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Link onClick={handleDialogPasswordOpen}>{t('user.change_password')}</Link>
                                 </Grid>
                             </Grid>
-                            <Index 
+
+                            <Index
                                 handleSave={handleSaveUser}
                                 handleCancel={handleCancelUser}
                             />
@@ -290,15 +264,108 @@ function Settings(props) {
                     <Card className={classes.settingCard}>
                         <CardContent>
 
-                            <Typography variant="h6" align="left"> {t('titles.general')} </Typography>
+                            <Typography variant="h6" align="left"> {t('security.title')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                             <Grid container spacing={2} style={{marginBottom: "20px"}}>
-                                <Grid item xs={4}>
-                                    <Chip label={t('fields.theme')}  style={{backgroundColor: "#2db4eb", color:"white"}}/>
+                                <Grid item xs={3}>
+                                    <FormControlLabel
+                                        disabled={status2FA && !status2FA.optional}
+                                        control={
+                                            <Switch
+                                                onChange={(e) => {
+                                                    //if (!e.target.checked) return;
+                                                    handleSettingsChange('2fa_enabled', e.target.checked)
+                                                }}
+                                                checked={getSettingsValue('2fa_enabled')}
+                                            />
+                                        }
+                                        label={t("security.2fa.enable")}
+                                    />
+                                </Grid>
+                                <Grid container spacing={2} item xs={9} direction="row" alignItems="center">
+                                    {
+                                        status2FA && !status2FA.disabled && (
+                                            <Grid item xs="auto">
+                                                {
+                                                    getSettingsValue('2fa_channel') === "mail" && (
+                                                        <React.Fragment>
+                                                            <Typography variant="body1" component="div" sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                flexWrap: 'wrap',
+                                                            }}>
+                                                                <EmailIcon/> &nbsp;Mail to {getSettingsValue('2fa_to')}
+                                                            </Typography>
+                                                        </React.Fragment>
+                                                    )
+                                                }
+                                                {
+                                                    getSettingsValue('2fa_channel') === "sms" && (
+                                                        <React.Fragment>
+                                                            <Typography variant="body1" component="div" sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                flexWrap: 'wrap',
+                                                            }}>
+                                                                <SmsIcon/> &nbsp;SMS to {getSettingsValue('2fa_to')}
+                                                            </Typography>
+                                                        </React.Fragment>
+                                                    )
+                                                }
+                                                {
+                                                    getSettingsValue('2fa_channel') === "whatsapp" && (
+                                                        <React.Fragment>
+                                                            <Typography variant="body1" component="div" sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                flexWrap: 'wrap',
+                                                            }}>
+                                                                <WhatsAppIcon/> &nbsp;WhatsApp to {getSettingsValue('2fa_to')}
+                                                            </Typography>
+                                                        </React.Fragment>
+                                                    )
+                                                }
+                                            </Grid>
+                                        )
+                                    }
+                                    <Grid item xs="auto">
+                                        <Button
+                                            onClick={handleClick2FAOpen}
+                                            variant="outlined"
+                                            disabled={status2FA && status2FA.disabled}
+                                        >
+                                            {t('security.2fa.configure')}
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="caption">
+                                        {t("security.2fa.description")}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Index
+                                handleSave={handleSaveSettings}
+                                handleCancel={handleCancelSettings}
+                            />
+                        </CardContent>
+                    </Card>
+
+                    <Card className={classes.settingCard}>
+                        <CardContent>
+
+                            <Typography variant="h6" align="left"> {t('general.title')} </Typography>
+                            <Divider style={{marginBottom: theme.spacing(2)}}/>
+
+                            <Grid container spacing={2} style={{marginBottom: "20px"}}>
+                                <Grid item xs={3}>
+                                    <Chip label={t('general.theme')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
-                                <Grid item xs={8} align="left">
+                                <Grid item xs={9} align="left">
                                     <FormControlLabel
                                         control={
                                             <Switch
@@ -309,17 +376,17 @@ function Settings(props) {
                                                 checked={getSettingsValue('theme') === "dark" ? true : false}
                                             />
                                         }
-                                        label={t("fields.dark_mode")}/>
+                                        label={t("general.dark_mode")}/>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={2} style={{marginBottom: "20px"}}>
-                                <Grid item xs={4}>
-                                    <Chip label={t('fields.language')}
-                                          style={{backgroundColor: "#2db4eb", color:"white"}}/>
+                                <Grid item xs={3}>
+                                    <Chip label={t('general.language')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
-                                <Grid item xs={8} align="left">
+                                <Grid item xs={9} align="left">
                                     <Select
                                         value={getSettingsValue('language') || "en"}
                                         label="Language"
@@ -327,23 +394,22 @@ function Settings(props) {
                                             handleSettingsChange('language', e.target.value)
                                         }}
                                     >
-                                        <MenuItem value={"fr"}>{t("fields.language_value.fr")}</MenuItem>
-                                        <MenuItem value={"en"}>{t("fields.language_value.en")}</MenuItem>
-                                        <MenuItem value={"es"}>{t("fields.language_value.es")}</MenuItem>
-                                        <MenuItem value={"he"}>{t("fields.language_value.he")}</MenuItem>
+                                        <MenuItem value={"fr"}>{t("general.language_value.fr")}</MenuItem>
+                                        <MenuItem value={"en"}>{t("general.language_value.en")}</MenuItem>
+                                        <MenuItem value={"es"}>{t("general.language_value.es")}</MenuItem>
                                     </Select>
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={2}>
-                                <Grid item xs={4}>
-                                    <Chip label={t('fields.format')}style={{backgroundColor: "#2db4eb", color:"white"}}/>
+                                <Grid item xs={3}>
+                                    <Chip label={t('general.format')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
-                                <Grid item xs={8} align="left">
+                                <Grid item xs={9} align="left">
                                     <Select
                                         value={getSettingsValue('date_format')}
-                                        label={t('fields.dateFormat')}
                                         onChange={(e) => {
                                             handleSettingsChange('date_format', e.target.value)
                                         }}
@@ -364,15 +430,15 @@ function Settings(props) {
                                 </Grid>
                             </Grid>
 
-                            <Box sx={{ mt: 5 }} />
+                            <Box sx={{mt: 5}}/>
 
-                            <Typography variant="h6" align="left"> {t('titles.studies')} </Typography>
+                            <Typography variant="h6" align="left"> {t('local.title')} </Typography>
                             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                             <Grid container spacing={2} style={{marginBottom: "50px"}}>
                                 <Grid item xs={3}>
-                                    <Chip label={t('fields.filters')}
-                                          style={{backgroundColor: "#2db4eb", color:"white"}}/>
+                                    <Chip label={t('local.filters')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={9}>
@@ -383,7 +449,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                            selection={currentSettings?currentSettings.filters_studies_primary:[]}
+                                            selection={currentSettings ? currentSettings.filters_studies_primary : []}
                                             setSelection={(value) => handleSettingsChange("filters_studies_primary", value)}
                                         />
 
@@ -393,7 +459,8 @@ function Settings(props) {
 
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>
-                                    <Chip label={t('fields.dates')} style={{backgroundColor: "#2db4eb", color:"white"}}/>
+                                    <Chip label={t('local.dates')}
+                                          style={{backgroundColor: theme.palette.chip.background}}/>
                                 </Grid>
 
                                 <Grid item xs={9}>
@@ -404,7 +471,7 @@ function Settings(props) {
                                         <MultiSelect
                                             page="studies"
                                             fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                            selection={currentSettings?currentSettings.filters_studies_date_presets:[]}
+                                            selection={currentSettings ? currentSettings.filters_studies_date_presets : []}
                                             setSelection={(value) => handleSettingsChange("filters_studies_date_presets", value)}
                                         />
                                     </Grid>
@@ -413,15 +480,15 @@ function Settings(props) {
 
                             {privileges.pages.includes('aet') && (
                                 <>
-                                    <Box sx={{ mt: 5 }} />
+                                    <Box sx={{mt: 5}}/>
 
-                                    <Typography variant="h6" align="left"> {t('titles.remote_aet')} </Typography>
+                                    <Typography variant="h6" align="left"> {t('remote.title')} </Typography>
                                     <Divider style={{marginBottom: theme.spacing(2)}}/>
 
                                     <Grid container spacing={2} style={{marginBottom: "50px"}}>
                                         <Grid item xs={3}>
-                                            <Chip label={t('fields.filters')}
-                                                  style={{backgroundColor: "#2db4eb", color:"white"}}/>
+                                            <Chip label={t('remote.filters')}
+                                                  style={{backgroundColor: theme.palette.chip.background}}/>
                                         </Grid>
 
                                         <Grid item xs={9}>
@@ -433,7 +500,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="aet"
                                                     fields={["patient_id", "patient_name", "accession_number", "description", "referring_physician", "modality", "birthdate"]}
-                                                    selection={currentSettings?currentSettings.filters_aets_primary:[]}
+                                                    selection={currentSettings ? currentSettings.filters_aets_primary : []}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_primary", value)}
                                                 />
                                             </Grid>
@@ -442,8 +509,8 @@ function Settings(props) {
 
                                     <Grid container spacing={2}>
                                         <Grid item xs={3}>
-                                            <Chip label={t('fields.dates')}
-                                                  style={{backgroundColor: "#2db4eb", color:"white"}}/>
+                                            <Chip label={t('remote.dates')}
+                                                  style={{backgroundColor: theme.palette.chip.background}}/>
                                         </Grid>
 
                                         <Grid item xs={9}>
@@ -454,7 +521,7 @@ function Settings(props) {
                                                 <MultiSelect
                                                     page="studies"
                                                     fields={["all", "today", "yesterday", "last_3days", "last_week", "last_month", "last_year"]}
-                                                    selection={currentSettings?currentSettings.filters_aets_date_presets:[]}
+                                                    selection={currentSettings ? currentSettings.filters_aets_date_presets : []}
                                                     setSelection={(value) => handleSettingsChange("filters_aets_date_presets", value)}
                                                 />
                                             </Grid>
@@ -465,34 +532,20 @@ function Settings(props) {
                             <Index
                                 handleSave={handleSaveSettings}
                                 handleCancel={handleCancelSettings}
-                        />
+                            />
                         </CardContent>
                     </Card>
                 </Masonry>
             </Container>
 
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={open}
-                onClose={handleCancelPassword}
-                scroll={scroll}
-                TransitionComponent={Transition}
-            >
-                <DialogContent dividers={scroll === 'paper'} style={{backgroundColor: theme.palette.dialog.color}}>
-                    <ChangePassword
-                        password={password}
-                        setPassword={setPassword}
-                    />
-                </DialogContent>
-                <DialogActions style={{backgroundColor: theme.palette.dialog.color}}>
-                    <Index 
-                        labelReset={t('buttons.cancel')}
-                        handleSave={handleSavePassword}
-                        handleCancel={handleCancelPassword}
-                    />
-                </DialogActions>
-            </Dialog>
+            <DialogChangePassword
+                ref={dialogPasswordRef}
+            />
+
+            <DialogConfigure2FA
+                ref={dialog2FARef}
+                refreshSettings={refreshSettings}
+            />
         </React.Fragment>
 
     )

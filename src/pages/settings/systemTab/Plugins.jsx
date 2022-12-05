@@ -1,4 +1,4 @@
-import {Card, CardContent, Grid, Button, Alert, Snackbar} from '@mui/material';
+import {Card, CardContent, Grid, Button} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import React from "react";
 import TablePlugins from "../../../layouts/settings/plugins";
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import {makeStyles} from "@mui/styles";
 
 export default function Plugins() {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -20,28 +20,11 @@ export default function Plugins() {
     });
     const classes = useStyles();
 
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
-
     /** FORCE REFRESH */
     const [forceRefresh, setForceRefresh] = React.useState(false);
 
     return (
         <>
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                      onClose={() => {
-                          setMessage({...message, show: !message.show})
-                      }}>
-                <Alert onClose={() => {
-                    setMessage({...message, show: !message.show})
-                }} severity={message.severity} sx={{width: '100%'}}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
             <Card className={classes.card} style={{
                 backgroundColor: theme.palette.card.color,
                 width: "100% !important",
@@ -56,14 +39,13 @@ export default function Plugins() {
                                 component="label"
                                 onClick={() => {setForceRefresh(!forceRefresh);}}
                             >
-                                {t('buttons.force_refresh')}
+                                {t('tab_plugins.actions.force_refresh')}
                             </Button>
                         </Grid>
                     </Grid>
                     <TablePlugins
                         filters={null}
                         forceRefresh={forceRefresh}
-                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>

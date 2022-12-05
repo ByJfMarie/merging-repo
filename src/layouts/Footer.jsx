@@ -36,7 +36,7 @@ export default function Footer() {
     const [title, setTitle] = React.useState(null);
     const [content, setContent] = React.useState(null);
     const handleClickOpen = async (name) => {
-        setTitle(t(name));
+        setTitle(t("titles."+name));
 
         let response = null;
         if (name==="contactUs") response = await SystemService.getContactUs();
@@ -75,7 +75,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('contactUs')}}
                             >
-                                {t('buttons.contact_us')}
+                                {t('toolbar.contact_us')}
                             </Link>
                         </Grid>
                         <Grid item xs="auto">-</Grid>
@@ -86,7 +86,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('faq')}}
                             >
-                                {t('buttons.faq')}
+                                {t('toolbar.faq')}
                             </Link>
                         </Grid>
                         <Grid item xs="auto">-</Grid>
@@ -97,7 +97,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('privacyPolicy')}}
                             >
-                                {t('buttons.privacy_policy')}
+                                {t('toolbar.privacy_policy')}
                             </Link>
                         </Grid>
                         <Grid item xs="auto">-</Grid>
@@ -108,7 +108,7 @@ export default function Footer() {
                                 underline="none"
                                 onClick={(e) => {handleClickOpen('terms&Conditions')}}
                             >
-                                {t("buttons.terms_conditions")}
+                                {t("toolbar.terms_conditions")}
                             </Link>
                         </Grid>
                     </Grid>

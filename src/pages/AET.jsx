@@ -12,7 +12,7 @@ import RetrievingLayout from '../layouts/retrieveStatus';
 import QueryAETSelect from "../layouts/remoteAET/QueryAETSelect";
 
 export default function AET() {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation(['remote_servers', 'study_filter']);
 
     /** THEME */
     const theme = useTheme();
@@ -47,12 +47,12 @@ export default function AET() {
                     style={{textAlign: 'left', color: theme.palette.primary.main, width: "300px", marginTop: "auto"}}
                 >
                     <Grid container direction="row" alignItems="center">
-                    <i class="fi fi-rr-database text-2xl"></i> <Box sx={{ m: 0.5 }} /> {t('titles.remote_aet')}
+                        <TravelExploreIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
                     </Grid>
                 </Typography>
 
                 <FormControl className={classes.root} variant="filled" style={{width: "300px"}}>
-                    <InputLabel id="aet">{t("filters.aet")}</InputLabel>
+                    <InputLabel id="aet">{t("fields.aet", {ns: 'study_filter'})}</InputLabel>
                     <QueryAETSelect
                         queryRetrieve={true}
                         currentAet={currentAET}
@@ -84,8 +84,6 @@ export default function AET() {
                 forceRefresh={forceRefreshStatus}
                 autoRefresh={true}
             />
-
-            <div className="h-8"></div>
 
         </React.Fragment>
     );

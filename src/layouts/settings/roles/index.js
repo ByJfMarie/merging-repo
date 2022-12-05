@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
 const Index = (props) => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('roles_perms');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -50,7 +50,7 @@ const Index = (props) => {
     const column = [
         {
             field: "role",
-            headerName: t("tables_header.role"),
+            headerName: t("table.header.role"),
             flex: 3,
             minWidth: 110,
             description: "Login",
@@ -58,7 +58,7 @@ const Index = (props) => {
         },
         {
             field: "description",
-            headerName: t("tables_header.description"),
+            headerName: t("table.header.description"),
             flex: 2,
             minWidth: 110,
             description: "Name",
@@ -73,7 +73,7 @@ const Index = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
-                    label={t("buttons.edit")}
+                    label={t("table.menu.edit")}
                     onClick={() => handleEdit(params.row)}
                     showInMenu
                 />);

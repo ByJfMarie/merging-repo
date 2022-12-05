@@ -11,7 +11,7 @@ import {
     Select,
     MenuItem,
     InputLabel,
-    Alert, Snackbar, Box
+    Box
 } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
@@ -24,7 +24,7 @@ import PryInfo from "../../components/PryInfo";
 import { useTranslation } from 'react-i18next';
 
 const Users = (props) => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('users');
 
     /** THEME */
     const theme = useTheme();
@@ -45,13 +45,6 @@ const Users = (props) => {
 
     });
     const classes = useStyles();
-
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
 
     /** FILTERS */
     const [filters, setFilters] = React.useState({
@@ -78,19 +71,13 @@ const Users = (props) => {
                 style={{ textAlign: 'left', color: theme.palette.primary.main }}
             >
                 <Grid container direction="row" alignItems="center">
-                    <GroupIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.users')}
+                    <GroupIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
                 </Grid>
             </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <PryInfo
-                text={t("info.users")}
+                text={t("info")}
             />
 
             <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important"}} >
@@ -112,33 +99,33 @@ const Users = (props) => {
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl className={classes.root} variant="standard" fullWidth >
-                                <InputLabel id="role" >{t("filters.role")}</InputLabel>
+                                <InputLabel id="role" >{t("filters.role.name")}</InputLabel>
                                 <Select
                                     labelId="role"
                                     id="role"
                                     value={filters.role}
                                     onChange={(e) => {handleFiltersChange("role", e.target.value)}}
                                 >
-                                    <MenuItem value="all">All</MenuItem>
-                                    <MenuItem value="administrator">Administrator</MenuItem>
-                                    <MenuItem value="physician">Physician</MenuItem>
-                                    <MenuItem value="patient">Patient</MenuItem>
-                                    <MenuItem value="radiologist">Radiologist</MenuItem>
+                                    <MenuItem value="all">{t("filters.role.all")}</MenuItem>
+                                    <MenuItem value="administrator">{t("filters.role.administrator")}</MenuItem>
+                                    <MenuItem value="physician">{t("filters.role.physician")}</MenuItem>
+                                    <MenuItem value="patient">{t("filters.role.patient")}</MenuItem>
+                                    <MenuItem value="radiologist">{t("filters.role.radiologist")}</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl className={classes.root} variant="standard" fullWidth >
-                                <InputLabel id="status" >{t("filters.status")}</InputLabel>
+                                <InputLabel id="status" >{t("filters.status.name")}</InputLabel>
                                 <Select
                                     labelId="status"
                                     id="status"
                                     value={filters.status}
                                     onChange={(e) => {handleFiltersChange("status", e.target.value)}}
                                 >
-                                    <MenuItem value="all">All</MenuItem>
-                                    <MenuItem value={true}>Active</MenuItem>
-                                    <MenuItem value={false}>Not active</MenuItem>
+                                    <MenuItem value="all">{t("filters.status.all")}</MenuItem>
+                                    <MenuItem value={true}>{t("filters.status.active")}</MenuItem>
+                                    <MenuItem value={false}>{t("filters.status.not_active")}</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -146,7 +133,7 @@ const Users = (props) => {
                         <Grid item xs />
 
                         <Grid item >
-                            <Button variant="contained" component="label" onClick={() => {setUserValues({}); toggleDialog();}}>+ {t('buttons.add')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {setUserValues({}); toggleDialog();}}>+ {t('actions.add')}</Button>
                         </Grid>
                     </Grid>
 
@@ -154,7 +141,6 @@ const Users = (props) => {
                         filters={filters}
                         forceRefresh={forceRefresh}
                         editUser={(values) => {setUserValues(values); toggleDialog();}}
-                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
@@ -165,7 +151,6 @@ const Users = (props) => {
                 isOpen={showDialog}
                 toggle={toggleDialog}
                 onSave={() => {setForceRefresh(!forceRefresh);}}
-                alertMessage={(message) => setMessage(message)}
             />
 
         </React.Fragment>

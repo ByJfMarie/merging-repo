@@ -14,6 +14,7 @@ import ForwardingService from "../../../services/api/forwarding.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
 import Index from "../../remoteAET/QueryAETSelect";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -40,7 +41,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -64,24 +67,15 @@ const DialogAddEdit = (props) => {
         else response = await ForwardingService.addRule(props.values);
 
         if (response.error) {
-            props.alertMessage({
-                show: true,
-                severity: "error",
-                message: t("msg_error.forwarding_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_forwarding.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.save_forwarding.success"), {variant: 'success'});
         props.toggle();
         props.setValues({});
         setAddMode(true);
         props.onSave();
-
-        props.alertMessage({
-            show: true,
-            severity: "success",
-            message: t("msg_info.forwarding_saved")
-        });
     }
 
     React.useEffect(() => {
@@ -103,16 +97,14 @@ const DialogAddEdit = (props) => {
             onClose={props.toggle}
             TransitionComponent={Transition}
         >
-            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", margin: '0px 0px' }} className='py-4' >
-                <h1 className="text-center text-primary text-lg font-medium">Forwardind rules</h1>
-                <CardContent className="" sx={{paddingLeft: "4rem", paddingRight: "4rem"}}>
-
+            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
+                <CardContent>
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={12} style={{marginBottom: '10px'}}>
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.aet_condition")}
+                                label={t("tab_forwarding.dialog_add_edit.aet_condition")}
                                 variant="standard"
                                 value={getValue('aet_condition')}
                                 onChange={(e) => {handleChange('aet_condition', e.target.value);}}
@@ -120,7 +112,7 @@ const DialogAddEdit = (props) => {
                         </Grid>
                         <Grid item xs={6} style={{marginBottom: '10px'}}>
                             <FormControl className={classes.root} variant="standard" fullWidth>
-                                <InputLabel id="aet" >{t("fields.forward_to")}</InputLabel>
+                                <InputLabel id="aet" >{t("tab_forwarding.dialog_add_edit.forward_to")}</InputLabel>
                                 <Index
                                     forward={true}
                                     currentAet={getValue('value')}
@@ -131,10 +123,10 @@ const DialogAddEdit = (props) => {
 
                         <Grid container spacing={2} direction={"row-reverse"}>
                             <Grid item >
-                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
+                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('tab_forwarding.dialog_add_edit.actions.save')}</Button>
                             </Grid>
                             <Grid item >
-                                <Button variant="outlined" className={classes.button} component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
+                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('tab_forwarding.dialog_add_edit.actions.cancel')}</Button>
                             </Grid>
                         </Grid>
                     </Grid>

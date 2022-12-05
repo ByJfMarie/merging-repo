@@ -8,19 +8,22 @@ import {
     FormControlLabel,
     Checkbox,
     Grid,
-    Button, Alert, Snackbar, Box
+    Button, Box
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import SystemService from "../../services/api/system.service";
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PryInfo from "../../components/PryInfo";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
 const License = () => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('license');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     /** THEME */
     const theme = useTheme();
@@ -36,13 +39,6 @@ const License = () => {
         }
     });
     const classes = useStyles();
-
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
 
     const [license, setLicense] = React.useState({});
     const getLicenseValue = (id) => {
@@ -64,32 +60,15 @@ const License = () => {
         refresh();
     }, []);
 
-    const getDate = (date) => {
-        if (!date) return '';
-        if (!date.day || !date.month || !date.year) return '';
-        return date.day + "/" + date.month + '/' + date.year;
-    }
-
     const handleUploadLicense = async (event) => {
         const response = await SystemService.setLicense(event.target.files[0]);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.license_uploaded", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.upload.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.license_uploaded")
-        });
-
+        enqueueSnackbar(t("messages.upload.success"), {variant: 'success'});
         refresh();
     }
 
@@ -118,25 +97,14 @@ const License = () => {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <ReceiptLongIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.license')}
+                    <ReceiptLongIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
                 </Grid>
             </Typography>
 
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                      onClose={() => {
-                          setMessage({...message, show: !message.show})
-                      }}>
-                <Alert onClose={() => {
-                    setMessage({...message, show: !message.show})
-                }} severity={message.severity} sx={{width: '100%'}}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <PryInfo
-                text={t("info.license")}
+                text={t("info")}
             />
 
             <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
@@ -146,7 +114,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.serial")}
+                                label={t("serial")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -159,7 +127,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.computer_id")}
+                                label={t("computer_id")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -172,12 +140,12 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.exp_date")}
+                                label={t("exp_date")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={getDate(getLicenseValue('hardware_id'))}
+                                value={getLicenseValue('exp_date_formatted')}
                             />
                         </Grid>
 
@@ -185,12 +153,12 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.amp_valid_until")}
+                                label={t("amp_valid_until")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                value={getDate(getLicenseValue('amp'))}
+                                value={getLicenseValue('amp_formatted')}
                             />
                         </Grid>
 
@@ -198,7 +166,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.dicom_nodes")}
+                                label={t("dicom_nodes")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -211,7 +179,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.portal_users")}
+                                label={t("portal_users")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -224,7 +192,7 @@ const License = () => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.retention_days")}
+                                label={t("retention_days")}
                                 variant="standard"
                                 InputProps={{
                                     readOnly: true,
@@ -241,49 +209,49 @@ const License = () => {
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.secondary_storage")}
+                                name={t("secondary_storage")}
                                 checked={getLicenseValue('secondary_storage')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.report_retrieval")}
+                                name={t("report_retrieval")}
                                 checked={getLicenseValue('report_retrieval')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.transfer")}
+                                name={t("transfer")}
                                 checked={getLicenseValue('transfer')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.delete_after_transfer")}
+                                name={t("delete_after_transfer")}
                                 checked={getLicenseValue('delete_after_transfer')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.forwarding")}
+                                name={t("forwarding")}
                                 checked={getLicenseValue('forwarding')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.diagnostic_report")}
+                                name={t("diagnostic_report")}
                                 checked={getLicenseValue('diagnostic_report_creator')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.hl7")}
+                                name={t("hl7")}
                                 checked={getLicenseValue('hl7')}
                             />
                         </Grid>
@@ -296,42 +264,42 @@ const License = () => {
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.media_burner")}
+                                name={t("media_burner")}
                                 checked={getLicenseValue('media_burner')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.delete_after_burning")}
+                                name={t("delete_after_burning")}
                                 checked={getLicenseValue('delete_after_burning')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.anonymization")}
+                                name={t("anonymization")}
                                 checked={getLicenseValue('anonymization')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.encryption")}
+                                name={t("encryption")}
                                 checked={getLicenseValue('encryption')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.efilm")}
+                                name={t("efilm")}
                                 checked={getLicenseValue('efilm')}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <DisplayFeature
-                                name={t("fields.iqview")}
+                                name={t("iqview")}
                                 checked={getLicenseValue('iqview')}
                             />
                         </Grid>
@@ -348,7 +316,7 @@ const License = () => {
                                 variant="contained"
                                 component="label"
                             >
-                                {t("buttons.upload_license")}
+                                {t("actions.upload")}
                                 <input type="file" hidden onChange={handleUploadLicense} accept=".txt"/>
                             </Button>
                         </Grid>

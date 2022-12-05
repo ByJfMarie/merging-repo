@@ -45,18 +45,14 @@ const BootstrapDialogTitle = (props) => {
                 <IconButton
                     aria-label="close"
                     onClick={onClose}
-                    
                     sx={{
                         position: 'absolute',
                         right: 8,
                         top: 8,
-                        ":hover": {
-                            backgroundColor: "transparent"
-                        }
-                    
+                        color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon className="hover:text-primary text-gray-300"/>
+                    <CloseIcon />
                 </IconButton>
             ) : null}
         </DialogTitle>
@@ -70,7 +66,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomDialogAddPermission({open, handleOpenDialog, handleCloseDialog, study}) {
 
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     const theme = useTheme();
 
@@ -169,10 +165,10 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
             maxWidth="sm"
             fullWidth
         >
-            <BootstrapDialogTitle id="customized-dialog-title" className="text-center text-primary" onClose={handleCloseDialog} style={{backgroundColor: theme.palette.dialog.color}}>
-                {t("titles.study_permissions")}
+            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
+                {t("dialog_permissions.title")}
             </BootstrapDialogTitle>
-            <DialogContent style={{backgroundColor: theme.palette.dialog.color}}>
+            <DialogContent dividers>
                 {
                     filteredRows &&
 
@@ -181,13 +177,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                             value={searched}
                             onChange={(searchVal) => requestSearch(searchVal)}
                             onCancelSearch={() => cancelSearch()}
-                            placeholder={t("fields.filter")}
-                            className="border borde-gray-200 shadow-sm "
-                            sx={{
-                                boxShadow: "unset"
-                            }}
-                                
-                                
+                            placeholder={t("dialog_permissions.filter")}
                         />
                         <List sx={{width: '100%', marginTop: '10px', bgcolor: 'background.paper'}} className={classes.root}>
                             {filteredRows.sort((a, b) => a.checked?-1:1).map((row) => {
@@ -225,7 +215,11 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                 }
 
             </DialogContent>
-          
+            <DialogActions>
+                <Button autoFocus onClick={handleCloseDialog}>
+                    {t("dialog_permissions.actions.close")}
+                </Button>
+            </DialogActions>
         </BootstrapDialog>
     )
 }

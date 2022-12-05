@@ -7,7 +7,7 @@ import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import { useTranslation } from 'react-i18next';
 
 const Index = (props) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     const [options, setOptions] = React.useState([]);
     const loadRemoteSites = async() => {
@@ -36,7 +36,7 @@ const Index = (props) => {
     return (
         <PryButtonSelect
             icon={<ConnectingAirportsIcon fontSize="small" />}
-            label={t('buttons.transfer')}
+            label={t('table.actions.transfer')}
             options={options}
             handleAction={handleTransfer}
             disabled={props.actionDisabled}
