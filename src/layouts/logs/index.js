@@ -15,7 +15,7 @@ import moment from "moment";
 import { useTranslation } from 'react-i18next';
 
 const LogsLayout = (props) => {
-    const { t } = useTranslation('logs');
+    const { t } = useTranslation('common');
 
     //const { privileges } = React.useContext(UserContext);
 
@@ -104,19 +104,19 @@ const LogsLayout = (props) => {
     const column = [
         {
             field: 'file_name',
-            headerName: t("table.header.file"),
+            headerName: t("file"),
             flex: 2,
             minWidth: 200
         },
         {
             field: 'date',
-            headerName: t("table.header.date"),
+            headerName: t("date"),
             flex: 3,
             minWidth: 200
         },
         {
             field: 'size',
-            headerName: t("table.header.size"),
+            headerName: t("size"),
             flex: 3,
             minWidth: 200,
             renderCell: (params) => {
@@ -133,13 +133,13 @@ const LogsLayout = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<VisibilityIcon/>}
-                    label={t("table.menu.view")}
+                    label={t("buttons.view")}
                     onClick={() => handleActionView(params.row.key)}
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<DownloadIcon/>}
-                    label={t("table.menu.download")}
+                    label={t("buttons.download")}
                     onClick={() => handleActionDownload(params.row.key)}
                 />);
 
@@ -171,7 +171,7 @@ const LogsLayout = (props) => {
                             <Grid item xs={3}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DesktopDatePicker
-                                        label={t("filters.date")}
+                                        label={t("fields.date")}
                                         inputFormat="MM/dd/yyyy"
                                         value={filters.date}
                                         onChange={(date, keyboardInputValue) => {
@@ -185,7 +185,7 @@ const LogsLayout = (props) => {
                             </Grid>
                             <Grid item xs={3}>
                                 <TextField
-                                    label={t("filters.file_name")}
+                                    label={t("fields.file_name")}
                                     variant="standard"
                                     value={filters.name}
                                     onChange={(e) => {handleFiltersChange("name", e.target.value);}}

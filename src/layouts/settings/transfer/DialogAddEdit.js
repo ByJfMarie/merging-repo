@@ -15,7 +15,6 @@ import React from "react";
 import TransferService from "../../../services/api/transfer.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -25,9 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
-    const { t } = useTranslation('system');
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
 
@@ -79,15 +76,24 @@ const DialogAddEdit = (props) => {
         else response = await TransferService.addRule(props.values);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.save_transfer.error", {error: response.error}), {variant: 'error'});
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: t("msg_error.transfer_saved", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.save_transfer.success"), {variant: 'success'});
         props.toggle();
         props.setValues({});
         setAddMode(true);
         props.onSave();
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: t("msg_info.transfer_saved")
+        });
     }
 
     React.useEffect(() => {
@@ -112,17 +118,17 @@ const DialogAddEdit = (props) => {
             <Card style={{
                 backgroundColor: theme.palette.card.color,
                 width: "100% !important",
-                padding: '25px 0px',
                 margin: '0px 0px'
-            }}>
-                <CardContent>
+            }} className='py-4'>
+                <h1 className="text-center text-primary text-lg font-medium">AET Condition</h1>
+                <CardContent className="" sx={{paddingLeft: "4rem", paddingRight: "4rem"}}>
 
-                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
-                        <Grid item xs={12}>
+                    <Grid container spacing={2} style={{}}>
+                        <Grid item xs={12} >
                             <TextField
                                 className={classes.field}
                                 id="ae_title"
-                                label={t("tab_transfer.dialog_add_edit.aet_condition")}
+                                label={t("fields.aet_condition")}
                                 variant="standard"
                                 value={getValue('ae_title')}
                                 onChange={(e) => handleChange("ae_title", e.target.value)}
@@ -134,7 +140,7 @@ const DialogAddEdit = (props) => {
                         <Grid item xs={12}>
                             <FormControl className={classes.root} size="small" fullWidth={true}>
                                 <InputLabel variant="standard"
-                                            id="destinations">{t("tab_transfer.dialog_add_edit.destinations")}</InputLabel>
+                                            id="destinations">{t("fields.destinations")}</InputLabel>
                                 <Select
                                     labelId="destinations"
                                     id="destinations"
@@ -173,15 +179,17 @@ const DialogAddEdit = (props) => {
                         </Grid>
 
                         <Grid item xs/>
+                        <div className="mt-12 flex">
 
-                        <Grid item>
-                            <Button className={classes.button} variant="contained" component="label"
-                                    onClick={handleCancel}>{t('tab_transfer.dialog_add_edit.actions.cancel')}</Button>
-                        </Grid>
+                            <Grid item>
+                                <Button className={classes.button} variant="outlined" component="label"
+                                        onClick={handleCancel}>{t('buttons.cancel')}</Button>
+                            </Grid>
 
-                        <Grid item>
-                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('tab_transfer.dialog_add_edit.actions.save')}</Button>
-                        </Grid>
+                            <Grid item>
+                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
+                            </Grid>
+                        </div>
                     </Grid>
 
                 </CardContent>

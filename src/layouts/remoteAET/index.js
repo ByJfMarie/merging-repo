@@ -1,4 +1,4 @@
-import {Box, Paper} from "@mui/material";
+import {Alert, Box, Paper, Snackbar} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
@@ -10,15 +10,12 @@ import TableRemoteStudiesActions from "./TableRemoteStudiesActions";
 import {useState} from "react";
 import QRService from "../../services/api/queryRetrieve.service";
 import UserContext from "../../components/UserContext";
-import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
 function Index(props) {
-    const { t } = useTranslation(['remote_servers', 'study_filter']);
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('common');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -43,6 +40,20 @@ function Index(props) {
         to: "",
     };
 
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: 'success',
+        message: ''
+    });
+    const messageAlert = (severity, message) => {
+        setMessage({
+            ...message,
+            show: true,
+            severity: severity,
+            message: message
+        });
+    }
+
     /* FILTERS */
     const [filters, setFilters] = useState(filtersInitValue);
     const [pageSize, setPageSize] = React.useState(10);
@@ -52,27 +63,27 @@ function Index(props) {
         if (!filters) return false;
 
         if (filters.patient_id && filters.patient_id.length<3) {
-            enqueueSnackbar(t("messages.patientID_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.patientID_too_short"))
             return false;
         }
 
         if (filters.patient_name && filters.patient_name.length<3) {
-            enqueueSnackbar(t("messages.patientName_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.patientName_too_short"))
             return false;
         }
 
         if (filters.description && filters.description.length<3) {
-            enqueueSnackbar(t("messages.studyDesc_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.studyDesc_too_short"))
             return false;
         }
 
         if (filters.accession_number && filters.accession_number.length<3) {
-            enqueueSnackbar(t("messages.accession_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.accession_too_short"))
             return false;
         }
 
         if (filters.referring_physician && filters.referring_physician.length<3) {
-            enqueueSnackbar(t("messages.refPhys_too_short", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.refPhys_too_short"))
             return false;
         }
 
@@ -90,10 +101,12 @@ function Index(props) {
             if (filters.to) empty = false;
 
             if(empty) {
-                enqueueSnackbar(t("messages.query_no_criteria", {ns: 'study_filter'}), {variant: 'error'});
+                messageAlert('error', t("msg_error.query_no_criteria"));
                 return false;
             }
         }
+
+        setMessage({...message, show: false})
         return true;
     }
 
@@ -104,7 +117,7 @@ function Index(props) {
         const rows = [];
 
         if (props.currentAET === '') {
-            enqueueSnackbar(t("messages.query_no_aet", {ns: 'study_filter'}), {variant: 'error'});
+            messageAlert('error', t("msg_error.query_no_aet"));
             setRows(rows);
             return;
         }
@@ -138,7 +151,7 @@ function Index(props) {
     const columns = [
         {
             field: "patient_full",
-            headerName: t("table.header.patient"),
+            headerName: t("tables_header.patient"),
             valueGetter: (params) => params.row.p_name,
             flex: 2,
             minWidth: 150,
@@ -153,7 +166,7 @@ function Index(props) {
         },
         {
             field: "study_full",
-            headerName: t('table.header.study'),
+            headerName: t('tables_header.study'),
             valueGetter: (params) => params.row.st_date,
             flex: 3,
             minWidth: 350,
@@ -173,106 +186,10 @@ function Index(props) {
             flex: 1,
             minWidth: 180,
             field: 'st_ref_physician',
-            headerName: t('table.header.referring_physician')
+            headerName: t('tables_header.referring_physician')
         },
     ];
 
-
-
-
-    /*priviledges.settings[props.page].searchTable.columns.map((row) => {
-
-        if (row === 'patient') {
-            columns.push({
-                field: "patient_full",
-                headerName: t(row),
-                flex: 25,
-                maxWidth: 250,
-                //resizable: true,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return <div
-                        style={{lineHeight: "normal"}}>{params.row.p_name || ''} ({params.row.p_id || ''})<br/>{params.row.p_birthdate || ''}
-                    </div>
-                }
-            });
-        } else if (row === 'study') {
-            columns.push({
-                field: "study_full",
-                headerName: t(row),
-                flex: 25,
-                maxWidth: 250,
-                encodeHtml: false,
-                renderCell: (params) => {
-                    return <div style={{display: "flex", alignItems: "center !important", lineHeight: "normal"}}>
-                        <Box style={{paddingLeft: '15px'}}>
-                            {params.row.st_date+" - "+params.row.st_accession_number+" - "+params.row.st_modalities}<br/>
-                            {params.row.st_description}<br/>
-                            {params.row.nb_series+" serie(s) - "+params.row.nb_images+" image(s)"}
-                        </Box>
-                    </div>
-                }
-            });
-        }
-        else if (row === 'accession_number') {
-            columns.push(
-                {
-                    flex: 5,
-                    field: 'st_accession_number',
-                    headerName: t('accession_number'),
-                }
-            );
-        }
-        else if (row === 'modality') {
-            columns.push(
-                {
-                    flex: 5,
-                    field: 'st_modalities',
-                    headerName: t('modality'),
-                }
-            );
-        }
-        else if (row === 'date') {
-            columns.push(
-                {
-                    flex: 5,
-                    field: 'st_date',
-                    headerName: t('date')
-                }
-            );
-        }
-        else if (row === 'description') {
-            columns.push(
-                {
-                    flex: 10,
-                    field: 'st_description',
-                    headerName: t('description'),
-                }
-            );
-        }
-        else if (row === 'referring_physician') {
-            columns.push(
-                {
-                    flex: 15,
-                    field: 'st_ref_physician',
-                    headerName: t('referring_physician')
-                }
-            );
-        }
-        else if (row === 'noi') {
-            columns.push(
-                {
-                    flex: 10,
-                    field: 'noi',
-                    headerName: t('noi'),
-                    renderCell: (params) => {
-                        return <div style={{ lineHeight: "normal" }}>{params.row.nb_series || ''} serie(s)<br/>{params.row.nb_images || ''} image(s)</div>;
-                    }
-                }
-            );
-        }
-        return true;
-    });*/
 
     if (privileges.tables[props.page].actions_rows) {
         columns.push(
@@ -316,6 +233,12 @@ function Index(props) {
 
     return (
         <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <TableRemoteStudiesFilter
                 initialValues={filtersInitValue}
                 searchFunction={queryStudies}
@@ -336,7 +259,6 @@ function Index(props) {
                         rowsPerPageOptions={[10,20,50]}
                         getRowId={(row) => row.key}
                         checkboxSelection
-                        disableSelectionOnClick
                         selectionModel={selectedRows}
                         onSelectionModelChange={(ids) => {
                             const selectedIDs = new Set(ids);

@@ -50,7 +50,7 @@ const BootstrapDialogTitle = (props) => {
                         position: 'absolute',
                         right: 8,
                         top: 8,
-                        color: (theme) => theme.palette.grey[500],
+                        color: (theme) => theme.palette.grey[600],
                     }}
                 >
                     <CloseIcon />
@@ -67,7 +67,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function DialogSharing({open, studies, handleCloseDialog, handleShareDialog}) {
 
-    const { t } = useTranslation('local_studies');
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { settings } = React.useContext(UserContext);
@@ -98,8 +98,8 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
             maxWidth="sm"
             fullWidth
         >
-            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                {t("dialog_sharing.title")}
+            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog} sx={{color: "#2db4eb", textAlign: 'center'}}>
+                {t("titles.study_sharing")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
 
@@ -107,8 +107,8 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
 
                     <Grid item xs={12}>
                         <InputTags
-                            label={t("dialog_sharing.share_to.name")}
-                            placeholder={t("dialog_sharing.share_to.description")}
+                            label={t("fields.share_to")}
+                            placeholder={t("msg_info.share_to")}
                             tags={getValue('share_to') || []}
                             SetTags={(tags) => {setValue("share_to", tags);}}
                         />
@@ -120,10 +120,10 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
                         <TextField
                             fullWidth={true}
                             id="filled-basic"
-                            label={t("dialog_sharing.share_comments.name")}
+                            label={t("fields.share_comments")}
                             variant="standard"
                             value={getValue('comments')}
-                            placeholder={t("dialog_sharing.share_comments.description")}
+                            placeholder={t("msg_info.share_comments")}
                             onChange={(e) => {setValue('comments', e.target.value)}}
                             multiline
                             InputLabelProps={{
@@ -140,7 +140,7 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DesktopDatePicker
                                     id="from"
-                                    label={t('dialog_sharing.share_validUntil')}
+                                    label={t('fields.share_validUntil')}
                                     inputFormat={settings.date_format}
                                     value={getValue("valid_until") || null}
                                     onChange={(date, keyboardInputValue) => {
@@ -159,11 +159,11 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
 
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseDialog} color="secondary">
-                    {t("dialog_sharing.actions.cancel")}
+                <Button onClick={handleCloseDialog} size="small" variant="outlined">
+                    {t("buttons.cancel")}
                 </Button>
-                <Button autoFocus onClick={clickShare}>
-                    {t("dialog_sharing.actions.share")}
+                <Button autoFocus onClick={clickShare} size="small" variant="contained">
+                    {t("buttons.share")}
                 </Button>
             </DialogActions>
         </BootstrapDialog>

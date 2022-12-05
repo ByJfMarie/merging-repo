@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 const TransferStatusLayout = (props) => {
 
-    const { t } = useTranslation('transfer');
+    const { t } = useTranslation('common');
     //const { privileges } = React.useContext(UserContext);
 
     const LocalstatusComponent = (row) => {
@@ -151,7 +151,7 @@ const TransferStatusLayout = (props) => {
     React.useEffect(() => {
         if (props.autoRefresh) {
             const interval = setInterval(() => {
-                refreshOrders(props.filters);
+                refreshOrders();
             }, 5000);
             return () => clearInterval(interval);
         }
@@ -182,10 +182,9 @@ const TransferStatusLayout = (props) => {
     const column = [
         {
             field: "status",
-            headerName: t("table.header.status"),
+            headerName: t("tables_header.status"),
             flex: 1,
             minWidth: 200,
-            maxWidth: 350,
             encodeHtml: false,
             renderCell: (params) => {
                 return <>
@@ -196,10 +195,10 @@ const TransferStatusLayout = (props) => {
         },
         {
             field: 'patient',
-            headerName: t("table.header.patient"),
+            headerName: t("tables_header.patient"),
             flex: 1,
             minWidth: 150,
-            maxWidth: 450,
+            maxWidth: 250,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div
@@ -209,10 +208,10 @@ const TransferStatusLayout = (props) => {
         },
         {
             field: 'study',
-            headerName: t("table.header.study"),
+            headerName: t("tables_header.study"),
             flex: 1,
             minWidth: 350,
-            //maxWidth: 450,
+            maxWidth: 450,
             encodeHtml: false,
             renderCell: (params) => {
                 return <div
@@ -234,7 +233,7 @@ const TransferStatusLayout = (props) => {
                     case 3: //Receiving
                         actions.push(<GridActionsCellItem
                             icon={<CancelIcon/>}
-                            label={t("table.menu.cancel")}
+                            label={t("buttons.cancel")}
                             onClick={() => handleCancel(params.row)}
                             showInMenu
                         />);
@@ -242,7 +241,7 @@ const TransferStatusLayout = (props) => {
                     case 4: //Done
                         actions.push(<GridActionsCellItem
                             icon={<CancelIcon/>}
-                            label={t("table.menu.delete")}
+                            label={t("buttons.delete")}
                             onClick={() => handleCancel(params.row)}
                             showInMenu
                         />);
@@ -250,7 +249,7 @@ const TransferStatusLayout = (props) => {
                     case 100: //Error
                         actions.push(<GridActionsCellItem
                             icon={<ReplayIcon/>}
-                            label={t("table.menu.retry")}
+                            label={t("buttons.retry")}
                             onClick={() => handleRetry(params.row)}
                             showInMenu
                         />);

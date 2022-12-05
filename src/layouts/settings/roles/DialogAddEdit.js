@@ -14,7 +14,6 @@ import React from "react";
 import SettingsService from "../../../services/api/settings.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
-import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -41,9 +40,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
-    const { t } = useTranslation('roles_perms');
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -63,14 +60,23 @@ const DialogAddEdit = (props) => {
         let response = await SettingsService.editPrivileges(props.values);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.save_perms.error", {error: response.error}), {variant: 'error'});
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: t("msg_error.permissions_saved", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.save_perms.success"), {variant: 'success'});
         props.toggle();
         props.setValues({});
         props.onSave();
+
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: t("msg_info.permissions_saved")
+        });
     }
 
     React.useEffect(() => {
@@ -85,15 +91,16 @@ const DialogAddEdit = (props) => {
             onClose={props.toggle}
             TransitionComponent={Transition}
         >
-            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", padding: '25px 0px', margin: '0px 0px' }} >
-                <CardContent>
+            <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important", paddingTop: '25px', margin: '0px 0px' }} >
+            <h1 className="text-center text-primary text-lg font-medium">Roles & Permissions</h1>
+                <CardContent className="" sx={{paddingLeft: "4rem", paddingRight: "4rem"}}>
 
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={12}>
                             <TextField
                                 className={classes.field}
                                 id="role"
-                                label={t("dialog_add_edit.role")}
+                                label={t("fields.role")}
                                 variant="standard"
                                 value={getValue("role") || ''}
                                 InputProps={{
@@ -106,7 +113,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("dialog_add_edit.description")}
+                                label={t("fields.description")}
                                 variant="standard"
                                 value={getValue("description") || ''}
                                 onChange={(e) => {handleChange('description', e.target.value);}}
@@ -118,7 +125,7 @@ const DialogAddEdit = (props) => {
                                 <InputLabel
                                     variant="standard"
                                     id="viewers"
-                                >{t("dialog_add_edit.viewers")}
+                                >{t("fields.viewers")}
                                 </InputLabel>
                                 <Select
                                     labelId="viewers"
@@ -153,12 +160,14 @@ const DialogAddEdit = (props) => {
                         <Grid item xs />
 
                         <Grid container spacing={2} direction={"row-reverse"}>
+                          
                             <Grid item >
-                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('dialog_add_edit.actions.save')}</Button>
+                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
                             </Grid>
                             <Grid item >
-                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('dialog_add_edit.actions.cancel')}</Button>
+                                <Button variant="outlined" className={classes.button} component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
                             </Grid>
+                          
                         </Grid>
                     </Grid>
 
