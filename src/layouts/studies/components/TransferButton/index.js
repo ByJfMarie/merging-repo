@@ -5,9 +5,10 @@ import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import { Tooltip } from '@mui/material';
 
 const Index = (props) => {
-    const { t } = useTranslation('local_studies');
+    const { t } = useTranslation('common');
 
     const [options, setOptions] = React.useState([]);
     const loadRemoteSites = async() => {
@@ -34,13 +35,34 @@ const Index = (props) => {
     }, []);
 
     return (
-        <PryButtonSelect
-            icon={<ConnectingAirportsIcon fontSize="small" />}
-            label={t('table.actions.transfer')}
-            options={options}
-            handleAction={handleTransfer}
-            disabled={props.actionDisabled}
-        />
+        <div>
+
+            <div className='laptop:hidden'>
+                <Tooltip title={t('buttons.transfer')}>
+                    <div>
+                    <PryButtonSelect
+                        style={{fontSize:'5px'}}
+                        icon={<ConnectingAirportsIcon fontSize="small" />}
+                        options={options}
+                        handleAction={handleTransfer}
+                        disabled={props.actionDisabled}
+                        label={t('buttons.transfer')}
+                    />
+                    </div>
+                </Tooltip>
+            </div>
+
+            <div className='hidden laptop:block'>
+                <PryButtonSelect
+                    icon={<ConnectingAirportsIcon fontSize="small" />}
+                    label={t('buttons.transfer')}
+                    options={options}
+                    handleAction={handleTransfer}
+                    disabled={props.actionDisabled}
+                />
+            </div>
+
+        </div>
     )
 }
 

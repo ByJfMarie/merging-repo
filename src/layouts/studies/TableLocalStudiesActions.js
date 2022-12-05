@@ -13,10 +13,63 @@ const TableLocalStudiesActions = (props) => {
 
     return (
         <React.Fragment>
-            <Grid container spacing={2}>
-                <Grid item sm={4} sx={{display: {xs: 'none', sm:'block'}}}>
+            <div className='laptop:hidden '>
+            <div container spacing={0} className='flex justify-center mt-5' >
+                <div >
                     {privileges.tables[props.page].actions.includes('download') && (
-                        <DownloadButton
+                        <DownloadButton                         
+                            key='download'
+                            downloadFunction={props.downloadFunction}
+                            actionDisabled={props.actionDisabled}
+                            
+                        />
+                    )}
+                </div>
+                <div  >
+                    <div className='flex'>
+                    {  // eslint-disable-next-line 
+                        privileges.tables[props.page].actions.map((value, key) => {
+                            if (value === "share") {
+                                return (
+                                    <div key={"sharing"} item xs="auto">
+                                        <SharingButton
+                                            sharingFunction={props.sharingFunction}
+                                            actionDisabled={props.actionDisabled}
+                                        />
+                                    </div>
+                                )
+                            }
+                            else if (value === "forward") {
+                                return (
+                                    <div key={value} item xs="auto">
+                                        <ForwardButton
+                                            forwardFunction={props.forwardFunction}
+                                            actionDisabled={props.actionDisabled}
+                                        />
+                                    </div>
+                                )
+                            }
+                            else if (value === "transfer") {
+                                return (
+                                    <div key={value} item xs="auto">
+                                    <TransferButton
+                                        transferFunction={props.transferFunction}
+                                        actionDisabled={props.actionDisabled}
+                                    />
+                                    </div>
+                                )
+                            }
+                        })}
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div className='hidden laptop:block'>
+            <Grid container spacing={0} >
+                <Grid item sm={4} >
+                    {privileges.tables[props.page].actions.includes('download') && (
+                        <DownloadButton                         
                             key='download'
                             downloadFunction={props.downloadFunction}
                             actionDisabled={props.actionDisabled}
@@ -57,26 +110,13 @@ const TableLocalStudiesActions = (props) => {
                                     </Grid>
                                 )
                             }
-                            /*else if (value === "media") {
-                                return (
-                                    <Button
-                                        key={value}
-                                        className={classes.buttonMain}
-                                        variant="outlined"
-                                        size="medium"
-                                        color="primary"
-                                        style={{ marginLeft: "10px" }}
-                                        onClick={() => {props.mediaFunction();}}
-                                        actionDisabled={props.actionDisabled}
-                                    >
-                                        {t(value)}
-                                    </Button>
-                                )
-                            }*/
                         })}
                     </Grid>
                 </Grid>
             </Grid>
+            </div>
+
+          
         </React.Fragment>
     )
 }

@@ -10,7 +10,12 @@ import {
     Select,
     InputLabel,
     FormControl,
+    Dialog,
+    DialogContent,
+    DialogContentText,
     Button,
+    DialogActions,
+    DialogTitle,
     Card,
     CardContent,
     ToggleButtonGroup,
@@ -19,7 +24,8 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from '@emotion/react';
-import { TextField } from "@mui/material";
+import { TextField, Paper, Fade, Popper } from "@mui/material";
+import PopupState, {bindPopper, bindToggle} from 'material-ui-popup-state'
 import BlockIcon from '@mui/icons-material/Block';
 import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -30,6 +36,7 @@ import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import UserContext from "../../components/UserContext";
 import styled from "styled-components";
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -71,13 +78,11 @@ const useStyles = makeStyles((theme) => ({
     },
 
     button: {
-        float: 'right',
         backgroundColor: theme.palette.chip.color + "!important",
         margin: '10px !important'
     },
 
     buttonQuery: {
-        float: 'right',
         margin: '10px !important'
     },
 
@@ -96,7 +101,7 @@ const BadgeMore = styled(Badge)`
     `;
 
 export default function TableRemoteStudiesFilter(props) {
-    const { t } = useTranslation('study_filter');
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { settings } = React.useContext(UserContext);
@@ -224,7 +229,7 @@ export default function TableRemoteStudiesFilter(props) {
 
     const modalityComponent = (primary) => (
         <FormControl className={classes.root} size="small" fullWidth={true} >
-            <InputLabel variant="standard" id="modality">{t("fields.modality")}</InputLabel>
+            <InputLabel variant="standard" id="modality">{t("filters.modality")}</InputLabel>
             <Select
                 labelId="modality"
                 id="modality"
@@ -261,7 +266,7 @@ export default function TableRemoteStudiesFilter(props) {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
                 id="birthdate"
-                label={t('fields.birthdate')}
+                label={t('filters.birthdate')}
                 inputFormat={settings.date_format}
                 value={values.birthdate || null}
                 onChange={(date, keyboardInputValue) => {
@@ -314,8 +319,31 @@ export default function TableRemoteStudiesFilter(props) {
     // var moreFilters = ""
     return (
         <React.Fragment>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {t('filters.termTooShort')}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {t('filters.termMessage')}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             <form onSubmit={handleClickQuery}>
-                <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+
+            <Card className='hidden laptop:block' style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
                     <CardContent>
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
 
@@ -340,7 +368,7 @@ export default function TableRemoteStudiesFilter(props) {
                                             key={key}
                                             className={classes.root}
                                             id={value}
-                                            label={t("fields."+value)}
+                                            label={t("filters."+value)}
                                             variant="standard"
                                             fullWidth
                                             value={values[value] || ""}
@@ -356,6 +384,7 @@ export default function TableRemoteStudiesFilter(props) {
                         <Container maxWidth="sm" style={{ display: "flex", justifyContent: 'center' }}>
 
                             <ToggleButtonGroup
+                                size='small'
                                 color="primary"
                                 exclusive
                                 value={values.date_preset}
@@ -372,7 +401,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                 value={key}
                                                 className={key > 2 ? classes.presetPhone : ""}
                                             >
-                                                {t("presets."+key)}
+                                                {t("date_presets."+key)}
                                             </ToggleButton>
                                         )
                                     })
@@ -382,20 +411,20 @@ export default function TableRemoteStudiesFilter(props) {
 
                         </Container>
 
-                        <Box sx={{ float: "left", height: "42px", display: "flex", alignItems: 'flex-end', color: 'warning.main'}}>
+                        <Box sx={{ float: "inline-start", height: "42px", display: "flex", alignItems: 'flex-end', color: 'warning.main'}}>
                             <Typography variant="caption">
-                                {t("messages.remote_use_wildcard")}
+                                {t("msg_info.remote_use_wildcard")}
                             </Typography>
                         </Box>
 
-                        <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonQuery} style={{ fontSize: '12px', width: '80px' }}>
+                        <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonQuery} style={{ fontSize: '12px', width: '80px',float: 'inline-end' }}>
                             <SearchIcon style={{ transform: "scale(0.8)" }} />
-                            {t('actions.query')+"   "}
+                            {t('buttons.query')+"   "}
                         </Button>
 
-                        <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
+                        <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px', float: 'inline-end' }}>
                             <MoreVertIcon style={{ transform: "scale(0.8)" }} />
-                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('actions.more')+"   "} </BadgeMore>
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
                         </Button>
 
                         <Button
@@ -403,10 +432,10 @@ export default function TableRemoteStudiesFilter(props) {
                             onClick={clearValues}
                             variant="contained"
                             className={classes.button}
-                            style={{ fontSize: '12px', width: '80px', heigh: '50px' }}
+                            style={{ fontSize: '12px', width: '80px', heigh: '50px',float: 'inline-end' }}
                         >
                             <BlockIcon style={{ transform: "scale(0.8)" }} />
-                            {t('actions.reset')}
+                            {t('buttons.reset')}
                         </Button>
 
                         <Popover
@@ -427,7 +456,7 @@ export default function TableRemoteStudiesFilter(props) {
                                     settings.filters_studies_primary.length < fields.length ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('fields.more')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('filters.more')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -454,7 +483,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                     <TextField
                                                         className={classes.root}
                                                         id={value}
-                                                        label={t("fields."+value)}
+                                                        label={t("filters."+value)}
                                                         variant="standard"
                                                         fullWidth
                                                         value={values[value] || ""}
@@ -473,7 +502,7 @@ export default function TableRemoteStudiesFilter(props) {
                                 <Container maxWidth="false" style={{ padding: '0 0 25px 0 ' }}>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('fields.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('filters.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
                                     {
@@ -489,7 +518,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="from"
-                                                        label={t('fields.from')}
+                                                        label={t('filters.from')}
                                                         inputFormat={settings.date_format}
                                                         value={values.from || null}
                                                         onChange={(date, keyboardInputValue) => {
@@ -507,7 +536,7 @@ export default function TableRemoteStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="to"
-                                                        label={t('fields.to')}
+                                                        label={t('filters.to')}
                                                         inputFormat={settings.date_format}
                                                         value={values.to || null}
                                                         onChange={(date, keyboardInputValue) => {
@@ -531,6 +560,234 @@ export default function TableRemoteStudiesFilter(props) {
                         </Popover>
                     </CardContent>
                 </Card>
+
+ {/* -----------------------------------------------PHONE VERSION------------------------------------------------ */}
+
+                <Card className='laptop:hidden' style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+                    <CardContent>
+                        <Grid container spacing={2} style={{ marginBottom: '15px', flexDirection:'column', width:'100%' }}>
+                            {
+                                settings &&
+                                settings.filters_aets_primary.map((value, key) => {
+
+                                    if (value === "modality") {
+                                        return (<Grid key={value} item xs={6} sm>
+                                            {modalityComponent(true)}
+                                        </Grid>)
+                                    }
+
+                                    if (value === "birthdate") {
+                                        return (<Grid key={value} item xs={6} sm>
+                                            {birthdateComponent(true)}
+                                        </Grid>)
+                                    }
+
+                                    return (
+                                            <Grid key={value} item xs={15} sm>
+                                                <TextField
+                                                    key={key}
+                                                    className={classes.root}
+                                                    id={value}
+                                                    label={t("filters."+value)}
+                                                    variant="standard"
+                                                    fullWidth
+                                                    value={values[value] || ""}
+                                                    onChange={(e) => {
+                                                        handleSearch(value, e.target.value);
+                                                        }
+                                                    }
+                                                />
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+
+                        <Container maxWidth="sm" style={{ display: "flex", justifyContent: 'center'}}>
+                            <ToggleButtonGroup
+                                style={{marginTop: '20px', height: '30px'}}
+                                color="primary"
+                                exclusive
+                                value={values.date_preset}
+                            >
+                                {
+                                    settings &&
+                                    settings.filters_aets_date_presets.map((key, index) => {
+
+                                        return (
+                                            <ToggleButton
+                                                size='small'
+                                                key={key}
+                                                style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main,  marginRight: '5px' }}
+                                                onClick={() => handleChangeDate(key, true)}
+                                                value={key}
+                                                className={key > 2 ? classes.presetPhone : ""}
+                                            >
+                                                {t("date_presets."+key)}
+                                            </ToggleButton>
+                                        )
+                                    })
+                                }
+
+                            </ToggleButtonGroup>
+                        
+                        </Container>
+
+                        <Container maxWidth="sm"  style={{ display: "flex", justifyContent: 'center', marginTop: '10px'}}>
+                                
+
+                            {/* <Button size='small' sx={{ float: "inline-start", height: "42px", display: "flex", alignItems: 'flex-end', color: 'warning.main'}}>
+                                <InfoTwoToneIcon style={{ transform: "scale(0.8)", color: 'blue' }}/>
+                                <Typography variant="caption" style={{fontSize: '10px'}}>
+                                    {t("msg_info.remote_use_wildcard")}
+                                </Typography>
+                            </Button> */}
+
+                        <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonQuery} style={{ fontSize: '12px', width: '80px',float: 'inline-end' }}>
+                            <SearchIcon style={{ transform: "scale(0.8)" }} />
+                            {t('buttons.query')+"   "}
+                        </Button>
+
+                        <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px', float: 'inline-end' }}>
+                            <MoreVertIcon style={{ transform: "scale(0.8)" }} />
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
+                        </Button>
+
+                        <Button
+                            size="small"
+                            onClick={clearValues}
+                            variant="contained"
+                            className={classes.button}
+                            style={{ fontSize: '12px', width: '80px', heigh: '50px',float: 'inline-end' }}
+                        >
+                            <BlockIcon style={{ transform: "scale(0.8)" }} />
+                            {t('buttons.reset')}
+                        </Button>
+                        </Container>
+
+                        <Popover
+                            id={id}
+                            open={openMore}
+                            anchorEl={anchorElMore}
+                            onClose={handleCloseMore}
+                            anchorOrigin={{
+                                horizontal: 'right',
+                                vertical: 'bottom'
+                            }}
+                            className={classes.popover}
+                        >
+                            <form>
+                            <Container style={{ maxWidth: "500px" }}>
+                                {
+                                    settings &&
+                                    settings.filters_studies_primary.length < fields.length ? (<>
+
+                                    <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
+                                        <Chip size="medium" label={t('filters.more')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                    </Divider>
+
+                                    <Grid container spacing={2} style={{ marginBottom: '15px' }}>
+
+                                        {
+                                            fields.map((value) => {
+                                                if (settings.filters_aets_primary.includes(value)) return;
+
+                                                if (value === "modality") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {modalityComponent(false)}
+                                                        </Grid>)
+                                                }
+
+                                                if (value === "birthdate") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {birthdateComponent(false)}
+                                                        </Grid>)
+                                                }
+
+                                                return (<Grid key={value} item xs={6} md={6} >
+                                                    <TextField
+                                                        className={classes.root}
+                                                        id={value}
+                                                        label={t("filters."+value)}
+                                                        variant="standard"
+                                                        fullWidth
+                                                        value={values[value] || ""}
+                                                        onChange={(e) => {
+                                                            handleSearch(value, e.target.value);
+                                                            handleSecondaryFilters(value, e.target.value);
+                                                        }}
+                                                    />
+                                                </Grid>)
+
+                                            })}
+
+                                    </Grid>
+                                </>) : ""}
+
+                                <Container maxWidth="false" style={{ padding: '0 0 25px 0 ' }}>
+
+                                    <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
+                                        <Chip size="medium" label={t('filters.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                    </Divider>
+
+                                    {
+                                        settings &&
+                                        <Grid container justifyContent="center" style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            direction: "column",
+                                            alignItems: "center"
+                                        }} spacing={2}>
+
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <Grid item xs={6} md={6}>
+                                                    <DesktopDatePicker
+                                                        id="from"
+                                                        label={t('filters.from')}
+                                                        inputFormat={settings.date_format}
+                                                        value={values.from || null}
+                                                        onChange={(date, keyboardInputValue) => {
+                                                            if (keyboardInputValue && keyboardInputValue.length > 0 && keyboardInputValue.length < 10) return;
+                                                            handleSearch("from", date);
+                                                            handleSecondaryFilters("from", date);
+                                                        }
+                                                        }
+                                                        renderInput={(params) => <TextField
+                                                            InputLabelProps={{shrink: true}} variant="standard"
+                                                            size="small" {...params} />}
+                                                        dateAdapter={AdapterDateFns}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={6} md={6}>
+                                                    <DesktopDatePicker
+                                                        id="to"
+                                                        label={t('filters.to')}
+                                                        inputFormat={settings.date_format}
+                                                        value={values.to || null}
+                                                        onChange={(date, keyboardInputValue) => {
+                                                            if (keyboardInputValue && keyboardInputValue.length > 0 && keyboardInputValue.length < 10) return;
+                                                            handleSearch("to", date);
+                                                            handleSecondaryFilters("to", date);
+                                                        }}
+                                                        renderInput={(params) => <TextField
+                                                            InputLabelProps={{shrink: true}} variant="standard"
+                                                            size="small" {...params} />}
+                                                        dateAdapter={AdapterDateFns}
+                                                    />
+                                                </Grid>
+                                            </LocalizationProvider>
+                                        </Grid>
+                                    }
+                                </Container>
+                            </Container>
+                                <Button type="submit"/>
+                            </form>
+                        </Popover>
+                    </CardContent>
+                </Card>
+{/* ----------------------------------------------------------------------------------  */}
             </form>
         </React.Fragment >)
 }

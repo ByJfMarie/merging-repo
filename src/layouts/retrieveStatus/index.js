@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 /** STATUS CHIP (ERROR / SUCCESS) */
 
 const RetrievingLayout = (props) => {
-    const { t } = useTranslation('remote_servers');
+    const { t } = useTranslation('common');
 
     //const[privileges] = React.useState(UserStorage.getPrivileges());
 
@@ -33,7 +33,7 @@ const RetrievingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                            label={t("table_status.status.waiting")}
+                            label={t("status.waiting")}
                             //color: "default"
                         />
                     )
@@ -45,7 +45,7 @@ const RetrievingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                            label={t("table_status.status.retrieving")}
+                            label={t("status.retrieving")}
                             color= "info"
                         />
                     )
@@ -57,7 +57,7 @@ const RetrievingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                            label={t("table_status.status.completed")}
+                            label={t("status.completed")}
                             color= "success"
                         />
                     )
@@ -70,7 +70,7 @@ const RetrievingLayout = (props) => {
                                 variant="filled"
                                 size="small"
                                 icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                                label={t("table_status.status.error")}
+                                label={t("status.error")}
                                 color= "error"
                             />
                         </Tooltip>
@@ -150,7 +150,7 @@ const RetrievingLayout = (props) => {
     const column = [
         {
             field: "status",
-            headerName: t("table_status.header.status"),
+            headerName: t("tables_header.status"),
             flex: 1,
             minWidth: 110,
             description: "Status",
@@ -161,19 +161,19 @@ const RetrievingLayout = (props) => {
         },
         {
             "field": 'p_name',
-            "headerName": t("table_status.header.patient"),
+            "headerName": t("tables_header.patient"),
             "flex": 2,
             "minWidth": 200
         },
         {
             "field": 'st_description',
-            "headerName": t("table_status.header.description"),
+            "headerName": t("tables_header.description"),
             "flex": 3,
             "minWidth": 200
         },
         {
             "field": 'aet',
-            "headerName": t("table_status.header.aet"),
+            "headerName": t("tables_header.aet"),
             "flex": 2,
             "minWidth": 200,
             renderCell: (params) => {
@@ -182,7 +182,7 @@ const RetrievingLayout = (props) => {
         },
         {
             "field": 'noi',
-            "headerName": t("table_status.header.noi"),
+            "headerName": t("tables_header.noi"),
             "flex": 1,
             "minWidth": 200,
             renderCell: (params) => {
@@ -202,7 +202,7 @@ const RetrievingLayout = (props) => {
                 if (params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
-                        label={t("table_status.menu.retry")}
+                        label={t("buttons.retry")}
                         onClick={() => handleRetry(params.row.id)}
                         showInMenu
                     />);
@@ -210,7 +210,7 @@ const RetrievingLayout = (props) => {
                 if (params.row.status === 0 || params.row.status === 1 || params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
-                        label={t("table_status.menu.cancel")}
+                        label={t("buttons.cancel")}
                         onClick={() => handleCancel(params.row.id)}
                         showInMenu
                     />);
@@ -218,7 +218,7 @@ const RetrievingLayout = (props) => {
                 if (params.row.status === 2) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
-                        label={t("table_status.menu .delete")}
+                        label={t("buttons.delete")}
                         onClick={() => handleCancel(params.row.id)}
                         showInMenu
                     />);

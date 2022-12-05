@@ -13,13 +13,12 @@ import GeneralService from "../../../services/api/general.service";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
-import UsersService from "../../../services/api/users.service";
 
 // Image
 const bgImage = "/images/loginbg.jpg";
 
 function Signin() {
-    const { t } = useTranslation(['login', 'common']);
+    const { t } = useTranslation('login');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -47,17 +46,17 @@ function Signin() {
         e.preventDefault();
 
         if (!username) {
-            swal("Failed", t("messages.username_required"), "error");
+            swal("Failed", t("msg_error.username_required"), "error");
             return;
         }
 
         if (!password) {
-            swal("Failed", t("messages.password_required"), "error");
+            swal("Failed", t("msg_error.password_required"), "error");
             return;
         }
 
         if (useCaptcha===true && !captchaValue) {
-            swal("Failed", t("messages.captcha_required"), "error");
+            swal("Failed", t("msg_error.captcha_required"), "error");
             return;
         }
 
@@ -67,20 +66,7 @@ function Signin() {
             return;
         }
 
-        //Redirection to 2FA (if enabled for the user)
-        const use2FA = await UsersService.isUse2FA();
-        if (use2FA.error) {
-            swal("Failed", response.error, "error");
-            return;
-        }
-
-        if (use2FA.items && use2FA.items.use2FA==="true") {
-            window.location.href = "/login-2fa";
-            return;
-        }
-
-        //No 2FA => Login successful
-        swal("Success", t("messages.login_success"), "success", {
+        swal("Success", t("msg_info.login_success"), "success", {
             buttons: false,
             timer: 2000,
         })
@@ -127,16 +113,16 @@ function Signin() {
                 <BackgroundLayout
                     bgImage={bgImage}
                 >
-                    <Grid item xs={12}><Typography variant="h2">{t("portal_name", {ns: "common"})}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h2">{t("texts.portal_name")}</Typography></Grid>
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
-                    <Grid item xs={12}><Typography variant="h4">{t("portal_welcome.title")}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h4">{t("texts.portal_subtitle")}</Typography></Grid>
                     <Grid item xs={12}>
                         <Typography variant="body2">
-                            {t("portal_welcome.line_1")}<br/>
-                            {t("portal_welcome.line_2")}<br/>
-                            {t("portal_welcome.line_3")}<br/>
-                            {t("portal_welcome.line_4")}<br/>
-                            {t("portal_welcome.line_5")}<br/>
+                            {t("texts.portal_welcome_text.line_1")}<br/>
+                            {t("texts.portal_welcome_text.line_2")}<br/>
+                            {t("texts.portal_welcome_text.line_3")}<br/>
+                            {t("texts.portal_welcome_text.line_4")}<br/>
+                            {t("texts.portal_welcome_text.line_5")}<br/>
                         </Typography>
                     </Grid>
                 </BackgroundLayout>
@@ -173,7 +159,7 @@ function Signin() {
                                 fullWidth
                                 id="username"
                                 name="username"
-                                label={t("login.username")}
+                                label={t("fields.username")}
                                 autoComplete="username"
                                 onChange={e => setUserName(e.target.value)}
                             />
@@ -184,7 +170,7 @@ function Signin() {
                                 fullWidth
                                 id="password"
                                 name="password"
-                                label={t("login.password")}
+                                label={t("fields.password")}
                                 type="password"
                                 autoComplete="current-password"
                                 onChange={e => setPassword(e.target.value)}
@@ -196,7 +182,7 @@ function Signin() {
                                 xs
                                 justifyContent="right"
                                 alignItems="center">
-                                <Link href="/forgot">{t("login.actions.forgot_password")}</Link>
+                                <Link href="/forgot">{t("actions.forgot_password")}</Link>
                             </Grid>
 
                             {
@@ -231,7 +217,7 @@ function Signin() {
                                 fullWidth
                                 disabled={useCaptcha && !verified}
                             >
-                                {t("login.actions.sign_in")}
+                                {t("buttons.sign_in")}
                             </Button>
 
                             <Box sx={{ m: 2 }} />
@@ -245,8 +231,8 @@ function Signin() {
                                     justifyContent="left"
                                     alignItems="center"
                                 >
-                                    <Typography variant="h6">{t("login.actions.reference_login.text")} <Link
-                                        href="/login-access">{t("login.actions.reference_login.link")}</Link></Typography>
+                                    <Typography variant="h6">{t("actions.access_code.text")} <Link
+                                        href="/login-access">{t("actions.access_code.link")}</Link></Typography>
                                 </Grid>
                             }
 

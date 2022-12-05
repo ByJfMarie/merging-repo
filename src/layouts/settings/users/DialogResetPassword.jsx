@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function ResetPassword({open, setOpen, user, alertMessage}) {
-    const { t } = useTranslation('users');
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
 
@@ -71,13 +71,13 @@ export default function ResetPassword({open, setOpen, user, alertMessage}) {
                 TransitionComponent={Transition}
             >
                 <DialogContent dividers={scroll === 'paper'} style={{backgroundColor: theme.palette.dialog.color}}>
-                    <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('dialog_reset_password.title')} </Typography>
+                    <Typography variant="h4" style={{ textAlign: 'left', color: theme.palette.primary.main }} > {t('titles.change_password')} </Typography>
                     <Divider style={{ marginBottom: theme.spacing(2) }} />
 
                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                         <Grid item xs={12}>
                             <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                                <InputLabel htmlFor="filled-adornment-password">{t('dialog_reset_password.new_password')}</InputLabel>
+                                <InputLabel htmlFor="filled-adornment-password">{t('fields.new_password')}</InputLabel>
                                 <Input
                                     id="pwd"
                                     name="pwd"
@@ -102,7 +102,7 @@ export default function ResetPassword({open, setOpen, user, alertMessage}) {
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                                <InputLabel htmlFor="filled-adornment-password">{t('dialog_reset_password.confirm_password')}</InputLabel>
+                                <InputLabel htmlFor="filled-adornment-password">{t('fields.repeat_password')}</InputLabel>
                                 <Input
                                     id="repeat"
                                     name="repeat"
@@ -129,7 +129,7 @@ export default function ResetPassword({open, setOpen, user, alertMessage}) {
                 </DialogContent>
                 <DialogActions style={{backgroundColor: theme.palette.dialog.color}}>
                     <ActionBar
-                        labelReset={t('dialog_reset_password.actions.cancel')}
+                        labelReset={t('buttons.cancel')}
                         handleSave={handleSave}
                         handleCancel={handleCancel}
                     />

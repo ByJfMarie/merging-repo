@@ -12,16 +12,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import {useState} from "react";
 import AlertDialog from "../../../components/AlertDialog";
-import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
 
 const Index = (props) => {
-    const { t } = useTranslation('users');
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('settings');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -60,12 +57,20 @@ const Index = (props) => {
 
         let response = await UsersService.editUser(row.login, row);
         if (response.error) {
-            enqueueSnackbar(t("messages.save_user.error", {error: response.error}), {variant: 'error'});
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: t("msg_error.user_saved", {error: response.error})
+            });
             return;
         }
 
         refreshUsers(props.filters);
-        enqueueSnackbar(t("messages.save_user.success"), {variant: 'success'});
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: t("msg_info.user_saved")
+        });
     }
 
     const [resetPasswordUser, setResetPasswordUser] = React.useState(null);
@@ -94,18 +99,26 @@ const Index = (props) => {
         const response = await UsersService.deleteUser(user.login);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.delete_user.error", {user: user.login, error: response.error}), {variant: 'error'});
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: t("msg_error.user_deleted", {user: user.login, error: response.error})
+            }           );
             return;
         }
 
         refreshUsers(props.filters);
-        enqueueSnackbar(t("messages.delete_user.success", {user: user.login}), {variant: 'success'});
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: t("msg_info.user_deleted", {user: user.login})
+        });
     }
 
     const column = [
         {
             field: "login",
-            headerName: t("table.header.login"),
+            headerName: t("tables_header.login"),
             flex: 1,
             minWidth: 110,
             description: "Login",
@@ -113,7 +126,7 @@ const Index = (props) => {
         },
         {
             field: "name",
-            headerName: t("table.header.name"),
+            headerName: t("tables_header.name"),
             flex: 1,
             minWidth: 110,
             description: "Name",
@@ -124,7 +137,7 @@ const Index = (props) => {
         },
         {
             field: "mail",
-            headerName: t("table.header.mail"),
+            headerName: t("tables_header.mail"),
             flex: 1,
             minWidth: 110,
             description: "Email",
@@ -132,7 +145,7 @@ const Index = (props) => {
         },
         {
             field: "role",
-            headerName: t("table.header.role"),
+            headerName: t("tables_header.role"),
             flex: 1,
             minWidth: 110,
             description: "Role",
@@ -140,7 +153,7 @@ const Index = (props) => {
         },
         {
             field: "status",
-            headerName: t("table.header.active"),
+            headerName: t("tables_header.active"),
             flex: 1,
             minWidth: 110,
             description: "Status",
@@ -167,14 +180,14 @@ const Index = (props) => {
                 if (params.row.status) {
                     actions.push(<GridActionsCellItem
                         icon={<CloseIcon color="error"/>}
-                        label={t("table.menu.deactivate")}
+                        label={t("buttons.deactivate")}
                         onClick={() => handleUserStatus(params.row)}
                         showInMenu
                     />);
                 } else {
                     actions.push(<GridActionsCellItem
                         icon={<CheckIcon color="success"/>}
-                        label={t("table.menu.activate")}
+                        label={t("buttons.activate")}
                         onClick={() => handleUserStatus(params.row)}
                         showInMenu
                     />);
@@ -182,21 +195,21 @@ const Index = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<LockResetIcon/>}
-                    label={t("table.menu.reset_password")}
+                    label={t("buttons.reset_password")}
                     onClick={() => handleResetPassword(params.row)}
                     showInMenu
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
-                    label={t("table.menu.edit")}
+                    label={t("buttons.edit")}
                     onClick={() => handleEdit(params.row)}
                     showInMenu
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<DeleteIcon/>}
-                    label={t("table.menu.delete")}
+                    label={t("buttons.delete")}
                     color="error"
                     onClick={() => handleDelete(params.row)}
                     showInMenu
@@ -243,15 +256,16 @@ const Index = (props) => {
                 open={resetPasswordOpen}
                 setOpen={setResetPasswordOpen}
                 user={resetPasswordUser}
+                alertMessage={(message) => props.alertMessage(message)}
             />
 
             <AlertDialog
                 open={dialogDeleteOpen}
-                title={t("dialog_delete.title")}
-                text={t("dialog_delete.text")}
+                title={t("confirm.delete_title")}
+                text={t("confirm.delete_user")}
                 data={dialogDeleteUser}
-                buttonCancel={t("dialog_delete.actions.cancel")}
-                buttonConfirm={t("dialog_delete.actions.delete")}
+                buttonCancel={t("buttons.cancel")}
+                buttonConfirm={t("buttons.delete")}
                 functionCancel={handleCloseDeleteDialog}
                 functionConfirm={handleConfirmDeleteDialog}
             />

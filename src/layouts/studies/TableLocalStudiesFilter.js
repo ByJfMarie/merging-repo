@@ -13,7 +13,12 @@ import {
     Select,
     InputLabel,
     FormControl,
+    Dialog,
+    DialogContent,
+    DialogContentText,
     Button,
+    DialogActions,
+    DialogTitle,
     Card,
     CardContent,
     ToggleButtonGroup,
@@ -73,13 +78,11 @@ const useStyles = makeStyles((theme) => ({
     },
 
     button: {
-        float: 'right',
         backgroundColor: theme.palette.chip.color + "!important",
         margin: '10px !important'
     },
 
     buttonFind: {
-        float: 'right',
         margin: '10px !important'
     },
 
@@ -90,6 +93,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
+
 const BadgeMore = styled(Badge)`
           .MuiBadge-badge {
                 right: -10px;
@@ -99,7 +104,7 @@ const BadgeMore = styled(Badge)`
 
 export default function TableLocalStudiesFilter(props) {
 
-    const { t } = useTranslation('study_filter');
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { settings, privileges } = React.useContext(UserContext);
@@ -147,10 +152,15 @@ export default function TableLocalStudiesFilter(props) {
     const classes = useStyles(theme);
 
     const [values, setValues] = React.useState(props.initialValues);
+    const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
         props.searchFunction(values);
-    }, []);
+    }, [open]);
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     /** MODALITY FIELD */
     const handleChangeModality = (event) => {
@@ -196,6 +206,8 @@ export default function TableLocalStudiesFilter(props) {
         props.searchFunction(items);
     }
 
+   
+
     /** RESET BUTTON */
     const clearValues = () => {
         setValues(props.initialValues);
@@ -219,8 +231,9 @@ export default function TableLocalStudiesFilter(props) {
     }
 
     const modalityComponent = (primary) => (
+        
             <FormControl className={classes.root} size="small" fullWidth={true}>
-                <InputLabel variant="standard" id="modality">{t("fields.modality")}</InputLabel>
+                <InputLabel variant="standard" id="modality">{t("filters.modality")}</InputLabel>
                 <Select
                     labelId="modality"
                     id="modality"
@@ -256,7 +269,7 @@ export default function TableLocalStudiesFilter(props) {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
                 id="birthdate"
-                label={t('fields.birthdate')}
+                label={t('filters.birthdate')}
                 inputFormat={settings.date_format}
                 value={values.birthdate || null}
                 onChange={(date, keyboardInputValue) => {
@@ -306,10 +319,31 @@ export default function TableLocalStudiesFilter(props) {
     // var moreFilters = ""
     return (
         <React.Fragment>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {t('filters.termTooShort')}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {t('filters.termMessage')}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             <form onSubmit={handleClickQuery}>
-                <Card style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
-                    <CardContent>
-                        <Grid container spacing={2} style={{ marginBottom: '15px' }}>
+                <Card  className='laptop:hidden' style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+                    <CardContent >
+                        <Grid container spacing={2} style={{ marginBottom: '15px', width:'100%', flexDirection: 'column'}}  >
 
                             {
                                 settings &&
@@ -317,7 +351,7 @@ export default function TableLocalStudiesFilter(props) {
 
                                     if (value === "modality") {
                                         return (
-                                            <Grid key={value} item xs={6} sm>
+                                            <Grid key={value} item xs={6} sm >
                                                 {modalityComponent(true)}
                                             </Grid>
                                         )
@@ -325,19 +359,20 @@ export default function TableLocalStudiesFilter(props) {
 
                                     if (value === "birthdate") {
                                         return (
-                                            <Grid key={value} item xs={6} sm>
+                                            <Grid key={value} item xs={6} sm >
                                                 {birthdateComponent(true)}
                                             </Grid>
                                         )
                                     }
 
                                     return (
-                                        <Grid key={value} item xs={6} sm>
+                                        <Grid key={value} item xs={15} sm >
                                             <TextField
+                                                size='small'
                                                 key={value}
                                                 className={classes.root}
                                                 id={value}
-                                                label={t("fields."+value)}
+                                                label={t("filters."+value)}
                                                 variant="standard"
                                                 fullWidth
                                                 value={values[value] || ""}
@@ -348,13 +383,16 @@ export default function TableLocalStudiesFilter(props) {
                                 })
                             }
                         </Grid>
+                        
 
-                        <Container maxWidth="sm" style={{ display: "flex", justifyContent: 'center' }}>
+                        <Container maxWidth="sm"  style={{ display: "flex", justifyContent: 'center', marginTop: '30px'}}>
 
                             <ToggleButtonGroup
                                 color="primary"
                                 exclusive
                                 value={values.date_preset}
+                                size="small"
+                                
                             >
                                 {
                                     settings &&
@@ -363,12 +401,12 @@ export default function TableLocalStudiesFilter(props) {
                                         return (
                                             <ToggleButton
                                                 key={key}
-                                                style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
+                                                style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main, marginRight: '8px', width:'max-content' }}
                                                 onClick={() => handleChangeDate(key)}
                                                 value={key}
                                                 className={key > 2 ? classes.presetPhone : ""}
                                             >
-                                                {t("presets."+key)}
+                                                {t("date_presets."+key)}
                                             </ToggleButton>
                                         )
                                     })
@@ -378,15 +416,19 @@ export default function TableLocalStudiesFilter(props) {
                             </ToggleButtonGroup>
 
                         </Container>
+                        
+                        <Container maxWidth="sm"  style={{ display: "flex", justifyContent: 'center', marginTop: '10px'}}>
+                        
 
-                        <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonFind} style={{ fontSize: '12px', width: '80px' }}>
-                            <SearchIcon fontSize="small" />
-                            {t('actions.find')+"   "}
-                        </Button>
-
-                        <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' }}>
+                        <Button 
+                            size="small" 
+                            onClick={handleClickMore} 
+                            variant="contained" 
+                            className={classes.button} 
+                            style={{ fontSize: '12px', width: '80px' ,  height: '30px' }}
+                        >
                             <MoreVertIcon fontSize="small" />
-                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('actions.more')+"   "} </BadgeMore>
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
                         </Button>
 
                         <Button
@@ -394,11 +436,24 @@ export default function TableLocalStudiesFilter(props) {
                             onClick={clearValues}
                             variant="contained"
                             className={classes.button}
-                            style={{ fontSize: '12px', width: '80px', heigh: '50px' }}
+                            style={{ fontSize: '12px', width: '80px', height: '30px'}}
                         >
                             <BlockIcon fontSize="small"/>
-                            {t('actions.reset')}
+                            {t('buttons.reset')}
                         </Button>
+
+                        <Button 
+                            type="submit" 
+                            size="small" 
+                            variant="contained" 
+                            color="primary" 
+                            className={classes.buttonFind} 
+                            style={{ fontSize: '12px', width: 'fit-content'}}
+                        >
+                            <SearchIcon fontSize="small" />
+                        </Button>
+                        </Container>
+
 
                         <Popover
                             id={id}
@@ -419,7 +474,7 @@ export default function TableLocalStudiesFilter(props) {
                                     settings.filters_studies_primary.length < fields.length ? (<>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('fields.more')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('filters.more')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
                                     <Grid container spacing={2} style={{ marginBottom: '15px' }}>
@@ -446,7 +501,7 @@ export default function TableLocalStudiesFilter(props) {
                                                     <TextField
                                                         className={classes.root}
                                                         id={value}
-                                                        label={t("fields."+value)}
+                                                        label={t("filters."+value)}
                                                         variant="standard"
                                                         fullWidth
                                                         value={values[value]}
@@ -462,10 +517,10 @@ export default function TableLocalStudiesFilter(props) {
                                     </Grid>
                                 </>) : ""}
 
-                                <Container maxWidth="false" style={{ padding: '0 0 25px 0 ' }}>
+                                <Container maxWidth="false" style={{ padding: '0 0 25px 0 '}}>
 
                                     <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
-                                        <Chip size="medium" label={t('fields.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                        <Chip size="medium" label={t('filters.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
                                     </Divider>
 
 
@@ -477,7 +532,7 @@ export default function TableLocalStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="from"
-                                                        label={t('fields.from')}
+                                                        label={t('filters.from')}
                                                         inputFormat={settings.date_format}
                                                         value={values.from || null}
                                                         onChange={(date, keyboardInputValue) => {
@@ -492,7 +547,7 @@ export default function TableLocalStudiesFilter(props) {
                                                 <Grid item xs={6} md={6}>
                                                     <DesktopDatePicker
                                                         id="to"
-                                                        label={t('fields.to')}
+                                                        label={t('filters.to')}
                                                         inputFormat={settings.date_format}
                                                         value={values.to || null}
                                                         onChange={(date, keyboardInputValue) => {
@@ -519,7 +574,240 @@ export default function TableLocalStudiesFilter(props) {
                                                                                   id="showDeleted"
                                                                                   checked={values.showDeleted || false} />
                                                                           }
-                                                                          label={t('fields.show_deleted')}
+                                                                          label={t('filters.show_deleted')}
+                                                                          onChange={(e) => {
+                                                                              handleSearch("showDeleted", !values.showDeleted);
+                                                                              handleSecondaryFilters("showDeleted", e.target.checked);
+                                                                          }}
+                                                        />
+                                                    </FormGroup>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    }
+                                </Container>
+                            </Container>
+                                <Button type="submit"/>
+                            </form>
+                        </Popover>
+                    </CardContent>
+                </Card>
+
+
+                <Card  className='hidden laptop:block' style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+                    <CardContent >
+                        <Grid id='flex' container spacing={2} style={{ marginBottom: '15px'}} >
+
+                            {
+                                settings &&
+                                settings.filters_studies_primary.map((value, key) => {
+
+                                    if (value === "modality") {
+                                        return (
+                                            <Grid key={value} item xs={6} sm >
+                                                {modalityComponent(true)}
+                                            </Grid>
+                                        )
+                                    }
+
+                                    if (value === "birthdate") {
+                                        return (
+                                            <Grid key={value} item xs={6} sm >
+                                                {birthdateComponent(true)}
+                                            </Grid>
+                                        )
+                                    }
+
+                                    return (
+                                        <Grid key={value} item xs={6} sm >
+                                            <TextField
+                                                key={value}
+                                                className={classes.root}
+                                                id={value}
+                                                label={t("filters."+value)}
+                                                variant="standard"
+                                                fullWidth
+                                                value={values[value] || ""}
+                                                onChange={(e) => handleSearch(value, e.target.value)}
+                                            />
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+                        
+
+                        <Container maxWidth="sm" style={{ display: "flex", justifyContent: 'center' }}>
+
+                            <ToggleButtonGroup
+                                color="primary"
+                                exclusive
+                                value={values.date_preset}
+                            >
+                                {
+                                    settings &&
+                                    settings.filters_studies_date_presets.map((key, index) => {
+
+                                        return (
+                                            <ToggleButton
+                                                key={key}
+                                                style={{ border: '0px solid', borderRadius: '5px', textDecoration: 'underline', color: theme.palette.primary.main }}
+                                                onClick={() => handleChangeDate(key)}
+                                                value={key}
+                                                className={key > 2 ? classes.presetPhone : ""}
+                                            >
+                                                {t("date_presets."+key)}
+                                            </ToggleButton>
+                                        )
+                                    })
+
+                                }
+
+                            </ToggleButtonGroup>
+
+                        </Container>
+
+                        <Button type="submit" size="small" variant="contained" color="primary" className={classes.buttonFind} style={{ fontSize: '12px', width: '100px', float: 'inline-end' }}>
+                            <SearchIcon fontSize="small" />
+                            {t('buttons.find')+"   "}
+                        </Button>
+
+                        <Button size="small" onClick={handleClickMore} variant="contained" className={classes.button} style={{ fontSize: '12px', width: '80px' , float: 'inline-end'}}>
+                            <MoreVertIcon fontSize="small" />
+                            <BadgeMore badgeContent={activeSecondaryFilters.length} color="primary">{t('filters.more')+"   "} </BadgeMore>
+                        </Button>
+
+                        <Button
+                            size="small"
+                            onClick={clearValues}
+                            variant="contained"
+                            className={classes.button}
+                            style={{ fontSize: '12px', width: '80px', heigh: '50px', float: 'inline-end' }}
+                        >
+                            <BlockIcon fontSize="small"/>
+                            {t('buttons.reset')}
+                        </Button>
+
+                        <Popover
+                            id={id}
+                            open={openMore}
+                            anchorEl={anchorElMore}
+                            onClose={handleCloseMore}
+                            anchorOrigin={{
+                                horizontal: 'right',
+                                vertical: 'bottom'
+                            }}
+                            className={classes.popover}
+                        >
+                            <form>
+                            <Container style={{ maxWidth: "500px" }}>
+
+                                {
+                                    settings &&
+                                    settings.filters_studies_primary.length < fields.length ? (<>
+
+                                    <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
+                                        <Chip size="medium" label={t('filters.more')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                    </Divider>
+
+                                    <Grid container spacing={2} style={{ marginBottom: '15px' }}>
+
+                                        {
+                                            fields.map((value) => {
+                                                if (settings.filters_studies_primary.includes(value)) return;
+
+                                                if (value === "modality") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {modalityComponent(false)}
+                                                        </Grid>)
+                                                }
+
+                                                if (value === "birthdate") {
+                                                    return (
+                                                        <Grid key={value} item xs={6} md={6}>
+                                                            {birthdateComponent(false)}
+                                                        </Grid>)
+                                                }
+
+                                                return (<Grid key={value} item xs={6} md={6} >
+                                                    <TextField
+                                                        className={classes.root}
+                                                        id={value}
+                                                        label={t("filters."+value)}
+                                                        variant="standard"
+                                                        fullWidth
+                                                        value={values[value]}
+                                                        onChange={(e) => {
+                                                            handleSearch(value, e.target.value);
+                                                            handleSecondaryFilters(value, e.target.value);
+                                                        }}
+                                                    />
+                                                </Grid>)
+                                            })
+                                        }
+
+                                    </Grid>
+                                </>) : ""}
+
+                                <Container maxWidth="false" style={{ padding: '0 0 25px 0 '}}>
+
+                                    <Divider style={{ marginBottom: theme.spacing(2), marginTop: theme.spacing(2) }}>
+                                        <Chip size="medium" label={t('filters.study_date')} style={{ backgroundColor: theme.palette.chip.color }} />
+                                    </Divider>
+
+
+                                    {
+                                        settings &&
+                                        <Grid container justifyContent="center" style={{ display: "flex", justifyContent: "center", direction: "column", alignItems: "center" }} spacing={2}>
+
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <Grid item xs={6} md={6}>
+                                                    <DesktopDatePicker
+                                                        id="from"
+                                                        label={t('filters.from')}
+                                                        inputFormat={settings.date_format}
+                                                        value={values.from || null}
+                                                        onChange={(date, keyboardInputValue) => {
+                                                            if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
+                                                            handleSearch("from", date);
+                                                            handleSecondaryFilters("from", date);
+                                                        }}
+                                                        renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
+                                                        dateAdapter={AdapterDateFns}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={6} md={6}>
+                                                    <DesktopDatePicker
+                                                        id="to"
+                                                        label={t('filters.to')}
+                                                        inputFormat={settings.date_format}
+                                                        value={values.to || null}
+                                                        onChange={(date, keyboardInputValue) => {
+                                                            if (keyboardInputValue && keyboardInputValue.length>0 && keyboardInputValue.length<10) return;
+                                                            handleSearch("to", date);
+                                                            handleSecondaryFilters("to", date);
+                                                        }}
+                                                        renderInput={(params) => <TextField InputLabelProps={{ shrink: true }} variant="standard" size="small" {...params} />}
+                                                        dateAdapter={AdapterDateFns}
+                                                    />
+                                                </Grid>
+                                            </LocalizationProvider>
+
+                                        </Grid>
+                                    }
+                                    {
+                                        privileges.tables[props.page].filters && privileges.tables[props.page].filters.includes('show_deleted') && (
+                                            <Grid container style={{ display: "flex", marginTop: "15px" }} spacing={2}>
+                                                <Grid item xs={12} sm={8} md={7} className={classes.delete}>
+                                                    <FormGroup>
+                                                        <FormControlLabel size="small"
+                                                                          control={
+                                                                              <Checkbox
+                                                                                  id="showDeleted"
+                                                                                  checked={values.showDeleted || false} />
+                                                                          }
+                                                                          label={t('filters.show_deleted')}
                                                                           onChange={(e) => {
                                                                               handleSearch("showDeleted", !values.showDeleted);
                                                                               handleSecondaryFilters("showDeleted", e.target.checked);

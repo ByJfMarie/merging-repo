@@ -138,11 +138,11 @@ function PryToolBar(props) {
 }
 
 const UserName = ({user, trans}) => {
-    let message = trans("toolbar.welcome");
+    let message = trans("texts.welcome");
 
     if (user) {
         if (user.first_name) {
-            if (user.title) message += " "+trans("toolbar.user_title."+user.title);
+            if (user.title) message += " "+trans("fields.title_value."+user.title);
             if (user.last_name) message += " "+user.last_name;
             if (user.first_name) message += " "+user.first_name;
         }

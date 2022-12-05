@@ -1,4 +1,4 @@
-import {Alert, Box, Chip, IconButton, Paper, Snackbar,Button,Modal,Typography} from "@mui/material";
+import {Alert, Box, Chip, IconButton, Paper, Snackbar,Button,Modal,Typography, Card} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
@@ -484,7 +484,7 @@ function StudiesLayout(props) {
                                 }
 
                                 {
-                                    (params.row.nb_shares>0)?(params.row.nb_shares+" physician(s)"):"No physicians"
+                                    (params.row.nb_shares>0)?(params.row.nb_shares+" physician(s)"): t('tables_header.no_physicians')
                                 }
                             </div>
                         )
@@ -510,7 +510,7 @@ function StudiesLayout(props) {
                             if (index === 0) {
                                 actions.push(<GridActionsCellItem
                                     icon={<VisibilityIcon/>}
-                                    label="View Study"
+                                    label= {t("label.view_study")}
                                     onClick={() => handleViewStudy(params.row, key)}
                                 />);
                             }
@@ -530,7 +530,7 @@ function StudiesLayout(props) {
                               
                                
                                 icon={<AssignmentIcon/>}
-                                label={"Manage Report"}
+                                label={t('label.manage_report')}
                                 onClick={() => setOpenManageReports(true)}
                                 showInMenu
                             />);
@@ -542,7 +542,7 @@ function StudiesLayout(props) {
                     if (privileges.tables[props.page].actions_rows.includes('info')) {
                         actions.push(<GridActionsCellItem
                             icon={<InfoIcon/>}
-                            label="Study Info"
+                            label={t('label.study_info')}
                             onClick={() => handleDialogStudyOpen(params.row)}
                             showInMenu
                         />);
@@ -552,7 +552,7 @@ function StudiesLayout(props) {
                     if (privileges.tables[props.page].actions_rows.includes('login_sheet')) {
                         actions.push(<GridActionsCellItem
                             icon={<ContactPageIcon/>}
-                            label="Login Sheet"
+                            label={t('label.login_sheet')}
                             onClick={() => handleActionLoginSheet(params.row.key)}
                             showInMenu
                         />);
@@ -561,7 +561,7 @@ function StudiesLayout(props) {
                     if (privileges.tables[props.page].actions_rows.includes('permissions')) {
                         actions.push(<GridActionsCellItem
                             icon={<LockIcon/>}
-                            label="Set Permissions"
+                            label={t('label.set_permissions')}
                             onClick={() => handleDialogPermissionsOpen(params.row.key)}
                             showInMenu
                         />);
@@ -570,7 +570,7 @@ function StudiesLayout(props) {
                     if (privileges.tables[props.page].actions_rows.includes('delete')) {
                         actions.push(<GridActionsCellItem
                             icon={<DeleteForeverIcon/>}
-                            label="Delete"
+                            label={t('label.delete')}
                             onClick={() => handleDelete(params.row)}
                             showInMenu
                         />);
@@ -600,7 +600,9 @@ function StudiesLayout(props) {
                 page="studies"
             />
 
-            <div component={Paper} style={{ display: 'flex', marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: theme.palette.table.head }}>
+       
+            <div className="laptop:hidden" >
+            <div component={Card} style={{ display: 'flex', marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: 'theme.palette.table.head' }}>
                 <div style={{ flexGrow: 1 }}>
                     <DataGrid
                         columns={columns}
@@ -622,6 +624,33 @@ function StudiesLayout(props) {
                         isRowSelectable={(params) => params.row.storage_status!=="offline"}
                     />
                 </div>
+            </div>
+            </div>
+
+            <div className="hidden laptop:block">
+                <div component={Paper} style={{ display: 'flex', marginTop: theme.spacing(4), marginBottom: theme.spacing(1), backgroundColor: 'theme.palette.table.head' }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                        columns={columns}
+                        rows={rows}
+                        loading={isLoading}
+                        //error={error}
+                        rowHeight={60}
+                        autoHeight={true}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        rowsPerPageOptions={[10,20,50]}
+                        getRowId={(row) => row.key}
+                        checkboxSelection
+                        selectionModel={selectedRows}
+                        onSelectionModelChange={(ids) => {
+                            setSelectedRows(ids);
+                        }}
+                        disableColumnMenu={true}
+                        isRowSelectable={(params) => params.row.storage_status!=="offline"}
+                    />
+                </div>
+            </div>
             </div>
 
             <TableLocalStudiesActions

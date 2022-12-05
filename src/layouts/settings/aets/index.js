@@ -9,15 +9,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
-import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
 const TableAets = (props) => {
-    const { t } = useTranslation('system');
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('settings');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -55,11 +52,19 @@ const TableAets = (props) => {
         const response = await AETService.echoAET(row.id);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.echo_aet.error", {aet: row.id, error: response.error}), {variant: 'error'});
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: t("msg_error.aet_echo", {aet: row.id, error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.echo_aet.success", {aet: row.id}), {variant: 'success'});
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: t("msg_info.aet_echo", {aet: row.id})
+        });
     }
 
     const handleEdit = async (row) => {
@@ -70,18 +75,26 @@ const TableAets = (props) => {
         const response = await AETService.deleteAET(id);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.delete_aet.error", {error: response.error}), {variant: 'error'});
+            props.alertMessage({
+                show: true,
+                severity: "error",
+                message: t("msg_error.aet_deleted", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.delete_aet.success"), {variant: 'success'});
         refresh();
+        props.alertMessage({
+            show: true,
+            severity: "success",
+            message: t("msg_info.aet_deleted")
+        });
     }
 
     const column = [
         {
             field: "aet",
-            headerName: t("tab_remote_servers.table.header.aet"),
+            headerName: t("tables_header.aet"),
             flex: 3,
             minWidth: 110,
             description: "Login",
@@ -92,7 +105,7 @@ const TableAets = (props) => {
         },
         {
             field: "ip",
-            headerName: t("tab_remote_servers.table.header.host"),
+            headerName: t("tables_header.host"),
             flex: 2,
             minWidth: 110,
             description: "Name",
@@ -100,7 +113,7 @@ const TableAets = (props) => {
         },
         {
             field: "port",
-            headerName: t("tab_remote_servers.table.header.port"),
+            headerName: t("tables_header.port"),
             flex: 1,
             minWidth: 110,
             description: "Email",
@@ -108,7 +121,7 @@ const TableAets = (props) => {
         },
         {
             field: "capabilities",
-            headerName: t("tab_remote_servers.table.header.capabilities"),
+            headerName: t("tables_header.capabilities"),
             flex: 8,
             minWidth: 110,
             description: "Role",
@@ -119,22 +132,22 @@ const TableAets = (props) => {
                             <Grid item xs={4}>
                                 {
                                     (params.row.qr)
-                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("tab_remote_servers.dialog_add_edit.capabilities.query")}</Typography>)
-                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("tab_remote_servers.dialog_add_edit.capabilities.query")}</Typography>)
+                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("fields.query")}</Typography>)
+                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("fields.query")}</Typography>)
                                 }
                             </Grid>
                             <Grid item xs={4}>
                                 {
                                     (params.row.store)
-                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("tab_remote_servers.dialog_add_edit.capabilities.retrieve")}</Typography>)
-                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("tab_remote_servers.dialog_add_edit.capabilities.retrieve")}</Typography>)
+                                        ? (<Typography ><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("fields.store")}</Typography>)
+                                        : (<Typography ><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("fields.store")}</Typography>)
                                 }
                             </Grid>
                             <Grid item xs={4}>
                                 {
                                     (params.row.forward)
-                                        ? (<Typography><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("tab_remote_servers.dialog_add_edit.capabilities.forward")}</Typography>)
-                                        : (<Typography><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("tab_remote_servers.dialog_add_edit.capabilities.forward")}</Typography>)
+                                        ? (<Typography><IconButton><CheckIcon color="success" fontSize="small"/></IconButton>{t("fields.forward")}</Typography>)
+                                        : (<Typography><IconButton><ClearIcon color="error" fontSize="small"/></IconButton>{t("fields.forward")}</Typography>)
                                 }
                             </Grid>
                         </Grid>
@@ -150,21 +163,21 @@ const TableAets = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<SyncAltIcon/>}
-                    label={t("tab_remote_servers.table.menu.echo")}
+                    label={t("buttons.echo")}
                     onClick={() => handleEcho(params.row)}
                     showInMenu
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
-                    label={t("tab_remote_servers.table.menu.edit")}
+                    label={t("buttons.edit")}
                     onClick={() => handleEdit(params.row)}
                     showInMenu
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<DeleteIcon/>}
-                    label={t("tab_remote_servers.table.menu.delete")}
+                    label={t("buttons.delete")}
                     color="error"
                     onClick={() => handleDelete(params.row.id)}
                     showInMenu

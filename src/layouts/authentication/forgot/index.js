@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 const bgImage = "/images/loginbg.jpg";
 
 function Forgot() {
-    const { t } = useTranslation(['login', 'common']);
+    const { t } = useTranslation('login');
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -40,12 +40,12 @@ function Forgot() {
         e.preventDefault();
 
         if (!username) {
-            swal("Failed", t("messages.username_required"), "error");
+            swal("Failed", t("msg_error.username_required"), "error");
             return;
         }
 
         if (useCaptcha===true && !captchaValue) {
-            swal("Failed", t("messages.captcha_required"), "error");
+            swal("Failed", t("msg_error.captcha_required"), "error");
             return;
         }
     }
@@ -86,16 +86,16 @@ function Forgot() {
                 <BackgroundLayout
                     bgImage={bgImage}
                 >
-                    <Grid item xs={12}><Typography variant="h2">{t("portal_name", {ns: "common"})}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h2">{t("texts.portal_name")}</Typography></Grid>
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
-                    <Grid item xs={12}><Typography variant="h4">{t("portal_welcome.title")}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h4">{t("texts.portal_subtitle")}</Typography></Grid>
                     <Grid item xs={12}>
                         <Typography variant="body2">
-                            {t("portal_welcome.line_1")}<br/>
-                            {t("portal_welcome.line_2")}<br/>
-                            {t("portal_welcome.line_3")}<br/>
-                            {t("portal_welcome.line_4")}<br/>
-                            {t("portal_welcome.line_5")}<br/>
+                            {t("texts.portal_welcome_text.line_1")}<br/>
+                            {t("texts.portal_welcome_text.line_2")}<br/>
+                            {t("texts.portal_welcome_text.line_3")}<br/>
+                            {t("texts.portal_welcome_text.line_4")}<br/>
+                            {t("texts.portal_welcome_text.line_5")}<br/>
                         </Typography>
                     </Grid>
                 </BackgroundLayout>
@@ -132,7 +132,7 @@ function Forgot() {
                                 fullWidth
                                 id="username"
                                 name="username"
-                                label={t("forgot_password.username")}
+                                label={t("fields.username")}
                                 autoComplete="username"
                                 onChange={e => setUserName(e.target.value)}
                             />
@@ -169,7 +169,7 @@ function Forgot() {
                                 fullWidth
                                 disabled={useCaptcha && !verified}
                             >
-                                {t("forgot_password.actions.forgot")}
+                                {t("buttons.forgot")}
                             </Button>
 
                             <Box sx={{ m: 2 }} />
@@ -181,7 +181,7 @@ function Forgot() {
                                 justifyContent="right"
                                 alignItems="center"
                             >
-                                <Link href="/login">{t("forgot_password.actions.back_login")}</Link>
+                                <Link href="/login">{t("actions.back_login")}</Link>
                             </Grid>
                         </form>
                     </Grid>

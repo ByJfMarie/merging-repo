@@ -5,9 +5,10 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import { Tooltip } from '@mui/material';
 
 const Index = (props) => {
-    const { t } = useTranslation('local_studies');
+    const { t } = useTranslation('common');
 
     const [options, setOptions] = React.useState([]);
     const loadAETs = async() => {
@@ -34,13 +35,33 @@ const Index = (props) => {
     }, []);
 
     return (
-        <PryButtonSelect
-            icon={<FastForwardIcon fontSize="small"/>}
-            label={t('table.actions.forward')}
-            options={options}
-            handleAction={handleForward}
-            disabled={props.actionDisabled}
-        />
+        <div>
+            
+           <div className='laptop:hidden' style={{marginRight: '15px'}}>
+                <Tooltip title={t('buttons.forward')}>
+                    <div>
+                        <PryButtonSelect
+                            icon={<FastForwardIcon fontSize="small"/>}
+                            options={options}
+                            handleAction={handleForward}
+                            disabled={props.actionDisabled}
+                        />
+                    </div>
+                </Tooltip>
+            </div>
+
+            <div className='hidden laptop:block'>
+                <PryButtonSelect
+                    icon={<FastForwardIcon fontSize="small"/>}
+                    label={t('buttons.forward')}
+                    options={options}
+                    handleAction={handleForward}
+                    disabled={props.actionDisabled}
+                /> 
+            </div>
+
+        </div>
+        
     )
 }
 
