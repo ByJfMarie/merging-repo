@@ -98,7 +98,7 @@ export default function Announcement() {
                 size="small"
                 onClick={handleRestart}
             >
-                {t("dialog_restart.acions.restart")}
+                {t("dialog_restart.actions.restart")}
             </Button>
             <IconButton
                 size="small"
