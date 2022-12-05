@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid} from '@mui/material';
+import {Card, CardContent, FormGroup, FormControlLabel, Checkbox, Button, Grid, Alert, Snackbar} from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import DialogAddEdit from "../../../layouts/settings/aets/DialogAddEdit";
@@ -11,7 +11,7 @@ import SettingsService from "../../../services/api/settings.service";
 import { useTranslation } from 'react-i18next';
 
 export default function RemoteAET() {
-    const { t } = useTranslation('system');
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -45,6 +45,13 @@ export default function RemoteAET() {
 
     });
     const classes = useStyles();
+
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
 
     const [config, setConfig] = React.useState({});
     const refresh = async () => {
@@ -96,6 +103,12 @@ export default function RemoteAET() {
 
     return (
         <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <Card className={classes.card} style={{
                 backgroundColor: theme.palette.card.color,
                 width: "100% !important",
@@ -111,14 +124,14 @@ export default function RemoteAET() {
                                             onChange={(e) => handleSettingsChange('DCMS.allow_all_scp', e.target.checked+"")}
                                         />
                                     }
-                                    label={t("tab_remote_servers.allow_all_remote_server")}/>
+                                    label={t("fields.allow_all_remote_server")}/>
                             </FormGroup>
                         </Grid>
 
                         <Grid item xs/>
 
                         <Grid item className={classes.userNameGrid}>
-                            <Button variant="contained" component="label" onClick={toggleDialog}>+ {t("tab_remote_servers.actions.add")}</Button><br/>
+                            <Button variant="contained" component="label" onClick={toggleDialog}>+ {t("buttons.add")}</Button><br/>
                         </Grid>
                     </Grid>
 
@@ -129,6 +142,7 @@ export default function RemoteAET() {
                             setSettingsValue(values);
                             toggleDialog();
                         }}
+                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
@@ -141,6 +155,7 @@ export default function RemoteAET() {
                 onSave={() => {
                     setForceRefresh(!forceRefresh);
                 }}
+                alertMessage={(message) => setMessage(message)}
             />
         </>
     )

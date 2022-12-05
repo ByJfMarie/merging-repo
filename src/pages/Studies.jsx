@@ -1,14 +1,14 @@
 import React from 'react';
 import {Box, Divider, Grid, Typography} from "@mui/material";
 import {useTheme} from '@emotion/react';
-import StudiesLayout from "../layouts/studies";
+import Index from "../layouts/studies";
 import SearchIcon from '@mui/icons-material/Search';
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
-export default function Studies() {
-    const { t } = useTranslation('local_studies');
+const Studies = (props) => {
+    const { t } = useTranslation('common');
 
     /** THEME */
     const theme = useTheme();
@@ -20,16 +20,19 @@ export default function Studies() {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <SearchIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
+                <i class="fi fi-rr-book-alt text-2xl"></i> <Box sx={{ m: 0.5 }} /> {t('titles.studies')}
                 </Grid>
             </Typography>
 
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <StudiesLayout
+            <Index
                 page="studies"
+                darkToggle={props.darkToggle}
             />
 
         </React.Fragment>
     );
 }
+
+export default Studies;

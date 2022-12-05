@@ -1,18 +1,15 @@
-import {Card, CardContent, TextField, Grid} from '@mui/material';
-import {useTheme} from '@emotion/react';
-import {makeStyles} from "@mui/styles";
+import {Card, CardContent, TextField, Grid, Alert, Snackbar} from '@mui/material';
+import { useTheme } from '@emotion/react';
+import { makeStyles } from "@mui/styles";
 import React from "react";
 import SettingsService from "../../../services/api/settings.service";
 import Index from "../../../layouts/settings/actions";
-import {useSnackbar} from "notistack";
 
 /** Translation */
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function Database() {
-    const {t} = useTranslation('system');
-
-    const {enqueueSnackbar} = useSnackbar();
+    const { t } = useTranslation('settings');
 
     /** STYLE & THEME */
     const theme = useTheme();
@@ -42,9 +39,20 @@ export default function Database() {
     });
     const classes = useStyles();
 
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+    /*function Message() {
+        if (!message || !message.show) return <></>;
+        return <Alert severity={message.severity}>{message.message}</Alert>;
+    }*/
+
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
-    const refresh = async () => {
+    const refresh = async() => {
         const response = await SettingsService.getDatabase();
 
         if (response.error) {
@@ -69,12 +77,22 @@ export default function Database() {
         const response = await SettingsService.saveDatabase(config);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.settings_saved", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
         refresh();
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: t("msg_info.settings_saved")
+        });
     };
 
     const handleCancel = () => {
@@ -83,78 +101,82 @@ export default function Database() {
 
     return (
         <>
-            <Card className={classes.card}
-                  style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
-                <CardContent>
-                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
-                        <Grid item xs={9}>
-                            <TextField
-                                className={classes.field}
-                                id="DB.host"
-                                label={t("tab_database.host")}
-                                variant="standard"
-                                value={getSettingsValue('DB.host')}
-                                onChange={(e) => {
-                                    handleSettingsChange('DB.host', e.target.value)
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                className={classes.field}
-                                id="DB.port"
-                                label={t("tab_database.port")}
-                                variant="standard"
-                                value={getSettingsValue('DB.port')}
-                                onChange={(e) => {
-                                    handleSettingsChange('DB.port', e.target.value)
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                style={{width: '100%'}}
-                                id="DB.user"
-                                label={t("tab_database.user")}
-                                variant="standard"
-                                value={getSettingsValue('DB.user')}
-                                onChange={(e) => {
-                                    handleSettingsChange('DB.user', e.target.value)
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                style={{width: '100%'}}
-                                id="DB.password"
-                                label={t("tab_database.password")}
-                                type={"password"}
-                                variant="standard"
-                                value={getSettingsValue('DB.password')}
-                                onChange={(e) => {
-                                    handleSettingsChange('DB.password', e.target.value)
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                style={{width: '100%'}}
-                                id="DB.name"
-                                label={t("tab_database.database_name")}
-                                variant="standard"
-                                value={getSettingsValue('DB.name')}
-                                onChange={(e) => {
-                                    handleSettingsChange('DB.name', e.target.value)
-                                }}
-                            />
-                        </Grid>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+        <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+            <CardContent>
+                <Grid container spacing={2} style={{ marginBottom: '15px' }}>
+                    <Grid item xs={9}>
+                        <TextField
+                            className={classes.field}
+                            id="DB.host"
+                            label={t("fields.host")}
+                            variant="standard"
+                            value={getSettingsValue('DB.host')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.host', e.target.value)
+                            }}
+                        />
                     </Grid>
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                </CardContent>
-            </Card>
-        </>
-    )
+                    <Grid item xs={3}>
+                        <TextField
+                            className={classes.field}
+                            id="DB.port"
+                            label={t("fields.port")}
+                            variant="standard"
+                            value={getSettingsValue('DB.port')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.port', e.target.value)
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            style={{ width: '100%' }}
+                            id="DB.user"
+                            label={t("fields.user")}
+                            variant="standard"
+                            value={getSettingsValue('DB.user')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.user', e.target.value)
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            style={{ width: '100%' }}
+                            id="DB.password"
+                            label={t("fields.password")}
+                            type={"password"}
+                            variant="standard"
+                            value={getSettingsValue('DB.password')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.password', e.target.value)
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            style={{ width: '100%' }}
+                            id="DB.name"
+                            label={t("fields.database_name")}
+                            variant="standard"
+                            value={getSettingsValue('DB.name')}
+                            onChange={(e) => {
+                                handleSettingsChange('DB.name', e.target.value)
+                            }}
+                        />
+                    </Grid>
+                </Grid>
+                <Index
+                    handleSave={handleSave}
+                    handleCancel={handleCancel}
+                />
+            </CardContent>
+        </Card>
+            </>
+            )
 }

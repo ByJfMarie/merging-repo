@@ -9,20 +9,22 @@ import {
     Card,
     CardContent,
     TextField,
-    Grid, MenuItem, Select, FormControl, InputLabel, Link,
+    Tooltip,
+    ListSubheader,
+    Grid, Alert, Snackbar, FormControlLabel, Checkbox, FormGroup, MenuItem, Select, FormControl, InputLabel, Link,
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
 import PhoneInput from "react-phone-input-2";
 import Editor from "../../components/Editor.jsx";
 import "react-phone-input-2/lib/high-res.css";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import {DropzoneArea} from 'react-mui-dropzone';
 import GeneralService from "../../services/api/general.service";
 import PryInfo from "../../components/PryInfo";
-import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -62,9 +64,7 @@ function a11yProps(index) {
 }
 
 export default function SiteDesign() {
-    const { t } = useTranslation('site_design');
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -100,13 +100,29 @@ export default function SiteDesign() {
         setValue(newValue);
     };
 
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+    /*function Message() {
+        if (!message || !message.show) return <></>;
+        return <Alert severity={message.severity}>{message.message}</Alert>;
+    }*/
+
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
     const refreshSettings = async () => {
         const response = await SettingsService.getDesign();
 
         if (response.error) {
-            enqueueSnackbar(response.error, {variant: 'error'});
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: response.error
+            });
             return;
         }
 
@@ -133,13 +149,28 @@ export default function SiteDesign() {
         const response = await SettingsService.saveDesign(settingsValue);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.settings_saved", {error: response.error})
+            });
             return;
         }
 
         refreshSettings();
-        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: t("msg_info.settings_saved")
+        });
     };
+
+    const [template, setTemplate] = React.useState('');
+    const handleTemplateSelect = (tmp_name) => {
+        setTemplate(tmp_name);
+    }
 
     const handleCancel = () => {
         refreshSettings();
@@ -151,11 +182,21 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadLogo(files[0]);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.logo_uploaded.error", {error: response.error}), {variant: 'error'});
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.logo_uploaded", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.logo_uploaded.success"), {variant: 'success'});
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: t("msg_info.logo_uploaded")
+        });
     }
 
     const handleUploadHelp = async (files) => {
@@ -163,11 +204,21 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadHelp(files[0]);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.help_uploaded.error", {error: response.error}), {variant: 'error'});
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.help_uploaded", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.help_uploaded.success"), {variant: 'success'});
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: t("msg_info.help_uploaded")
+        });
     }
 
     const handleUploadLoginSheet = async (files) => {
@@ -175,11 +226,21 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadLoginSheet(files[0]);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.loginSheet_uploaded.error", {error: response.error}), {variant: 'error'});
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.loginSheet_uploaded", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.loginSheet_uploaded.success"), {variant: 'success'});
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: t("msg_info.loginSheet_uploaded")
+        });
     }
 
 
@@ -190,29 +251,36 @@ export default function SiteDesign() {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <DesignServicesIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
+                    <DesignServicesIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.site_design')}
                 </Grid>
             </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
+                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable"
                       scrollButtons allowScrollButtonsMobile>
-                    <Tab label={t('tab_general.title')} {...a11yProps(0)} />
-                    <Tab label={t('tab_custom_files.title')} {...a11yProps(1)} />
-                    <Tab label={t('tab_custom_texts.title')} {...a11yProps(2)} />
+                    <Tab label={t('titles.general')} {...a11yProps(0)} />
+                    <Tab label={t('titles.login')} {...a11yProps(1)} />
+                    <Tab label={t('titles.custom_files')} {...a11yProps(2)} />
+                    <Tab label={t('titles.custom_texts')} {...a11yProps(3)} />
                 </Tabs>
             </Box>
-            <TabPanel value={value} index={0} dir="ltr">
+            <TabPanel value={value} index={0} >
                 <PryInfo
-                    text={t("tab_general.info")}
+                    text={t("info.site_design_general")}
                 />
                 <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                     <CardContent>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
-                                    <InputLabel>{t('tab_general.language.name')}</InputLabel>
+                                    <InputLabel>{t('fields.language')}</InputLabel>
                                     <Select
                                         value={getSettingsValue('WEB.language') || "en"}
                                         label="Language"
@@ -221,17 +289,17 @@ export default function SiteDesign() {
                                         }}
                                         fullWidth={true}
                                     >
-                                        <MenuItem value={"fr"}>{t("tab_general.language.fr")}</MenuItem>
-                                        <MenuItem value={"en"}>{t("tab_general.language.en")}</MenuItem>
+                                        <MenuItem value={"fr"}>{t("fields.language_value.fr")}</MenuItem>
+                                        <MenuItem value={"en"}>{t("fields.language_value.en")}</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
-                                    <InputLabel>{t('tab_general.date_format')}</InputLabel>
+                                    <InputLabel>{t('fields.date_format')}</InputLabel>
                                     <Select
                                         value={getSettingsValue('ALL.date_format')}
-                                        label={t('tab_general.date_format')}
+                                        label={t('fields.date_format')}
                                         onChange={(e) => {
                                             handleSettingsChange('ALL.date_format', e.target.value)
                                         }}
@@ -255,15 +323,14 @@ export default function SiteDesign() {
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
-                                        label={t("tab_general.institution")}
+                                        label={t("fields.institution")}
                                         variant="standard"
                                         InputLabelProps={{shrink: true}}
                                         value={getSettingsValue('WEB.general_institution')}
                                         onChange={(e) => {handleSettingsChange('WEB.general_institution', e.target.value)}}
                                     />
                             </Grid>
-                            {
-                                /*<Grid item xs="auto" style={{ display: "flex", alignItems: "center" }}>
+                            <Grid item xs="auto" style={{ display: "flex", alignItems: "center" }}>
                                     <Tooltip title="Lorry mange tous les chocolats">
                                         <InfoOutlinedIcon
                                             style={{
@@ -274,13 +341,12 @@ export default function SiteDesign() {
                                             }}
                                         />
                                     </Tooltip>
-                                </Grid>*/
-                            }
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("tab_general.departement")}
+                                    label={t("fields.departement")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_department')}
@@ -291,7 +357,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("tab_general.country")}
+                                    label={t("fields.country")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_country')}
@@ -315,7 +381,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("tab_general.address")}
+                                    label={t("fields.address")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_address')}
@@ -325,7 +391,7 @@ export default function SiteDesign() {
                             <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
-                                    id="filled-basic" label={t("tab_general.city")}
+                                    id="filled-basic" label={t("fields.city")}
                                     variant="standard" InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_city')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_city', e.target.value)}}
@@ -335,7 +401,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("tab_general.website")}
+                                    label={t("fields.website")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_website')}
@@ -346,7 +412,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("tab_general.doctor_id")}
+                                    label={t("fields.doctor_id")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_doctor_id')}
@@ -357,7 +423,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("tab_general.external_address")}
+                                    label={t("fields.external_address")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_external_web_link')}
@@ -373,24 +439,98 @@ export default function SiteDesign() {
                 </Card>
             </TabPanel>
 
-            <TabPanel value={value} index={1} dir="ltr">
+            <TabPanel value={value} index={1} >
+
                 <PryInfo
-                    text={t("tab_custom_files.info")}
+                    text={t("info.site_design_login")}
+                />
+
+                <Card className={classes.card}>
+                    <Typography variant="h6" align="left"> {t('titles.security')} </Typography>
+                    <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('WEB.login_captcha')==="true"}
+                                    onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked+"")}
+                                />
+                            }
+                            label={t("fields.enable_google_recaptcha")}
+                        />
+                    </FormGroup>
+
+                    <Box sx={{ m: 4 }} />
+
+                    <TextField
+                        className={classes.field}
+                        id="filled-basic"
+                        label={t("fields.site_key")}
+                        variant="standard"
+                        InputLabelProps={{shrink: true}}
+                        value={getSettingsValue('WEB.login_captcha_site_key')}
+                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_site_key', e.target.value)}}
+                    />
+
+                    <Box sx={{ m: 2 }} />
+
+                    <TextField
+                        className={classes.field}
+                        id="filled-basic"
+                        label={t("fields.secret_key")}
+                        variant="standard"
+                        InputLabelProps={{shrink: true}}
+                        value={getSettingsValue('WEB.login_captcha_secret_key')}
+                        onChange={(e) => {handleSettingsChange('WEB.login_captcha_secret_key', e.target.value)}}
+                    />
+                    <Index
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
+                    </CardContent>
+                </Card>
+
+                <Card className={classes.card}>
+                    <Typography variant="h6" align="left"> {t('titles.patients')} </Typography>
+                    <Divider style={{marginBottom: theme.spacing(2)}}/>
+                    <CardContent>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={getSettingsValue('WEB.login_by_reference')==="true"}
+                                    onChange={(e) => handleSettingsChange('WEB.login_by_reference', e.target.checked+"")}
+                                />
+                            }
+                            label={t("fields.enable_ref_login")}/>
+                    </FormGroup>
+                    <Index
+                        handleSave={handleSave}
+                        handleCancel={handleCancel}
+                    />
+                    </CardContent>
+                </Card>
+            </TabPanel>
+
+            <TabPanel value={value} index={2} >
+                <PryInfo
+                    text={t("info.site_design_customFiles")}
                 />
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
-                    <Typography gutterBottom variant="h6" component="div">{t('tab_custom_files.company_logo')}
-                        &nbsp;<Link target="_blank" href={GeneralService.getLogoURL()} variant="body2" rel="noreferrer">{t('tab_custom_files.actions.view')}</Link>
+                    <Typography gutterBottom variant="h6" component="div">{t('fields.company_logo')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getLogoURL()} variant="body2" rel="noreferrer">View</Link>
                     </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary">{t('tab_custom_files.texts.only_svg')}</Typography>
+                        <Typography variant="body2" color="text.secondary">Only *.svg images will be accepted</Typography>
                         <Box m={2}/>
                         <DropzoneArea
                             dropzoneClass={classes.myDropZone}
                             acceptedFiles={['.svg']}
                             filesLimit={1}
-                            dropzoneText={t('tab_custom_files.texts.drag_and_drop')}
+                            dropzoneText={("Drag and drop a file here or click to select a file")}
                             onChange={(files) => handleUploadLogo(files)}
                             showPreviewsInDropzone={false}
                             showAlerts={false}
@@ -399,18 +539,18 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
-                    <Typography gutterBottom variant="h6" component="div">{t('tab_custom_files.help_file')}
-                        &nbsp;<Link target="_blank" href={GeneralService.getHelpFileURL()} variant="body2" rel="noreferrer">{t('tab_custom_files.actions.view')}</Link>
+                    <Typography gutterBottom variant="h6" component="div">{t('fields.help_file')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getHelpFileURL()} variant="body2" rel="noreferrer">View</Link>
                     </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary">{t('tab_custom_files.texts.only_pdf')}</Typography>
+                        <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
                         <Box m={2}/>
                         <DropzoneArea
                             dropzoneClass={classes.myDropZone}
                             acceptedFiles={['.pdf']}
                             filesLimit={1}
-                            dropzoneText={t('tab_custom_files.texts.drag_and_drop')}
+                            dropzoneText={("Drag and drop a file here or click to select a file")}
                             onChange={(files) => handleUploadHelp(files)}
                             showPreviewsInDropzone={false}
                             showAlerts={false}
@@ -419,18 +559,18 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
-                    <Typography gutterBottom variant="h6" component="div">{t('tab_custom_files.login_sheet')}
-                        &nbsp;<Link target="_blank" href={GeneralService.getLoginSheetFileURL()} variant="body2" rel="noreferrer">{t('tab_custom_files.actions.view')}</Link>
+                    <Typography gutterBottom variant="h6" component="div">{t('fields.login_sheet')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getLoginSheetFileURL()} variant="body2" rel="noreferrer">View</Link>
                     </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary">{t('tab_custom_files.texts.only_pdf')}</Typography>
+                        <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
                         <Box m={2}/>
                         <DropzoneArea
                             dropzoneClass={classes.myDropZone}
                             acceptedFiles={['.pdf']}
                             filesLimit={1}
-                            dropzoneText={t('tab_custom_files.texts.drag_and_drop')}
+                            dropzoneText={("Drag and drop a file here or click to select a file")}
                             onChange={(files) => handleUploadLoginSheet(files)}
                             showPreviewsInDropzone={false}
                             showAlerts={false}
@@ -439,107 +579,48 @@ export default function SiteDesign() {
                 </Card>
             </TabPanel>
 
-            <TabPanel value={value} index={2} dir="ltr">
+            <TabPanel value={value} index={3} >
                 <PryInfo
-                    text={t("tab_custom_texts.info")}
+                    text={t("info.site_design_customTexts")}
                 />
 
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('tab_custom_texts.disclaimer')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <Editor
-                        id="disclaimer"
-                        defaultValue={getSettingsValue('WEB.disclaimer')}
-                        onChange={(value) => {handleSettingsChange('WEB.disclaimer', value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                    </CardContent>
-                </Card>
+<Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
+                        <CardContent>
+                        <Grid container spacing={2} style={{ marginBottom: '15px' }}>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
+                                    <InputLabel>Customize Texts</InputLabel>
+                                    <Select
+                                        labelId="template"
+                                        value={template || ''}
+                                        onChange={(e) => handleTemplateSelect(e.target.value)}
+                                    >
+                                        <MenuItem value="disclaimer">{t('fields.disclaimer')}</MenuItem>
+                                        <MenuItem value="privacy_policy">{t('fields.privacy_policy')}</MenuItem>
+                                        <MenuItem value="copyright">{t('fields.copyright')}</MenuItem>
+                                        <MenuItem value="contact_us">{t('fields.contact_us')}</MenuItem>
+                                        <MenuItem value="faq">{t('fields.faq')}</MenuItem>
+                                        <MenuItem value="terms_conditions">{t('fields.terms_conditions')}</MenuItem>
 
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('tab_custom_texts.privacy_policy')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <Editor
-                        id="privacy"
-                        defaultValue={getSettingsValue('WEB.privacy_policy')}
-                        onChange={(value) => {handleSettingsChange('WEB.privacy_policy', value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                             
+                        </Grid>
+
+                        <Divider />
+                        <Editor
+                            id="body"
+                            defaultValue={getSettingsValue('WEB.' + template) || ''}
+                            onChange={(value) => {handleSettingsChange('WEB.' + template, value)}}
+                        />
+                        <Index
+                            handleSave={handleSave}
+                            handleCancel={handleCancel}
+                        />
                         </CardContent>
-                </Card>
+                    </Card>
 
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('tab_custom_texts.copyright')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <Editor
-                        id="copyright"
-                        defaultValue={getSettingsValue('WEB.copyright')}
-                        onChange={(value) => {handleSettingsChange('WEB.copyright', value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                        </CardContent>
-                </Card>
-
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('tab_custom_texts.faq')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <Editor
-                        id="faq"
-                        defaultValue={getSettingsValue('WEB.faq')}
-                        onChange={(value) => {handleSettingsChange('WEB.faq', value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                        </CardContent>
-                </Card>
-
-
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('tab_custom_texts.terms_conditions')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <Editor
-                        id="terms"
-                        defaultValue={getSettingsValue('WEB.terms')}
-                        onChange={(value) => {handleSettingsChange('WEB.terms', value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                        </CardContent>
-                </Card>
-
-                <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('tab_custom_texts.contact_us')} </Typography>
-                    <Divider style={{marginBottom: theme.spacing(2)}}/>
-                    <CardContent>
-                    <Editor
-                        id="contactus"
-                        defaultValue={getSettingsValue('WEB.contactus')}
-                        onChange={(value) => {handleSettingsChange('WEB.contactus', value)}}
-                    />
-                    <Index
-                        handleSave={handleSave}
-                        handleCancel={handleCancel}
-                    />
-                        </CardContent>
-                </Card>
 
             </TabPanel>
         </React.Fragment>

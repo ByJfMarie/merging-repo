@@ -9,22 +9,21 @@ import {
     FormControl,
     Card,
     CardContent,
+    Link,
     Typography,
     TextField,
+    Alert, Snackbar
 } from "@mui/material";
 import {useTheme} from '@emotion/react';
 import SettingsService from "../../../services/api/settings.service";
 import Index from "../../../layouts/settings/actions";
-import {makeStyles} from "@mui/styles";
-import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import {makeStyles} from "@mui/styles";
 
 export default function Reporting(props) {
-    const { t } = useTranslation('system');
-
-    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation('settings');
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -35,6 +34,17 @@ export default function Reporting(props) {
         }
     });
     const classes = useStyles();
+
+    /** MESSAGES */
+    const [message, setMessage] = React.useState({
+        show: false,
+        severity: "info",
+        message: ""
+    });
+    /*function Message() {
+        if (!message || !message.show) return <></>;
+        return <Alert severity={message.severity}>{message.message}</Alert>;
+    }*/
 
     /** SETTINGS VALUES */
     const [config, setConfig] = React.useState({});
@@ -66,7 +76,7 @@ export default function Reporting(props) {
 
     const getSettingsValue = (id) => {
         if (!config || !config[id]) return '';
-        return config[id]['value'];
+        return config[id]['value'] || '';
     }
     const handleSettingsChange = (id, value) => {
         let cfg = config[id];
@@ -79,12 +89,22 @@ export default function Reporting(props) {
         const response = await SettingsService.saveReporting(config);
 
         if (response.error) {
-            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
+            setMessage({
+                ...message,
+                show: true,
+                severity: "error",
+                message: t("msg_error.settings_saved", {error: response.error})
+            });
             return;
         }
 
-        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
         refresh();
+        setMessage({
+            ...message,
+            show: true,
+            severity: "success",
+            message: t("msg_info.settings_saved")
+        });
     };
 
     const handleCancel = () => {
@@ -93,6 +113,17 @@ export default function Reporting(props) {
 
     return (
         <>
+            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                      onClose={() => {
+                          setMessage({...message, show: !message.show})
+                      }}>
+                <Alert onClose={() => {
+                    setMessage({...message, show: !message.show})
+                }} severity={message.severity} sx={{width: '100%'}}>
+                    {message.message}
+                </Alert>
+            </Snackbar>
+
             <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <FormGroup>
@@ -103,7 +134,7 @@ export default function Reporting(props) {
                                     onChange={(e) => handleSettingsChange('RRS.enabled', e.target.checked + "")}
                                 />
                             }
-                            label={t("tab_reporting.enable")}
+                            label={t("fields.enable")}
                         />
                         <Grid container spacing={2}>
 
@@ -115,7 +146,7 @@ export default function Reporting(props) {
                                             onChange={(e) => handleSettingsChange('RRS.print_report', e.target.checked + "")}
                                         />
                                     }
-                                    label={t("tab_reporting.print_report")}
+                                    label={t("fields.print_report")}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8} lg={10} style={{display: "flex"}}>
@@ -123,7 +154,7 @@ export default function Reporting(props) {
                                     <Select
                                         labelId="print_selection"
                                         id="printer_selection"
-                                        label={t("tab_reporting.print_selection")}
+                                        label={t("fields.print_selection")}
                                         value={getSettingsValue("RRS.printer_name")}
                                         onChange={(e) => handleSettingsChange('RRS.printer_name', e.target.value)}
                                     >
@@ -137,29 +168,26 @@ export default function Reporting(props) {
                             </Grid>
 
 
-                            {
-                                /*<Grid item xs={12} sm={4} lg={2} style={{display: "flex"}}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={getSettingsValue('RRS.useHtmlTemplate') === "true"}
-                                                onChange={(e) => handleSettingsChange('RRS.useHtmlTemplate', e.target.checked + "")}
-                                            />
-                                        }
-                                        label={t("fields.template")}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12} sm={8} lg={10} style={{display: "flex", alignItems: 'center'}}>
-                                    <Typography variant="h8" style={{textAlign: 'left'}}>
-                                        <Link>{t("buttons.configure")}</Link>
-                                    </Typography>
-                                </Grid>*/
-                            }
+                            <Grid item xs={12} sm={4} lg={2} style={{display: "flex"}}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={getSettingsValue('RRS.useHtmlTemplate') === "true"}
+                                            onChange={(e) => handleSettingsChange('RRS.useHtmlTemplate', e.target.checked + "")}
+                                        />
+                                    }
+                                    label={t("fields.template")}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={8} lg={10} style={{display: "flex", alignItems: 'center'}}>
+                                <Typography variant="h8" style={{textAlign: 'left'}}>
+                                    <Link>{t("buttons.configure")}</Link>
+                                </Typography>
+                            </Grid>
 
                             <Grid item xs={12} sm={4} lg={2} style={{display: "flex", alignItems: 'center'}}>
                                 <Typography variant="h8" style={{textAlign: 'left'}}>
-                                    {t("tab_reporting.request_type.name")}
+                                    {t("fields.request_type")}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} sm={8} lg={10} style={{display: "flex"}}>
@@ -173,18 +201,18 @@ export default function Reporting(props) {
                                         value={getSettingsValue("RRS.requestType")}
                                         onChange={(e) => handleSettingsChange('RRS.requestType', e.target.value)}
                                     >
-                                        <MenuItem value={0}>{t("tab_reporting.request_type.http")}</MenuItem>
-                                        <MenuItem value={1}>{t("tab_reporting.request_type.unc")}</MenuItem>
-                                        <MenuItem value={2}>{t("tab_reporting.request_type.mitra")}</MenuItem>
-                                        <MenuItem value={3}>{t("tab_reporting.request_type.ge")}</MenuItem>
-                                        <MenuItem value={4}>{t("tab_reporting.request_type.fuji")}</MenuItem>
-                                        <MenuItem value={5}>{t("tab_reporting.request_type.dicom")}</MenuItem>
+                                        <MenuItem value={0}>{t("fields.request_type_value.http")}</MenuItem>
+                                        <MenuItem value={1}>{t("fields.request_type_value.unc")}</MenuItem>
+                                        <MenuItem value={2}>{t("fields.request_type_value.mitra")}</MenuItem>
+                                        <MenuItem value={3}>{t("fields.request_type_value.ge")}</MenuItem>
+                                        <MenuItem value={4}>{t("fields.request_type_value.fuji")}</MenuItem>
+                                        <MenuItem value={5}>{t("fields.request_type_value.dicom")}</MenuItem>
                                     </Select>
 
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography variant="h8" style={{textAlign: 'left'}}>
-                                    {t("tab_reporting.request")}
+                                    {t("fields.request")}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>

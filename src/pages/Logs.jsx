@@ -12,7 +12,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { useTranslation } from 'react-i18next';
 
 const Logs = () => {
-    const { t } = useTranslation('logs');
+    const { t } = useTranslation('common');
 
     /** THEME AND CSS */
     //const Date = formatDate();
@@ -50,7 +50,7 @@ const Logs = () => {
                 style={{ textAlign: 'left', color: theme.palette.primary.main }}
             >
                 <Grid container direction="row" alignItems="center">
-                    <DescriptionIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
+                <i class="fi fi-rr-document text-2xl"></i> <Box sx={{ m: 0.5 }} /> {t('titles.logs')}
                 </Grid>
             </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
