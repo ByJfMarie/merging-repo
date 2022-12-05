@@ -15,6 +15,7 @@ import React from "react";
 import TransferService from "../../../services/api/transfer.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -24,7 +25,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
 
@@ -76,24 +79,15 @@ const DialogAddEdit = (props) => {
         else response = await TransferService.addRule(props.values);
 
         if (response.error) {
-            props.alertMessage({
-                show: true,
-                severity: "error",
-                message: t("msg_error.transfer_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_transfer.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.save_transfer.success"), {variant: 'success'});
         props.toggle();
         props.setValues({});
         setAddMode(true);
         props.onSave();
-
-        props.alertMessage({
-            show: true,
-            severity: "success",
-            message: t("msg_info.transfer_saved")
-        });
     }
 
     React.useEffect(() => {
@@ -128,7 +122,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="ae_title"
-                                label={t("fields.aet_condition")}
+                                label={t("tab_transfer.dialog_add_edit.aet_condition")}
                                 variant="standard"
                                 value={getValue('ae_title')}
                                 onChange={(e) => handleChange("ae_title", e.target.value)}
@@ -140,7 +134,7 @@ const DialogAddEdit = (props) => {
                         <Grid item xs={12}>
                             <FormControl className={classes.root} size="small" fullWidth={true}>
                                 <InputLabel variant="standard"
-                                            id="destinations">{t("fields.destinations")}</InputLabel>
+                                            id="destinations">{t("tab_transfer.dialog_add_edit.destinations")}</InputLabel>
                                 <Select
                                     labelId="destinations"
                                     id="destinations"
@@ -182,11 +176,11 @@ const DialogAddEdit = (props) => {
 
                         <Grid item>
                             <Button className={classes.button} variant="contained" component="label"
-                                    onClick={handleCancel}>{t('buttons.cancel')}</Button>
+                                    onClick={handleCancel}>{t('tab_transfer.dialog_add_edit.actions.cancel')}</Button>
                         </Grid>
 
                         <Grid item>
-                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('tab_transfer.dialog_add_edit.actions.save')}</Button>
                         </Grid>
                     </Grid>
 

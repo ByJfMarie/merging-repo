@@ -1,0 +1,48 @@
+{
+  "title": "Local Studies",
+
+  "fields": {
+    "aet": "AET",
+    "patient_id": "Patient ID / MRN",
+    "patient_name": "Patient Name",
+    "accession_number": "Accession #",
+    "referring_physician": "Referring Physician",
+    "modality": "Modality",
+    "study_id": "Study ID",
+    "description": "Study Description",
+    "study_date": "Study Date",
+    "from": "From",
+    "to": "To",
+    "birthdate": "Date of birth",
+    "more": "More",
+    "show_deleted": "Show deleted"
+  },
+
+  "presets": {
+    "all": "All",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last_month": "Last month",
+    "last_year": "Last year",
+    "last_week": "Last week",
+    "last_3days": "Last 3 days"
+  },
+
+  "actions": {
+    "find": "Find",
+    "more": "More",
+    "reset": "Reset",
+    "query": "Query"
+  },
+
+  "messages": {
+    "patientID_too_short": "Patient ID is too short (Min 3 characters allowed...)",
+    "patientName_too_short": "Patient Name is too short (Min 3 characters allowed...)",
+    "studyDesc_too_short": "Study Description is too short (Min 3 characters allowed...)",
+    "accession_too_short": "Accession Number is too short (Min 3 characters allowed...)",
+    "refPhys_too_short": "Referring Physician is too short (Min 3 characters allowed...)",
+    "query_no_criteria": "You can't query studies without criteria!",
+    "query_no_aet": "You have to select a query AET!",
+    "remote_use_wildcard": "Use \"*\" as a wildcard for your search"
+  }
+}

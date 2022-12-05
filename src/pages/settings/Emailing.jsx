@@ -20,7 +20,7 @@ import {
     InputLabel,
     FormControlLabel,
     Checkbox,
-    Button, Alert, Snackbar
+    Button
 } from '@mui/material';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@emotion/react';
@@ -35,6 +35,7 @@ import PryInfo from "../../components/PryInfo";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import {useSnackbar} from "notistack";
 
 /** TABS FUNCTION */
 function TabPanel(props) {
@@ -72,7 +73,8 @@ function a11yProps(index) {
 }
 
 export default function Emailing() {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('emailing');
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -100,13 +102,6 @@ export default function Emailing() {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {setValue(newValue);};
     const handleChangeIndex = (index) => {setValue(index);};
-
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
 
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
@@ -142,43 +137,23 @@ export default function Emailing() {
         const response = await MailingService.test(testRecipient, settingsValue);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.mail_test", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.test.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.mail_test")
-        });
+        enqueueSnackbar(t("messages.test.success"), {variant: 'success'});
     }
 
     const handleSave = async () => {
         const response = await SettingsService.saveEmailing(settingsValue);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.settings_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
         refreshSettings();
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.settings_saved")
-        });
+        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
     };
 
     const handleCancel = () => {
@@ -213,16 +188,10 @@ export default function Emailing() {
 
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label={t('titles.general')} {...a11yProps(0)} />
-                    <Tab label={t('titles.templates')} {...a11yProps(1)} />
+                    <Tab label={t('tab_general.title')} {...a11yProps(0)} />
+                    <Tab label={t('tab_templates.title')} {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <SwipeableViews
@@ -233,7 +202,7 @@ export default function Emailing() {
 
                 <TabPanel value={value} index={0} dir="ltr">
                     <PryInfo
-                        text={t("info.emailing_general")}
+                        text={t("tab_general.info")}
                     />
 
                     <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
@@ -252,7 +221,7 @@ export default function Emailing() {
                                         <TextField
                                             className={classes.field}
                                             id="filled-basic"
-                                            label={t("fields.host")}
+                                            label={t("tab_general.host")}
                                             variant="standard"
                                             value={getSettingsValue('NOT.smtp_host')}
                                             onChange={(e) => {handleSettingsChange('NOT.smtp_host', e.target.value)}}
@@ -262,7 +231,7 @@ export default function Emailing() {
                                         <TextField
                                             className={classes.field}
                                             id="filled-basic"
-                                            label={t("fields.port")}
+                                            label={t("tab_general.port")}
                                             variant="standard"
                                             value={getSettingsValue('NOT.smtp_port')}
                                             onChange={(e) => {handleSettingsChange('NOT.smtp_port', e.target.value)}}
@@ -272,7 +241,7 @@ export default function Emailing() {
                                         <TextField
                                             style={{ width: '100%' }}
                                             id="filled-basic"
-                                            label={t("fields.from")}
+                                            label={t("tab_general.from")}
                                             variant="standard"
                                             value={getSettingsValue('NOT.smtp_from')}
                                             onChange={(e) => {handleSettingsChange('NOT.smtp_from', e.target.value)}}
@@ -288,7 +257,7 @@ export default function Emailing() {
                                                 onChange={(e) => handleSettingsChange('NOT.smtp_authentication', e.target.checked+"")}
                                             />
                                         }
-                                        label={t("fields.authentication")}
+                                        label={t("tab_general.authentication")}
                                     />
                                 </FormGroup>
 
@@ -299,7 +268,7 @@ export default function Emailing() {
                                                 style={{ maxWidth: '600px' }}
                                                 fullWidth={true}
                                                 id="filled-basic"
-                                                label={t("fields.user")}
+                                                label={t("tab_general.user")}
                                                 variant="standard"
                                                 value={getSettingsValue('NOT.smtp_user')}
                                                 onChange={(e) => {handleSettingsChange('NOT.smtp_user', e.target.value)}}
@@ -310,7 +279,7 @@ export default function Emailing() {
                                                 style={{ maxWidth: '600px' }}
                                                 fullWidth={true}
                                                 id="filled-basic"
-                                                label={t("fields.password")}
+                                                label={t("tab_general.password")}
                                                 variant="standard"
                                                 type="password"
                                                 value={getSettingsValue('NOT.smtp_password')}
@@ -319,19 +288,19 @@ export default function Emailing() {
                                         </Grid>
                                         <Grid item xs={11}>
                                             <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
-                                                <InputLabel>{t('fields.security')}</InputLabel>
+                                                <InputLabel>{t('tab_general.security.name')}</InputLabel>
                                                     <Select
                                                         labelId="security-label"
                                                         id="security"
                                                         value={getSettingsValue('NOT.smtp_security') || 'none'}
-                                                        label={t("fields.security")}
+                                                        label={t("tab_general.security.name")}
                                                         onChange={(e) => {handleSettingsChange('NOT.smtp_security', e.target.value)}}
                                                         fullWidth={true}
                                                         style={{ maxWidth: '600px' }}
                                                     >
-                                                        <MenuItem value={"tls"}>{t("fields.security_value.tls")}</MenuItem>
-                                                        <MenuItem value={"ssl"}>{t("fields.security_value.ssl")}</MenuItem>
-                                                        <MenuItem value={"none"}>{t("fields.security_value.none")}</MenuItem>
+                                                        <MenuItem value={"tls"}>{t("tab_general.security.tls")}</MenuItem>
+                                                        <MenuItem value={"ssl"}>{t("tab_general.security.ssl")}</MenuItem>
+                                                        <MenuItem value={"none"}>{t("tab_general.security.none")}</MenuItem>
                                                     </Select>
                                             </FormControl>
                                         </Grid>
@@ -348,7 +317,7 @@ export default function Emailing() {
                                     <Grid item xs={6}>
                                         <TextField
                                             fullWidth
-                                            label={t("fields.test_smtp")}
+                                            label={t("tab_general.recipient")}
                                             variant="outlined"
                                             placeholder={t("fields.recipient")}
                                             value={testRecipient || ''}
@@ -363,7 +332,7 @@ export default function Emailing() {
                                                 onClick={() => handleTest()}
 
                                             >
-                                                {t("buttons.test_email")}
+                                                {t("tab_general.actions.test_email")}
                                             </Button>
                                     </Grid>
                                 </Grid>
@@ -378,7 +347,7 @@ export default function Emailing() {
 
                 <TabPanel value={value} index={1} dir="ltr">
                     <PryInfo
-                        text={t("info.emailing_templates")}
+                        text={t("tab_templates.info")}
                     />
 
                     <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
@@ -386,34 +355,34 @@ export default function Emailing() {
                         <Grid container spacing={2} style={{ marginBottom: '15px' }}>
                             <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
-                                    <InputLabel>{t('fields.template')}</InputLabel>
+                                    <InputLabel>{t('tab_templates.template.name')}</InputLabel>
                                     <Select
                                         labelId="template"
                                         value={template.name || ''}
                                         onChange={(e) => handleTemplateSelect(e.target.value)}
                                     >
-                                        <ListSubheader>{t("fields.template_value.general")}</ListSubheader>
-                                        <MenuItem value="NOT.download_ready">{t("fields.template_value.download_ready")}</MenuItem>
-                                        <MenuItem value="NOT.mail_change_confirmation">{t("fields.template_value.mail_change")}</MenuItem>
-                                        <MenuItem value="NOT.reset_password">{t("fields.template_value.reset_password")}</MenuItem>
-                                        <ListSubheader>{t("fields.template_value.patient")}</ListSubheader>
-                                        <MenuItem value="NOT.activation">{t("fields.template_value.activation_request")}</MenuItem>
-                                        <MenuItem value="NOT.activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
-                                        <MenuItem value="NOT.notification">{t("fields.template_value.study_notification")}</MenuItem>
-                                        <MenuItem value="NOT.registration_error">{t("fields.template_value.registration_error")}</MenuItem>
-                                        <ListSubheader>{t("fields.template_value.physicians")}</ListSubheader>
-                                        <MenuItem value="NOT.doctor-activation">{t("fields.template_value.activation_request")}</MenuItem>
-                                        <MenuItem value="NOT.doctor_activation_request">{t("fields.template_value.activation_request2")}</MenuItem>
-                                        <MenuItem value="NOT.doctor_activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
-                                        <MenuItem value="NOT.doctor_notification">{t("fields.template_value.study_notification")}</MenuItem>
-                                        <MenuItem value="NOT.share_user">{t("fields.template_value.share_to")}</MenuItem>
-                                        <ListSubheader>{t("fields.template_value.radiologist")}</ListSubheader>
-                                        <MenuItem value="NOT.radio-activation">{t("fields.template_value.activation_request")}</MenuItem>
-                                        <MenuItem value="NOT.radio_activation_request">{t("fields.template_value.activation_request2")}</MenuItem>
-                                        <MenuItem value="NOT.radio_activation_confirmation">{t("fields.template_value.activation_confirmation")}</MenuItem>
-                                        <ListSubheader>{t("fields.template_value.guest")}</ListSubheader>
-                                        <MenuItem value="NOT.share_guest">{t("fields.template_value.share_to")}</MenuItem>
-                                        <MenuItem value="NOT.share_guest_password">{t("fields.template_value.share_to_password")}</MenuItem>
+                                        <ListSubheader>{t("tab_templates.template.general")}</ListSubheader>
+                                        <MenuItem value="NOT.download_ready">{t("tab_templates.template.download_ready")}</MenuItem>
+                                        <MenuItem value="NOT.mail_change_confirmation">{t("tab_templates.template.mail_change")}</MenuItem>
+                                        <MenuItem value="NOT.reset_password">{t("tab_templates.template.reset_password")}</MenuItem>
+                                        <ListSubheader>{t("tab_templates.template.patient")}</ListSubheader>
+                                        <MenuItem value="NOT.activation">{t("tab_templates.template.activation_request")}</MenuItem>
+                                        <MenuItem value="NOT.activation_confirmation">{t("tab_templates.template.activation_confirmation")}</MenuItem>
+                                        <MenuItem value="NOT.notification">{t("tab_templates.template.study_notification")}</MenuItem>
+                                        <MenuItem value="NOT.registration_error">{t("tab_templates.template.registration_error")}</MenuItem>
+                                        <ListSubheader>{t("tab_templates.template.physicians")}</ListSubheader>
+                                        <MenuItem value="NOT.doctor-activation">{t("tab_templates.template.activation_request")}</MenuItem>
+                                        <MenuItem value="NOT.doctor_activation_request">{t("tab_templates.template.activation_request2")}</MenuItem>
+                                        <MenuItem value="NOT.doctor_activation_confirmation">{t("tab_templates.template.activation_confirmation")}</MenuItem>
+                                        <MenuItem value="NOT.doctor_notification">{t("tab_templates.template.study_notification")}</MenuItem>
+                                        <MenuItem value="NOT.share_user">{t("tab_templates.template.share_to")}</MenuItem>
+                                        <ListSubheader>{t("tab_templates.template.radiologist")}</ListSubheader>
+                                        <MenuItem value="NOT.radio-activation">{t("tab_templates.template.activation_request")}</MenuItem>
+                                        <MenuItem value="NOT.radio_activation_request">{t("tab_templates.template.activation_request2")}</MenuItem>
+                                        <MenuItem value="NOT.radio_activation_confirmation">{t("tab_templates.template.activation_confirmation")}</MenuItem>
+                                        <ListSubheader>{t("tab_templates.template.guest")}</ListSubheader>
+                                        <MenuItem value="NOT.share_guest">{t("tab_templates.template.share_to")}</MenuItem>
+                                        <MenuItem value="NOT.share_guest_password">{t("tab_templates.template.share_to_password")}</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -422,7 +391,7 @@ export default function Emailing() {
                                 <TextField
                                     id="Subject"
                                     fullWidth
-                                    label={t('fields.subject')}
+                                    label={t('tab_templates.subject')}
                                     variant="standard"
                                     //style={{ marginBottom: "10px", width: "100%" }}
                                     value={template.subject || ''}

@@ -21,6 +21,7 @@ import Masonry from "react-masonry-css";
 import MultiSelect from '../components/MultiSelect';
 import Index from "../layouts/settings/actions";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import {useTranslation} from 'react-i18next';
@@ -34,7 +35,6 @@ import DialogChangePassword from "../layouts/profile/DialogChangePassword";
 import EmailIcon from "@mui/icons-material/Email";
 import SmsIcon from "@mui/icons-material/Sms";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import {useSnackbar} from "notistack";
 
 function Settings(props) {
     const {t} = useTranslation('profile');

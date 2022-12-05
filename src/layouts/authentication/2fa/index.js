@@ -16,7 +16,7 @@ import UsersService from "../../../services/api/users.service";
 const bgImage = "/images/loginbg.jpg";
 
 const TwoFactorAuthentication = () => {
-    const { t } = useTranslation('login');
+    const { t } = useTranslation(['login', 'common']);
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -70,7 +70,7 @@ const TwoFactorAuthentication = () => {
                 return;
             }
 
-            swal("Success", t("msg_info.login_success"), "success", {
+            swal("Success", t("messages.login_success"), "success", {
                 buttons: false,
                 timer: 2000,
             })
@@ -116,16 +116,16 @@ const TwoFactorAuthentication = () => {
                 <BackgroundLayout
                     bgImage={bgImage}
                 >
-                    <Grid item xs={12}><Typography variant="h2">{t("texts.portal_name")}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h2">{t("portal_name", {ns: "common"})}</Typography></Grid>
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
-                    <Grid item xs={12}><Typography variant="h4">{t("texts.portal_subtitle")}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h4">{t("portal_welcome.title")}</Typography></Grid>
                     <Grid item xs={12}>
                         <Typography variant="body2">
-                            {t("texts.portal_welcome_text.line_1")}<br/>
-                            {t("texts.portal_welcome_text.line_2")}<br/>
-                            {t("texts.portal_welcome_text.line_3")}<br/>
-                            {t("texts.portal_welcome_text.line_4")}<br/>
-                            {t("texts.portal_welcome_text.line_5")}<br/>
+                            {t("portal_welcome.line_1")}<br/>
+                            {t("portal_welcome.line_2")}<br/>
+                            {t("portal_welcome.line_3")}<br/>
+                            {t("portal_welcome.line_4")}<br/>
+                            {t("portal_welcome.line_5")}<br/>
                         </Typography>
                     </Grid>
                 </BackgroundLayout>
@@ -154,10 +154,9 @@ const TwoFactorAuthentication = () => {
                             <img src={GeneralService.getLogoURL()} alt="Logo" width="100%"/>
                         </Grid>
 
-                        <Grid align='center'>
+                        <Grid align='center' sx={{whiteSpace: "pre-line"}}>
                             <h1>
-                                Two-Factor
-                                <br /> Authentication
+                                {t("2fa.title")}
                             </h1>
                             <AuthCode
                                 key={allowedCharacters}
@@ -169,20 +168,17 @@ const TwoFactorAuthentication = () => {
                                 isPassword={isPassword}
                                 disabled={disabled}
                             />
-                            <p>
-                                A message with a verification code has been sent to <br />
-                                your devices. Enter the code to continue.
-                            </p>
+                            <p>{t("2fa.description")}</p>
                         </Grid>
                         <Grid align='center'>
-                            Didn't receive OTP?
+                            {t("2fa.no_otp")}
                         </Grid>
                         <Grid align='center'>
                             <Button
                                 disabled={otpTimer>0}
                                 onClick={() => {refreshOTP()}}
                             >
-                                Resend OTP {otpTimer>0?('in '+otpTimer+' seconds'):''}
+                                {otpTimer>0? t("2fa.actions.resend_otp_timer", {seconds: otpTimer}):t("2fa.actions.resend_otp")}
                             </Button>
                         </Grid>
                     </Grid>

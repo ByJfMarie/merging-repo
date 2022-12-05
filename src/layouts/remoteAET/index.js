@@ -1,4 +1,4 @@
-import {Alert, Box, Paper, Snackbar} from "@mui/material";
+import {Box, Paper} from "@mui/material";
 import { useTheme } from '@emotion/react';
 import * as React from 'react';
 import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
@@ -10,12 +10,15 @@ import TableRemoteStudiesActions from "./TableRemoteStudiesActions";
 import {useState} from "react";
 import QRService from "../../services/api/queryRetrieve.service";
 import UserContext from "../../components/UserContext";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
 function Index(props) {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation(['remote_servers', 'study_filter']);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -40,20 +43,6 @@ function Index(props) {
         to: "",
     };
 
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: 'success',
-        message: ''
-    });
-    const messageAlert = (severity, message) => {
-        setMessage({
-            ...message,
-            show: true,
-            severity: severity,
-            message: message
-        });
-    }
-
     /* FILTERS */
     const [filters, setFilters] = useState(filtersInitValue);
     const [pageSize, setPageSize] = React.useState(10);
@@ -63,27 +52,27 @@ function Index(props) {
         if (!filters) return false;
 
         if (filters.patient_id && filters.patient_id.length<3) {
-            messageAlert('error', t("msg_error.patientID_too_short"))
+            enqueueSnackbar(t("messages.patientID_too_short", {ns: 'study_filter'}), {variant: 'error'});
             return false;
         }
 
         if (filters.patient_name && filters.patient_name.length<3) {
-            messageAlert('error', t("msg_error.patientName_too_short"))
+            enqueueSnackbar(t("messages.patientName_too_short", {ns: 'study_filter'}), {variant: 'error'});
             return false;
         }
 
         if (filters.description && filters.description.length<3) {
-            messageAlert('error', t("msg_error.studyDesc_too_short"))
+            enqueueSnackbar(t("messages.studyDesc_too_short", {ns: 'study_filter'}), {variant: 'error'});
             return false;
         }
 
         if (filters.accession_number && filters.accession_number.length<3) {
-            messageAlert('error', t("msg_error.accession_too_short"))
+            enqueueSnackbar(t("messages.accession_too_short", {ns: 'study_filter'}), {variant: 'error'});
             return false;
         }
 
         if (filters.referring_physician && filters.referring_physician.length<3) {
-            messageAlert('error', t("msg_error.refPhys_too_short"))
+            enqueueSnackbar(t("messages.refPhys_too_short", {ns: 'study_filter'}), {variant: 'error'});
             return false;
         }
 
@@ -101,12 +90,10 @@ function Index(props) {
             if (filters.to) empty = false;
 
             if(empty) {
-                messageAlert('error', t("msg_error.query_no_criteria"));
+                enqueueSnackbar(t("messages.query_no_criteria", {ns: 'study_filter'}), {variant: 'error'});
                 return false;
             }
         }
-
-        setMessage({...message, show: false})
         return true;
     }
 
@@ -117,7 +104,7 @@ function Index(props) {
         const rows = [];
 
         if (props.currentAET === '') {
-            messageAlert('error', t("msg_error.query_no_aet"));
+            enqueueSnackbar(t("messages.query_no_aet", {ns: 'study_filter'}), {variant: 'error'});
             setRows(rows);
             return;
         }
@@ -151,7 +138,7 @@ function Index(props) {
     const columns = [
         {
             field: "patient_full",
-            headerName: t("tables_header.patient"),
+            headerName: t("table.header.patient"),
             valueGetter: (params) => params.row.p_name,
             flex: 2,
             minWidth: 150,
@@ -166,7 +153,7 @@ function Index(props) {
         },
         {
             field: "study_full",
-            headerName: t('tables_header.study'),
+            headerName: t('table.header.study'),
             valueGetter: (params) => params.row.st_date,
             flex: 3,
             minWidth: 350,
@@ -186,7 +173,7 @@ function Index(props) {
             flex: 1,
             minWidth: 180,
             field: 'st_ref_physician',
-            headerName: t('tables_header.referring_physician')
+            headerName: t('table.header.referring_physician')
         },
     ];
 
@@ -329,12 +316,6 @@ function Index(props) {
 
     return (
         <>
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <TableRemoteStudiesFilter
                 initialValues={filtersInitValue}
                 searchFunction={queryStudies}

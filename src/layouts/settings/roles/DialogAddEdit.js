@@ -14,6 +14,7 @@ import React from "react";
 import SettingsService from "../../../services/api/settings.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -40,7 +41,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('roles_perms');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -60,23 +63,14 @@ const DialogAddEdit = (props) => {
         let response = await SettingsService.editPrivileges(props.values);
 
         if (response.error) {
-            props.alertMessage({
-                show: true,
-                severity: "error",
-                message: t("msg_error.permissions_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_perms.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.save_perms.success"), {variant: 'success'});
         props.toggle();
         props.setValues({});
         props.onSave();
-
-        props.alertMessage({
-            show: true,
-            severity: "success",
-            message: t("msg_info.permissions_saved")
-        });
     }
 
     React.useEffect(() => {
@@ -99,7 +93,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="role"
-                                label={t("fields.role")}
+                                label={t("dialog_add_edit.role")}
                                 variant="standard"
                                 value={getValue("role") || ''}
                                 InputProps={{
@@ -112,7 +106,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.description")}
+                                label={t("dialog_add_edit.description")}
                                 variant="standard"
                                 value={getValue("description") || ''}
                                 onChange={(e) => {handleChange('description', e.target.value);}}
@@ -124,7 +118,7 @@ const DialogAddEdit = (props) => {
                                 <InputLabel
                                     variant="standard"
                                     id="viewers"
-                                >{t("fields.viewers")}
+                                >{t("dialog_add_edit.viewers")}
                                 </InputLabel>
                                 <Select
                                     labelId="viewers"
@@ -160,10 +154,10 @@ const DialogAddEdit = (props) => {
 
                         <Grid container spacing={2} direction={"row-reverse"}>
                             <Grid item >
-                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
+                                <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('dialog_add_edit.actions.save')}</Button>
                             </Grid>
                             <Grid item >
-                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
+                                <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('dialog_add_edit.actions.cancel')}</Button>
                             </Grid>
                         </Grid>
                     </Grid>

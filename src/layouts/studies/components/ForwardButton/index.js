@@ -7,7 +7,7 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 import { useTranslation } from 'react-i18next';
 
 const Index = (props) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     const [options, setOptions] = React.useState([]);
     const loadAETs = async() => {
@@ -36,7 +36,7 @@ const Index = (props) => {
     return (
         <PryButtonSelect
             icon={<FastForwardIcon fontSize="small"/>}
-            label={t('buttons.forward')}
+            label={t('table.actions.forward')}
             options={options}
             handleAction={handleForward}
             disabled={props.actionDisabled}

@@ -67,7 +67,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function DialogSharing({open, studies, handleCloseDialog, handleShareDialog}) {
 
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     /** User & privileges */
     const { settings } = React.useContext(UserContext);
@@ -99,7 +99,7 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
             fullWidth
         >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                {t("titles.study_sharing")}
+                {t("dialog_sharing.title")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
 
@@ -107,8 +107,8 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
 
                     <Grid item xs={12}>
                         <InputTags
-                            label={t("fields.share_to")}
-                            placeholder={t("msg_info.share_to")}
+                            label={t("dialog_sharing.share_to.name")}
+                            placeholder={t("dialog_sharing.share_to.description")}
                             tags={getValue('share_to') || []}
                             SetTags={(tags) => {setValue("share_to", tags);}}
                         />
@@ -120,10 +120,10 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
                         <TextField
                             fullWidth={true}
                             id="filled-basic"
-                            label={t("fields.share_comments")}
+                            label={t("dialog_sharing.share_comments.name")}
                             variant="standard"
                             value={getValue('comments')}
-                            placeholder={t("msg_info.share_comments")}
+                            placeholder={t("dialog_sharing.share_comments.description")}
                             onChange={(e) => {setValue('comments', e.target.value)}}
                             multiline
                             InputLabelProps={{
@@ -140,7 +140,7 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DesktopDatePicker
                                     id="from"
-                                    label={t('fields.share_validUntil')}
+                                    label={t('dialog_sharing.share_validUntil')}
                                     inputFormat={settings.date_format}
                                     value={getValue("valid_until") || null}
                                     onChange={(date, keyboardInputValue) => {
@@ -160,10 +160,10 @@ export default function DialogSharing({open, studies, handleCloseDialog, handleS
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="secondary">
-                    {t("buttons.cancel")}
+                    {t("dialog_sharing.actions.cancel")}
                 </Button>
                 <Button autoFocus onClick={clickShare}>
-                    {t("buttons.share")}
+                    {t("dialog_sharing.actions.share")}
                 </Button>
             </DialogActions>
         </BootstrapDialog>

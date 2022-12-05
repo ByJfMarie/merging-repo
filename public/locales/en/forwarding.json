@@ -1,0 +1,30 @@
+{
+  "title": "Forwarding",
+
+  "table": {
+    "header": {
+      "status": "Status",
+      "creation_date": "Creation Date",
+      "patient": "Patient",
+      "description": "Study Description",
+      "aet": "AET",
+      "noi": "# Images"
+    },
+    "menu": {
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "status": {
+      "waiting": "Waiting",
+      "completed": "Completed",
+      "error": "Error",
+      "forwarding": "Forwarding"
+    },
+    "actions": {
+    }
+  },
+
+  "messages": {
+  }
+}

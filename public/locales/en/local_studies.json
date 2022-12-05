@@ -1,0 +1,123 @@
+{
+  "title": "Local Studies",
+
+  "table": {
+    "header": {
+      "status": "Status",
+      "patient": "Patient",
+      "study": "Study",
+      "description": "Study Description",
+      "referring_physician": "Ref. Physician",
+      "report": "Report",
+      "assignations": "Assigned To",
+      "noi": "# Images",
+      "aet": "AET",
+      "creation_date": "Creation Date"
+    },
+    "menu": {
+      "view": "View Study",
+      "view_with_viewer": "View Study ({{viewer}})",
+      "info": "Study Info",
+      "login_sheet": "Login Sheet",
+      "permissions": "Set Permissions",
+      "delete": "Delete"
+    },
+    "status": {
+      "online": "Online",
+      "nearline": "Nearline",
+      "offline": "offline"
+    },
+    "actions": {
+      "download": {
+        "name": "Download",
+        "jpeg": "JPEG",
+        "jpeg_overlay": "JPEG Overlay",
+        "dicom": "DICOM Files"
+      },
+      "share": "Share",
+      "forward": "Forward",
+      "transfer": "Transfer"
+    }
+  },
+
+  "messages": {
+    "study_no_selection": "You have to select at least one study!",
+    "open_viewer": {
+      "error": "Impossible to open viewer: {{error}}"
+    },
+    "delete_study": {
+      "error": "Impossible to mark Study {{description}} for Patient {{patient}} for delete: {{error}}",
+      "success": "Study {{description}} for patient {{patient}} has been marked for delete."
+    },
+    "forward": {
+      "success": "Forwarding order has been successfully created.",
+      "error": "Impossible to forward study: {{error}}"
+    },
+    "transfer": {
+      "success": "Transfer order has been successfully created.",
+      "error": "Impossible to transfer study: {{error}}"
+    },
+    "share": {
+      "success": "Your study selection has been successfully shared.",
+      "error": "Impossible to share your study selection: {{error}}"
+    },
+    "download": {
+      "creating_zip": "Creating ZIP File",
+      "downloading": "Downloading file",
+      "download_completed": "Download Completed"
+    }
+  },
+  "dialog_info": {
+    "title": "Study Information",
+    "p_name": "Patient Name",
+    "p_id": "Patient ID",
+    "p_birthdate": "Patient Birthdate",
+    "st_institution": "Institution",
+    "st_ref_physician": "Referring Physician",
+    "st_accession_number": "Accession Number",
+    "st_description": "Study Description",
+    "st_modalities": "Modalities",
+    "st_date": "Study Date",
+    "st_id": "Study ID",
+    "st_uid": "Study UID",
+    "st_reference": "Reference",
+    "st_storage_key": "Storage Key",
+    "actions": {
+      "close": "Close"
+    }
+  },
+
+  "dialog_permissions": {
+    "title": "Study Permissions",
+    "filter": "Filter",
+    "actions": {
+      "close": "Close"
+    }
+  },
+
+  "dialog_sharing": {
+    "title": "Sharing Studies",
+    "share_to": {
+      "name": "Share To",
+      "description": "Enter your recipients email addresses"
+    },
+    "share_comments": {
+      "name": "Comments",
+      "description": "Enter an optionally comment"
+    },
+    "share_validUntil": "Choose an End Date",
+    "actions": {
+      "cancel": "cancel",
+      "share": "Share"
+    }
+  },
+
+  "dialog_delete_study": {
+    "title": "Are you sure?",
+    "message": "Do you really want to delete this study? This process cannot be undone.",
+    "actions": {
+      "cancel": "cancel",
+      "delete": "Delete"
+    }
+  }
+}

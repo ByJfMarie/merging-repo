@@ -5,16 +5,16 @@ import * as React from "react";
 import { useTranslation } from 'react-i18next';
 
 export default function SettingsActionsLayout(props) {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('users');
 
     return (
         <Grid container spacing={2} direction={"row-reverse"} style={{ marginTop: '15px' }}>
             <Grid item xs="auto">
-                <Button variant="contained" component="label" onClick={props.handleSave}>{t('buttons.save')}</Button>
+                <Button variant="contained" component="label" onClick={props.handleSave}>{t('actions.save')}</Button>
             </Grid>
             <Grid item xs="auto">
                 <Button variant="outlined" component="label"
-                        onClick={props.handleCancel}>{props.labelReset || t('buttons.reset')}</Button>
+                        onClick={props.handleCancel}>{props.labelReset || t('actions.reset')}</Button>
             </Grid>
             <Grid item xs>
             </Grid>
@@ -23,7 +23,7 @@ export default function SettingsActionsLayout(props) {
 
                 <Grid item xs="auto">
                     <Button variant="outlined" color="success" component="label"
-                            onClick={props.handleTest}>{t("buttons.test_settings")}</Button>
+                            onClick={props.handleTest}>{t("actions.test_settings")}</Button>
                 </Grid>
             }
         </Grid>

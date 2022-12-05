@@ -9,7 +9,7 @@ import {
     Card,
     CardContent,
     TextField,
-    Grid, Alert, Snackbar, MenuItem, Select, FormControl, InputLabel, Link,
+    Grid, MenuItem, Select, FormControl, InputLabel, Link,
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -22,6 +22,7 @@ import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import {DropzoneArea} from 'react-mui-dropzone';
 import GeneralService from "../../services/api/general.service";
 import PryInfo from "../../components/PryInfo";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -61,7 +62,9 @@ function a11yProps(index) {
 }
 
 export default function SiteDesign() {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('site_design');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -97,29 +100,13 @@ export default function SiteDesign() {
         setValue(newValue);
     };
 
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
-    /*function Message() {
-        if (!message || !message.show) return <></>;
-        return <Alert severity={message.severity}>{message.message}</Alert>;
-    }*/
-
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
     const refreshSettings = async () => {
         const response = await SettingsService.getDesign();
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: response.error
-            });
+            enqueueSnackbar(response.error, {variant: 'error'});
             return;
         }
 
@@ -146,22 +133,12 @@ export default function SiteDesign() {
         const response = await SettingsService.saveDesign(settingsValue);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.settings_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
         refreshSettings();
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.settings_saved")
-        });
+        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
     };
 
     const handleCancel = () => {
@@ -174,21 +151,11 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadLogo(files[0]);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.logo_uploaded", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.logo_uploaded.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.logo_uploaded")
-        });
+        enqueueSnackbar(t("messages.logo_uploaded.success"), {variant: 'success'});
     }
 
     const handleUploadHelp = async (files) => {
@@ -196,21 +163,11 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadHelp(files[0]);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.help_uploaded", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.help_uploaded.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.help_uploaded")
-        });
+        enqueueSnackbar(t("messages.help_uploaded.success"), {variant: 'success'});
     }
 
     const handleUploadLoginSheet = async (files) => {
@@ -218,21 +175,11 @@ export default function SiteDesign() {
         const response = await SettingsService.uploadLoginSheet(files[0]);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.loginSheet_uploaded", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.loginSheet_uploaded.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.loginSheet_uploaded")
-        });
+        enqueueSnackbar(t("messages.loginSheet_uploaded.success"), {variant: 'success'});
     }
 
 
@@ -243,35 +190,29 @@ export default function SiteDesign() {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <DesignServicesIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.site_design')}
+                    <DesignServicesIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
                 </Grid>
             </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable"
                       scrollButtons allowScrollButtonsMobile>
-                    <Tab label={t('titles.general')} {...a11yProps(0)} />
-                    <Tab label={t('titles.custom_files')} {...a11yProps(1)} />
-                    <Tab label={t('titles.custom_texts')} {...a11yProps(2)} />
+                    <Tab label={t('tab_general.title')} {...a11yProps(0)} />
+                    <Tab label={t('tab_custom_files.title')} {...a11yProps(1)} />
+                    <Tab label={t('tab_custom_texts.title')} {...a11yProps(2)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0} dir="ltr">
                 <PryInfo
-                    text={t("info.site_design_general")}
+                    text={t("tab_general.info")}
                 />
                 <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                     <CardContent>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
-                                    <InputLabel>{t('fields.language')}</InputLabel>
+                                    <InputLabel>{t('tab_general.language.name')}</InputLabel>
                                     <Select
                                         value={getSettingsValue('WEB.language') || "en"}
                                         label="Language"
@@ -280,17 +221,17 @@ export default function SiteDesign() {
                                         }}
                                         fullWidth={true}
                                     >
-                                        <MenuItem value={"fr"}>{t("fields.language_value.fr")}</MenuItem>
-                                        <MenuItem value={"en"}>{t("fields.language_value.en")}</MenuItem>
+                                        <MenuItem value={"fr"}>{t("tab_general.language.fr")}</MenuItem>
+                                        <MenuItem value={"en"}>{t("tab_general.language.en")}</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControl fullWidth variant="standard" style={{ width: "100%", padding: "0px" }}>
-                                    <InputLabel>{t('fields.date_format')}</InputLabel>
+                                    <InputLabel>{t('tab_general.date_format')}</InputLabel>
                                     <Select
                                         value={getSettingsValue('ALL.date_format')}
-                                        label={t('fields.date_format')}
+                                        label={t('tab_general.date_format')}
                                         onChange={(e) => {
                                             handleSettingsChange('ALL.date_format', e.target.value)
                                         }}
@@ -314,7 +255,7 @@ export default function SiteDesign() {
                                     <TextField
                                         className={classes.field}
                                         id="filled-basic"
-                                        label={t("fields.institution")}
+                                        label={t("tab_general.institution")}
                                         variant="standard"
                                         InputLabelProps={{shrink: true}}
                                         value={getSettingsValue('WEB.general_institution')}
@@ -339,7 +280,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.departement")}
+                                    label={t("tab_general.departement")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_department')}
@@ -350,7 +291,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.country")}
+                                    label={t("tab_general.country")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_country')}
@@ -374,7 +315,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.address")}
+                                    label={t("tab_general.address")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_address')}
@@ -384,7 +325,7 @@ export default function SiteDesign() {
                             <Grid item xs={12}>
                                 <TextField
                                     className={classes.field}
-                                    id="filled-basic" label={t("fields.city")}
+                                    id="filled-basic" label={t("tab_general.city")}
                                     variant="standard" InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_city')}
                                     onChange={(e) => {handleSettingsChange('WEB.general_city', e.target.value)}}
@@ -394,7 +335,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.website")}
+                                    label={t("tab_general.website")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_website')}
@@ -405,7 +346,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.doctor_id")}
+                                    label={t("tab_general.doctor_id")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_doctor_id')}
@@ -416,7 +357,7 @@ export default function SiteDesign() {
                                 <TextField
                                     className={classes.field}
                                     id="filled-basic"
-                                    label={t("fields.external_address")}
+                                    label={t("tab_general.external_address")}
                                     variant="standard"
                                     InputLabelProps={{shrink: true}}
                                     value={getSettingsValue('WEB.general_external_web_link')}
@@ -434,22 +375,22 @@ export default function SiteDesign() {
 
             <TabPanel value={value} index={1} dir="ltr">
                 <PryInfo
-                    text={t("info.site_design_customFiles")}
+                    text={t("tab_custom_files.info")}
                 />
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
-                    <Typography gutterBottom variant="h6" component="div">{t('fields.company_logo')}
-                        &nbsp;<Link target="_blank" href={GeneralService.getLogoURL()} variant="body2" rel="noreferrer">View</Link>
+                    <Typography gutterBottom variant="h6" component="div">{t('tab_custom_files.company_logo')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getLogoURL()} variant="body2" rel="noreferrer">{t('tab_custom_files.actions.view')}</Link>
                     </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary">Only *.svg images will be accepted</Typography>
+                        <Typography variant="body2" color="text.secondary">{t('tab_custom_files.texts.only_svg')}</Typography>
                         <Box m={2}/>
                         <DropzoneArea
                             dropzoneClass={classes.myDropZone}
                             acceptedFiles={['.svg']}
                             filesLimit={1}
-                            dropzoneText={("Drag and drop a file here or click to select a file")}
+                            dropzoneText={t('tab_custom_files.texts.drag_and_drop')}
                             onChange={(files) => handleUploadLogo(files)}
                             showPreviewsInDropzone={false}
                             showAlerts={false}
@@ -458,18 +399,18 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
-                    <Typography gutterBottom variant="h6" component="div">{t('fields.help_file')}
-                        &nbsp;<Link target="_blank" href={GeneralService.getHelpFileURL()} variant="body2" rel="noreferrer">View</Link>
+                    <Typography gutterBottom variant="h6" component="div">{t('tab_custom_files.help_file')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getHelpFileURL()} variant="body2" rel="noreferrer">{t('tab_custom_files.actions.view')}</Link>
                     </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
+                        <Typography variant="body2" color="text.secondary">{t('tab_custom_files.texts.only_pdf')}</Typography>
                         <Box m={2}/>
                         <DropzoneArea
                             dropzoneClass={classes.myDropZone}
                             acceptedFiles={['.pdf']}
                             filesLimit={1}
-                            dropzoneText={("Drag and drop a file here or click to select a file")}
+                            dropzoneText={t('tab_custom_files.texts.drag_and_drop')}
                             onChange={(files) => handleUploadHelp(files)}
                             showPreviewsInDropzone={false}
                             showAlerts={false}
@@ -478,18 +419,18 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card style={{backgroundColor: theme.palette.card.color, width: "100% !important"}} className={classes.card}>
-                    <Typography gutterBottom variant="h6" component="div">{t('fields.login_sheet')}
-                        &nbsp;<Link target="_blank" href={GeneralService.getLoginSheetFileURL()} variant="body2" rel="noreferrer">View</Link>
+                    <Typography gutterBottom variant="h6" component="div">{t('tab_custom_files.login_sheet')}
+                        &nbsp;<Link target="_blank" href={GeneralService.getLoginSheetFileURL()} variant="body2" rel="noreferrer">{t('tab_custom_files.actions.view')}</Link>
                     </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary">Only *.pdf files will be accepted</Typography>
+                        <Typography variant="body2" color="text.secondary">{t('tab_custom_files.texts.only_pdf')}</Typography>
                         <Box m={2}/>
                         <DropzoneArea
                             dropzoneClass={classes.myDropZone}
                             acceptedFiles={['.pdf']}
                             filesLimit={1}
-                            dropzoneText={("Drag and drop a file here or click to select a file")}
+                            dropzoneText={t('tab_custom_files.texts.drag_and_drop')}
                             onChange={(files) => handleUploadLoginSheet(files)}
                             showPreviewsInDropzone={false}
                             showAlerts={false}
@@ -500,11 +441,11 @@ export default function SiteDesign() {
 
             <TabPanel value={value} index={2} dir="ltr">
                 <PryInfo
-                    text={t("info.site_design_customTexts")}
+                    text={t("tab_custom_texts.info")}
                 />
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('fields.disclaimer')} </Typography>
+                    <Typography variant="h6" align="left"> {t('tab_custom_texts.disclaimer')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
                     <Editor
@@ -520,7 +461,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('fields.privacy_policy')} </Typography>
+                    <Typography variant="h6" align="left"> {t('tab_custom_texts.privacy_policy')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
                     <Editor
@@ -536,7 +477,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('fields.copyright')} </Typography>
+                    <Typography variant="h6" align="left"> {t('tab_custom_texts.copyright')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
                     <Editor
@@ -552,7 +493,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('fields.faq')} </Typography>
+                    <Typography variant="h6" align="left"> {t('tab_custom_texts.faq')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
                     <Editor
@@ -569,7 +510,7 @@ export default function SiteDesign() {
 
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('fields.terms_conditions')} </Typography>
+                    <Typography variant="h6" align="left"> {t('tab_custom_texts.terms_conditions')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
                     <Editor
@@ -585,7 +526,7 @@ export default function SiteDesign() {
                 </Card>
 
                 <Card className={classes.card}>
-                    <Typography variant="h6" align="left"> {t('fields.contact_us')} </Typography>
+                    <Typography variant="h6" align="left"> {t('tab_custom_texts.contact_us')} </Typography>
                     <Divider style={{marginBottom: theme.spacing(2)}}/>
                     <CardContent>
                     <Editor

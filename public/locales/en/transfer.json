@@ -1,0 +1,50 @@
+{
+  "title": "Transfer",
+
+  "filters": {
+    "transfer_site": {
+      "name": "Site",
+      "all": "All"
+    },
+    "transfer_direction": {
+      "name": "Direction",
+      "all": "All",
+      "send": "Outgoing",
+      "receive": "Incoming"
+    },
+    "transfer_status": {
+      "name": "Status",
+      "all": "All",
+      "in_progress": "In Progress",
+      "done": "Completed",
+      "error": "Error"
+    },
+    "transfer_remoteStatus": {
+      "name": "Remote Status",
+      "all": "All",
+      "in_progress": "In Progress",
+      "done": "Completed",
+      "error": "Error"
+    }
+  },
+
+  "table": {
+    "header": {
+      "status": "Status",
+      "patient": "Patient",
+      "study": "Study"
+    },
+    "menu": {
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "status": {
+    },
+    "actions": {
+    }
+  },
+
+  "messages": {
+  }
+}

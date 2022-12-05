@@ -60,7 +60,7 @@ export default function Announcement() {
         if (!response.items.value) return;
         if (response.items.value==="false") return;
 
-        snackbarId = enqueueSnackbar(t("msg_info.settings_changed"), {
+        snackbarId = enqueueSnackbar(t("messages.settings_changed"), {
             persist: true,
             preventDuplicate: true,
             variant: "warning",
@@ -79,8 +79,8 @@ export default function Announcement() {
             .then((rsp => {
                     handleOverlayClose();
 
-                    if (rsp.error) enqueueSnackbar(t("msg_error.perennity_restart"), {variant: 'error'});
-                    else enqueueSnackbar(t("msg_info.perennity_restart"), {variant: 'success'});
+                    if (rsp.error) enqueueSnackbar(t("messages.restart_perennity.error"), {variant: 'error'});
+                    else enqueueSnackbar(t("messages.restart_perennity.success"), {variant: 'success'});
                 })
             );
     }
@@ -98,7 +98,7 @@ export default function Announcement() {
                 size="small"
                 onClick={handleRestart}
             >
-                {t("buttons.restart")}
+                {t("dialog_restart.acions.restart")}
             </Button>
             <IconButton
                 size="small"
@@ -122,7 +122,7 @@ export default function Announcement() {
             >
                 <CircularProgress color="inherit" />
                 <Box ml={2}>
-                    <Typography variant="h3">{t("texts.restart_perennity")}</Typography>
+                    <Typography variant="h3">{t("dialog_restart.restarting")}</Typography>
                 </Box>
             </Backdrop>
         </>

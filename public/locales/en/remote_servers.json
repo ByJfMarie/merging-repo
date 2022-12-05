@@ -1,0 +1,47 @@
+{
+  "title": "Remote Servers",
+
+  "table": {
+    "header": {
+      "patient": "Patient",
+      "study": "Study",
+      "description": "Study Description",
+      "referring_physician": "Ref. Physician",
+      "report": "Report",
+      "assignations": "Assigned To",
+      "noi": "# Images",
+      "aet": "AET",
+      "creation_date": "Creation Date"
+    },
+    "menu": {
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "status": {
+
+    },
+    "actions": {
+      "retrieve": "Retrieve"
+    }
+  },
+
+  "table_status": {
+    "header": {
+      "status": "Status",
+      "patient": "Patient",
+      "description": "Study Description",
+      "aet": "AET",
+      "noi": "# Images"
+    },
+    "status": {
+      "waiting": "Waiting",
+      "completed": "Completed",
+      "error": "Error",
+      "retrieving": "Retrieving"
+    }
+  },
+
+  "messages": {
+  }
+}

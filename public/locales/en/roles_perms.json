@@ -1,0 +1,37 @@
+{
+  "title": "Roles & Permissions",
+  "info": "Edit roles and assign permissions to them (currently only a viewer).",
+
+  "filters": {
+  },
+
+  "actions": {
+  },
+
+  "table": {
+    "header": {
+      "role": "Roles",
+      "description": "Description"
+    },
+    "menu": {
+      "edit": "Edit"
+    }
+  },
+
+  "dialog_add_edit": {
+    "role": "Role",
+    "description": "Description",
+    "viewers": "Viewers",
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+
+  "messages": {
+    "save_perms": {
+      "success": "Privileges have been successfully saved!",
+      "error": "Impossible to save privileges: {{error}}"
+    }
+  }
+}

@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 /** STATUS CHIP (ERROR / SUCCESS) */
 
 const ForwardingLayout = (props) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('forwarding');
 
     //const[privileges] = React.useState(UserStorage.getPrivileges());
 
@@ -32,7 +32,7 @@ const ForwardingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<AccessTimeIcon style={{fill: '#fff'}}/>}
-                            label={t("status.waiting")}
+                            label={t("table.status.waiting")}
                             //color: "default"
                         />
                     )
@@ -44,7 +44,7 @@ const ForwardingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<DownloadIcon style={{fill: '#fff'}}/>}
-                            label={t("status.forwarding")}
+                            label={t("table.status.forwarding")}
                             color= "info"
                         />
                     )
@@ -56,7 +56,7 @@ const ForwardingLayout = (props) => {
                             variant="filled"
                             size="small"
                             icon= {<CheckCircleIcon style={{fill: '#fff'}}/>}
-                            label={t("status.completed")}
+                            label={t("table.status.completed")}
                             color= "success"
                         />
                     )
@@ -69,7 +69,7 @@ const ForwardingLayout = (props) => {
                                 variant="filled"
                                 size="small"
                                 icon= {<ErrorIcon style={{fill: '#fff'}}/>}
-                                label={t("status.error")}
+                                label={t("table.status.error")}
                                 color= "error"
                             />
                         </Tooltip>
@@ -151,7 +151,7 @@ const ForwardingLayout = (props) => {
     const column = [
         {
             field: "status",
-            headerName: t("tables_header.status"),
+            headerName: t("table.header.status"),
             flex: 1,
             minWidth: 110,
             description: "Status",
@@ -162,25 +162,25 @@ const ForwardingLayout = (props) => {
         },
         {
             "field": 'creation_date_formatted',
-            "headerName": t("tables_header.creation_date"),
+            "headerName": t("table.header.creation_date"),
             "flex": 2,
             "minWidth": 200
         },
         {
             "field": 'p_name',
-            "headerName": t("tables_header.patient"),
+            "headerName": t("table.header.patient"),
             "flex": 2,
             "minWidth": 200
         },
         {
             "field": 'st_description',
-            "headerName": t("tables_header.description"),
+            "headerName": t("table.header.description"),
             "flex": 3,
             "minWidth": 200
         },
         {
             "field": 'aet',
-            "headerName": t("tables_header.aet"),
+            "headerName": t("table.header.aet"),
             "flex": 2,
             "minWidth": 200,
             renderCell: (params) => {
@@ -189,7 +189,7 @@ const ForwardingLayout = (props) => {
         },
         {
             "field": 'noi',
-            "headerName": t("tables_header.noi"),
+            "headerName": t("table.header.noi"),
             "flex": 1,
             "minWidth": 200,
             renderCell: (params) => {
@@ -211,7 +211,7 @@ const ForwardingLayout = (props) => {
                 if (params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<ReplayIcon/>}
-                        label={t("buttons.retry")}
+                        label={t("table.menu.retry")}
                         onClick={() => handleRetry(params.row.study_uid, params.row.called_aet)}
                         showInMenu
                     />);
@@ -219,7 +219,7 @@ const ForwardingLayout = (props) => {
                 if (params.row.status === 0 || params.row.status === 1 || params.row.status === 100) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
-                        label={t("buttons.cancel")}
+                        label={t("table.menu.cancel")}
                         onClick={() => handleCancel(params.row.study_uid, params.row.called_aet)}
                         showInMenu
                     />);
@@ -227,7 +227,7 @@ const ForwardingLayout = (props) => {
                 if (params.row.status === 2) {
                     actions.push(<GridActionsCellItem
                         icon={<CancelIcon/>}
-                        label={t("buttons.delete")}
+                        label={t("table.menu.delete")}
                         onClick={() => handleCancel(params.row.study_uid, params.row.called_aet)}
                         showInMenu
                     />);

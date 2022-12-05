@@ -62,7 +62,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomDialogStudyInfo({open, handleOpenDialog, handleCloseDialog, study}) {
 
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     const [values, setValues] = React.useState(null);
 
@@ -79,64 +79,64 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
             fullWidth
         >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                {t("titles.study_information")}
+                {t("dialog_info.title")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
                 {
                     values &&
 
                         <Grid container spacing={2}>
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.p_name")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.p_name")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_name}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.p_id")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.p_id")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_id}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.p_birthdate")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.p_birthdate")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.p_birthdate_formatted}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_institution")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_institution")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_institution}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_ref_physician")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_ref_physician")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_ref_physician}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_accession_number")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_accession_number")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_accession_number}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_description")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_description")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_description}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_modalities")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_modalities")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{""+values.st_modalities}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_date")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_date")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_date}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_id")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_id")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_id}</Grid>
 
                             <Grid item xs={12}><Divider/></Grid>
 
-                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_uid")}</Grid>
+                            <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_uid")}</Grid>
                             <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_uid}</Grid>
 
                             {
@@ -144,7 +144,7 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
                                 <>
                                     <Grid item xs={12}><Divider/></Grid>
 
-                                    <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_reference")}</Grid>
+                                    <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_reference")}</Grid>
                                     <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_reference}</Grid>
                                 </>
                             }
@@ -154,7 +154,7 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
                                 <>
                                     <Grid item xs={12}><Divider/></Grid>
 
-                                    <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("fields.st_storage_key")}</Grid>
+                                    <Grid item xs={6} style={{fontWeight: 'bold'}}>{t("dialog_info.st_storage_key")}</Grid>
                                     <Grid item xs="auto" style={{fontSize: '80%'}}>{values.st_storage_key}</Grid>
                                 </>
                             }
@@ -163,7 +163,7 @@ export default function CustomDialogStudyInfo({open, handleOpenDialog, handleClo
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCloseDialog}>
-                    {t("buttons.close")}
+                    {t("dialog_info.actions.close")}
                 </Button>
             </DialogActions>
         </BootstrapDialog>

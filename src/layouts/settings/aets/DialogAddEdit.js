@@ -12,6 +12,7 @@ import React from "react";
 import AETService from "../../../services/api/aet.service";
 import {useTheme} from "@emotion/react";
 import {makeStyles} from "@mui/styles";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
@@ -38,7 +39,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogAddEdit = (props) => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -62,24 +65,15 @@ const DialogAddEdit = (props) => {
         else response = await AETService.addAET(props.values);
 
         if (response.error) {
-            props.alertMessage({
-                show: true,
-                severity: "error",
-                message: t("msg_error.aet_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_aet.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.save_aet.success"), {variant: 'success'});
         props.toggle();
         props.setValues({});
         setAddMode(true);
         props.onSave();
-
-        props.alertMessage({
-            show: true,
-            severity: "success",
-            message: t("msg_info.aet_saved")
-        });
     }
 
     React.useEffect(() => {
@@ -109,7 +103,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.aet")}
+                                label={t("tab_remote_servers.dialog_add_edit.aet")}
                                 variant="standard"
                                 value={getValue('title')}
                                 onChange={(e) => {handleChange('title', e.target.value);}}
@@ -122,7 +116,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.host")}
+                                label={t("tab_remote_servers.dialog_add_edit.host")}
                                 variant="standard"
                                 value={getValue('ip')}
                                 onChange={(e) => {handleChange('ip', e.target.value);}}
@@ -132,7 +126,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.port")}
+                                label={t("tab_remote_servers.dialog_add_edit.port")}
                                 variant="standard"
                                 value={getValue('port')}
                                 onChange={(e) => {handleChange('port', e.target.value);}}
@@ -142,7 +136,7 @@ const DialogAddEdit = (props) => {
                             <TextField
                                 className={classes.field}
                                 id="filled-basic"
-                                label={t("fields.alias")}
+                                label={t("tab_remote_servers.dialog_add_edit.alias")}
                                 variant="standard"
                                 value={getValue('description')}
                                 onChange={(e) => {handleChange('description', e.target.value);}}
@@ -150,27 +144,27 @@ const DialogAddEdit = (props) => {
                         </Grid>
 
                         <Grid item xs={12} style={{ marginBottom: '10px' }}>
-                            <FormLabel component="legend">{t("fields.capabilities")}</FormLabel>
+                            <FormLabel component="legend">{t("tab_remote_servers.dialog_add_edit.capabilities.name")}</FormLabel>
                             <Grid container direction="row-reverse">
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
                                         control={<Switch color="primary" checked={getValue('qr') || false} onChange={(e) => {handleChange('qr', !props.values.qr);}}/>}
-                                        label={t("fields.query")}
+                                        label={t("tab_remote_servers.dialog_add_edit.capabilities.query")}
                                     />
                                 </Grid>
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
                                         control={<Switch color="primary" checked={getValue('store') || false} onChange={(e) => {handleChange('store', !props.values.store);}}/>}
-                                        label={t("fields.store")}
+                                        label={t("tab_remote_servers.dialog_add_edit.capabilities.retrieve")}
                                     />
                                 </Grid>
                                 <Grid item xs={11} style={{ marginBottom: '10px' }}>
                                     <FormControlLabel
                                         value="start"
                                         control={<Switch color="primary" checked={getValue('forward') || false} onChange={(e) => {handleChange('forward', !props.values.forward);}}/>}
-                                        label={t("fields.forward")}
+                                        label={t("tab_remote_servers.dialog_add_edit.capabilities.forward")}
                                     />
                                 </Grid>
                             </Grid>
@@ -179,11 +173,11 @@ const DialogAddEdit = (props) => {
                         <Grid item xs />
 
                         <Grid item >
-                            <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('buttons.cancel')}</Button>
+                            <Button variant="contained" className={classes.button} component="label" onClick={handleCancel}>{t('tab_remote_servers.dialog_add_edit.actions.cancel')}</Button>
                         </Grid>
 
                         <Grid item >
-                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('buttons.save')}</Button>
+                            <Button variant="contained" component="label" onClick={() => {handleSave()}}>{t('tab_remote_servers.dialog_add_edit.actions.save')}</Button>
                         </Grid>
                     </Grid>
 

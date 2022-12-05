@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PrySideBarSettings(props) {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('common');
 
     /** User & privileges */
     const { user } = React.useContext(UserContext);
@@ -105,7 +105,7 @@ function PrySideBarSettings(props) {
             <List>
 
                 <ListItem >
-                    <ListItemText primary={t("titles.settings")} />
+                    <ListItemText primary={t("menu.settings")} />
                 </ListItem>
 
                 <Divider classes={{ root: classes.divider }} />

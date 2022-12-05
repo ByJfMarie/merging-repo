@@ -6,7 +6,7 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Grid, Alert, Snackbar, Typography
+    Grid, Typography
 } from '@mui/material';
 import {useTheme} from '@emotion/react';
 import {makeStyles} from "@mui/styles";
@@ -16,6 +16,7 @@ import Index from "../../../layouts/settings/actions";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -45,17 +46,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LocalServer() {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const classes = useStyles(theme);
-
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
 
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
@@ -96,22 +92,12 @@ export default function LocalServer() {
         const response = await SettingsService.saveLocalServer(settingsValue);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.settings_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
         refreshSettings();
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.settings_saved")
-        });
     };
 
     const handleCancel = () => {
@@ -120,19 +106,13 @@ export default function LocalServer() {
 
     return (
         <>
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
                 <CardContent>
                     <Grid container rowSpacing={2} style={{marginBottom: '15px'}}>
                         <Grid item xs={12}>
                             <TextField
                                 className={classes.field} id="filled-basic"
-                                label={t("fields.aet")}
+                                label={t("tab_local_server.aet")}
                                 variant="standard"
                                 value={getSettingsValue('DCMS.server_aet')}
                                 onChange={(e) => {
@@ -144,7 +124,7 @@ export default function LocalServer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="filled-basic"
-                                label={t("fields.port")}
+                                label={t("tab_local_server.port")}
                                 variant="standard"
                                 value={getSettingsValue('DCMS.port_dicom')}
                                 onChange={(e) => {
@@ -156,7 +136,7 @@ export default function LocalServer() {
                             <TextField
                                 style={{width: '100%'}}
                                 id="filled-basic"
-                                label={t("fields.latency")}
+                                label={t("tab_local_server.latency")}
                                 variant="standard"
                                 value={getSettingsValue('DCMS.latency_time')}
                                 onChange={(e) => {
@@ -169,7 +149,7 @@ export default function LocalServer() {
             </Card>
 
             <Card className={classes.card} style={{backgroundColor: theme.palette.card.color, width: "100% !important"}}>
-                <Typography variant="h6" align="left"> {t('titles.accepted_transfer_syntax')} </Typography>
+                <Typography variant="h6" align="left"> {t('tab_local_server.transfer_syntax.name')} </Typography>
                 <Divider style={{marginBottom: theme.spacing(2)}}/>
                 <CardContent>
                     <FormGroup>
@@ -181,7 +161,7 @@ export default function LocalServer() {
                                     onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2', e.target.checked)}
                                 />
                             }
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -189,7 +169,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.1'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.1', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_1")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_1")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -197,7 +177,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.2'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.2', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_2")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_2")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -205,7 +185,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.50'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.50', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_50")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_50")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -213,7 +193,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.51'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.51', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_51")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_51")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -221,7 +201,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.57'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.57', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_57")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_57")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -229,7 +209,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.70'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.70', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_70")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_70")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -237,7 +217,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.80'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.80', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_80")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_80")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -245,7 +225,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.81'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.81', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_81")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_81")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -253,7 +233,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.90'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.90', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_90")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_90")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -261,7 +241,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.91'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.91', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_91")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_91")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -269,7 +249,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.92'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.92', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_92")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_92")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -277,7 +257,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.93'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.93', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_93")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_93")}
                         />
                     </FormGroup>
 
@@ -290,7 +270,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.94'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.94', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_94")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_94")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -298,7 +278,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.95'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.95', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_95")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_95")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -306,7 +286,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.5'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.5', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_5")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_5")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -314,7 +294,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.6.1'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.6.1', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_6_1")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_6_1")}
                         />
                     </FormGroup>
 
@@ -327,7 +307,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.100'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.100', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_100")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_100")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -335,7 +315,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.102'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.102', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_102")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_102")}
                         />
                         <FormControlLabel
                             classes={{label: classes.label}}
@@ -343,7 +323,7 @@ export default function LocalServer() {
                                 checked={getSettingsValue('DCMS.accepted_ts')?getSettingsValue('DCMS.accepted_ts')['1.2.840.10008.1.2.4.103'] || false : false}
                                 onChange={(e) => handleSettingsTSChange('1.2.840.10008.1.2.4.103', e.target.checked)}
                             />}
-                            label={t("fields.transfer_syntax.1_2_840_10008_1_2_4_103")}
+                            label={t("tab_local_server.transfer_syntax.1_2_840_10008_1_2_4_103")}
                         />
                     </FormGroup>
                     <Index

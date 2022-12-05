@@ -8,7 +8,7 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 import { useTranslation } from 'react-i18next';
 
 const Forwarding = () => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('forwarding');
 
   /** THEME */
   const theme = useTheme();
@@ -21,7 +21,7 @@ const Forwarding = () => {
             style={{textAlign: 'left', color: theme.palette.primary.main}}
         >
             <Grid container direction="row" alignItems="center">
-                <FastForwardIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.forwarding')}
+                <FastForwardIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
             </Grid>
         </Typography>
 

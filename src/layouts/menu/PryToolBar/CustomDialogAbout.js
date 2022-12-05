@@ -105,35 +105,35 @@ export default function CustomDialogAbout({open, handleOpenDialog, handleCloseDi
             fullWidth
         >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                {t("titles.about")}
+                {t("dialog_about.title")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
-                <Typography variant="h6" >{t("texts.portal_name")}</Typography>
-                <Typography variant="h6" >{t("fields.version")} {version.version} {t("fields.build")} {version.build}</Typography>
+                <Typography variant="h6" >{t("portal_name")}</Typography>
+                <Typography variant="h6" >{t("dialog_about.version")} {version.version} {t("dialog_about.build")} {version.build}</Typography>
                 <br/>
                 <div className={classes.div}>
-                    <Typography className={classes.spaceAfter}>{t("texts.our_website")}</Typography>
+                    <Typography className={classes.spaceAfter}>{t("dialog_about.our_website")}</Typography>
                     <Typography ><Link href='https://perennity.io'>https://perennity.io</Link></Typography>
                 </div>
 
                 <div className={classes.div}>
-                    <Typography className={classes.spaceAfter}>{t("texts.technical_support")}</Typography>
+                    <Typography className={classes.spaceAfter}>{t("dialog_about.technical_support")}</Typography>
                     <Typography ><Link href='#'>support@perennity.io</Link></Typography>
                 </div>
                 <div className={classes.div}>
-                    <Typography className={classes.spaceAfter}>{t("texts.license_request")}</Typography>
+                    <Typography className={classes.spaceAfter}>{t("dialog_about.license_request")}</Typography>
                     <Typography ><Link href='#'>license@perennity.io</Link></Typography>
                 </div>
                 <br/>
                 <div className={classes.div}>
                     <Typography variant="subtitle2" align="justify">
-                        {t("texts.warning_medical_device")}
+                        {t("dialog_about.warning_medical_device")}
                     </Typography>
                 </div>
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCloseDialog}>
-                    {t("buttons.close")}
+                    {t("dialog_about.actions.close")}
                 </Button>
             </DialogActions>
         </BootstrapDialog>

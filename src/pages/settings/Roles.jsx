@@ -5,7 +5,7 @@ import {
     Card,
     CardContent,
     Grid,
-    Alert, Snackbar, Box
+    Box
 } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from "@mui/styles";
@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 });*/
 
 const Roles = () => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('roles_perms');
 
     /** THEME */
     const theme = useTheme();
@@ -35,13 +35,6 @@ const Roles = () => {
         }
     });
     const classes = useStyles();
-
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
 
     /** ADD/EDIT POP UP */
     const [showDialog, setShowDialog] = React.useState(false);
@@ -74,19 +67,13 @@ const Roles = () => {
                 style={{ textAlign: 'left', color: theme.palette.primary.main }}
             >
                 <Grid container direction="row" alignItems="center">
-                    <LockIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('titles.roles_perm')}
+                    <LockIcon fontSize="large"/> <Box sx={{ m: 0.5 }} /> {t('title')}
                 </Grid>
             </Typography>
             <Divider style={{ marginBottom: theme.spacing(2) }} />
 
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => {setMessage({...message, show: !message.show})}}>
-                <Alert onClose={() => {setMessage({...message, show: !message.show})}} severity={message.severity} sx={{ width: '100%' }}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <PryInfo
-                text={t("info.roles_perms")}
+                text={t("info")}
             />
 
             <Card className={classes.card} style={{ backgroundColor: theme.palette.card.color, width: "100% !important" }}>
@@ -103,7 +90,6 @@ const Roles = () => {
                         filters={null}
                         forceRefresh={forceRefresh}
                         edit={(values) => {setSettingsValue(values); toggleDialog();}}
-                        alertMessage={(message) => setMessage(message)}
                     />
                 </CardContent>
             </Card>
@@ -115,7 +101,6 @@ const Roles = () => {
                 isOpen={showDialog}
                 toggle={toggleDialog}
                 onSave={() => {setForceRefresh(!forceRefresh);}}
-                alertMessage={(message) => setMessage(message)}
             />
 
         </React.Fragment>

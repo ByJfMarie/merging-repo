@@ -1,0 +1,47 @@
+{
+  "title": "Security",
+
+  "tab_login":{
+    "title": "Login",
+    "info": "Enable login by Study Reference Number",
+    "enable_ref_login": "Enable Reference Number Login"
+  },
+
+  "tab_captcha":{
+    "title": "Captcha",
+    "info": "Enable Google reCAPTCHA.",
+    "enable_google_recaptcha": "Enable Google reCAPTCHA",
+    "site_key": "Site Key",
+    "secret_key": "Secret Key"
+  },
+
+  "tab_2fa":{
+    "title": "Two-Factor Authentication",
+    "info": "Enable Double Factor Authentication",
+    "enable_2fa": {
+      "name": "Enable Two-Factor Authentication",
+      "disabled": "Disabled. Do not required a verification code",
+      "optional": "Optional. User can decide to use 2FA or not",
+      "required": "Required. Enforce all users to use 2FA"
+    },
+    "pry_channel": {
+      "name": "Perennity Channels",
+      "email": "2FA over email"
+    },
+    "twilio_channel": {
+      "name": "Twilio Channels",
+      "sms": "2FA over SMS",
+      "whatsapp": "2FA over WhatsApp",
+      "account_sid": "Account SID",
+      "auth_token": "Auth Token",
+      "verify_sid": "Verify Service SID"
+    }
+  },
+
+  "messages": {
+    "save_settings": {
+      "success": "Settings successfully saved!",
+      "error": "Impossible to save settings: {{error}}"
+    }
+  }
+}

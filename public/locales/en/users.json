@@ -1,0 +1,110 @@
+{
+  "title": "Users",
+  "info": "Create, edit and delete users; including their assignment to a particular role. You can also deactivate a user or change his/her password.",
+
+  "filters": {
+    "username": "Username",
+    "role": {
+      "name": "Role",
+      "all": "All",
+      "administrator": "Administrator",
+      "physician": "Physician",
+      "patient": "Patient",
+      "radiologist": "Radiologist"
+    },
+    "status": {
+      "name": "Status",
+      "all": "All",
+      "active": "Active",
+      "not_active": "Not active"
+    }
+  },
+
+  "actions": {
+    "add": "Add",
+    "save": "Save",
+    "reset": "Reset",
+    "test_settings": "Test Settings"
+  },
+
+  "table": {
+    "header": {
+      "login": "Login",
+      "name": "Name",
+      "mail": "Mail",
+      "role": "Role",
+      "active": "Active"
+    },
+    "menu": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "reset_password": "Reset Password",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+
+  "dialog_add_edit": {
+    "title": "",
+    "username": "Username",
+    "mail": "Email",
+    "name": "Name",
+    "birthdate": "Date of birth",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "zip": "Zip / Postal code",
+    "country": "Country",
+    "dicom_tag": "DICOM Tag",
+    "dicom_tag_value": "DICOM Tag Value",
+    "role": {
+      "name": "Role",
+      "administrator": "Administrator",
+      "physician": "Physician",
+      "patient": "Patient",
+      "radiologist": "Radiologist"
+    },
+    "title": {
+      "name": "Title",
+      "mr": "Mr.",
+      "mrs": "Mrs.",
+      "miss": "Miss.",
+      "ms": "Ms.",
+      "dr": "Dr."
+    },
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+
+  "dialog_reset_password": {
+    "title": "Reset Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "actions": {
+      "cancel": "Cancel",
+      "save": "Save"
+    }
+  },
+
+  "dialog_delete": {
+    "title": "Are you sure?",
+    "text": "Do you really want to delete this user? This process cannot be undone.",
+    "actions": {
+      "cancel": "Cancel",
+      "delete": "Delete"
+    }
+  },
+
+  "messages": {
+    "save_user": {
+      "success": "User has been successfully saved!",
+      "error": "Impossible to save user: {{error}}"
+    },
+    "delete_user": {
+      "success": "User has been successfully deleted!",
+      "error": "Impossible to delete user: {{error}}"
+    }
+  }
+}

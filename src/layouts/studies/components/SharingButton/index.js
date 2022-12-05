@@ -8,7 +8,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { useTranslation } from 'react-i18next';
 
 const SharingButton = (props) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     const theme = useTheme();
 
@@ -40,7 +40,7 @@ const SharingButton = (props) => {
             disabled={props.actionDisabled}
         >
             <ShareIcon fontSize="small" />
-            {t('buttons.share')}
+            {t('table.actions.share')}
         </Button>
     )
 }

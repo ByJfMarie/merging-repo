@@ -10,8 +10,6 @@ import {
     CardContent,
     TextField,
     Grid,
-    Alert,
-    Snackbar,
     FormControlLabel,
     Checkbox,
     FormGroup,
@@ -25,6 +23,7 @@ import SettingsService from "../../services/api/settings.service";
 import Index from "../../layouts/settings/actions";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import PryInfo from "../../components/PryInfo";
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import {useTranslation} from 'react-i18next';
@@ -65,7 +64,9 @@ function a11yProps(index) {
 }
 
 export default function Security() {
-    const {t} = useTranslation('settings');
+    const {t} = useTranslation('security');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const theme = useTheme();
     const useStyles = makeStyles({
@@ -101,29 +102,13 @@ export default function Security() {
         setValue(newValue);
     };
 
-    /** MESSAGES */
-    const [message, setMessage] = React.useState({
-        show: false,
-        severity: "info",
-        message: ""
-    });
-    /*function Message() {
-        if (!message || !message.show) return <></>;
-        return <Alert severity={message.severity}>{message.message}</Alert>;
-    }*/
-
     /** SETTINGS VALUES */
     const [settingsValue, setSettingsValue] = React.useState({});
     const refreshSettings = async () => {
         const response = await SettingsService.getSecurity();
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: response.error
-            });
+            enqueueSnackbar(response.error, {variant: 'error'});
             return;
         }
 
@@ -156,23 +141,13 @@ export default function Security() {
         const response = await SettingsService.saveSecurity(settingsValue);
 
         if (response.error) {
-            setMessage({
-                ...message,
-                show: true,
-                severity: "error",
-                message: t("msg_error.settings_saved", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.save_settings.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
         UserStorage.removeUser2FA(); //Force refresh for 2FA
         refreshSettings();
-        setMessage({
-            ...message,
-            show: true,
-            severity: "success",
-            message: t("msg_info.settings_saved")
-        });
+        enqueueSnackbar(t("messages.save_settings.success"), {variant: 'success'});
     };
 
     const handleCancel = () => {
@@ -187,35 +162,24 @@ export default function Security() {
                 style={{textAlign: 'left', color: theme.palette.primary.main}}
             >
                 <Grid container direction="row" alignItems="center">
-                    <DesignServicesIcon fontSize="large"/> <Box sx={{m: 0.5}}/> {t('titles.security')}
+                    <DesignServicesIcon fontSize="large"/> <Box sx={{m: 0.5}}/> {t('title')}
                 </Grid>
             </Typography>
             <Divider style={{marginBottom: theme.spacing(2)}}/>
 
-            <Snackbar open={message.show} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                      onClose={() => {
-                          setMessage({...message, show: !message.show})
-                      }}>
-                <Alert onClose={() => {
-                    setMessage({...message, show: !message.show})
-                }} severity={message.severity} sx={{width: '100%'}}>
-                    {message.message}
-                </Alert>
-            </Snackbar>
-
             <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable"
                       scrollButtons allowScrollButtonsMobile>
-                    <Tab label={t('titles.login')} {...a11yProps(0)} />
-                    <Tab label={t('titles.captcha')} {...a11yProps(1)} />
-                    <Tab label={t('titles.2fa')} {...a11yProps(2)} />
+                    <Tab label={t('tab_login.title')} {...a11yProps(0)} />
+                    <Tab label={t('tab_captcha.title')} {...a11yProps(1)} />
+                    <Tab label={t('tab_2fa.title')} {...a11yProps(2)} />
                 </Tabs>
             </Box>
 
             <TabPanel value={value} index={0} dir="ltr">
 
                 <PryInfo
-                    text={t("info.security_login")}
+                    text={t("tab_login.info")}
                 />
 
                 <Card className={classes.card}>
@@ -228,7 +192,7 @@ export default function Security() {
                                         onChange={(e) => handleSettingsChange('WEB.login_by_reference', e.target.checked + "")}
                                     />
                                 }
-                                label={t("fields.enable_ref_login")}/>
+                                label={t("tab_login.enable_ref_login")}/>
                         </FormGroup>
 
                         <Index
@@ -242,7 +206,7 @@ export default function Security() {
             <TabPanel value={value} index={1} dir="ltr">
 
                 <PryInfo
-                    text={t("info.security_captcha")}
+                    text={t("tab_captcha.info")}
                 />
 
                 <Card className={classes.card}>
@@ -255,7 +219,7 @@ export default function Security() {
                                         onChange={(e) => handleSettingsChange('WEB.login_captcha', e.target.checked + "")}
                                     />
                                 }
-                                label={t("fields.enable_google_recaptcha")}
+                                label={t("tab_captcha.enable_google_recaptcha")}
                             />
                         </FormGroup>
 
@@ -264,7 +228,7 @@ export default function Security() {
                         <TextField
                             className={classes.field}
                             id="filled-basic"
-                            label={t("fields.site_key")}
+                            label={t("tab_captcha.site_key")}
                             variant="standard"
                             InputLabelProps={{shrink: true}}
                             value={getSettingsValue('WEB.login_captcha_site_key')}
@@ -278,7 +242,7 @@ export default function Security() {
                         <TextField
                             className={classes.field}
                             id="filled-basic"
-                            label={t("fields.secret_key")}
+                            label={t("tab_captcha.secret_key")}
                             variant="standard"
                             InputLabelProps={{shrink: true}}
                             value={getSettingsValue('WEB.login_captcha_secret_key')}
@@ -297,13 +261,13 @@ export default function Security() {
             <TabPanel value={value} index={2} dir="ltr">
 
                 <PryInfo
-                    text={t("info.security_2fa")}
+                    text={t("tab_2fa.info")}
                 />
 
                 <Card className={classes.card}>
                     <CardContent>
                         <FormControl>
-                            <FormLabel id="enable-2fa-label">Enable Two-Factor Authentication</FormLabel>
+                            <FormLabel id="enable-2fa-label">{t('tab_2fa.enable_2fa.name')}</FormLabel>
                             <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, mt: 1 }}>
                                 <RadioGroup
                                     aria-labelledby="enable-2fa-label"
@@ -314,11 +278,11 @@ export default function Security() {
                                     }}
                                 >
                                     <FormControlLabel value="disabled" control={<Radio/>}
-                                                      label="Disabled. Do not required a verification code"/>
+                                                      label={t('tab_2fa.enable_2fa.disabled')}/>
                                     <FormControlLabel value="optional" control={<Radio/>}
-                                                      label="Optional. User can decide to use 2FA or not"/>
+                                                      label={t('tab_2fa.enable_2fa.optional')}/>
                                     <FormControlLabel value="required" control={<Radio/>}
-                                                      label="Required. Enforce all users to use 2FA"/>
+                                                      label={t('tab_2fa.enable_2fa.required')}/>
                                 </RadioGroup>
                             </Box>
                         </FormControl>
@@ -326,7 +290,7 @@ export default function Security() {
                         <Box sx={{m: 4}}/>
 
                         <FormControl>
-                            <FormLabel id="2fa-services-label">Perennity Channels</FormLabel>
+                            <FormLabel id="2fa-services-label">{t('tab_2fa.pry_channel.name')}</FormLabel>
 
                             <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, mt: 1 }}>
                                 <FormGroup>
@@ -338,7 +302,7 @@ export default function Security() {
                                                 disabled={getSettingsValue('WEB.login_2fa')==='disabled'}
                                             />
                                         }
-                                        label="2FA over email"/>
+                                        label={t('tab_2fa.pry_channel.email')}/>
                                 </FormGroup>
                             </Box>
                         </FormControl>
@@ -346,7 +310,7 @@ export default function Security() {
                         <Box sx={{m: 4}}/>
 
                         <FormControl fullWidth>
-                            <FormLabel id="2fa-services-label">Twilio Channels</FormLabel>
+                            <FormLabel id="2fa-services-label">{t('tab_2fa.twilio_channel.name')}</FormLabel>
 
                             <Box sx={{ display: 'flex', flexDirection: 'column', width: 'auto', ml: 3, mt: 2 }}>
                                 <FormGroup>
@@ -358,7 +322,7 @@ export default function Security() {
                                                 disabled={!isTwilioActive() || getSettingsValue('WEB.login_2fa')==='disabled'}
                                             />
                                         }
-                                        label="2FA over SMS" />
+                                        label={t('tab_2fa.twilio_channel.sms')} />
                                     <FormControlLabel
                                         control={
                                             <Checkbox
@@ -367,13 +331,13 @@ export default function Security() {
                                                 disabled={!isTwilioActive() || getSettingsValue('WEB.login_2fa')==='disabled'}
                                             />
                                         }
-                                        label="2FA over WhatsApp" />
+                                        label={t('tab_2fa.twilio_channel.whatsapp')} />
                                     {/*<FormControlLabel control={<Checkbox />} label="2FA over Google Authenticator" />*/}
                                 </FormGroup>
                                 <Box sx={{ mt: 1 }}/>
                                 <TextField
                                     id="twilio-sid"
-                                    label={"Account SID"}
+                                    label={t('tab_2fa.twilio_channel.account_sid')}
                                     variant="standard"
                                     InputLabelProps={{
                                         shrink: true,
@@ -386,7 +350,7 @@ export default function Security() {
                                 <Box sx={{ mt: 1 }}/>
                                 <TextField
                                     id="twilio-token"
-                                    label={"Auth Token"}
+                                    label={t('tab_2fa.twilio_channel.auth_token')}
                                     variant="standard"
                                     InputLabelProps={{
                                         shrink: true,
@@ -399,7 +363,7 @@ export default function Security() {
                                 <Box sx={{ mt: 1 }}/>
                                 <TextField
                                     id="twilio-service-sid"
-                                    label={"Verify Service SID"}
+                                    label={t('tab_2fa.twilio_channel.verify_sid')}
                                     variant="standard"
                                     InputLabelProps={{
                                         shrink: true,

@@ -1,45 +1,62 @@
 {
-  "texts": {
-    "portal_name": "My Image Portal",
-    "portal_subtitle": "Access your studies",
-    "portal_welcome_text": {
-      "line_1": "Welcome to the Perennity Radiology Portal.",
-      "line_2": "This portal access is only available for authorized users.",
-      "line_3": "",
-      "line_4": "",
-      "line_5": ""
-    }
+  "portal_welcome":{
+    "title": "Access your studies",
+    "line_1": "Welcome to the Perennity Radiology Portal.",
+    "line_2": "This portal access is only available for authorized users.",
+    "line_3": "",
+    "line_4": "",
+    "line_5": ""
   },
-  "fields": {
-    "username": "Username",
-    "password": "Password",
-    "reference_number": "Reference Number",
-    "birthdate": "Birthdate"
-  },
-  "buttons": {
-    "sign_in": "Sign in",
-    "forgot": "Forgot Password"
-  },
-  "actions": {
-    "forgot_password": "Forgot password?",
-    "reference_login": {
-      "text": "Sign in with a",
-      "link": "Reference Number"
-    },
-    "sign_in": {
-      "text": "Sign in with",
-      "link": "Login & Password"
-    },
-    "back_login": "Back to Login"
-  },
-  "msg_info": {
-    "login_success": "Login successful"
-  },
-  "msg_error": {
+
+  "messages": {
+    "login_success": "Login successful",
     "username_required": "Username is required!",
     "captcha_required": "Captcha is required!",
     "password_required": "Password is required!",
     "reference_required": "Reference is required!",
     "birthdate_required": "Birthdate is required!"
+  },
+
+  "login": {
+    "username": "Username",
+    "password": "Password",
+    "actions": {
+      "sign_in": "Sign in",
+      "forgot_password": "Forgot Password?",
+      "reference_login": {
+        "text": "Sign in with a",
+        "link": "Reference Number"
+      }
+    }
+  },
+
+  "login_by_reference": {
+    "reference_number": "Reference Number",
+    "birthdate": "Birthdate",
+    "actions": {
+      "sign_in": "Sign in",
+      "login": {
+        "text": "Sign in with",
+        "link": "Login & Password"
+      }
+    }
+  },
+
+  "forgot_password": {
+    "username": "Username",
+    "actions": {
+      "forgot": "Forgot password",
+      "back_login": "Back to Login"
+    }
+  },
+
+  "2fa": {
+    "title": "Two-Factor\nAuthentication",
+    "description": "A message with a verification code has been sent to\nyour devices. Enter the code to continue.",
+    "no_otp": "Didn't receive OTP?",
+    "actions": {
+      "resend_otp_timer": "Resend OTP in {{seconds}} seconds",
+      "resend_otp": "Resend OTP"
+    }
   }
 }

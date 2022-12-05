@@ -1,0 +1,60 @@
+{
+  "title": "Emailing",
+  "info": "Edit roles and assign permissions to them (currently only a viewer).",
+
+  "tab_general":{
+    "title": "General",
+    "info": "Configure SMTP email server settings.",
+    "host": "Host",
+    "port": "Port",
+    "from": "From",
+    "authentication": "Authentication",
+    "user": "User",
+    "password": "Password",
+    "security": {
+      "name": "Security",
+      "tls": "TLS",
+      "ssl": "SSL",
+      "none": "None"
+    },
+    "recipient": "Recipient",
+    "actions": {
+      "test_email": "Send Test Email"
+    }
+  },
+
+  "tab_templates":{
+    "title": "Templates",
+    "info": "Configure email templates.",
+    "subject": "Subject",
+    "template": {
+      "name": "Template",
+      "general": "General",
+      "download_ready": "Download Ready",
+      "mail_change": "Mail Change",
+      "reset_password": "Reset Password",
+      "patient": "Patient",
+      "activation_request": "Activation Request",
+      "activation_request2": "Activation Request 2",
+      "activation_confirmation": "Activation Confirmation",
+      "study_notification": "Study Notification",
+      "registration_error": "Registration Error",
+      "physicians": "Physicians",
+      "radiologist": "Radiologist",
+      "guest": "Guests",
+      "share_to": "Share To",
+      "share_to_password": "Share To (Password)"
+    }
+  },
+
+  "messages": {
+    "test": {
+      "success": "Mail successful sent!",
+      "error": "Impossible to send test mail: {{error}}"
+    },
+    "save_settings": {
+      "success": "Settings successfully saved!",
+      "error": "Impossible to save settings: {{error}}"
+    }
+  }
+}

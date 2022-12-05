@@ -1,0 +1,35 @@
+{
+  "title": "License",
+  "info": "Upload a license activation key and check your license.",
+  "serial": "Serial",
+  "computer_id": "Computer ID",
+  "exp_date": "Expiration Date",
+  "amp_valid_until": "AMP Valid Until",
+  "dicom_nodes": "DICOM Nodes",
+  "portal_users": "Portal Users",
+  "retention_days": "Retention Days",
+  "secondary_storage": "Secondary Storage",
+  "report_retrieval": "Report Retrieval",
+  "transfer": "Transfer",
+  "delete_after_transfer": "Delete After Transfer",
+  "forwarding": "Forwarding",
+  "diagnostic_report": "Diagnostic Report Creator",
+  "hl7": "HL7",
+  "media_burner": "Media Burner",
+  "delete_after_burning": "Delete After Burning",
+  "anonymization": "Anonymization",
+  "encryption": "Encryption",
+  "efilm": "Efilm",
+  "iqview": "Iqview",
+
+  "actions": {
+    "upload": "Upload License File"
+  },
+
+  "messages": {
+    "upload": {
+      "success": "License successfully uploaded!",
+      "error": "Impossible to upload License File!"
+    }
+  }
+}

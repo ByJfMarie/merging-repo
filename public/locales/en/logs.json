@@ -1,0 +1,27 @@
+{
+  "title": "Logs",
+
+  "filters": {
+    "date": "Date",
+    "file_name": "File Name"
+  },
+
+  "table": {
+    "header": {
+      "file": "File",
+      "date": "Date",
+      "size": "Size"
+    },
+    "menu": {
+      "view": "View",
+      "download": "Download"
+    },
+    "status": {
+    },
+    "actions": {
+    }
+  },
+
+  "messages": {
+  }
+}

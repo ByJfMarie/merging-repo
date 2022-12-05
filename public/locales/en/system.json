@@ -1,0 +1,245 @@
+{
+  "title": "System",
+
+  "tab_local_server":{
+    "title": "Local Server",
+    "info": "Configure the default DICOM parameters for Perennity, and define negotiated transfer syntaxes.",
+    "aet": "AET",
+    "port": "Port",
+    "latency": "Latency",
+    "transfer_syntax": {
+      "name": "Accepted transfer syntaxes",
+      "1_2_840_10008_1_2": "Implicit VR Endian",
+      "1_2_840_10008_1_2_1": "Explicit VR Little Endian",
+      "1_2_840_10008_1_2_2": "Explicit VR Big Endian",
+      "1_2_840_10008_1_2_4_50": "JPEG Baseline (Process 1)",
+      "1_2_840_10008_1_2_4_51": "JPEG Baseline (Process 2 & 4)",
+      "1_2_840_10008_1_2_4_57": "JPEG Lossless, Nonhierarchical (Processes 14)",
+      "1_2_840_10008_1_2_4_70": "JPEG Lossless, Nonhierarchical, First- Order Prediction (Processes 14 [Selection Value 1])",
+      "1_2_840_10008_1_2_4_80": "JPEG-LS Lossless Image Compression",
+      "1_2_840_10008_1_2_4_81": "JPEG-LS Lossy (Near- Lossless) Image Compression",
+      "1_2_840_10008_1_2_4_90": "JPEG 2000 Image Compression (Lossless Only)",
+      "1_2_840_10008_1_2_4_91": "JPEG 2000 Image Compression",
+      "1_2_840_10008_1_2_4_92": "JPEG 2000 Part 2 Multicomponent Image Compression (Lossless Only)",
+      "1_2_840_10008_1_2_4_93": "JPEG 2000 Part 2 Multicomponent Image Compression",
+      "1_2_840_10008_1_2_4_94": "JPIP Referenced",
+      "1_2_840_10008_1_2_4_95": "JPIP Referenced Deflate",
+      "1_2_840_10008_1_2_5": "RLE Lossless",
+      "1_2_840_10008_1_2_6_1": "RFC 2557 MIME Encapsulation",
+      "1_2_840_10008_1_2_4_100": "MPEG2 Main Profile Main Level",
+      "1_2_840_10008_1_2_4_102": "MPEG-4 AVC/H.264 High Profile / Level 4.1",
+      "1_2_840_10008_1_2_4_103": "MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1"
+    }
+  },
+
+  "tab_storage":{
+    "title": "Storage",
+    "info": "Configure primary and secondary storage paths and storage retention rules.",
+    "storage_path" : "Storage Path",
+    "secondary_path" : "Secondary Path",
+    "keep_images_for" : "Keep images for",
+    "days" : "days",
+    "capacity_treshold" : "Capacity threshold",
+    "maximum" : "Maximum",
+    "drop_to" : "Drop to"
+  },
+
+  "tab_remote_servers":{
+    "title": "DICOM Nodes",
+    "info": "Configure remote and/or local AETs and define their capabilities for DICOM communication.",
+    "allow_all_remote_server" : "Allow All Remote Servers",
+    "table": {
+      "header": {
+        "aet": "AET",
+        "host": "Host",
+        "port": "Port",
+        "capabilities": "Capabilities"
+      },
+      "menu": {
+        "echo": "Echo",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "dialog_add_edit": {
+      "title": "",
+      "aet": "AET",
+      "host": "Host",
+      "port": "Port",
+      "alias": "Alias",
+      "capabilities": {
+        "name": "Capabilities",
+        "query": "Query",
+        "retrieve": "Retrieve",
+        "forward": "Forward"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "actions": {
+      "add": "Add"
+    }
+  },
+
+  "tab_forwarding":{
+    "title": "Forwarding",
+    "info": "Set up forwarding rules, based on AET conditions.",
+    "table": {
+      "header": {
+        "aet_condition": "AET Condition",
+        "forward_to": "Forward To"
+      },
+      "menu": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "dialog_add_edit": {
+      "title": "",
+      "aet_condition": "AET Condition",
+      "forward_to": "Forward To",
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "actions": {
+      "add": "Add"
+    }
+  },
+
+  "tab_transfer":{
+    "title": "Transfer",
+    "info": "Configure the connection to an SFTP server for inter-site transfers, and set up transfer rules based on AET conditions.",
+    "alias": "Alias",
+    "working_folder_group" : "Working Folder Group",
+    "host": "host",
+    "port": "Port",
+    "user": "User",
+    "password": "Password",
+    "splitting_volumes": "Split to volumes",
+    "table": {
+      "header": {
+        "aet_condition": "AET Condition",
+        "destinations": "Destination(s)"
+      },
+      "menu": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "dialog_add_edit": {
+      "title": "",
+      "aet_condition": "AET Condition",
+      "destinations": "Destination(s)",
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "actions": {
+      "add": "Add"
+    }
+  },
+
+  "tab_reporting":{
+    "title": "Reporting",
+    "info": "Define the connection to a report source, from which Perennity can pull diagnostic study reports. Additional configurations include automatic report printing and applying a template.",
+    "enable": "Enable",
+    "print_report": "Print Report",
+    "printer_selection": "Printer Selection",
+    "request_type": {
+      "name": "Request Type",
+      "http": "Http request",
+      "unc": "UNC Request (txt, pdf, SR)",
+      "mitra": "Mitra Broker",
+      "ge": "Database General Electrics request",
+      "fuji": "Fuji Synapse Http Request",
+      "dicom": "DICOM Receive"
+    },
+    "request": "Request"
+  },
+
+  "tab_database":{
+    "title": "Database",
+    "info": "Configure the Perennity database connection.",
+    "host": "host",
+    "port": "Port",
+    "user": "User",
+    "password": "Password",
+    "database_name" : "Database Name"
+  },
+
+  "tab_plugins":{
+    "title": "Plugins",
+    "info": "Plugins add functionality to Perennity (e.g. diagnostic viewer).",
+    "table": {
+      "header": {
+        "name": "Name",
+        "version": "Version",
+        "type": "Type"
+      },
+      "menu": {
+        "install": "Install",
+        "uninstall": "Uninstall",
+        "delete": "Delete"
+      }
+    },
+    "actions": {
+      "force_refresh": "Force Refresh"
+    }
+  },
+
+  "messages": {
+    "save_settings": {
+      "success": "Settings successfully saved!",
+      "error": "Impossible to save settings: {{error}}"
+    },
+    "echo_aet": {
+      "success": "ECHO to {{aet}} successful!",
+      "error": "Impossible to make an ECHO to {{aet}}: {{error}}"
+    },
+    "delete_aet": {
+      "success": "AET has been successfully deleted!",
+      "error": "Impossible to delete AET: {{error}}"
+    },
+    "save_aet": {
+      "success": "AET has been successfully saved!",
+      "error": "Impossible to save AET: {{error}}"
+    },
+    "save_forwarding": {
+      "success": "Forwarding Rule has been successfully saved!",
+      "error": "Impossible to save Forwarding Rule: {{error}}"
+    },
+    "delete_forwarding": {
+      "success": "Forwarding Rule has been successfully deleted!",
+      "error": "Impossible to delete Forwarding Rule: {{error}}"
+    },
+    "save_transfer": {
+      "success": "Transfer Rule has been successfully saved!",
+      "error": "Impossible to save Transfer Rule: {{error}}"
+    },
+    "delete_transfer": {
+      "success": "Transfer Rule has been successfully deleted!",
+      "error": "Impossible to delete Transfer Rule: {{error}}"
+    },
+    "test_transfer": {
+      "success": "SFTP connection successful!",
+      "error": "SFTP connection error: {{error}}"
+    },
+    "install_plugin": {
+      "success": "Plugin successfully installed!",
+      "error": "Impossible to install Plugin: {{error}}"
+    },
+    "uninstall_plugin": {
+      "success": "Plugin successfully uninstalled!",
+      "error": "Impossible to uninstall Plugin: {{error}}"
+    },
+    "delete_plugin": {
+      "success": "Plugin successfully deleted!",
+      "error": "Impossible to delete Plugin: {{error}}"
+    }
+  }
+}

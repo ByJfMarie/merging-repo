@@ -6,20 +6,20 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { useTranslation } from 'react-i18next';
 
 const Index = (props) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     const options = [
         {
             name: 'jpg',
-            label: t("buttons.download_jpeg")
+            label: t("table.actions.download.jpeg")
         },
         {
             name: 'jpg-overlay',
-            label: t("buttons.download_jpeg_overlay")
+            label: t("table.actions.download.jpeg_overlay")
         },
         {
             name: 'dcm',
-            label: t("buttons.download_dicom")
+            label: t("table.actions.download.dicom")
         }
     ];
 
@@ -30,7 +30,7 @@ const Index = (props) => {
     return (
         <PryButtonSelect
             icon={<DownloadIcon fontSize="small" />}
-            label={t('buttons.download')}
+            label={t('table.actions.download.name')}
             options={options}
             handleAction={handleDownload}
             disabled={props.actionDisabled}

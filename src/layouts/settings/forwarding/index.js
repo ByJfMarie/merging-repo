@@ -5,12 +5,15 @@ import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
 import ForwardingService from "../../../services/api/forwarding.service";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {useSnackbar} from "notistack";
 
 /** Translation */
 import { useTranslation } from 'react-i18next';
 
 const TableForwarding = (props) => {
-    const { t } = useTranslation('settings');
+    const { t } = useTranslation('system');
+
+    const { enqueueSnackbar } = useSnackbar();
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -52,26 +55,18 @@ const TableForwarding = (props) => {
         const response = await ForwardingService.deleteRule(id);
 
         if (response.error) {
-            props.alertMessage({
-                show: true,
-                severity: "error",
-                message: t("msg_error.forwarding_deleted", {error: response.error})
-            });
+            enqueueSnackbar(t("messages.delete_forwarding.error", {error: response.error}), {variant: 'error'});
             return;
         }
 
+        enqueueSnackbar(t("messages.delete_forwarding.success"), {variant: 'success'});
         refresh();
-        props.alertMessage({
-            show: true,
-            severity: "success",
-            message: t("msg_info.forwarding_deleted")
-        });
     }
 
     const column = [
         {
             field: "aet_condition",
-            headerName: t("tables_header.aet_condition"),
+            headerName: t("tab_forwarding.table.header.aet_condition"),
             flex: 3,
             minWidth: 110,
             description: "Login",
@@ -79,7 +74,7 @@ const TableForwarding = (props) => {
         },
         {
             field: "value",
-            headerName: t("tables_header.forward_to"),
+            headerName: t("tab_forwarding.table.header.forward_to"),
             flex: 2,
             minWidth: 110,
             description: "Name",
@@ -94,14 +89,14 @@ const TableForwarding = (props) => {
 
                 actions.push(<GridActionsCellItem
                     icon={<EditIcon/>}
-                    label={t("buttons.edit")}
+                    label={t("tab_forwarding.table.menu.edit")}
                     onClick={() => handleEdit(params.row)}
                     showInMenu
                 />);
 
                 actions.push(<GridActionsCellItem
                     icon={<DeleteIcon/>}
-                    label={t("buttons.delete")}
+                    label={t("tab_forwarding.table.menu.delete")}
                     color="error"
                     onClick={() => handleDelete(params.row.id)}
                     showInMenu

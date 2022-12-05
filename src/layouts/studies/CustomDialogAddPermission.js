@@ -66,7 +66,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomDialogAddPermission({open, handleOpenDialog, handleCloseDialog, study}) {
 
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('local_studies');
 
     const theme = useTheme();
 
@@ -166,7 +166,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
             fullWidth
         >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                {t("titles.study_permissions")}
+                {t("dialog_permissions.title")}
             </BootstrapDialogTitle>
             <DialogContent dividers>
                 {
@@ -177,7 +177,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
                             value={searched}
                             onChange={(searchVal) => requestSearch(searchVal)}
                             onCancelSearch={() => cancelSearch()}
-                            placeholder={t("fields.filter")}
+                            placeholder={t("dialog_permissions.filter")}
                         />
                         <List sx={{width: '100%', marginTop: '10px', bgcolor: 'background.paper'}} className={classes.root}>
                             {filteredRows.sort((a, b) => a.checked?-1:1).map((row) => {
@@ -217,7 +217,7 @@ export default function CustomDialogAddPermission({open, handleOpenDialog, handl
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCloseDialog}>
-                    {t("buttons.close")}
+                    {t("dialog_permissions.actions.close")}
                 </Button>
             </DialogActions>
         </BootstrapDialog>

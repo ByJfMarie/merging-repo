@@ -19,7 +19,7 @@ import UsersService from "../../../services/api/users.service";
 const bgImage = "/images/loginbg.jpg";
 
 function Signin() {
-    const { t } = useTranslation('login');
+    const { t } = useTranslation(['login', 'common']);
 
     /** THEME AND CSS */
     const theme = useTheme();
@@ -47,17 +47,17 @@ function Signin() {
         e.preventDefault();
 
         if (!username) {
-            swal("Failed", t("msg_error.username_required"), "error");
+            swal("Failed", t("messages.username_required"), "error");
             return;
         }
 
         if (!password) {
-            swal("Failed", t("msg_error.password_required"), "error");
+            swal("Failed", t("messages.password_required"), "error");
             return;
         }
 
         if (useCaptcha===true && !captchaValue) {
-            swal("Failed", t("msg_error.captcha_required"), "error");
+            swal("Failed", t("messages.captcha_required"), "error");
             return;
         }
 
@@ -80,7 +80,7 @@ function Signin() {
         }
 
         //No 2FA => Login successful
-        swal("Success", t("msg_info.login_success"), "success", {
+        swal("Success", t("messages.login_success"), "success", {
             buttons: false,
             timer: 2000,
         })
@@ -127,16 +127,16 @@ function Signin() {
                 <BackgroundLayout
                     bgImage={bgImage}
                 >
-                    <Grid item xs={12}><Typography variant="h2">{t("texts.portal_name")}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h2">{t("portal_name", {ns: "common"})}</Typography></Grid>
                     <Grid item xs={12}><Divider  sx={{borderColor: 'white'}}/></Grid>
-                    <Grid item xs={12}><Typography variant="h4">{t("texts.portal_subtitle")}</Typography></Grid>
+                    <Grid item xs={12}><Typography variant="h4">{t("portal_welcome.title")}</Typography></Grid>
                     <Grid item xs={12}>
                         <Typography variant="body2">
-                            {t("texts.portal_welcome_text.line_1")}<br/>
-                            {t("texts.portal_welcome_text.line_2")}<br/>
-                            {t("texts.portal_welcome_text.line_3")}<br/>
-                            {t("texts.portal_welcome_text.line_4")}<br/>
-                            {t("texts.portal_welcome_text.line_5")}<br/>
+                            {t("portal_welcome.line_1")}<br/>
+                            {t("portal_welcome.line_2")}<br/>
+                            {t("portal_welcome.line_3")}<br/>
+                            {t("portal_welcome.line_4")}<br/>
+                            {t("portal_welcome.line_5")}<br/>
                         </Typography>
                     </Grid>
                 </BackgroundLayout>
@@ -173,7 +173,7 @@ function Signin() {
                                 fullWidth
                                 id="username"
                                 name="username"
-                                label={t("fields.username")}
+                                label={t("login.username")}
                                 autoComplete="username"
                                 onChange={e => setUserName(e.target.value)}
                             />
@@ -184,7 +184,7 @@ function Signin() {
                                 fullWidth
                                 id="password"
                                 name="password"
-                                label={t("fields.password")}
+                                label={t("login.password")}
                                 type="password"
                                 autoComplete="current-password"
                                 onChange={e => setPassword(e.target.value)}
@@ -196,7 +196,7 @@ function Signin() {
                                 xs
                                 justifyContent="right"
                                 alignItems="center">
-                                <Link href="/forgot">{t("actions.forgot_password")}</Link>
+                                <Link href="/forgot">{t("login.actions.forgot_password")}</Link>
                             </Grid>
 
                             {
@@ -231,7 +231,7 @@ function Signin() {
                                 fullWidth
                                 disabled={useCaptcha && !verified}
                             >
-                                {t("buttons.sign_in")}
+                                {t("login.actions.sign_in")}
                             </Button>
 
                             <Box sx={{ m: 2 }} />
@@ -245,8 +245,8 @@ function Signin() {
                                     justifyContent="left"
                                     alignItems="center"
                                 >
-                                    <Typography variant="h6">{t("actions.reference_login.text")} <Link
-                                        href="/login-access">{t("actions.reference_login.link")}</Link></Typography>
+                                    <Typography variant="h6">{t("login.actions.reference_login.text")} <Link
+                                        href="/login-access">{t("login.actions.reference_login.link")}</Link></Typography>
                                 </Grid>
                             }
 

@@ -1,0 +1,70 @@
+{
+  "title": "Site & Design",
+
+  "tab_general":{
+    "title": "General",
+    "info": "Set default language and date format, general site information, and the external address (URL) to access the portal.",
+    "language": {
+      "name": "Default Language",
+      "fr": "French",
+      "en": "English",
+      "es": "Spanish"
+    },
+    "date_format": "Default Date Format",
+    "institution" : "Institution",
+    "departement" : "Departement",
+    "phone" : "Phone",
+    "address" : "Address",
+    "city" : "City",
+    "country" : "Country",
+    "website" : "Web site",
+    "doctor_id" : "Doctor ID",
+    "external_address" : "External Address"
+  },
+
+  "tab_custom_files":{
+    "title": "Custom Files",
+    "info": "Upload custom logo, help file and login sheet, which will replace the default ones.",
+    "company_logo": "Company Logo",
+    "help_file": "Help File",
+    "login_sheet": "Login Sheet",
+    "actions": {
+      "view": "View"
+    },
+    "texts": {
+      "only_svg": "Only *.svg images will be accepted",
+      "only_pdf": "Only *.pdf files will be accepted",
+      "drag_and_drop": "Drag and drop a file here or click to select a file"
+    }
+  },
+
+  "tab_custom_texts":{
+    "title": "Custom Texts",
+    "info": "Customize the texts for the Disclaimer, Privacy Policy, Copyright, FAQ,\nTerms and Conditions, and Contact us buttons.",
+    "disclaimer": "Disclaimer",
+    "privacy_policy": "Privacy Policy",
+    "copyright": "Copyright",
+    "faq": "FAQ",
+    "terms_conditions": "Terms & Conditions",
+    "contact_us": "Contact Us"
+  },
+
+  "messages": {
+    "save_settings": {
+      "success": "Settings successfully saved!",
+      "error": "Impossible to save settings: {{error}}"
+    },
+    "logo_uploaded": {
+      "success": "Logo File successfully uploaded!",
+      "error": "Impossible to upload Logo File: {{error}}"
+    },
+    "help_uploaded": {
+      "success": "Help File successfully uploaded!",
+      "error": "Impossible to upload Help File: {{error}}"
+    },
+    "loginSheet_uploaded": {
+      "success": "Login Sheet successfully uploaded!",
+      "error": "Impossible to upload Login Sheet File: {{error}}"
+    }
+  }
+}

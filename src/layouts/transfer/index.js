@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 const TransferStatusLayout = (props) => {
 
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('transfer');
     //const { privileges } = React.useContext(UserContext);
 
     const LocalstatusComponent = (row) => {
@@ -182,7 +182,7 @@ const TransferStatusLayout = (props) => {
     const column = [
         {
             field: "status",
-            headerName: t("tables_header.status"),
+            headerName: t("table.header.status"),
             flex: 1,
             minWidth: 200,
             maxWidth: 350,
@@ -196,7 +196,7 @@ const TransferStatusLayout = (props) => {
         },
         {
             field: 'patient',
-            headerName: t("tables_header.patient"),
+            headerName: t("table.header.patient"),
             flex: 1,
             minWidth: 150,
             maxWidth: 450,
@@ -209,7 +209,7 @@ const TransferStatusLayout = (props) => {
         },
         {
             field: 'study',
-            headerName: t("tables_header.study"),
+            headerName: t("table.header.study"),
             flex: 1,
             minWidth: 350,
             //maxWidth: 450,
@@ -234,7 +234,7 @@ const TransferStatusLayout = (props) => {
                     case 3: //Receiving
                         actions.push(<GridActionsCellItem
                             icon={<CancelIcon/>}
-                            label={t("buttons.cancel")}
+                            label={t("table.menu.cancel")}
                             onClick={() => handleCancel(params.row)}
                             showInMenu
                         />);
@@ -242,7 +242,7 @@ const TransferStatusLayout = (props) => {
                     case 4: //Done
                         actions.push(<GridActionsCellItem
                             icon={<CancelIcon/>}
-                            label={t("buttons.delete")}
+                            label={t("table.menu.delete")}
                             onClick={() => handleCancel(params.row)}
                             showInMenu
                         />);
@@ -250,7 +250,7 @@ const TransferStatusLayout = (props) => {
                     case 100: //Error
                         actions.push(<GridActionsCellItem
                             icon={<ReplayIcon/>}
-                            label={t("buttons.retry")}
+                            label={t("table.menu.retry")}
                             onClick={() => handleRetry(params.row)}
                             showInMenu
                         />);
